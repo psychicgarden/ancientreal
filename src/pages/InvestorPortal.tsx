@@ -2,9 +2,9 @@ import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp, PieChart, DollarSign, BarChart3 } from "lucide-react";
-import villaBahia from "@/assets/villa-bahia.jpg";
-import villaMexico from "@/assets/villa-mexico.jpg";
-import villaGreece from "@/assets/villa-greece.jpg";
+import villaBahia from "@/assets/loft-bahia.jpg";
+import villaMexico from "@/assets/penthouse-mexico.jpg";
+import villaGreece from "@/assets/apartment-greece.jpg";
 
 const InvestorPortal = () => {
   return (
@@ -92,16 +92,20 @@ const InvestorPortal = () => {
               <CardContent className="p-6">
                 <div className="aspect-video bg-cover bg-center rounded-lg mb-4" 
                      style={{ backgroundImage: `url(${villaBahia})` }}></div>
-                <h3 className="text-xl font-semibold mb-2">Oceanfront Villa Bahia</h3>
+                <h3 className="text-xl font-semibold mb-2">Artist Loft Bahia</h3>
                 <p className="text-muted-foreground mb-2">Salvador, Bahia, Brazil</p>
-                <p className="text-sm text-muted-foreground mb-4">Luxury beachfront property with infinity pool and private beach access</p>
+                <p className="text-sm text-muted-foreground mb-4">Industrial-chic loft with ocean views in the historic Pelourinho district</p>
                 <div className="flex justify-between items-center mb-4">
-                  <span className="text-sm text-muted-foreground">Funded: 78%</span>
-                  <span className="text-sm font-semibold">$3.2M Target</span>
+                  <span className="text-sm text-muted-foreground">Funded: 82%</span>
+                  <span className="text-sm font-semibold">$165K Target</span>
                 </div>
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-sm text-muted-foreground">Min. Investment:</span>
-                  <span className="text-sm font-semibold text-gold">$1,000</span>
+                  <span className="text-sm font-semibold text-gold">$250</span>
+                </div>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-sm text-muted-foreground">Est. Annual Yield:</span>
+                  <span className="text-sm font-semibold text-green-500">11.2%</span>
                 </div>
                 <Button className="w-full" variant="default">
                   Invest Now
@@ -113,16 +117,20 @@ const InvestorPortal = () => {
               <CardContent className="p-6">
                 <div className="aspect-video bg-cover bg-center rounded-lg mb-4" 
                      style={{ backgroundImage: `url(${villaMexico})` }}></div>
-                <h3 className="text-xl font-semibold mb-2">Colonial Villa Tulum</h3>
+                <h3 className="text-xl font-semibold mb-2">Beach Penthouse Tulum</h3>
                 <p className="text-muted-foreground mb-2">Tulum, Quintana Roo, Mexico</p>
-                <p className="text-sm text-muted-foreground mb-4">Traditional Mexican architecture with modern amenities in eco-paradise</p>
+                <p className="text-sm text-muted-foreground mb-4">Rooftop penthouse with private terrace and jacuzzi near cenotes</p>
                 <div className="flex justify-between items-center mb-4">
-                  <span className="text-sm text-muted-foreground">Funded: 65%</span>
-                  <span className="text-sm font-semibold">$2.8M Target</span>
+                  <span className="text-sm text-muted-foreground">Funded: 75%</span>
+                  <span className="text-sm font-semibold">$152K Target</span>
                 </div>
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-sm text-muted-foreground">Min. Investment:</span>
-                  <span className="text-sm font-semibold text-gold">$750</span>
+                  <span className="text-sm font-semibold text-gold">$200</span>
+                </div>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-sm text-muted-foreground">Est. Annual Yield:</span>
+                  <span className="text-sm font-semibold text-green-500">13.8%</span>
                 </div>
                 <Button className="w-full" variant="default">
                   Invest Now
@@ -134,16 +142,20 @@ const InvestorPortal = () => {
               <CardContent className="p-6">
                 <div className="aspect-video bg-cover bg-center rounded-lg mb-4" 
                      style={{ backgroundImage: `url(${villaGreece})` }}></div>
-                <h3 className="text-xl font-semibold mb-2">Cliffside Villa Santorini</h3>
+                <h3 className="text-xl font-semibold mb-2">Modern Caldera Apartment</h3>
                 <p className="text-muted-foreground mb-2">Oia, Santorini, Greece</p>
-                <p className="text-sm text-muted-foreground mb-4">Iconic white and blue villa with panoramic Aegean Sea views</p>
+                <p className="text-sm text-muted-foreground mb-4">Minimalist apartment with private balcony overlooking the caldera</p>
                 <div className="flex justify-between items-center mb-4">
-                  <span className="text-sm text-muted-foreground">Funded: 92%</span>
-                  <span className="text-sm font-semibold">$4.5M Target</span>
+                  <span className="text-sm text-muted-foreground">Funded: 91%</span>
+                  <span className="text-sm font-semibold">$178K Target</span>
                 </div>
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-sm text-muted-foreground">Min. Investment:</span>
-                  <span className="text-sm font-semibold text-gold">$1,500</span>
+                  <span className="text-sm font-semibold text-gold">$300</span>
+                </div>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-sm text-muted-foreground">Est. Annual Yield:</span>
+                  <span className="text-sm font-semibold text-green-500">10.5%</span>
                 </div>
                 <Button className="w-full" variant="default">
                   Invest Now

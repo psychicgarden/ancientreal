@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Search, MapPin, Calendar, Users, Wallet, Gift } from "lucide-react";
-import villaBahia from "@/assets/villa-bahia.jpg";
-import villaMexico from "@/assets/villa-mexico.jpg";
-import villaGreece from "@/assets/villa-greece.jpg";
+import villaBahia from "@/assets/loft-bahia.jpg";
+import villaMexico from "@/assets/penthouse-mexico.jpg";
+import villaGreece from "@/assets/apartment-greece.jpg";
 
 const TravelerPortal = () => {
   return (
@@ -111,10 +111,10 @@ const TravelerPortal = () => {
             <Card className="bg-gradient-card border-accent/20 overflow-hidden">
               <div className="aspect-square bg-cover bg-center" style={{ backgroundImage: `url(${villaBahia})` }}></div>
               <CardContent className="p-4">
-                <h3 className="font-semibold mb-1">Oceanfront Villa Bahia</h3>
-                <p className="text-sm text-muted-foreground mb-2">Salvador, Brazil • 4.9★ (47 reviews)</p>
+                <h3 className="font-semibold mb-1">Artist Loft Bahia</h3>
+                <p className="text-sm text-muted-foreground mb-2">Salvador, Brazil • 4.8★ (34 reviews)</p>
                 <div className="flex justify-between items-center">
-                  <span className="font-semibold">$320/night</span>
+                  <span className="font-semibold">$85/night</span>
                   <span className="text-xs text-gold">Crypto accepted</span>
                 </div>
               </CardContent>
@@ -123,11 +123,11 @@ const TravelerPortal = () => {
             <Card className="bg-gradient-card border-accent/20 overflow-hidden">
               <div className="aspect-square bg-cover bg-center" style={{ backgroundImage: `url(${villaMexico})` }}></div>
               <CardContent className="p-4">
-                <h3 className="font-semibold mb-1">Colonial Villa Tulum</h3>
-                <p className="text-sm text-muted-foreground mb-2">Tulum, Mexico • 4.8★ (32 reviews)</p>
+                <h3 className="font-semibold mb-1">Beach Penthouse Tulum</h3>
+                <p className="text-sm text-muted-foreground mb-2">Tulum, Mexico • 4.9★ (28 reviews)</p>
                 <div className="flex justify-between items-center">
-                  <span className="font-semibold">$280/night</span>
-                  <span className="text-xs text-gold">DPN tokens 10% off</span>
+                  <span className="font-semibold">$95/night</span>
+                  <span className="text-xs text-gold">DPN tokens 15% off</span>
                 </div>
               </CardContent>
             </Card>
@@ -135,10 +135,10 @@ const TravelerPortal = () => {
             <Card className="bg-gradient-card border-accent/20 overflow-hidden">
               <div className="aspect-square bg-cover bg-center" style={{ backgroundImage: `url(${villaGreece})` }}></div>
               <CardContent className="p-4">
-                <h3 className="font-semibold mb-1">Cliffside Villa Santorini</h3>
-                <p className="text-sm text-muted-foreground mb-2">Oia, Greece • 5.0★ (89 reviews)</p>
+                <h3 className="font-semibold mb-1">Modern Caldera Apartment</h3>
+                <p className="text-sm text-muted-foreground mb-2">Oia, Greece • 4.9★ (52 reviews)</p>
                 <div className="flex justify-between items-center">
-                  <span className="font-semibold">$450/night</span>
+                  <span className="font-semibold">$120/night</span>
                   <span className="text-xs text-gold">Investment credits</span>
                 </div>
               </CardContent>
