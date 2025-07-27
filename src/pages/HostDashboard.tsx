@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Home, DollarSign, Calendar, Settings, Plus, TrendingUp } from "lucide-react";
+import villaBali from "@/assets/villa-bali.jpg";
+import apartmentNYC from "@/assets/apartment-nyc.jpg";
+import beachHouseMaldives from "@/assets/beach-house-maldives.jpg";
 
 const HostDashboard = () => {
   return (
@@ -87,13 +90,14 @@ const HostDashboard = () => {
           
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {[
-              { name: "Luxury Villa Bali", status: "Active", bookings: 12, revenue: "$8,420" },
-              { name: "Modern Apartment NYC", status: "Active", bookings: 8, revenue: "$12,150" },
-              { name: "Beach House Maldives", status: "Maintenance", bookings: 0, revenue: "$4,010" }
+              { name: "Luxury Villa Bali", status: "Active", bookings: 12, revenue: "$8,420", image: villaBali },
+              { name: "Modern Apartment NYC", status: "Active", bookings: 8, revenue: "$12,150", image: apartmentNYC },
+              { name: "Beach House Maldives", status: "Maintenance", bookings: 0, revenue: "$4,010", image: beachHouseMaldives }
             ].map((property, i) => (
               <Card key={i} className="bg-gradient-card border-accent/20">
                 <CardContent className="p-6">
-                  <div className="aspect-video bg-muted rounded-lg mb-4"></div>
+                  <div className="aspect-video bg-cover bg-center rounded-lg mb-4" 
+                       style={{ backgroundImage: `url(${property.image})` }}></div>
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="text-xl font-semibold">{property.name}</h3>
                     <Badge variant={property.status === "Active" ? "default" : "secondary"}>
