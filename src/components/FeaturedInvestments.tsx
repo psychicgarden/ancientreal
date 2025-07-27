@@ -10,8 +10,8 @@ import coworkingParis from "@/assets/coworking-paris.jpg";
 const FeaturedInvestments = () => {
   const properties = [
     {
-      type: "Villa",
-      name: "Boho Luxury Villa",
+      type: "Loft",
+      name: "Art Deco Loft",
       location: "Tulum, Mexico",
       totalValue: 150000,
       pricePerShare: 150,
