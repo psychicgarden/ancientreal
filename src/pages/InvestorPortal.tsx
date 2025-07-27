@@ -12,7 +12,7 @@ const InvestorPortal = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="pt-32 pb-16 px-6">
+      <section className="pt-32 pb-8 px-6">
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
