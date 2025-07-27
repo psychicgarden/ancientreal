@@ -18,17 +18,17 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#properties" className="text-foreground/80 hover:text-foreground transition-colors">
-              Properties
+            <a href="/investor" className="text-foreground/80 hover:text-foreground transition-colors">
+              Investor
             </a>
-            <a href="#invest" className="text-foreground/80 hover:text-foreground transition-colors">
-              How It Works
+            <a href="/traveler" className="text-foreground/80 hover:text-foreground transition-colors">
+              Travel
             </a>
-            <a href="#about" className="text-foreground/80 hover:text-foreground transition-colors">
-              About
+            <a href="/host" className="text-foreground/80 hover:text-foreground transition-colors">
+              Host
             </a>
-            <a href="#contact" className="text-foreground/80 hover:text-foreground transition-colors">
-              Contact
+            <a href="#developers" className="text-foreground/80 hover:text-foreground transition-colors">
+              Developers
             </a>
           </nav>
 
@@ -51,17 +51,17 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden py-6 border-t border-border/50">
             <nav className="flex flex-col space-y-4">
-              <a href="#properties" className="text-foreground/80 hover:text-foreground transition-colors">
-                Properties
+              <a href="/investor" className="text-foreground/80 hover:text-foreground transition-colors">
+                Investor
               </a>
-              <a href="#invest" className="text-foreground/80 hover:text-foreground transition-colors">
-                How It Works
+              <a href="/traveler" className="text-foreground/80 hover:text-foreground transition-colors">
+                Travel
               </a>
-              <a href="#about" className="text-foreground/80 hover:text-foreground transition-colors">
-                About
+              <a href="/host" className="text-foreground/80 hover:text-foreground transition-colors">
+                Host
               </a>
-              <a href="#contact" className="text-foreground/80 hover:text-foreground transition-colors">
-                Contact
+              <a href="#developers" className="text-foreground/80 hover:text-foreground transition-colors">
+                Developers
               </a>
               <div className="flex flex-col space-y-2 pt-4">
                 <Button variant="ghost">Sign In</Button>
