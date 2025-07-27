@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { TrendingUp } from "lucide-react";
 import villaTulum from "@/assets/villa-tulum.jpg";
 import beachChalet from "@/assets/beach-chalet.jpg";
-import coworkingMallorca from "@/assets/coworking-mallorca.jpg";
+import coworkingParis from "@/assets/coworking-paris.jpg";
 
 const FeaturedInvestments = () => {
   const properties = [
@@ -32,15 +32,15 @@ const FeaturedInvestments = () => {
       image: beachChalet
     },
     {
-      type: "Commercial",
-      name: "Creative Coworking Space",
-      location: "Mallorca, Spain",
-      totalValue: 160000,
-      pricePerShare: 160, 
-      sharesLeft: 123,
-      fundingProgress: 88,
-      expectedReturn: 16.5,
-      image: coworkingMallorca
+      type: "Coliving",
+      name: "BOHO Creative Coliving Centre",
+      location: "Paris, France",
+      totalValue: 2200000,
+      pricePerShare: 2200, 
+      sharesLeft: 250,
+      fundingProgress: 75,
+      expectedReturn: 18.2,
+      image: coworkingParis
     }
   ];
 
