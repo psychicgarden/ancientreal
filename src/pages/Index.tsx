@@ -1,15 +1,15 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import FeaturedProperties from "@/components/FeaturedProperties";
-import InvestmentOptions from "@/components/InvestmentOptions";
+import FeaturedInvestments from "@/components/FeaturedInvestments";
+import TwoWaysToInvest from "@/components/TwoWaysToInvest";
 
 const Index = () => {
   return (
     <div className="min-h-screen">
       <Header />
       <Hero />
-      <FeaturedProperties />
-      <InvestmentOptions />
+      <FeaturedInvestments />
+      <TwoWaysToInvest />
     </div>
   );
 };
