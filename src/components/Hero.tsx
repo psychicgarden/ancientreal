@@ -13,13 +13,6 @@ const Hero = () => {
       {/* Content */}
       <div className="relative z-10 container mx-auto px-6 lg:px-8 text-center">
         <div className="max-w-4xl mx-auto">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-accent-foreground/10 backdrop-blur-sm border border-accent-foreground/20 rounded-full px-6 py-3 mb-8">
-            <TrendingUp className="w-4 h-4 text-gold" />
-            <span className="text-accent-foreground text-sm font-medium">
-              🚀 2025 Snapshot — Borderless Mortgages Go On-Chain
-            </span>
-          </div>
 
           {/* Main Headline */}
           <h1 className="text-accent-foreground mb-6">
