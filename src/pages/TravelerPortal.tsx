@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Search, MapPin, Calendar, Users, Wallet, Gift } from "lucide-react";
+import villaBahia from "@/assets/villa-bahia.jpg";
+import villaMexico from "@/assets/villa-mexico.jpg";
+import villaGreece from "@/assets/villa-greece.jpg";
 
 const TravelerPortal = () => {
   return (
@@ -105,19 +108,77 @@ const TravelerPortal = () => {
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">Featured Stays</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <Card key={i} className="bg-gradient-card border-accent/20 overflow-hidden">
-                <div className="aspect-square bg-muted"></div>
-                <CardContent className="p-4">
-                  <h3 className="font-semibold mb-1">Luxury Villa #{i}</h3>
-                  <p className="text-sm text-muted-foreground mb-2">Tropical Paradise • 4.9★</p>
-                  <div className="flex justify-between items-center">
-                    <span className="font-semibold">$200/night</span>
-                    <span className="text-xs text-gold">Crypto accepted</span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            <Card className="bg-gradient-card border-accent/20 overflow-hidden">
+              <div className="aspect-square bg-cover bg-center" style={{ backgroundImage: `url(${villaBahia})` }}></div>
+              <CardContent className="p-4">
+                <h3 className="font-semibold mb-1">Oceanfront Villa Bahia</h3>
+                <p className="text-sm text-muted-foreground mb-2">Salvador, Brazil • 4.9★ (47 reviews)</p>
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold">$320/night</span>
+                  <span className="text-xs text-gold">Crypto accepted</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-card border-accent/20 overflow-hidden">
+              <div className="aspect-square bg-cover bg-center" style={{ backgroundImage: `url(${villaMexico})` }}></div>
+              <CardContent className="p-4">
+                <h3 className="font-semibold mb-1">Colonial Villa Tulum</h3>
+                <p className="text-sm text-muted-foreground mb-2">Tulum, Mexico • 4.8★ (32 reviews)</p>
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold">$280/night</span>
+                  <span className="text-xs text-gold">DPN tokens 10% off</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-card border-accent/20 overflow-hidden">
+              <div className="aspect-square bg-cover bg-center" style={{ backgroundImage: `url(${villaGreece})` }}></div>
+              <CardContent className="p-4">
+                <h3 className="font-semibold mb-1">Cliffside Villa Santorini</h3>
+                <p className="text-sm text-muted-foreground mb-2">Oia, Greece • 5.0★ (89 reviews)</p>
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold">$450/night</span>
+                  <span className="text-xs text-gold">Investment credits</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-card border-accent/20 overflow-hidden">
+              <div className="aspect-square bg-muted"></div>
+              <CardContent className="p-4">
+                <h3 className="font-semibold mb-1">Beach House Mykonos</h3>
+                <p className="text-sm text-muted-foreground mb-2">Mykonos, Greece • 4.7★ (23 reviews)</p>
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold">$380/night</span>
+                  <span className="text-xs text-gold">Crypto accepted</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-card border-accent/20 overflow-hidden">
+              <div className="aspect-square bg-muted"></div>
+              <CardContent className="p-4">
+                <h3 className="font-semibold mb-1">Jungle Lodge Costa Rica</h3>
+                <p className="text-sm text-muted-foreground mb-2">Manuel Antonio, CR • 4.9★ (61 reviews)</p>
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold">$220/night</span>
+                  <span className="text-xs text-gold">Stablecoin discount</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-card border-accent/20 overflow-hidden">
+              <div className="aspect-square bg-muted"></div>
+              <CardContent className="p-4">
+                <h3 className="font-semibold mb-1">Desert Oasis Morocco</h3>
+                <p className="text-sm text-muted-foreground mb-2">Marrakech, Morocco • 4.8★ (38 reviews)</p>
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold">$195/night</span>
+                  <span className="text-xs text-gold">Travel credits</span>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>

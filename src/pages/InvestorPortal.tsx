@@ -2,6 +2,9 @@ import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp, PieChart, DollarSign, BarChart3 } from "lucide-react";
+import villaBahia from "@/assets/villa-bahia.jpg";
+import villaMexico from "@/assets/villa-mexico.jpg";
+import villaGreece from "@/assets/villa-greece.jpg";
 
 const InvestorPortal = () => {
   return (
@@ -85,22 +88,68 @@ const InvestorPortal = () => {
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">Active Property Campaigns</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3].map((i) => (
-              <Card key={i} className="bg-gradient-card border-accent/20">
-                <CardContent className="p-6">
-                  <div className="aspect-video bg-muted rounded-lg mb-4"></div>
-                  <h3 className="text-xl font-semibold mb-2">Premium Villa #{i}</h3>
-                  <p className="text-muted-foreground mb-4">Luxury property in tropical paradise</p>
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="text-sm text-muted-foreground">Funded: 75%</span>
-                    <span className="text-sm font-semibold">$2.5M Target</span>
-                  </div>
-                  <Button className="w-full" variant="default">
-                    Invest Now
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+            <Card className="bg-gradient-card border-accent/20">
+              <CardContent className="p-6">
+                <div className="aspect-video bg-cover bg-center rounded-lg mb-4" 
+                     style={{ backgroundImage: `url(${villaBahia})` }}></div>
+                <h3 className="text-xl font-semibold mb-2">Oceanfront Villa Bahia</h3>
+                <p className="text-muted-foreground mb-2">Salvador, Bahia, Brazil</p>
+                <p className="text-sm text-muted-foreground mb-4">Luxury beachfront property with infinity pool and private beach access</p>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-sm text-muted-foreground">Funded: 78%</span>
+                  <span className="text-sm font-semibold">$3.2M Target</span>
+                </div>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-sm text-muted-foreground">Min. Investment:</span>
+                  <span className="text-sm font-semibold text-gold">$1,000</span>
+                </div>
+                <Button className="w-full" variant="default">
+                  Invest Now
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-card border-accent/20">
+              <CardContent className="p-6">
+                <div className="aspect-video bg-cover bg-center rounded-lg mb-4" 
+                     style={{ backgroundImage: `url(${villaMexico})` }}></div>
+                <h3 className="text-xl font-semibold mb-2">Colonial Villa Tulum</h3>
+                <p className="text-muted-foreground mb-2">Tulum, Quintana Roo, Mexico</p>
+                <p className="text-sm text-muted-foreground mb-4">Traditional Mexican architecture with modern amenities in eco-paradise</p>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-sm text-muted-foreground">Funded: 65%</span>
+                  <span className="text-sm font-semibold">$2.8M Target</span>
+                </div>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-sm text-muted-foreground">Min. Investment:</span>
+                  <span className="text-sm font-semibold text-gold">$750</span>
+                </div>
+                <Button className="w-full" variant="default">
+                  Invest Now
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-card border-accent/20">
+              <CardContent className="p-6">
+                <div className="aspect-video bg-cover bg-center rounded-lg mb-4" 
+                     style={{ backgroundImage: `url(${villaGreece})` }}></div>
+                <h3 className="text-xl font-semibold mb-2">Cliffside Villa Santorini</h3>
+                <p className="text-muted-foreground mb-2">Oia, Santorini, Greece</p>
+                <p className="text-sm text-muted-foreground mb-4">Iconic white and blue villa with panoramic Aegean Sea views</p>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-sm text-muted-foreground">Funded: 92%</span>
+                  <span className="text-sm font-semibold">$4.5M Target</span>
+                </div>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-sm text-muted-foreground">Min. Investment:</span>
+                  <span className="text-sm font-semibold text-gold">$1,500</span>
+                </div>
+                <Button className="w-full" variant="default">
+                  Invest Now
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
