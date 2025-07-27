@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { TrendingUp } from "lucide-react";
-import villaTulum from "@/assets/villa-tulum.jpg";
+import loftBahia from "@/assets/loft-bahia.jpg";
 import beachChalet from "@/assets/beach-chalet.jpg";
 import coworkingParis from "@/assets/coworking-paris.jpg";
 
@@ -18,7 +18,7 @@ const FeaturedInvestments = () => {
       sharesLeft: 234,
       fundingProgress: 77,
       expectedReturn: 14.2,
-      image: villaTulum
+      image: loftBahia
     },
     {
       type: "Chalet", 
