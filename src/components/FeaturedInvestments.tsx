@@ -3,6 +3,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { TrendingUp } from "lucide-react";
+import villaTulum from "@/assets/villa-tulum.jpg";
+import desertOasisBahia from "@/assets/desert-oasis-bahia.jpg";
+import coworkingMallorca from "@/assets/coworking-mallorca.jpg";
 
 const FeaturedInvestments = () => {
   const properties = [
@@ -15,7 +18,7 @@ const FeaturedInvestments = () => {
       sharesLeft: 234,
       fundingProgress: 77,
       expectedReturn: 14.2,
-      image: "/placeholder.svg"
+      image: villaTulum
     },
     {
       type: "House", 
@@ -26,7 +29,7 @@ const FeaturedInvestments = () => {
       sharesLeft: 456,
       fundingProgress: 54,
       expectedReturn: 11.8,
-      image: "/placeholder.svg"
+      image: desertOasisBahia
     },
     {
       type: "Commercial",
@@ -37,7 +40,7 @@ const FeaturedInvestments = () => {
       sharesLeft: 123,
       fundingProgress: 88,
       expectedReturn: 16.5,
-      image: "/placeholder.svg"
+      image: coworkingMallorca
     }
   ];
 
@@ -59,7 +62,12 @@ const FeaturedInvestments = () => {
           {properties.map((property, index) => (
             <Card key={index} className="bg-gradient-card border-accent/20">
               <CardContent className="p-6">
-                <div className="aspect-video bg-muted rounded-lg mb-4 relative">
+                <div className="aspect-video bg-muted rounded-lg mb-4 relative overflow-hidden">
+                  <img 
+                    src={property.image} 
+                    alt={property.name}
+                    className="w-full h-full object-cover"
+                  />
                   <Badge className="absolute top-2 right-2 bg-accent text-accent-foreground">
                     {property.type}
                   </Badge>
