@@ -12,7 +12,7 @@ const FeaturedInvestments = () => {
     {
       type: "Loft",
       name: "Art Deco Loft",
-      location: "Tulum, Mexico",
+      location: "Bahia, Brazil",
       totalValue: 150000,
       pricePerShare: 150,
       sharesLeft: 234,
