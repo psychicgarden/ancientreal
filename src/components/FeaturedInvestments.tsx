@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { TrendingUp } from "lucide-react";
 import villaTulum from "@/assets/villa-tulum.jpg";
-import desertOasisBahia from "@/assets/desert-oasis-bahia.jpg";
+import beachChalet from "@/assets/beach-chalet.jpg";
 import coworkingMallorca from "@/assets/coworking-mallorca.jpg";
 
 const FeaturedInvestments = () => {
@@ -21,15 +21,15 @@ const FeaturedInvestments = () => {
       image: villaTulum
     },
     {
-      type: "House", 
-      name: "Modern Desert Oasis",
-      location: "Bahia, Brazil", 
-      totalValue: 140000,
-      pricePerShare: 140,
-      sharesLeft: 456,
-      fundingProgress: 54,
-      expectedReturn: 11.8,
-      image: desertOasisBahia
+      type: "Chalet", 
+      name: "Seaside Beach Chalet",
+      location: "Maldives", 
+      totalValue: 180000,
+      pricePerShare: 180,
+      sharesLeft: 320,
+      fundingProgress: 62,
+      expectedReturn: 13.5,
+      image: beachChalet
     },
     {
       type: "Commercial",
