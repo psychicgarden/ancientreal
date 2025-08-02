@@ -149,9 +149,11 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       // Simulate blockchain transaction delay
       await new Promise(resolve => setTimeout(resolve, 3000 + Math.random() * 2000));
 
+      const txHash = "0x" + Math.random().toString(16).slice(2, 18);
+      
       toast({
         title: "Purchase Successful!",
-        description: "Success! You now own 100 mortgage tokens!",
+        description: `Success! You now own 100 mortgage tokens! Tx: ${txHash}`,
       });
     } catch (error: any) {
       console.error('Error purchasing tokens:', error);
