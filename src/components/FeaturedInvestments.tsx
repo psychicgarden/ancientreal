@@ -27,9 +27,10 @@ const FeaturedInvestments = () => {
   const properties = [
     {
       type: "🏝️ Join the Mazunte Village",
-      name: "Founding Citizen Opportunity",
-      location: "Mexico Archipelago",
+      name: "Art Deco Loft",
+      location: "Mazunte, Mexico",
       totalValue: isConnected ? mazunteData.totalValue : 150000,
+      listPrice: 150000,
       downPayment: isConnected ? mazunteData.downPayment : 30000,
       monthlyPayment: isConnected ? mazunteData.monthlyPayment : 1456,
       monthlyRent: 2400,
@@ -46,13 +47,14 @@ const FeaturedInvestments = () => {
     {
       type: "Villa", 
       name: "Ocean Villa Retreat",
-      location: "Maldives", 
-      totalValue: 280000,
-      downPayment: 56000,
-      monthlyPayment: 2712,
-      monthlyRent: 3800,
-      monthlyProfit: 1088,
-      networkValue: 873600, // 280k * 1.12^10
+      location: "Bahia, Brazil", 
+      totalValue: 130000,
+      listPrice: 130000,
+      downPayment: 26000,
+      monthlyPayment: 1264,
+      monthlyRent: 1800,
+      monthlyProfit: 536,
+      networkValue: 405600, // 130k * 1.12^10
       propertiesSold: 8,
       totalProperties: 12,
       mortgageTerm: "10 years",
@@ -66,6 +68,7 @@ const FeaturedInvestments = () => {
       name: "Urban Creative Residence",
       location: "Paris, France",
       totalValue: 450000,
+      listPrice: 450000,
       downPayment: 90000, 
       monthlyPayment: 4370,
       monthlyRent: 5200,
@@ -134,12 +137,16 @@ const FeaturedInvestments = () => {
                   <div className="space-y-4 mb-6">
                     {/* Network Investment */}
                     <div className="bg-card/50 p-4 rounded-lg border">
-                      <h4 className="font-semibold mb-3">NETWORK INVESTMENT</h4>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex justify-between">
-                          <span>Citizenship Cost:</span>
-                          <span className="font-semibold">${property.downPayment.toLocaleString()} (founding member rate)</span>
-                        </div>
+                       <h4 className="font-semibold mb-3">NETWORK INVESTMENT</h4>
+                       <div className="space-y-2 text-sm">
+                         <div className="flex justify-between">
+                           <span>List Price:</span>
+                           <span className="font-semibold">${property.listPrice.toLocaleString()}</span>
+                         </div>
+                         <div className="flex justify-between">
+                           <span>Citizenship Cost:</span>
+                           <span className="font-semibold">${property.downPayment.toLocaleString()} (founding member rate)</span>
+                         </div>
                         <div className="flex justify-between">
                           <span>Monthly Network Yield:</span>
                           <span className="font-semibold text-green-600">${property.monthlyProfit}</span>
