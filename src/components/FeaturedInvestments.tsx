@@ -123,37 +123,6 @@ const FeaturedInvestments = () => {
 
                 {property.isVillage ? (
                   <div className="space-y-4 mb-6">
-                    {/* Network Citizenship Benefits */}
-                    <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 p-4 rounded-lg border">
-                      <h4 className="font-semibold mb-3">🌍 NETWORK CITIZENSHIP BENEFITS</h4>
-                      <div className="space-y-1 text-sm">
-                        <div>✅ ${property.monthlyProfit}/month profit from Day 1</div>
-                        <div>✅ Stay in any Ancient property worldwide</div>
-                        <div>✅ Governance rights in village decisions</div>
-                        <div>✅ Profit sharing across entire network</div>
-                        <div>✅ Early access to new village launches</div>
-                      </div>
-                    </div>
-
-                    {/* Immediate Cash Flow */}
-                    <div className="bg-card/50 p-4 rounded-lg border">
-                      <h4 className="font-semibold mb-3">IMMEDIATE CASH FLOW</h4>
-                      <div className="flex justify-between items-center text-lg">
-                        <div className="text-center">
-                          <div className="text-green-600 font-bold">${property.monthlyRent}</div>
-                          <div className="text-xs text-muted-foreground">Monthly Rent</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-red-600 font-bold">-${property.monthlyPayment}</div>
-                          <div className="text-xs text-muted-foreground">Mortgage</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-primary font-bold">= +${property.monthlyProfit}</div>
-                          <div className="text-xs text-muted-foreground">PROFIT/Month</div>
-                        </div>
-                      </div>
-                    </div>
-
                     {/* Network Investment */}
                     <div className="bg-card/50 p-4 rounded-lg border">
                       <h4 className="font-semibold mb-3">NETWORK INVESTMENT</h4>
@@ -173,6 +142,25 @@ const FeaturedInvestments = () => {
                         <div className="flex justify-between">
                           <span>Access:</span>
                           <span className="font-semibold">Entire Ancient archipelago</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Immediate Cash Flow */}
+                    <div className="bg-card/50 p-4 rounded-lg border">
+                      <h4 className="font-semibold mb-3">IMMEDIATE CASH FLOW</h4>
+                      <div className="flex justify-between items-center text-lg">
+                        <div className="text-center">
+                          <div className="text-green-600 font-bold">${property.monthlyRent}</div>
+                          <div className="text-xs text-muted-foreground">Monthly Rent</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-red-600 font-bold">-${property.monthlyPayment}</div>
+                          <div className="text-xs text-muted-foreground">Mortgage</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-primary font-bold">= +${property.monthlyProfit}</div>
+                          <div className="text-xs text-muted-foreground">PROFIT/Month</div>
                         </div>
                       </div>
                     </div>
