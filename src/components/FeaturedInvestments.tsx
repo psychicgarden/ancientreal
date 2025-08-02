@@ -21,14 +21,14 @@ const FeaturedInvestments = () => {
       image: villaTulum
     },
     {
-      type: "Chalet", 
-      name: "Seaside Beach Chalet",
-      location: "Maldives", 
-      totalValue: 180000,
-      pricePerShare: 180,
-      sharesLeft: 320,
-      fundingProgress: 62,
-      expectedReturn: 13.5,
+      type: "Atelier", 
+      name: "Coastal Atelier",
+      location: "Mazunte, Mexico", 
+      totalValue: 150000,
+      downPayment: 30000,
+      monthlyPayment: 950,
+      occupancyRate: 92,
+      expectedReturn: 16.8,
       image: beachChalet
     },
     {
@@ -48,13 +48,15 @@ const FeaturedInvestments = () => {
     <section className="py-16 px-6">
       <div className="container mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Featured Investment
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            🏡 Dream Homes Available
             <br />
-            Opportunities
+            <span className="text-foreground">With Just 20% Down</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Discover hand-selected premium properties that blend luxury living with smart investment returns. Each property is carefully vetted for quality, location, and growth potential.
+            <strong className="text-primary">Don't wait for "someday"</strong> - Your perfect home is here, waiting for you. 
+            These aren't just properties, they're <em>lifestyle investments</em> in your future happiness. 
+            <span className="text-accent font-semibold">Starting from just $30K down.</span>
           </p>
         </div>
 
@@ -73,44 +75,97 @@ const FeaturedInvestments = () => {
                   </Badge>
                 </div>
                 
-                <div className="mb-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm text-muted-foreground">Funding Progress</span>
-                    <span className="text-sm font-semibold">{property.fundingProgress}% Sold</span>
-                  </div>
-                  <Progress value={property.fundingProgress} className="h-2" />
-                </div>
+                {property.downPayment ? (
+                  // Mortgage format for Coastal Atelier
+                  <>
+                    <div className="mb-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm text-muted-foreground">🔥 High Demand</span>
+                        <span className="text-sm font-semibold text-orange-500">{property.occupancyRate}% Booked</span>
+                      </div>
+                      <Progress value={property.occupancyRate} className="h-2" />
+                    </div>
 
-                <h3 className="text-xl font-semibold mb-1">{property.name}</h3>
-                <p className="text-muted-foreground mb-4">{property.location}</p>
+                    <h3 className="text-xl font-semibold mb-1">{property.name}</h3>
+                    <p className="text-muted-foreground mb-4">📍 {property.location}</p>
 
-                <div className="space-y-2 mb-4">
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Total Value:</span>
-                    <span className="font-semibold">${property.totalValue.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Per Share:</span>
-                    <span className="font-semibold">${property.pricePerShare}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Shares Left:</span>
-                    <span className="font-semibold">{property.sharesLeft} shares left</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-sm text-muted-foreground">Expected Return:</span>
-                    <span className="font-semibold text-green-500">{property.expectedReturn}% expected return</span>
-                  </div>
-                </div>
+                    <div className="space-y-3 mb-6">
+                      <div className="bg-gradient-to-r from-primary/10 to-accent/10 p-4 rounded-lg border-l-4 border-accent">
+                        <div className="flex justify-between items-center">
+                          <span className="text-lg font-bold text-primary">Total Price:</span>
+                          <span className="text-2xl font-bold">${property.totalValue.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between items-center mt-2">
+                          <span className="text-sm text-muted-foreground">You only need:</span>
+                          <span className="text-xl font-bold text-accent">${property.downPayment.toLocaleString()} down</span>
+                        </div>
+                        <div className="flex justify-between items-center mt-1">
+                          <span className="text-sm text-muted-foreground">Monthly payment:</span>
+                          <span className="text-lg font-semibold">${property.monthlyPayment}/mo</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-between items-center p-3 bg-green-50 dark:bg-green-950/20 rounded-lg">
+                        <span className="text-sm font-medium">💰 ROI Potential:</span>
+                        <span className="font-bold text-green-600 dark:text-green-400">{property.expectedReturn}% annually</span>
+                      </div>
+                    </div>
 
-                <div className="space-y-2">
-                  <Button className="w-full" variant="default">
-                    Invest Now
-                  </Button>
-                  <Button className="w-full" variant="outline">
-                    20% Down Purchase
-                  </Button>
-                </div>
+                    <div className="space-y-3">
+                      <Button className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white font-bold py-3 shadow-lg transform hover:scale-105 transition-all duration-200" size="lg">
+                        🚀 Secure This Dream Home NOW
+                      </Button>
+                      <Button className="w-full" variant="outline" size="lg">
+                        💳 Apply for Mortgage
+                      </Button>
+                      <p className="text-xs text-center text-muted-foreground">
+                        ⏰ <strong>Limited time:</strong> Lock in today's rates before they rise
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  // Investment format for other properties
+                  <>
+                    <div className="mb-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm text-muted-foreground">Funding Progress</span>
+                        <span className="text-sm font-semibold">{property.fundingProgress}% Sold</span>
+                      </div>
+                      <Progress value={property.fundingProgress} className="h-2" />
+                    </div>
+
+                    <h3 className="text-xl font-semibold mb-1">{property.name}</h3>
+                    <p className="text-muted-foreground mb-4">{property.location}</p>
+
+                    <div className="space-y-2 mb-4">
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">Total Value:</span>
+                        <span className="font-semibold">${property.totalValue.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">Per Share:</span>
+                        <span className="font-semibold">${property.pricePerShare}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">Shares Left:</span>
+                        <span className="font-semibold">{property.sharesLeft} shares left</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">Expected Return:</span>
+                        <span className="font-semibold text-green-500">{property.expectedReturn}% expected return</span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Button className="w-full" variant="default">
+                        Invest Now
+                      </Button>
+                      <Button className="w-full" variant="outline">
+                        20% Down Purchase
+                      </Button>
+                    </div>
+                  </>
+                )}
               </CardContent>
             </Card>
           ))}
