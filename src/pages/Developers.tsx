@@ -31,7 +31,7 @@ const Developers = () => {
       roi: "41%",
       timeline: "18 months",
       backers: 234,
-      image: "/placeholder.svg",
+      image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&h=600&fit=crop",
       tags: ["Real Estate", "Eco-Tourism", "Presold"],
       status: "completed",
       developerProfit: 350000,
@@ -47,7 +47,7 @@ const Developers = () => {
       roi: "63%",
       timeline: "24 months",
       backers: 456,
-      image: "/placeholder.svg",
+      image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=800&h=600&fit=crop",
       tags: ["Smart City", "IoT", "Blockchain"],
       status: "completed",
       developerProfit: 750000,
@@ -63,7 +63,7 @@ const Developers = () => {
       roi: "42%",
       timeline: "15 months",
       backers: 189,
-      image: "/placeholder.svg",
+      image: "https://images.unsplash.com/photo-1493397212122-2b85dda8106b?w=800&h=600&fit=crop",
       tags: ["Renewable Energy", "Sustainability", "Villas"],
       status: "completed",
       developerProfit: 270000,
@@ -79,7 +79,7 @@ const Developers = () => {
       roi: "29%",
       timeline: "12 months",
       backers: 167,
-      image: "/placeholder.svg",
+      image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop",
       tags: ["Coliving", "Remote Work", "Community"],
       status: "in-progress",
       developerProfit: 180000,
@@ -220,8 +220,12 @@ const Developers = () => {
                   </div>
                 )}
                 
-                <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 rounded-t-lg flex items-center justify-center relative">
-                  <Rocket className="h-12 w-12 text-primary/60" />
+                <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 rounded-t-lg flex items-center justify-center relative overflow-hidden">
+                  <img 
+                    src={project.image} 
+                    alt={project.title}
+                    className="w-full h-full object-cover"
+                  />
                   {/* ROI overlay */}
                   <div className="absolute bottom-3 left-3 bg-green-600/90 text-white px-2 py-1 rounded text-sm font-bold">
                     +{project.roi} ROI
