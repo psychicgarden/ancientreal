@@ -15,21 +15,37 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
   const [investment, setInvestment] = useState([30000]);
   const { isConnected, purchaseTokens, isPurchasing } = useWallet();
 
-  // Investment calculations - Mortgage Model
+  // Investment calculations - Dynamic Mortgage Model
   const investmentAmount = investment[0];
   const propertyValue = 150000;
   const monthlyRent = 2400;
-  const monthlyMortgage = 1456;
-  const monthlyProfit = monthlyRent - monthlyMortgage; // $943 fixed cash flow
+  
+  // Calculate mortgage payment based on down payment
+  const loanAmount = propertyValue - investmentAmount;
+  const annualInterestRate = 0.07; // 7% annual rate
+  const monthlyInterestRate = annualInterestRate / 12;
+  const loanTermMonths = 30 * 12; // 30 years
+  
+  // Mortgage payment formula: M = P[r(1+r)^n]/[(1+r)^n-1]
+  const monthlyMortgage = loanAmount > 0 
+    ? (loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, loanTermMonths)) / 
+      (Math.pow(1 + monthlyInterestRate, loanTermMonths) - 1)
+    : 0;
+    
+  const monthlyProfit = monthlyRent - monthlyMortgage;
   
   // Calculate mortgage financing returns
   const annualProfit = monthlyProfit * 12;
   const annualYield = (annualProfit / investmentAmount) * 100;
   
-  // 10-year projections (12% property growth, mortgage pays down)
+  // 10-year projections (12% property growth, mortgage balance after 10 years)
   const tenYearPropertyValue = propertyValue * Math.pow(1.12, 10);
-  const remainingMortgage = propertyValue - investmentAmount; // Simplified: full mortgage minus down payment
-  const tenYearEquity = tenYearPropertyValue - remainingMortgage;
+  const paymentsIn10Years = 10 * 12;
+  const remainingMortgage = loanAmount > 0 
+    ? loanAmount * Math.pow(1 + monthlyInterestRate, paymentsIn10Years) - 
+      monthlyMortgage * ((Math.pow(1 + monthlyInterestRate, paymentsIn10Years) - 1) / monthlyInterestRate)
+    : 0;
+  const tenYearEquity = tenYearPropertyValue - Math.max(0, remainingMortgage);
   const tenYearProfit = tenYearEquity - investmentAmount;
 
   return (
