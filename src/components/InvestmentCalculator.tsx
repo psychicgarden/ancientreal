@@ -140,13 +140,13 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <Calculator className="w-4 h-4 text-purple-500" />
-                  <span className="font-medium">Interest Saved</span>
+                  <span className="font-medium">Interest Eliminated</span>
                 </div>
                 <div className="text-2xl font-bold text-purple-600">
-                  ${Math.round(totalInterestSaved).toLocaleString()}
+                  ${Math.round(baselineTotalInterest - totalInterest).toLocaleString()}
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  vs. $30K down payment
+                  {investmentAmount >= 150000 ? "100% Interest-Free" : "vs. baseline scenario"}
                 </div>
               </CardContent>
             </Card>
@@ -161,11 +161,28 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
                   {trueAnnualROI.toFixed(1)}%
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  Total return on investment
+                  {investmentAmount >= 150000 ? "Risk-free returns" : "Total return on investment"}
                 </div>
               </CardContent>
             </Card>
           </div>
+
+          {/* Investment Security Indicator for 100% down */}
+          {investmentAmount >= 150000 && (
+            <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
+              <CardContent className="p-4">
+                <div className="text-center">
+                  <div className="text-lg font-bold text-green-700 mb-2">
+                    🛡️ Maximum Security Investment
+                  </div>
+                  <div className="text-sm text-green-600">
+                    • Zero mortgage risk • Maximum interest savings: ${Math.round(baselineTotalInterest).toLocaleString()} 
+                    • Guaranteed cash flow • Full property ownership rights
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* 10-Year Projection */}
           <Card className="bg-gradient-to-r from-primary/5 to-accent/5">
