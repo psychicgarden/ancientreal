@@ -207,7 +207,7 @@ const FeaturedInvestments = () => {
                       <Button 
                         className="w-full" 
                         size="lg"
-                        onClick={purchaseTokens}
+                        onClick={() => purchaseTokens(property.downPayment)}
                         disabled={isPurchasing || !isConnected}
                       >
                         {isPurchasing 
@@ -230,7 +230,7 @@ const FeaturedInvestments = () => {
                     <Button 
                       className="w-full" 
                       size="lg"
-                      onClick={purchaseTokens}
+                      onClick={() => purchaseTokens()}
                       disabled={isPurchasing || !isConnected}
                     >
                       {isPurchasing 

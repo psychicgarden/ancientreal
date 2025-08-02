@@ -7,7 +7,7 @@ interface WalletContextType {
   isLoading: boolean;
   connectWallet: () => Promise<void>;
   disconnectWallet: () => void;
-  purchaseTokens: () => Promise<void>;
+  purchaseTokens: (investmentAmount?: number) => Promise<void>;
   isPurchasing: boolean;
 }
 
@@ -128,7 +128,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     });
   };
 
-  const purchaseTokens = async () => {
+  const purchaseTokens = async (investmentAmount: number = 30000) => {
     if (!isConnected) {
       toast({
         title: "Wallet Not Connected",
@@ -141,25 +141,41 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setIsPurchasing(true);
     
     try {
-      toast({
-        title: "Processing Transaction",
-        description: "Processing transaction...",
-      });
-
-      // Simulate blockchain transaction delay
-      await new Promise(resolve => setTimeout(resolve, 3000 + Math.random() * 2000));
-
-      const txHash = "0x" + Math.random().toString(16).slice(2, 18);
+      // Calculate token details
+      const propertyValue = 150000;
+      const monthlyProfit = Math.round(((investmentAmount / propertyValue) * 943));
+      const tokens = investmentAmount; // 1 token per $1 invested
       
       toast({
-        title: "Purchase Successful!",
-        description: `Success! You now own 100 mortgage tokens! Tx: ${txHash}`,
+        title: "Processing Transaction",
+        description: `Purchasing ${tokens.toLocaleString()} MAZUNTE tokens for $${investmentAmount.toLocaleString()}...`,
+      });
+
+      // Simulate smart contract interaction with Avalanche Fuji
+      await new Promise(resolve => setTimeout(resolve, 3000 + Math.random() * 2000));
+
+      // Generate realistic transaction hash
+      const txHash = "0x" + Math.random().toString(16).slice(2, 66);
+      
+      toast({
+        title: "Success! You are now a Mazunte Village Founding Citizen",
+        description: `Investment: $${investmentAmount.toLocaleString()} | Monthly Yield: $${monthlyProfit} | Village Access: Activated`,
+        action: (
+          <a 
+            href={`https://testnet.snowtrace.io/tx/${txHash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 hover:underline text-sm"
+          >
+            View on Avalanche Explorer
+          </a>
+        ),
       });
     } catch (error: any) {
       console.error('Error purchasing tokens:', error);
       toast({
         title: "Transaction Failed",
-        description: error.message || "Failed to purchase tokens",
+        description: error.message || "Failed to purchase MAZUNTE village tokens",
         variant: "destructive",
       });
     } finally {

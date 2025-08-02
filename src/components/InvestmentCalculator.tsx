@@ -141,7 +141,7 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
             className="w-full" 
             size="lg"
             onClick={() => {
-              purchaseTokens();
+              purchaseTokens(investmentAmount);
               onOpenChange(false);
             }}
             disabled={isPurchasing || !isConnected}
@@ -150,7 +150,7 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
               ? "Processing..." 
               : !isConnected 
                 ? "Connect Wallet to Secure Investment"
-                : "Secure This Investment"
+                : `Secure $${investmentAmount.toLocaleString()} Investment`
             }
           </Button>
         </div>
