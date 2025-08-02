@@ -4,6 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Header from "@/components/Header"; // Fixed import
+import baliJungleResort from "@/assets/bali-jungle-resort.jpg";
+import ecoSmartCity from "@/assets/eco-smart-city.jpg";
+import bohoColivingSpace from "@/assets/boho-coliving-space.jpg";
 import { 
   Rocket, 
   Users, 
@@ -31,7 +34,7 @@ const Developers = () => {
       roi: "41%",
       timeline: "18 months",
       backers: 234,
-      image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&h=600&fit=crop",
+      image: baliJungleResort,
       tags: ["Real Estate", "Eco-Tourism", "Presold"],
       status: "completed",
       developerProfit: 350000,
@@ -47,7 +50,7 @@ const Developers = () => {
       roi: "63%",
       timeline: "24 months",
       backers: 456,
-      image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=800&h=600&fit=crop",
+      image: ecoSmartCity,
       tags: ["Smart City", "IoT", "Blockchain"],
       status: "completed",
       developerProfit: 750000,
@@ -79,7 +82,7 @@ const Developers = () => {
       roi: "29%",
       timeline: "12 months",
       backers: 167,
-      image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop",
+      image: bohoColivingSpace,
       tags: ["Coliving", "Remote Work", "Community"],
       status: "in-progress",
       developerProfit: 180000,
