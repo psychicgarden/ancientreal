@@ -7,121 +7,157 @@ import Header from "@/components/Header"; // Fixed import
 import baliJungleResort from "@/assets/bali-jungle-resort.jpg";
 import ecoSmartCity from "@/assets/eco-smart-city.jpg";
 import bohoColivingSpace from "@/assets/boho-coliving-space.jpg";
-import { Rocket, Users, DollarSign, Code, Shield, Star, Clock, TrendingUp, Award, Upload, Vote, Zap } from "lucide-react";
+import { 
+  Rocket, 
+  Users, 
+  DollarSign, 
+  Code, 
+  Shield, 
+  Star,
+  Clock,
+  TrendingUp,
+  Award,
+  Upload,
+  Vote,
+  Zap
+} from "lucide-react";
+
 const Developers = () => {
-  const featuredProjects = [{
-    id: 1,
-    title: "Bali Eco Resort Complex",
-    creator: "Tropical Builders Co.",
-    description: "Luxury eco-resort with 45 units in Canggu. Sold out in 4 days after DAO funding.",
-    initialFunding: 850000,
-    currentValue: 1200000,
-    roi: "41%",
-    timeline: "18 months",
-    backers: 234,
-    image: baliJungleResort,
-    tags: ["Real Estate", "Eco-Tourism", "Presold"],
-    status: "completed",
-    developerProfit: 350000,
-    developerStory: "Zero upfront cost. We provided full funding after community validation."
-  }, {
-    id: 2,
-    title: "Smart City Infrastructure",
-    creator: "NextGen Urban",
-    description: "IoT-enabled smart city project with blockchain integration for 200+ residential units",
-    initialFunding: 1200000,
-    currentValue: 1950000,
-    roi: "63%",
-    timeline: "24 months",
-    backers: 456,
-    image: ecoSmartCity,
-    tags: ["Smart City", "IoT", "Blockchain"],
-    status: "completed",
-    developerProfit: 750000,
-    developerStory: "Community funded, DAO approved. Developer kept 60% equity with zero risk."
-  }, {
-    id: 3,
-    title: "Renewable Energy Villas",
-    creator: "GreenTech Developments",
-    description: "Self-sustaining villa complex with solar integration. 90% presold in 3 months.",
-    initialFunding: 650000,
-    currentValue: 920000,
-    roi: "42%",
-    timeline: "15 months",
-    backers: 189,
-    image: "https://images.unsplash.com/photo-1493397212122-2b85dda8106b?w=800&h=600&fit=crop",
-    tags: ["Renewable Energy", "Sustainability", "Villas"],
-    status: "completed",
-    developerProfit: 270000,
-    developerStory: "From idea to fully funded in 45 days. No personal investment required."
-  }, {
-    id: 4,
-    title: "Digital Nomad Coliving Hub",
-    creator: "Remote Work Studios",
-    description: "Modern coliving spaces with integrated coworking. Currently 85% presold.",
-    initialFunding: 450000,
-    currentValue: 580000,
-    roi: "29%",
-    timeline: "12 months",
-    backers: 167,
-    image: bohoColivingSpace,
-    tags: ["Coliving", "Remote Work", "Community"],
-    status: "in-progress",
-    developerProfit: 180000,
-    developerStory: "DAO funding eliminated our biggest risk - we focus purely on building."
-  }];
-  const benefits = [{
-    icon: <DollarSign className="h-8 w-8" />,
-    title: "Instant Funding Access",
-    description: "Get funded within 24-48 hours of DAO approval. No lengthy bank processes or VC meetings."
-  }, {
-    icon: <Users className="h-8 w-8" />,
-    title: "Community-Driven",
-    description: "Real users vote and fund projects they want to see. Build with your future users from day one."
-  }, {
-    icon: <Shield className="h-8 w-8" />,
-    title: "Smart Contract Protection",
-    description: "Funds held in escrow smart contracts. Milestone-based releases ensure accountability."
-  }, {
-    icon: <Code className="h-8 w-8" />,
-    title: "Technical Validation",
-    description: "Our expert DAO members review code quality, technical feasibility, and innovation potential."
-  }, {
-    icon: <TrendingUp className="h-8 w-8" />,
-    title: "Growth Support",
-    description: "Get access to our network of advisors, marketing support, and partnership opportunities."
-  }, {
-    icon: <Award className="h-8 w-8" />,
-    title: "Revenue Sharing",
-    description: "Keep majority ownership while sharing success with your early supporters and the DAO."
-  }];
-  const howItWorks = [{
-    step: 1,
-    icon: <Upload className="h-6 w-6" />,
-    title: "Upload Project Blueprint",
-    description: "Share renderings, 3D models, videos, and design story to showcase your vision"
-  }, {
-    step: 2,
-    icon: <Shield className="h-6 w-6" />,
-    title: "Prove Ownership & Show Past Work",
-    description: "Upload deeds, contracts, permits, and portfolio of past builds with testimonials"
-  }, {
-    step: 3,
-    icon: <Users className="h-6 w-6" />,
-    title: "Create Presale Tiers & Set Goals",
-    description: "Token-gated or public presales for early backers with funding goals and milestones"
-  }, {
-    step: 4,
-    icon: <Vote className="h-6 w-6" />,
-    title: "DAO Vetting & Community Voting",
-    description: "Gain DAO approval, feedback, and ranking before funding unlocks"
-  }, {
-    step: 5,
-    icon: <Zap className="h-6 w-6" />,
-    title: "Get Funded & Build",
-    description: "Receive milestone-based funding and sell out in 4 days to 2 months"
-  }];
-  return <div className="min-h-screen bg-background">
+  const featuredProjects = [
+    {
+      id: 1,
+      title: "Bali Eco Resort Complex",
+      creator: "Tropical Builders Co.",
+      description: "Luxury eco-resort with 45 units in Canggu. Sold out in 4 days after DAO funding.",
+      initialFunding: 850000,
+      currentValue: 1200000,
+      roi: "41%",
+      timeline: "18 months",
+      backers: 234,
+      image: baliJungleResort,
+      tags: ["Real Estate", "Eco-Tourism", "Presold"],
+      status: "completed",
+      developerProfit: 350000,
+      developerStory: "Zero upfront cost. We provided full funding after community validation."
+    },
+    {
+      id: 2,
+      title: "Smart City Infrastructure",
+      creator: "NextGen Urban",
+      description: "IoT-enabled smart city project with blockchain integration for 200+ residential units",
+      initialFunding: 1200000,
+      currentValue: 1950000,
+      roi: "63%",
+      timeline: "24 months",
+      backers: 456,
+      image: ecoSmartCity,
+      tags: ["Smart City", "IoT", "Blockchain"],
+      status: "completed",
+      developerProfit: 750000,
+      developerStory: "Community funded, DAO approved. Developer kept 60% equity with zero risk."
+    },
+    {
+      id: 3,
+      title: "Renewable Energy Villas",
+      creator: "GreenTech Developments",
+      description: "Self-sustaining villa complex with solar integration. 90% presold in 3 months.",
+      initialFunding: 650000,
+      currentValue: 920000,
+      roi: "42%",
+      timeline: "15 months",
+      backers: 189,
+      image: "https://images.unsplash.com/photo-1493397212122-2b85dda8106b?w=800&h=600&fit=crop",
+      tags: ["Renewable Energy", "Sustainability", "Villas"],
+      status: "completed",
+      developerProfit: 270000,
+      developerStory: "From idea to fully funded in 45 days. No personal investment required."
+    },
+    {
+      id: 4,
+      title: "Digital Nomad Coliving Hub",
+      creator: "Remote Work Studios",
+      description: "Modern coliving spaces with integrated coworking. Currently 85% presold.",
+      initialFunding: 450000,
+      currentValue: 580000,
+      roi: "29%",
+      timeline: "12 months",
+      backers: 167,
+      image: bohoColivingSpace,
+      tags: ["Coliving", "Remote Work", "Community"],
+      status: "in-progress",
+      developerProfit: 180000,
+      developerStory: "DAO funding eliminated our biggest risk - we focus purely on building."
+    }
+  ];
+
+  const benefits = [
+    {
+      icon: <DollarSign className="h-8 w-8" />,
+      title: "Instant Funding Access",
+      description: "Get funded within 24-48 hours of DAO approval. No lengthy bank processes or VC meetings."
+    },
+    {
+      icon: <Users className="h-8 w-8" />,
+      title: "Community-Driven",
+      description: "Real users vote and fund projects they want to see. Build with your future users from day one."
+    },
+    {
+      icon: <Shield className="h-8 w-8" />,
+      title: "Smart Contract Protection",
+      description: "Funds held in escrow smart contracts. Milestone-based releases ensure accountability."
+    },
+    {
+      icon: <Code className="h-8 w-8" />,
+      title: "Technical Validation",
+      description: "Our expert DAO members review code quality, technical feasibility, and innovation potential."
+    },
+    {
+      icon: <TrendingUp className="h-8 w-8" />,
+      title: "Growth Support",
+      description: "Get access to our network of advisors, marketing support, and partnership opportunities."
+    },
+    {
+      icon: <Award className="h-8 w-8" />,
+      title: "Revenue Sharing",
+      description: "Keep majority ownership while sharing success with your early supporters and the DAO."
+    }
+  ];
+
+  const howItWorks = [
+    {
+      step: 1,
+      icon: <Upload className="h-6 w-6" />,
+      title: "Upload Project Blueprint",
+      description: "Share renderings, 3D models, videos, and design story to showcase your vision"
+    },
+    {
+      step: 2,
+      icon: <Shield className="h-6 w-6" />,
+      title: "Prove Ownership & Show Past Work",
+      description: "Upload deeds, contracts, permits, and portfolio of past builds with testimonials"
+    },
+    {
+      step: 3,
+      icon: <Users className="h-6 w-6" />,
+      title: "Create Presale Tiers & Set Goals",
+      description: "Token-gated or public presales for early backers with funding goals and milestones"
+    },
+    {
+      step: 4,
+      icon: <Vote className="h-6 w-6" />,
+      title: "DAO Vetting & Community Voting",
+      description: "Gain DAO approval, feedback, and ranking before funding unlocks"
+    },
+    {
+      step: 5,
+      icon: <Zap className="h-6 w-6" />,
+      title: "Get Funded & Build",
+      description: "Receive milestone-based funding and sell out in 4 days to 2 months"
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-background">
       <Header />
       
       {/* Hero Section */}
@@ -157,7 +193,7 @@ const Developers = () => {
                 <div className="text-muted-foreground">Projects Completed</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-accent">< 4 Weeks</div>
+                <div className="text-3xl font-bold text-accent">&lt; 1 Week</div>
                 <div className="text-muted-foreground">Average Sellout Time</div>
               </div>
               <div className="text-center">
@@ -183,17 +219,26 @@ const Developers = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-            {featuredProjects.map(project => <Card key={project.id} className="group hover:shadow-xl transition-all duration-300 border-border/50 hover:border-primary/20 relative overflow-hidden">
+            {featuredProjects.map((project) => (
+              <Card key={project.id} className="group hover:shadow-xl transition-all duration-300 border-border/50 hover:border-primary/20 relative overflow-hidden">
                 {/* Success badge for completed projects */}
-                {project.status === 'completed' && <div className="absolute top-4 right-4 z-10 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                {project.status === 'completed' && (
+                  <div className="absolute top-4 right-4 z-10 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
                     SOLD OUT
-                  </div>}
-                {project.status === 'in-progress' && <div className="absolute top-4 right-4 z-10 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                  </div>
+                )}
+                {project.status === 'in-progress' && (
+                  <div className="absolute top-4 right-4 z-10 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
                     85% PRESOLD
-                  </div>}
+                  </div>
+                )}
                 
                 <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 rounded-t-lg flex items-center justify-center relative overflow-hidden">
-                  <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+                  <img 
+                    src={project.image} 
+                    alt={project.title}
+                    className="w-full h-full object-cover"
+                  />
                   {/* ROI overlay */}
                   <div className="absolute bottom-3 left-3 bg-green-600/90 text-white px-2 py-1 rounded text-sm font-bold">
                     +{project.roi} ROI
@@ -249,16 +294,19 @@ const Developers = () => {
                   </div>
 
                   <div className="flex flex-wrap gap-1 mb-4">
-                    {project.tags.map(tag => <Badge key={tag} variant="secondary" className="text-xs">
+                    {project.tags.map((tag) => (
+                      <Badge key={tag} variant="secondary" className="text-xs">
                         {tag}
-                      </Badge>)}
+                      </Badge>
+                    ))}
                   </div>
 
                   <Button className="w-full" variant={project.status === 'completed' ? 'outline' : 'default'}>
                     {project.status === 'completed' ? 'View Case Study' : 'Track Progress'}
                   </Button>
                 </CardContent>
-              </Card>)}
+              </Card>
+            ))}
           </div>
         </div>
       </section>
@@ -274,7 +322,8 @@ const Developers = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-            {howItWorks.map((step, index) => <div key={step.step} className="text-center">
+            {howItWorks.map((step, index) => (
+              <div key={step.step} className="text-center">
                 <div className="relative mb-6">
                   <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 text-primary-foreground">
                     {step.icon}
@@ -282,13 +331,15 @@ const Developers = () => {
                   <div className="absolute -top-2 -right-2 w-8 h-8 bg-accent rounded-full flex items-center justify-center text-sm font-bold text-accent-foreground">
                     {step.step}
                   </div>
-                  {index < howItWorks.length - 1 && <div className="hidden lg:block absolute top-8 left-full w-full h-0.5 bg-border -translate-y-0.5" style={{
-                width: 'calc(100% - 2rem)'
-              }} />}
+                  {index < howItWorks.length - 1 && (
+                    <div className="hidden lg:block absolute top-8 left-full w-full h-0.5 bg-border -translate-y-0.5" 
+                         style={{ width: 'calc(100% - 2rem)' }} />
+                  )}
                 </div>
                 <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
                 <p className="text-muted-foreground">{step.description}</p>
-              </div>)}
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -304,7 +355,8 @@ const Developers = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {benefits.map((benefit, index) => <Card key={index} className="text-center hover:shadow-lg transition-all duration-300 border-border/50 hover:border-primary/20">
+            {benefits.map((benefit, index) => (
+              <Card key={index} className="text-center hover:shadow-lg transition-all duration-300 border-border/50 hover:border-primary/20">
                 <CardHeader>
                   <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 text-primary">
                     {benefit.icon}
@@ -314,7 +366,8 @@ const Developers = () => {
                 <CardContent>
                   <p className="text-muted-foreground">{benefit.description}</p>
                 </CardContent>
-              </Card>)}
+              </Card>
+            ))}
           </div>
         </div>
       </section>
@@ -464,6 +517,8 @@ const Developers = () => {
           </div>
         </div>
       </section>
-    </div>;
+    </div>
+  );
 };
+
 export default Developers;
