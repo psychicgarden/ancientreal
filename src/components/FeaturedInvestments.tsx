@@ -73,7 +73,7 @@ const FeaturedInvestments = () => {
       monthlyPayment: 4370,
       monthlyRent: 5200,
       monthlyProfit: 830,
-      networkValue: 1404000, // 450k * 1.12^10
+      networkValue: 679275, // 450k * 1.042^10 (4.2% annually)
       propertiesSold: 3,
       totalProperties: 8,
       mortgageTerm: "10 years",
