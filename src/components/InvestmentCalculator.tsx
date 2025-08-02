@@ -15,23 +15,22 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
   const [investment, setInvestment] = useState([30000]);
   const { isConnected, purchaseTokens, isPurchasing } = useWallet();
 
-  // Investment calculations
+  // Investment calculations - Mortgage Model
   const investmentAmount = investment[0];
   const propertyValue = 150000;
   const monthlyRent = 2400;
   const monthlyMortgage = 1456;
-  const baseMonthlyProfit = monthlyRent - monthlyMortgage; // $943
+  const monthlyProfit = monthlyRent - monthlyMortgage; // $943 fixed cash flow
   
-  // Calculate user's share based on investment
-  const ownershipPercentage = investmentAmount / propertyValue;
-  const monthlyProfit = baseMonthlyProfit * ownershipPercentage;
+  // Calculate mortgage financing returns
   const annualProfit = monthlyProfit * 12;
   const annualYield = (annualProfit / investmentAmount) * 100;
   
-  // 10-year projections (12% growth)
-  const tenYearValue = propertyValue * Math.pow(1.12, 10);
-  const tenYearOwnershipValue = tenYearValue * ownershipPercentage;
-  const tenYearProfit = tenYearOwnershipValue - investmentAmount;
+  // 10-year projections (12% property growth, mortgage pays down)
+  const tenYearPropertyValue = propertyValue * Math.pow(1.12, 10);
+  const remainingMortgage = propertyValue - investmentAmount; // Simplified: full mortgage minus down payment
+  const tenYearEquity = tenYearPropertyValue - remainingMortgage;
+  const tenYearProfit = tenYearEquity - investmentAmount;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -76,7 +75,7 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
                   ${Math.round(monthlyProfit).toLocaleString()}
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  {(ownershipPercentage * 100).toFixed(1)}% ownership
+                  Fixed monthly return
                 </div>
               </CardContent>
             </Card>
@@ -110,9 +109,9 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
                   <div className="text-lg font-bold">${investmentAmount.toLocaleString()}</div>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">Projected Value</div>
+                  <div className="text-sm text-muted-foreground">Projected Equity</div>
                   <div className="text-lg font-bold text-green-600">
-                    ${Math.round(tenYearOwnershipValue).toLocaleString()}
+                    ${Math.round(tenYearEquity).toLocaleString()}
                   </div>
                 </div>
                 <div>
