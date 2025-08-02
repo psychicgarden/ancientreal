@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { TrendingUp, Calculator, MapPin } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { TrendingUp, Calculator, MapPin, RefreshCw, AlertCircle } from "lucide-react";
 import { useWallet } from "@/contexts/WalletContext";
+import { useProperties } from "@/hooks/useProperties";
 import PropertyInvestmentCalculator from "@/components/PropertyInvestmentCalculator";
 import villaTulum from "@/assets/villa-tulum.jpg";
 import beachChalet from "@/assets/beach-chalet.jpg";
@@ -14,75 +16,45 @@ const FeaturedInvestments = () => {
   const { isConnected, purchaseTokens, isPurchasing } = useWallet();
   const [calculatorOpen, setCalculatorOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
+  
+  const { data: dbProperties, isLoading, error, refetch } = useProperties();
 
-  // Hardcoded blockchain data for Mazunte property
-  const mazunteData = {
-    totalValue: 150000,
-    downPayment: 30000,
-    monthlyPayment: 1456,
-    projectedValue: 421500,
-    location: "Calle Rinconcito, Mazunte, Oaxaca, Mexico",
-    legalOwner: "Ancient Holdings Ltd (Nevis Corporation)"
-  };
-  const properties = [
-    {
-      type: "🏝️ Join the Mazunte Village",
-      name: "Art Deco Loft",
-      location: "Mazunte, Mexico",
-      totalValue: isConnected ? mazunteData.totalValue : 150000,
-      listPrice: 150000,
-      downPayment: isConnected ? mazunteData.downPayment : 30000,
-      monthlyPayment: isConnected ? mazunteData.monthlyPayment : 1456,
-      monthlyRent: 2050,
-      monthlyProfit: 594,
-      networkValue: 467000, // Updated with 4% annual rent growth
-      propertiesSold: 11,
+  // Transform database properties to match UI format
+  const transformProperty = (dbProp: any, index: number) => {
+    const basePrice = dbProp.price;
+    const downPayment = Math.round(basePrice * 0.2); // 20% down
+    const monthlyPayment = Math.round((basePrice - downPayment) / 120); // 10 years
+    const monthlyRent = Math.round(basePrice * 0.015); // 1.5% of value per month
+    const monthlyProfit = Math.round(monthlyRent - monthlyPayment);
+    
+    // Default property images cycle
+    const images = [villaTulum, beachChalet, villaCorfu];
+    const image = images[index % images.length];
+    
+    return {
+      id: dbProp.id,
+      type: "🏡 Real Estate",
+      name: dbProp.name,
+      location: dbProp.address,
+      totalValue: basePrice,
+      listPrice: basePrice,
+      downPayment,
+      monthlyPayment,
+      monthlyRent,
+      monthlyProfit,
+      networkValue: Math.round(basePrice * 2.4), // 10-year projection
+      propertiesSold: Math.floor(Math.random() * 8) + 3, // Random for demo
       totalProperties: 15,
       mortgageTerm: "10 years",
-      expectedReturn: isConnected ? 181 : 16.8,
-      image: villaTulum,
-      isBlockchain: true,
-      isVillage: true
-    },
-    {
-      type: "Villa", 
-      name: "Ocean Villa Retreat",
-      location: "Bahia, Brazil", 
-      totalValue: 130000,
-      listPrice: 130000,
-      downPayment: 26000,
-      monthlyPayment: 1264,
-      monthlyRent: 1800,
-      monthlyProfit: 536,
-      networkValue: 405600, // 130k * 1.12^10
-      propertiesSold: 8,
-      totalProperties: 12,
-      mortgageTerm: "10 years",
-      expectedReturn: 15.2,
-      image: beachChalet,
-      isBlockchain: false,
-      isVillage: true
-    },
-    {
-      type: "Villa",
-      name: "Mediterranean Villa",
-      location: "Corfu, Greece",
-      totalValue: 280000,
-      listPrice: 280000,
-      downPayment: 56000, 
-      monthlyPayment: 2717,
-      monthlyRent: 2950,
-      monthlyProfit: 233,
-      networkValue: 663000, // 280k * 2.37 (10-year appreciation with 4% rent growth)
-      propertiesSold: 5,
-      totalProperties: 10,
-      mortgageTerm: "10 years",
-      expectedReturn: 17.8,
-      image: villaCorfu,
-      isBlockchain: false,
-      isVillage: true
-    }
-  ];
+      expectedReturn: Math.round((monthlyProfit * 12 / downPayment) * 100 * 10) / 10,
+      image,
+      isBlockchain: index === 0, // First property is blockchain-enabled
+      isVillage: true,
+      dbProperty: dbProp
+    };
+  };
+
+  const properties = dbProperties?.map(transformProperty) || [];
 
   return (
     <section className="py-16 px-6">
@@ -99,9 +71,44 @@ const FeaturedInvestments = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {properties.map((property, index) => (
-            <Card key={index} className="bg-gradient-card border-accent/20">
+        {/* Loading State */}
+        {isLoading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {[1, 2, 3].map((i) => (
+              <Card key={i} className="bg-gradient-card border-accent/20">
+                <CardContent className="p-6">
+                  <Skeleton className="aspect-video rounded-lg mb-4" />
+                  <Skeleton className="h-4 mb-2" />
+                  <Skeleton className="h-8 mb-4" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-20" />
+                    <Skeleton className="h-20" />
+                  </div>
+                  <Skeleton className="h-10 mt-4" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <div className="text-center py-12">
+            <AlertCircle className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-xl font-semibold mb-2">Unable to load properties</h3>
+            <p className="text-muted-foreground mb-4">Please check your connection and try again</p>
+            <Button onClick={() => refetch()} variant="outline">
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Retry
+            </Button>
+          </div>
+        )}
+
+        {/* Properties Grid */}
+        {!isLoading && !error && properties.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {properties.map((property, index) => (
+            <Card key={property.id} className="bg-gradient-card border-accent/20">
               <CardContent className="p-6">
                 <div className="aspect-video bg-muted rounded-lg mb-4 relative overflow-hidden">
                   <img 
@@ -258,10 +265,19 @@ const FeaturedInvestments = () => {
                     </Button>
                   )}
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+               </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!isLoading && !error && properties.length === 0 && (
+          <div className="text-center py-12">
+            <h3 className="text-xl font-semibold mb-2">No properties found</h3>
+            <p className="text-muted-foreground">Properties will appear here once they're added to the database</p>
+          </div>
+        )}
 
         <div className="text-center">
           <Button variant="outline" size="lg">
