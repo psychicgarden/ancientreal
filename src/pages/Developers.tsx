@@ -23,42 +23,67 @@ const Developers = () => {
   const featuredProjects = [
     {
       id: 1,
-      title: "DeFi Yield Optimizer",
-      creator: "BlockChain Builders",
-      description: "Advanced smart contract protocol for maximizing DeFi yields across multiple chains",
-      raised: 45000,
-      goal: 50000,
-      backers: 128,
-      timeLeft: "3 days",
+      title: "Bali Eco Resort Complex",
+      creator: "Tropical Builders Co.",
+      description: "Luxury eco-resort with 45 units in Canggu. Presold 100% before groundbreaking.",
+      initialFunding: 850000,
+      currentValue: 1200000,
+      roi: "41%",
+      timeline: "18 months",
+      backers: 234,
       image: "/placeholder.svg",
-      tags: ["DeFi", "Smart Contracts", "Yield Farming"],
-      status: "funding"
+      tags: ["Real Estate", "Eco-Tourism", "Presold"],
+      status: "completed",
+      developerProfit: 350000,
+      developerStory: "Zero upfront cost. We provided full funding after community validation."
     },
     {
       id: 2,
-      title: "NFT Marketplace 3.0",
-      creator: "Digital Art Labs",
-      description: "Next-generation NFT platform with AI-powered pricing and cross-chain compatibility",
-      raised: 75000,
-      goal: 60000,
-      backers: 245,
-      timeLeft: "Funded",
+      title: "Smart City Infrastructure",
+      creator: "NextGen Urban",
+      description: "IoT-enabled smart city project with blockchain integration for 200+ residential units",
+      initialFunding: 1200000,
+      currentValue: 1950000,
+      roi: "63%",
+      timeline: "24 months",
+      backers: 456,
       image: "/placeholder.svg",
-      tags: ["NFT", "AI", "Cross-chain"],
-      status: "funded"
+      tags: ["Smart City", "IoT", "Blockchain"],
+      status: "completed",
+      developerProfit: 750000,
+      developerStory: "Community funded, DAO approved. Developer kept 60% equity with zero risk."
     },
     {
       id: 3,
-      title: "Privacy DEX Protocol",
-      creator: "Anonymous Devs",
-      description: "Zero-knowledge proof based decentralized exchange for ultimate privacy",
-      raised: 32000,
-      goal: 80000,
-      backers: 89,
-      timeLeft: "12 days",
+      title: "Renewable Energy Villas",
+      creator: "GreenTech Developments",
+      description: "Self-sustaining villa complex with solar integration. 90% presold in 3 months.",
+      initialFunding: 650000,
+      currentValue: 920000,
+      roi: "42%",
+      timeline: "15 months",
+      backers: 189,
       image: "/placeholder.svg",
-      tags: ["Privacy", "DEX", "ZK-Proofs"],
-      status: "funding"
+      tags: ["Renewable Energy", "Sustainability", "Villas"],
+      status: "completed",
+      developerProfit: 270000,
+      developerStory: "From idea to fully funded in 45 days. No personal investment required."
+    },
+    {
+      id: 4,
+      title: "Digital Nomad Coliving Hub",
+      creator: "Remote Work Studios",
+      description: "Modern coliving spaces with integrated coworking. Currently 85% presold.",
+      initialFunding: 450000,
+      currentValue: 580000,
+      roi: "29%",
+      timeline: "12 months",
+      backers: 167,
+      image: "/placeholder.svg",
+      tags: ["Coliving", "Remote Work", "Community"],
+      status: "in-progress",
+      developerProfit: 180000,
+      developerStory: "DAO funding eliminated our biggest risk - we focus purely on building."
     }
   ];
 
@@ -151,16 +176,16 @@ const Developers = () => {
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
               <div className="text-center">
-                <div className="text-3xl font-bold text-primary">$2.4M+</div>
-                <div className="text-muted-foreground">Total Funded</div>
+                <div className="text-3xl font-bold text-green-600">$4.2M+</div>
+                <div className="text-muted-foreground">Developer Profits</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-primary">156</div>
-                <div className="text-muted-foreground">Projects Launched</div>
+                <div className="text-muted-foreground">Projects Completed</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-primary">89%</div>
-                <div className="text-muted-foreground">Success Rate</div>
+                <div className="text-3xl font-bold text-green-600">47%</div>
+                <div className="text-muted-foreground">Average ROI</div>
               </div>
             </div>
           </div>
@@ -171,26 +196,46 @@ const Developers = () => {
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Featured Projects</h2>
+            <Badge className="mb-4 bg-green-600/10 text-green-600 border-green-600/20">
+              💰 Success Stories & Real Returns
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Proven Success Stories</h2>
             <p className="text-xl text-muted-foreground">
-              Discover innovative projects currently seeking funding from our DAO
+              Real developers, real projects, real profits. Zero upfront cost, maximum returns.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
             {featuredProjects.map((project) => (
-              <Card key={project.id} className="group hover:shadow-lg transition-all duration-300 border-border/50 hover:border-primary/20">
-                <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 rounded-t-lg flex items-center justify-center">
+              <Card key={project.id} className="group hover:shadow-xl transition-all duration-300 border-border/50 hover:border-primary/20 relative overflow-hidden">
+                {/* Success badge for completed projects */}
+                {project.status === 'completed' && (
+                  <div className="absolute top-4 right-4 z-10 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                    SOLD OUT
+                  </div>
+                )}
+                {project.status === 'in-progress' && (
+                  <div className="absolute top-4 right-4 z-10 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                    85% PRESOLD
+                  </div>
+                )}
+                
+                <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 rounded-t-lg flex items-center justify-center relative">
                   <Rocket className="h-12 w-12 text-primary/60" />
+                  {/* ROI overlay */}
+                  <div className="absolute bottom-3 left-3 bg-green-600/90 text-white px-2 py-1 rounded text-sm font-bold">
+                    +{project.roi} ROI
+                  </div>
                 </div>
+                
                 <CardHeader className="pb-3">
                   <div className="flex justify-between items-start mb-2">
-                    <Badge variant={project.status === 'funded' ? 'default' : 'secondary'}>
-                      {project.status === 'funded' ? 'Funded' : 'Funding'}
+                    <Badge variant={project.status === 'completed' ? 'default' : 'secondary'} className="bg-green-600/10 text-green-600">
+                      {project.status === 'completed' ? 'Completed' : 'In Progress'}
                     </Badge>
                     <div className="flex items-center text-sm text-muted-foreground">
                       <Clock className="h-4 w-4 mr-1" />
-                      {project.timeLeft}
+                      {project.timeline}
                     </div>
                   </div>
                   <CardTitle className="text-xl group-hover:text-primary transition-colors">
@@ -198,21 +243,37 @@ const Developers = () => {
                   </CardTitle>
                   <p className="text-sm text-muted-foreground">by {project.creator}</p>
                 </CardHeader>
+                
                 <CardContent>
                   <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
                     {project.description}
                   </p>
                   
-                  <div className="space-y-3 mb-4">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Raised</span>
-                      <span className="font-semibold">${project.raised.toLocaleString()}</span>
+                  {/* Financial highlights */}
+                  <div className="bg-muted/30 rounded-lg p-4 mb-4 space-y-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">Initial DAO Funding</span>
+                      <span className="font-bold text-green-600">${project.initialFunding.toLocaleString()}</span>
                     </div>
-                    <Progress value={(project.raised / project.goal) * 100} className="h-2" />
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">{project.backers} backers</span>
-                      <span className="text-muted-foreground">Goal: ${project.goal.toLocaleString()}</span>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">Current Value</span>
+                      <span className="font-bold">${project.currentValue.toLocaleString()}</span>
                     </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">Developer Profit</span>
+                      <span className="font-bold text-green-600">${project.developerProfit.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">Community Backers</span>
+                      <span className="font-semibold">{project.backers}</span>
+                    </div>
+                  </div>
+
+                  {/* Developer testimonial */}
+                  <div className="bg-primary/5 rounded-lg p-3 mb-4">
+                    <p className="text-sm italic text-muted-foreground">
+                      "{project.developerStory}"
+                    </p>
                   </div>
 
                   <div className="flex flex-wrap gap-1 mb-4">
@@ -223,8 +284,8 @@ const Developers = () => {
                     ))}
                   </div>
 
-                  <Button className="w-full" variant={project.status === 'funded' ? 'outline' : 'default'}>
-                    {project.status === 'funded' ? 'View Project' : 'Support Project'}
+                  <Button className="w-full" variant={project.status === 'completed' ? 'outline' : 'default'}>
+                    {project.status === 'completed' ? 'View Case Study' : 'Track Progress'}
                   </Button>
                 </CardContent>
               </Card>
