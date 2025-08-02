@@ -24,17 +24,17 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="/investor" className="text-foreground/80 hover:text-foreground transition-colors">
-              Investor
+            <a href="#markets" className="text-foreground/80 hover:text-foreground transition-colors">
+              Global Markets
             </a>
-            <a href="/traveler" className="text-foreground/80 hover:text-foreground transition-colors">
-              Travel
+            <a href="#how-it-works" className="text-foreground/80 hover:text-foreground transition-colors">
+              How It Works
             </a>
-            <a href="/host" className="text-foreground/80 hover:text-foreground transition-colors">
-              Host
+            <a href="#qualification" className="text-foreground/80 hover:text-foreground transition-colors">
+              Qualification
             </a>
-            <a href="#developers" className="text-foreground/80 hover:text-foreground transition-colors">
-              Developers
+            <a href="#get-started" className="text-foreground/80 hover:text-foreground transition-colors">
+              Get Started
             </a>
           </nav>
 
@@ -75,17 +75,17 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden py-6 border-t border-border/50">
             <nav className="flex flex-col space-y-4">
-              <a href="/investor" className="text-foreground/80 hover:text-foreground transition-colors">
-                Investor
+              <a href="#markets" className="text-foreground/80 hover:text-foreground transition-colors">
+                Global Markets
               </a>
-              <a href="/traveler" className="text-foreground/80 hover:text-foreground transition-colors">
-                Travel
+              <a href="#how-it-works" className="text-foreground/80 hover:text-foreground transition-colors">
+                How It Works
               </a>
-              <a href="/host" className="text-foreground/80 hover:text-foreground transition-colors">
-                Host
+              <a href="#qualification" className="text-foreground/80 hover:text-foreground transition-colors">
+                Qualification
               </a>
-              <a href="#developers" className="text-foreground/80 hover:text-foreground transition-colors">
-                Developers
+              <a href="#get-started" className="text-foreground/80 hover:text-foreground transition-colors">
+                Get Started
               </a>
               <div className="flex flex-col space-y-2 pt-4">
                 {isConnected ? (

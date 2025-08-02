@@ -22,44 +22,44 @@ const FeaturedInvestments = () => {
   };
   const properties = [
     {
-      type: "Atelier",
-      name: "Coastal Atelier",
-      location: isConnected ? mazunteData.location : "Mazunte, Mexico",
+      type: "🔥 12% Annual Growth Market",
+      name: "Mazunte Beachfront Mortgage",
+      location: isConnected ? mazunteData.location : "Mexico • High-Growth Coastal Market",
       totalValue: isConnected ? mazunteData.totalValue : 150000,
       downPayment: isConnected ? mazunteData.downPayment : 30000,
       monthlyPayment: isConnected ? mazunteData.monthlyPayment : 1456,
       propertiesSold: 11,
       totalProperties: 15,
       mortgageTerm: "10 years",
-      expectedReturn: isConnected ? 181 : 16.8, // ROI calculated from blockchain data
+      expectedReturn: isConnected ? 181 : 12, // Market growth rate
       image: villaTulum,
       isBlockchain: true
     },
     {
-      type: "Villa", 
-      name: "Ocean Villa Retreat",
-      location: "Maldives", 
+      type: "Coming Soon", 
+      name: "Maldives Growth Market",
+      location: "Maldives • 8% Growth Market", 
       totalValue: 280000,
       downPayment: 56000,
       monthlyPayment: 2712,
       propertiesSold: 8,
       totalProperties: 12,
       mortgageTerm: "10 years",
-      expectedReturn: 15.2,
+      expectedReturn: 8,
       image: beachChalet,
       isBlockchain: false
     },
     {
-      type: "Residence",
-      name: "Urban Creative Residence",
-      location: "Paris, France",
+      type: "Coming Soon",
+      name: "Paris Urban Mortgage",
+      location: "Paris, France • 6% Growth Market",
       totalValue: 450000,
       downPayment: 90000, 
       monthlyPayment: 4370,
       propertiesSold: 3,
       totalProperties: 8,
       mortgageTerm: "10 years",
-      expectedReturn: 18.2,
+      expectedReturn: 6,
       image: coworkingParis,
       isBlockchain: false
     }
@@ -70,13 +70,13 @@ const FeaturedInvestments = () => {
       <div className="container mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 tracking-tight">
-            Sustainable Living
+            High-Growth Global Markets
             <br />
-            <span className="text-muted-foreground font-light">20% Down Financing</span>
+            <span className="text-muted-foreground font-light">Same Process, Better Returns</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Thoughtfully curated eco-luxury residences. 
-            Modern financing for conscious living.
+            Access mortgages in the world's fastest-growing real estate markets. 
+            Why settle for 4% when you can get 12%?
           </p>
         </div>
 
@@ -112,25 +112,53 @@ const FeaturedInvestments = () => {
                 <p className="text-muted-foreground mb-4">{property.location}</p>
 
                 <div className="space-y-3 mb-6">
-                  <div className="bg-card/50 p-4 rounded-lg border">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Total Value</span>
-                      <span className="text-lg font-semibold">${property.totalValue.toLocaleString()}</span>
+                  {property.isBlockchain ? (
+                    <div className="bg-card/50 p-4 rounded-lg border">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">Market Growth</span>
+                        <span className="text-lg font-semibold text-green-500">{property.expectedReturn}% annually</span>
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-1">(vs 4% in NYC)</div>
+                      
+                      <div className="flex justify-between items-center mt-3">
+                        <span className="text-sm text-muted-foreground">Entry Point</span>
+                        <span className="text-xl font-bold">${property.downPayment.toLocaleString()}</span>
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-1">(vs $160K in NYC)</div>
+                      
+                      <div className="flex justify-between items-center mt-3">
+                        <span className="text-sm text-muted-foreground">Property Value</span>
+                        <span className="text-lg font-semibold">${property.totalValue.toLocaleString()}</span>
+                      </div>
+                      <div className="text-xs text-muted-foreground mt-1">(vs $800K in NYC)</div>
+                      
+                      <div className="mt-4 pt-3 border-t border-border/50">
+                        <div className="text-sm font-semibold text-primary mb-1">5-Year Projection:</div>
+                        <div className="text-sm text-muted-foreground">
+                          ${property.totalValue.toLocaleString()} → ${Math.round(property.totalValue * Math.pow(1.12, 5)).toLocaleString()} 
+                          <span className="text-green-500 font-semibold"> (+${Math.round(property.totalValue * (Math.pow(1.12, 5) - 1)).toLocaleString()} profit)</span>
+                        </div>
+                        <div className="text-sm text-muted-foreground mt-1">
+                          Plus: ${property.monthlyPayment.toLocaleString()}/month mortgage income
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex justify-between items-center mt-2">
-                      <span className="text-sm text-muted-foreground">Down Payment</span>
-                      <span className="text-xl font-bold">${property.downPayment.toLocaleString()}</span>
+                  ) : (
+                    <div className="bg-card/50 p-4 rounded-lg border">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">Market Growth</span>
+                        <span className="text-lg font-semibold">{property.expectedReturn}% annually</span>
+                      </div>
+                      <div className="flex justify-between items-center mt-2">
+                        <span className="text-sm text-muted-foreground">Entry Point</span>
+                        <span className="text-xl font-bold">${property.downPayment.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center mt-1">
+                        <span className="text-sm text-muted-foreground">Property Value</span>
+                        <span className="text-lg font-semibold">${property.totalValue.toLocaleString()}</span>
+                      </div>
                     </div>
-                    <div className="flex justify-between items-center mt-1">
-                      <span className="text-sm text-muted-foreground">Monthly ({property.mortgageTerm})</span>
-                      <span className="text-lg font-semibold">${property.monthlyPayment.toLocaleString()}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                    <span className="text-sm text-muted-foreground">Expected Return</span>
-                    <span className="font-semibold text-primary">{property.expectedReturn}% annually</span>
-                  </div>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -145,7 +173,7 @@ const FeaturedInvestments = () => {
                         ? "Processing..." 
                         : !isConnected 
                           ? "Connect Wallet to Purchase"
-                          : "Purchase Mortgage Tokens"
+                          : "Apply for This Mortgage"
                       }
                     </Button>
                   ) : (
@@ -154,7 +182,7 @@ const FeaturedInvestments = () => {
                     </Button>
                   )}
                   <Button className="w-full" variant="outline">
-                    Schedule Viewing
+                    {property.isBlockchain ? "Download Market Report" : "Get Notified When Available"}
                   </Button>
                 </div>
               </CardContent>
