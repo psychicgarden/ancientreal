@@ -1,9 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { useWallet } from "@/contexts/WalletContext";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isConnected, account, isLoading, connectWallet, disconnectWallet } = useWallet();
+
+  const formatAddress = (address: string) => {
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
@@ -34,7 +40,24 @@ const Header = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="outline">Connect Wallet</Button>
+            {isConnected ? (
+              <div className="flex items-center space-x-3">
+                <span className="text-sm text-muted-foreground">
+                  {formatAddress(account!)}
+                </span>
+                <Button variant="outline" onClick={disconnectWallet}>
+                  Disconnect
+                </Button>
+              </div>
+            ) : (
+              <Button 
+                variant="outline" 
+                onClick={connectWallet}
+                disabled={isLoading}
+              >
+                {isLoading ? "Connecting..." : "Connect Wallet"}
+              </Button>
+            )}
             <Button variant="ghost">Sign In</Button>
             <Button variant="default">Get Started</Button>
           </div>
@@ -65,7 +88,25 @@ const Header = () => {
                 Developers
               </a>
               <div className="flex flex-col space-y-2 pt-4">
-                <Button variant="outline">Connect Wallet</Button>
+                {isConnected ? (
+                  <div className="space-y-2">
+                    <span className="text-sm text-muted-foreground px-3">
+                      {formatAddress(account!)}
+                    </span>
+                    <Button variant="outline" onClick={disconnectWallet} className="w-full">
+                      Disconnect
+                    </Button>
+                  </div>
+                ) : (
+                  <Button 
+                    variant="outline" 
+                    onClick={connectWallet}
+                    disabled={isLoading}
+                    className="w-full"
+                  >
+                    {isLoading ? "Connecting..." : "Connect Wallet"}
+                  </Button>
+                )}
                 <Button variant="ghost">Sign In</Button>
                 <Button variant="default">Get Started</Button>
               </div>

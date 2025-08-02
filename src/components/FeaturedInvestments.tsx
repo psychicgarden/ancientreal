@@ -3,24 +3,37 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { TrendingUp } from "lucide-react";
+import { useWallet } from "@/contexts/WalletContext";
 import villaTulum from "@/assets/villa-tulum.jpg";
 import beachChalet from "@/assets/beach-chalet.jpg";
 import coworkingParis from "@/assets/coworking-paris.jpg";
 
 const FeaturedInvestments = () => {
+  const { isConnected, purchaseTokens, isPurchasing } = useWallet();
+
+  // Hardcoded blockchain data for Mazunte property
+  const mazunteData = {
+    totalValue: 150000,
+    downPayment: 30000,
+    monthlyPayment: 1456,
+    projectedValue: 421500,
+    location: "Calle Rinconcito, Mazunte, Oaxaca, Mexico",
+    legalOwner: "Ancient Holdings Ltd (Nevis Corporation)"
+  };
   const properties = [
     {
       type: "Atelier",
       name: "Coastal Atelier",
-      location: "Mazunte, Mexico",
-      totalValue: 150000,
-      downPayment: 30000,
-      monthlyPayment: 1456,
+      location: isConnected ? mazunteData.location : "Mazunte, Mexico",
+      totalValue: isConnected ? mazunteData.totalValue : 150000,
+      downPayment: isConnected ? mazunteData.downPayment : 30000,
+      monthlyPayment: isConnected ? mazunteData.monthlyPayment : 1456,
       propertiesSold: 11,
       totalProperties: 15,
       mortgageTerm: "10 years",
-      expectedReturn: 16.8,
-      image: villaTulum
+      expectedReturn: isConnected ? 181 : 16.8, // ROI calculated from blockchain data
+      image: villaTulum,
+      isBlockchain: true
     },
     {
       type: "Villa", 
@@ -33,7 +46,8 @@ const FeaturedInvestments = () => {
       totalProperties: 12,
       mortgageTerm: "10 years",
       expectedReturn: 15.2,
-      image: beachChalet
+      image: beachChalet,
+      isBlockchain: false
     },
     {
       type: "Residence",
@@ -46,7 +60,8 @@ const FeaturedInvestments = () => {
       totalProperties: 8,
       mortgageTerm: "10 years",
       expectedReturn: 18.2,
-      image: coworkingParis
+      image: coworkingParis,
+      isBlockchain: false
     }
   ];
 
@@ -78,6 +93,11 @@ const FeaturedInvestments = () => {
                   <Badge className="absolute top-2 right-2 bg-accent text-accent-foreground">
                     {property.type}
                   </Badge>
+                  {property.isBlockchain && isConnected && (
+                    <Badge className="absolute top-2 left-2 bg-green-500 text-white">
+                      🔗 LIVE BLOCKCHAIN
+                    </Badge>
+                  )}
                 </div>
                 
                 <div className="mb-4">
@@ -114,9 +134,25 @@ const FeaturedInvestments = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Button className="w-full" size="lg">
-                    Apply for Financing
-                  </Button>
+                  {property.isBlockchain ? (
+                    <Button 
+                      className="w-full" 
+                      size="lg"
+                      onClick={purchaseTokens}
+                      disabled={isPurchasing || !isConnected}
+                    >
+                      {isPurchasing 
+                        ? "Processing..." 
+                        : !isConnected 
+                          ? "Connect Wallet to Purchase"
+                          : "Purchase Mortgage Tokens"
+                      }
+                    </Button>
+                  ) : (
+                    <Button className="w-full" size="lg" disabled>
+                      Coming Soon - Tokenization
+                    </Button>
+                  )}
                   <Button className="w-full" variant="outline">
                     Schedule Viewing
                   </Button>
