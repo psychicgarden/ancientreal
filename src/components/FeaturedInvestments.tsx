@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { TrendingUp, Calculator, MapPin } from "lucide-react";
 import { useWallet } from "@/contexts/WalletContext";
-import InvestmentCalculator from "@/components/InvestmentCalculator";
+import PropertyInvestmentCalculator from "@/components/PropertyInvestmentCalculator";
 import villaTulum from "@/assets/villa-tulum.jpg";
 import beachChalet from "@/assets/beach-chalet.jpg";
 import coworkingParis from "@/assets/coworking-paris.jpg";
@@ -13,6 +13,7 @@ import coworkingParis from "@/assets/coworking-paris.jpg";
 const FeaturedInvestments = () => {
   const { isConnected, purchaseTokens, isPurchasing } = useWallet();
   const [calculatorOpen, setCalculatorOpen] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState(null);
 
   // Hardcoded blockchain data for Mazunte property
   const mazunteData = {
@@ -45,13 +46,13 @@ const FeaturedInvestments = () => {
     {
       type: "Villa", 
       name: "Ocean Villa Retreat",
-      location: "Bahia, Brazil", 
-      totalValue: 150000,
-      downPayment: 30000,
-      monthlyPayment: 1456,
-      monthlyRent: 1800,
-      monthlyProfit: 344,
-      networkValue: 467000,
+      location: "Maldives", 
+      totalValue: 280000,
+      downPayment: 56000,
+      monthlyPayment: 2712,
+      monthlyRent: 3800,
+      monthlyProfit: 1088,
+      networkValue: 873600, // 280k * 1.12^10
       propertiesSold: 8,
       totalProperties: 12,
       mortgageTerm: "10 years",
@@ -64,12 +65,12 @@ const FeaturedInvestments = () => {
       type: "Residence",
       name: "Urban Creative Residence",
       location: "Paris, France",
-      totalValue: 150000,
-      downPayment: 30000, 
-      monthlyPayment: 1456,
-      monthlyRent: 2200,
-      monthlyProfit: 744,
-      networkValue: 467000,
+      totalValue: 450000,
+      downPayment: 90000, 
+      monthlyPayment: 4370,
+      monthlyRent: 5200,
+      monthlyProfit: 830,
+      networkValue: 1404000, // 450k * 1.12^10
       propertiesSold: 3,
       totalProperties: 8,
       mortgageTerm: "10 years",
@@ -216,7 +217,10 @@ const FeaturedInvestments = () => {
                       <Button 
                         className="w-full" 
                         variant="outline"
-                        onClick={() => setCalculatorOpen(true)}
+                        onClick={() => {
+                          setSelectedProperty(property);
+                          setCalculatorOpen(true);
+                        }}
                       >
                         <Calculator className="w-4 h-4 mr-2" />
                         Calculate Network Returns
@@ -259,10 +263,11 @@ const FeaturedInvestments = () => {
         </div>
       </div>
 
-      {/* Investment Calculator Modal */}
-      <InvestmentCalculator 
+      {/* Property Investment Calculator Modal */}
+      <PropertyInvestmentCalculator 
         open={calculatorOpen} 
-        onOpenChange={setCalculatorOpen} 
+        onOpenChange={setCalculatorOpen}
+        property={selectedProperty}
       />
     </section>
   );
