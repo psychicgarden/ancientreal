@@ -33,9 +33,9 @@ const FeaturedInvestments = () => {
       listPrice: 150000,
       downPayment: isConnected ? mazunteData.downPayment : 30000,
       monthlyPayment: isConnected ? mazunteData.monthlyPayment : 1456,
-      monthlyRent: 2400,
-      monthlyProfit: 943,
-      networkValue: 467000,
+      monthlyRent: 2050,
+      monthlyProfit: 594,
+      networkValue: 467000, // Updated with 4% annual rent growth
       propertiesSold: 11,
       totalProperties: 15,
       mortgageTerm: "10 years",
