@@ -64,20 +64,20 @@ const FeaturedInvestments = () => {
       isVillage: true
     },
     {
-      type: "Residence",
-      name: "Urban Creative Residence",
-      location: "Paris, France",
-      totalValue: 450000,
-      listPrice: 450000,
-      downPayment: 90000, 
-      monthlyPayment: 4370,
-      monthlyRent: 5200,
-      monthlyProfit: 830,
-      networkValue: 679275, // 450k * 1.042^10 (4.2% annually)
-      propertiesSold: 3,
-      totalProperties: 8,
+      type: "Villa",
+      name: "Mediterranean Villa",
+      location: "Corfu, Greece",
+      totalValue: 280000,
+      listPrice: 280000,
+      downPayment: 56000, 
+      monthlyPayment: 2717,
+      monthlyRent: 2950,
+      monthlyProfit: 233,
+      networkValue: 576000, // 280k * 1.074^10 (7.4% annually with 4% rent growth)
+      propertiesSold: 5,
+      totalProperties: 10,
       mortgageTerm: "10 years",
-      expectedReturn: 18.2,
+      expectedReturn: 17.8,
       image: coworkingParis,
       isBlockchain: false,
       isVillage: true
