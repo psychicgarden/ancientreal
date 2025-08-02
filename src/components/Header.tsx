@@ -34,6 +34,7 @@ const Header = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
+            <Button variant="outline">Connect Wallet</Button>
             <Button variant="ghost">Sign In</Button>
             <Button variant="default">Get Started</Button>
           </div>
@@ -64,6 +65,7 @@ const Header = () => {
                 Developers
               </a>
               <div className="flex flex-col space-y-2 pt-4">
+                <Button variant="outline">Connect Wallet</Button>
                 <Button variant="ghost">Sign In</Button>
                 <Button variant="default">Get Started</Button>
               </div>
