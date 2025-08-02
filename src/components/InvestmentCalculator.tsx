@@ -90,14 +90,16 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
               <label className="text-sm font-medium">Investment Amount</label>
               <span className="text-xl font-bold">${investmentAmount.toLocaleString()}</span>
             </div>
-            <Slider
-              value={investment}
-              onValueChange={setInvestment}
-              max={150000}
-              min={30000}
-              step={5000}
-              className="w-full"
-            />
+            <div className="px-3">
+              <Slider
+                value={investment}
+                onValueChange={setInvestment}
+                max={150000}
+                min={30000}
+                step={5000}
+                className="w-full"
+              />
+            </div>
             <div className="flex justify-between text-xs text-muted-foreground">
               <span>$30K (Founding Member)</span>
               <span>$150K (Full Property)</span>
