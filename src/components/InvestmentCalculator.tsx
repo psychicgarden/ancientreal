@@ -167,23 +167,6 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
             </Card>
           </div>
 
-          {/* Investment Security Indicator for 100% down */}
-          {investmentAmount >= 150000 && (
-            <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
-              <CardContent className="p-4">
-                <div className="text-center">
-                  <div className="text-lg font-bold text-green-700 mb-2">
-                    🛡️ Maximum Security Investment
-                  </div>
-                  <div className="text-sm text-green-600">
-                    • Zero mortgage risk • Maximum interest savings: ${Math.round(baselineTotalInterest).toLocaleString()} 
-                    • Guaranteed cash flow • Full property ownership rights
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
           {/* 10-Year Projection */}
           <Card className="bg-gradient-to-r from-primary/5 to-accent/5">
             <CardContent className="p-6">
