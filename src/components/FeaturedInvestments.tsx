@@ -45,30 +45,38 @@ const FeaturedInvestments = () => {
     {
       type: "Villa", 
       name: "Ocean Villa Retreat",
-      location: "Maldives", 
-      totalValue: 280000,
-      downPayment: 56000,
-      monthlyPayment: 2712,
+      location: "Bahia, Brazil", 
+      totalValue: 150000,
+      downPayment: 30000,
+      monthlyPayment: 1456,
+      monthlyRent: 2050,
+      monthlyProfit: 594,
+      networkValue: 467000,
       propertiesSold: 8,
       totalProperties: 12,
       mortgageTerm: "10 years",
       expectedReturn: 15.2,
       image: beachChalet,
-      isBlockchain: false
+      isBlockchain: false,
+      isVillage: true
     },
     {
       type: "Residence",
       name: "Urban Creative Residence",
       location: "Paris, France",
-      totalValue: 450000,
-      downPayment: 90000, 
-      monthlyPayment: 4370,
+      totalValue: 150000,
+      downPayment: 30000, 
+      monthlyPayment: 1456,
+      monthlyRent: 2050,
+      monthlyProfit: 594,
+      networkValue: 467000,
       propertiesSold: 3,
       totalProperties: 8,
       mortgageTerm: "10 years",
       expectedReturn: 18.2,
       image: coworkingParis,
-      isBlockchain: false
+      isBlockchain: false,
+      isVillage: true
     }
   ];
 
