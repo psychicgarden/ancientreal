@@ -23,7 +23,8 @@ import {
 } from "lucide-react";
 
 const Developers = () => {
-  const featuredProjects = [
+  // Best Sold-Out Success Stories (Featured at Top)
+  const soldOutStories = [
     {
       id: 1,
       title: "Bali Eco Resort Complex",
@@ -35,10 +36,11 @@ const Developers = () => {
       timeline: "18 months",
       backers: 234,
       image: baliJungleResort,
-      tags: ["Real Estate", "Eco-Tourism", "Presold"],
-      status: "completed",
+      tags: ["Real Estate", "Eco-Tourism"],
+      selloutTime: "4 days",
       developerProfit: 350000,
-      developerStory: "Zero upfront cost. We provided full funding after community validation."
+      developerStory: "Zero upfront cost. We provided full funding after community validation.",
+      presalePercentage: 100
     },
     {
       id: 2,
@@ -52,41 +54,82 @@ const Developers = () => {
       backers: 456,
       image: ecoSmartCity,
       tags: ["Smart City", "IoT", "Blockchain"],
-      status: "completed",
+      selloutTime: "6 days",
       developerProfit: 750000,
-      developerStory: "Community funded, DAO approved. Developer kept 60% equity with zero risk."
+      developerStory: "Community funded, DAO approved. Developer kept 60% equity with zero risk.",
+      presalePercentage: 100
     },
     {
       id: 3,
       title: "Renewable Energy Villas",
       creator: "GreenTech Developments",
-      description: "Self-sustaining villa complex with solar integration. 90% presold in 3 months.",
+      description: "Self-sustaining villa complex with solar integration. Sold out in 2.5 weeks.",
       initialFunding: 650000,
       currentValue: 920000,
       roi: "42%",
       timeline: "15 months",
       backers: 189,
       image: "https://images.unsplash.com/photo-1493397212122-2b85dda8106b?w=800&h=600&fit=crop",
-      tags: ["Renewable Energy", "Sustainability", "Villas"],
-      status: "completed",
+      tags: ["Renewable Energy", "Sustainability"],
+      selloutTime: "2.5 weeks",
       developerProfit: 270000,
-      developerStory: "From idea to fully funded in 45 days. No personal investment required."
-    },
+      developerStory: "From idea to fully funded in 45 days. No personal investment required.",
+      presalePercentage: 100
+    }
+  ];
+
+  // Current Projects Seeking Presales (80% threshold for greenlight)
+  const currentProjects = [
     {
       id: 4,
       title: "Digital Nomad Coliving Hub",
       creator: "Remote Work Studios",
-      description: "Modern coliving spaces with integrated coworking. Currently 85% presold.",
-      initialFunding: 450000,
-      currentValue: 580000,
-      roi: "29%",
+      description: "Modern coliving spaces with integrated coworking facilities across Southeast Asia.",
+      targetFunding: 450000,
+      currentFunding: 382500,
+      roi: "Est. 29%",
       timeline: "12 months",
       backers: 167,
       image: bohoColivingSpace,
       tags: ["Coliving", "Remote Work", "Community"],
-      status: "in-progress",
-      developerProfit: 180000,
+      presalePercentage: 85,
+      minInvestment: 500,
+      estimatedYield: "14.2%",
       developerStory: "DAO funding eliminated our biggest risk - we focus purely on building."
+    },
+    {
+      id: 5,
+      title: "Desert Wellness Retreat",
+      creator: "Zen Developments",
+      description: "Sustainable wellness resort in Morocco's Atlas Mountains with healing spa facilities.",
+      targetFunding: 750000,
+      currentFunding: 525000,
+      roi: "Est. 38%",
+      timeline: "20 months",
+      backers: 298,
+      image: "https://images.unsplash.com/photo-1539650116574-75c0c6d73a0e?w=800&h=600&fit=crop",
+      tags: ["Wellness", "Sustainability", "Retreat"],
+      presalePercentage: 70,
+      minInvestment: 300,
+      estimatedYield: "12.8%",
+      developerStory: "Traditional funding rejected us 3 times. DAO believed in our vision."
+    },
+    {
+      id: 6,
+      title: "Urban Vertical Farm Complex",
+      creator: "AgriTech Builders",
+      description: "Vertical farming towers with residential units - food production meets urban living.",
+      targetFunding: 920000,
+      currentFunding: 734000,
+      roi: "Est. 45%",
+      timeline: "16 months",
+      backers: 421,
+      image: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&h=600&fit=crop",
+      tags: ["AgriTech", "Urban", "Innovation"],
+      presalePercentage: 80,
+      minInvestment: 750,
+      estimatedYield: "16.5%",
+      developerStory: "We reached 80% presale threshold! Greenlit for full DAO funding."
     }
   ];
 
@@ -205,33 +248,26 @@ const Developers = () => {
         </div>
       </section>
 
-      {/* Featured Projects */}
+      {/* Best Sold-Out Success Stories */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <Badge className="mb-4 bg-green-600/10 text-green-600 border-green-600/20">
-              💰 Success Stories & Real Returns
+              🚀 Best Sold-Out Success Stories
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Proven Success Stories</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Developers Sold Out in 4 Days to 2.5 Weeks</h2>
             <p className="text-xl text-muted-foreground">
               Real developers, real projects, real profits. Zero upfront cost, maximum returns.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-            {featuredProjects.map((project) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {soldOutStories.map((project) => (
               <Card key={project.id} className="group hover:shadow-xl transition-all duration-300 border-border/50 hover:border-primary/20 relative overflow-hidden">
-                {/* Success badge for completed projects */}
-                {project.status === 'completed' && (
-                  <div className="absolute top-4 right-4 z-10 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    SOLD OUT
-                  </div>
-                )}
-                {project.status === 'in-progress' && (
-                  <div className="absolute top-4 right-4 z-10 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    85% PRESOLD
-                  </div>
-                )}
+                {/* Sold out badge */}
+                <div className="absolute top-4 right-4 z-10 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                  SOLD OUT IN {project.selloutTime.toUpperCase()}
+                </div>
                 
                 <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 rounded-t-lg flex items-center justify-center relative overflow-hidden">
                   <img 
@@ -247,8 +283,8 @@ const Developers = () => {
                 
                 <CardHeader className="pb-3">
                   <div className="flex justify-between items-start mb-2">
-                    <Badge variant={project.status === 'completed' ? 'default' : 'secondary'} className="bg-green-600/10 text-green-600">
-                      {project.status === 'completed' ? 'Completed' : 'In Progress'}
+                    <Badge className="bg-green-600/10 text-green-600">
+                      Completed
                     </Badge>
                     <div className="flex items-center text-sm text-muted-foreground">
                       <Clock className="h-4 w-4 mr-1" />
@@ -301,8 +337,91 @@ const Developers = () => {
                     ))}
                   </div>
 
-                  <Button className="w-full" variant={project.status === 'completed' ? 'outline' : 'default'}>
-                    {project.status === 'completed' ? 'View Case Study' : 'Track Progress'}
+                  <Button className="w-full" variant="outline">
+                    View Case Study
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Current Projects Seeking Presales */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <Badge className="mb-4 bg-blue-600/10 text-blue-600 border-blue-600/20">
+              🎯 Active Project Campaigns
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Projects Seeking 80% Presale for Greenlight</h2>
+            <p className="text-xl text-muted-foreground">
+              Once 80% presold, we greenlight full DAO funding. Get in early.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {currentProjects.map((project) => (
+              <Card key={project.id} className="bg-gradient-card border-accent/20 hover:shadow-xl transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="aspect-video bg-cover bg-center rounded-lg mb-4 relative overflow-hidden">
+                    <img 
+                      src={project.image} 
+                      alt={project.title}
+                      className="w-full h-full object-cover"
+                    />
+                    {/* Presale percentage overlay */}
+                    <div className="absolute top-3 right-3 bg-blue-600/90 text-white px-2 py-1 rounded text-sm font-bold">
+                      {project.presalePercentage}% PRESOLD
+                    </div>
+                  </div>
+                  
+                  <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+                  <p className="text-muted-foreground mb-2">by {project.creator}</p>
+                  <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
+                  
+                  {/* Progress bar */}
+                  <div className="mb-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm text-muted-foreground">Presale Progress: {project.presalePercentage}%</span>
+                      <span className="text-sm font-semibold">${project.targetFunding.toLocaleString()} Target</span>
+                    </div>
+                    <Progress value={project.presalePercentage} className="h-2" />
+                    {project.presalePercentage >= 80 && (
+                      <div className="text-xs text-green-600 font-semibold mt-1">✅ Greenlit for DAO funding!</div>
+                    )}
+                  </div>
+                  
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-sm text-muted-foreground">Min. Investment:</span>
+                    <span className="text-sm font-semibold text-gold">${project.minInvestment}</span>
+                  </div>
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-sm text-muted-foreground">Est. Annual Yield:</span>
+                    <span className="text-sm font-semibold text-green-500">{project.estimatedYield}</span>
+                  </div>
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-sm text-muted-foreground">Community Backers:</span>
+                    <span className="text-sm font-semibold">{project.backers}</span>
+                  </div>
+
+                  {/* Developer testimonial */}
+                  <div className="bg-primary/5 rounded-lg p-3 mb-4">
+                    <p className="text-xs italic text-muted-foreground">
+                      "{project.developerStory}"
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1 mb-4">
+                    {project.tags.map((tag) => (
+                      <Badge key={tag} variant="secondary" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                  
+                  <Button className="w-full" variant={project.presalePercentage >= 80 ? "default" : "outline"}>
+                    {project.presalePercentage >= 80 ? "View Greenlit Project" : "Support Project"}
                   </Button>
                 </CardContent>
               </Card>
