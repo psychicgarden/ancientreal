@@ -66,12 +66,12 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
   // True ROI: Total annual benefit divided by total investment
   const trueAnnualROI = (totalAnnualBenefit / investmentAmount) * 100;
   
-  // Total wealth impact over 10 years
+  // Total wealth actually created (not comparative savings)
   const totalCashFlow = annualProfit * 10;
-  const totalWealthCreated = totalCashFlow + totalInterestSaved + buyerAppreciationShare;
+  const actualWealthCreated = totalCashFlow + buyerAppreciationShare;
   
-  // Calculate total 10-year ROI including all components
-  const total10YearROI = (totalWealthCreated / investmentAmount) * 100;
+  // Calculate total 10-year ROI based on actual wealth created
+  const total10YearROI = (actualWealthCreated / investmentAmount) * 100;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -217,7 +217,7 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
                 <div>
                   <div className="text-sm text-muted-foreground">Total Wealth Created</div>
                   <div className="text-lg font-bold text-primary">
-                    ${Math.round(totalWealthCreated).toLocaleString()}
+                    ${Math.round(actualWealthCreated).toLocaleString()}
                   </div>
                 </div>
               </div>
