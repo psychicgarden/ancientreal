@@ -28,7 +28,7 @@ const Developers = () => {
       id: 1,
       title: "Bali Eco Resort Complex",
       creator: "Tropical Builders Co.",
-      description: "Luxury eco-resort with 45 units in Canggu. Presold 100% before groundbreaking.",
+      description: "Luxury eco-resort with 45 units in Canggu. Sold out in 4 days after DAO funding.",
       initialFunding: 850000,
       currentValue: 1200000,
       roi: "41%",
@@ -127,26 +127,32 @@ const Developers = () => {
     {
       step: 1,
       icon: <Upload className="h-6 w-6" />,
-      title: "Submit Your Project",
-      description: "Upload your project details, codebase, demo, and funding requirements"
+      title: "Upload Project Blueprint",
+      description: "Share renderings, 3D models, videos, and design story to showcase your vision"
     },
     {
       step: 2,
       icon: <Shield className="h-6 w-6" />,
-      title: "Technical Review",
-      description: "Our expert validators review your code, feasibility, and innovation potential"
+      title: "Prove Ownership & Show Past Work",
+      description: "Upload deeds, contracts, permits, and portfolio of past builds with testimonials"
     },
     {
       step: 3,
-      icon: <Vote className="h-6 w-6" />,
-      title: "Community Voting",
-      description: "DAO members and community vote on funding your project based on merit and potential"
+      icon: <Users className="h-6 w-6" />,
+      title: "Create Presale Tiers & Set Goals",
+      description: "Token-gated or public presales for early backers with funding goals and milestones"
     },
     {
       step: 4,
+      icon: <Vote className="h-6 w-6" />,
+      title: "DAO Vetting & Community Voting",
+      description: "Gain DAO approval, feedback, and ranking before funding unlocks"
+    },
+    {
+      step: 5,
       icon: <Zap className="h-6 w-6" />,
       title: "Get Funded & Build",
-      description: "Receive funding in tranches based on milestones and start building your vision"
+      description: "Receive milestone-based funding and sell out in 4 days to 2 months"
     }
   ];
 
@@ -177,7 +183,7 @@ const Developers = () => {
             </div>
             
             {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mt-16">
               <div className="text-center">
                 <div className="text-3xl font-bold text-green-600">$4.2M+</div>
                 <div className="text-muted-foreground">Developer Profits</div>
@@ -185,6 +191,10 @@ const Developers = () => {
               <div className="text-center">
                 <div className="text-3xl font-bold text-primary">156</div>
                 <div className="text-muted-foreground">Projects Completed</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-accent">&lt; 1 Week</div>
+                <div className="text-muted-foreground">Average Sellout Time</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-green-600">47%</div>
@@ -307,11 +317,11 @@ const Developers = () => {
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">How It Works</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              From idea to funding in 4 simple steps. Our streamlined process gets you building faster.
+              From idea to funding in 5 detailed steps. Our comprehensive process ensures project success.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
             {howItWorks.map((step, index) => (
               <div key={step.step} className="text-center">
                 <div className="relative mb-6">
