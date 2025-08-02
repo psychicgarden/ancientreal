@@ -18,7 +18,7 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
   // Investment calculations - Dynamic Mortgage Model
   const investmentAmount = investment[0];
   const propertyValue = 150000;
-  const monthlyRent = 2400;
+  const monthlyRent = 2050;
   
   // Calculate mortgage payment based on down payment
   const loanAmount = propertyValue - investmentAmount;
