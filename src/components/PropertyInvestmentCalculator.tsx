@@ -20,16 +20,21 @@ interface PropertyInvestmentCalculatorProps {
 }
 
 const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: PropertyInvestmentCalculatorProps) => {
-  const [investment, setInvestment] = useState([0]);
+  const [investment, setInvestment] = useState([30000]); // Default value
   const { isConnected, purchaseTokens, isPurchasing } = useWallet();
 
+  // Set investment to property's down payment when property changes
+  useEffect(() => {
+    if (property) {
+      setInvestment([property.downPayment]);
+    }
+  }, [property]);
+
+  // Early return AFTER all hooks
   if (!property) return null;
 
-  // Set initial investment to property's down payment
-  const initialInvestment = investment[0] || property.downPayment;
-
   // Investment calculations - Dynamic Mortgage Model
-  const investmentAmount = initialInvestment;
+  const investmentAmount = investment[0];
   const propertyValue = property.totalValue;
   const monthlyRent = property.monthlyRent;
   
@@ -85,12 +90,6 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
 
   const cashFlowYield = (annualProfit / investmentAmount) * 100;
 
-  // Set investment to property's down payment when property changes
-  useEffect(() => {
-    if (property) {
-      setInvestment([property.downPayment]);
-    }
-  }, [property]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
