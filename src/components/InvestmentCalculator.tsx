@@ -49,30 +49,21 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
   
   const totalInterestSaved = baselineTotalInterest - totalInterest;
   
-  // Calculate baseline scenario returns for comparison
-  const baselineMonthlyProfit = monthlyRent - baselineMonthlymortgage;
-  const baselineAnnualProfit = baselineMonthlyProfit * 12;
-  
-  // Calculate additional investment above baseline
-  const additionalInvestment = investmentAmount - 30000;
-  const additionalMonthlyProfit = monthlyProfit - baselineMonthlyProfit;
-  const additionalAnnualProfit = additionalMonthlyProfit * 12;
-  
-  // Calculate returns properly
+  // Calculate absolute returns for this scenario
   const annualProfit = monthlyProfit * 12;
   const cashFlowYield = (annualProfit / investmentAmount) * 100;
   
-  // Calculate marginal ROI on additional investment (shows true benefit of putting more down)
+  // Calculate total annual benefit (cash flow + guaranteed interest savings)
   const annualInterestSavings = totalInterestSaved / 10; // Annual portion of total savings
-  const marginalAnnualBenefit = additionalAnnualProfit + annualInterestSavings;
-  const marginalROI = additionalInvestment > 0 
-    ? (marginalAnnualBenefit / additionalInvestment) * 100 
-    : 0;
+  const totalAnnualBenefit = annualProfit + annualInterestSavings;
   
-  // Calculate efficiency metric: interest saved per additional dollar invested
-  const interestEfficiency = additionalInvestment > 0 
-    ? totalInterestSaved / additionalInvestment 
-    : 0;
+  // True ROI: Total annual benefit divided by total investment
+  // This shows the absolute return on your investment amount
+  const trueAnnualROI = (totalAnnualBenefit / investmentAmount) * 100;
+  
+  // Total wealth impact over 10 years
+  const totalCashFlow = annualProfit * 10;
+  const totalWealthCreated = totalCashFlow + totalInterestSaved;
   
   // 10-year projections (12% property growth, mortgage balance after 10 years)
   const tenYearPropertyValue = propertyValue * Math.pow(1.12, 10);
@@ -169,10 +160,10 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
                   <span className="font-medium">True Annual ROI</span>
                 </div>
                 <div className="text-2xl font-bold text-orange-600">
-                  {marginalROI.toFixed(1)}%
+                  {trueAnnualROI.toFixed(1)}%
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  On additional investment
+                  Total return on investment
                 </div>
               </CardContent>
             </Card>
