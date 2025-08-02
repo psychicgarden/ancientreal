@@ -34,6 +34,21 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
     
   const monthlyProfit = monthlyRent - monthlyMortgage;
   
+  // Calculate total interest savings
+  const totalPayments = monthlyMortgage * loanTermMonths;
+  const totalInterest = totalPayments - loanAmount;
+  
+  // Calculate baseline scenario (minimum $30K down payment)
+  const baselineLoanAmount = propertyValue - 30000;
+  const baselineMonthlymortgage = baselineLoanAmount > 0 
+    ? (baselineLoanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, loanTermMonths)) / 
+      (Math.pow(1 + monthlyInterestRate, loanTermMonths) - 1)
+    : 0;
+  const baselineTotalPayments = baselineMonthlymortgage * loanTermMonths;
+  const baselineTotalInterest = baselineTotalPayments - baselineLoanAmount;
+  
+  const totalInterestSaved = baselineTotalInterest - totalInterest;
+  
   // Calculate mortgage financing returns
   const annualProfit = monthlyProfit * 12;
   const annualYield = (annualProfit / investmentAmount) * 100;
@@ -46,7 +61,7 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
       monthlyMortgage * ((Math.pow(1 + monthlyInterestRate, paymentsIn10Years) - 1) / monthlyInterestRate)
     : 0;
   const tenYearEquity = tenYearPropertyValue - Math.max(0, remainingMortgage);
-  const tenYearProfit = tenYearEquity - investmentAmount;
+  const tenYearProfit = tenYearEquity - investmentAmount + totalInterestSaved;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -80,7 +95,7 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
           </div>
 
           {/* Real-time Calculations */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 mb-2">
@@ -107,6 +122,21 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
                 </div>
                 <div className="text-sm text-muted-foreground">
                   ${Math.round(annualProfit).toLocaleString()}/year
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Calculator className="w-4 h-4 text-purple-500" />
+                  <span className="font-medium">Interest Saved</span>
+                </div>
+                <div className="text-2xl font-bold text-purple-600">
+                  ${Math.round(totalInterestSaved).toLocaleString()}
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  vs. $30K down payment
                 </div>
               </CardContent>
             </Card>
