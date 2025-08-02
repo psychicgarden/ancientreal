@@ -107,7 +107,7 @@ const Developers = () => {
       roi: "Est. 38%",
       timeline: "20 months",
       backers: 298,
-      image: "https://images.unsplash.com/photo-1539650116574-75c0c6d73a0e?w=800&h=600&fit=crop",
+      image: "https://images.unsplash.com/photo-1482881497185-d4a9ddbe4151?w=800&h=600&fit=crop",
       tags: ["Wellness", "Sustainability", "Retreat"],
       presalePercentage: 70,
       minInvestment: 300,
