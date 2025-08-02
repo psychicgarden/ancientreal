@@ -8,7 +8,7 @@ import { useWallet } from "@/contexts/WalletContext";
 import PropertyInvestmentCalculator from "@/components/PropertyInvestmentCalculator";
 import villaTulum from "@/assets/villa-tulum.jpg";
 import beachChalet from "@/assets/beach-chalet.jpg";
-import coworkingParis from "@/assets/coworking-paris.jpg";
+import villaCorfu from "@/assets/villa-corfu-greece.jpg";
 
 const FeaturedInvestments = () => {
   const { isConnected, purchaseTokens, isPurchasing } = useWallet();
@@ -73,12 +73,12 @@ const FeaturedInvestments = () => {
       monthlyPayment: 2717,
       monthlyRent: 2950,
       monthlyProfit: 233,
-      networkValue: 576000, // 280k * 1.074^10 (7.4% annually with 4% rent growth)
+      networkValue: 663000, // 280k * 2.37 (10-year appreciation with 4% rent growth)
       propertiesSold: 5,
       totalProperties: 10,
       mortgageTerm: "10 years",
       expectedReturn: 17.8,
-      image: coworkingParis,
+      image: villaCorfu,
       isBlockchain: false,
       isVillage: true
     }
