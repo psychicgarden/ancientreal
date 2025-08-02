@@ -22,9 +22,9 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
   
   // Calculate mortgage payment based on down payment
   const loanAmount = propertyValue - investmentAmount;
-  const annualInterestRate = 0.07; // 7% annual rate
+  const annualInterestRate = 0.08; // 8% annual rate
   const monthlyInterestRate = annualInterestRate / 12;
-  const loanTermMonths = 30 * 12; // 30 years
+  const loanTermMonths = 10 * 12; // 10 years
   
   // Mortgage payment formula: M = P[r(1+r)^n]/[(1+r)^n-1]
   const monthlyMortgage = loanAmount > 0 
