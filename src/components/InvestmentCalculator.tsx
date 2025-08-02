@@ -53,27 +53,25 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
   const annualProfit = monthlyProfit * 12;
   const cashFlowYield = (annualProfit / investmentAmount) * 100;
   
-  // Calculate total annual benefit (cash flow + guaranteed interest savings)
+  // Property appreciation calculations
+  const tenYearPropertyValue = 467000; // Fixed final value as specified
+  const totalAppreciation = tenYearPropertyValue - propertyValue; // $317,000
+  const buyerAppreciationShare = totalAppreciation * 0.5; // 50% split = $158,500
+  const annualAppreciationBenefit = buyerAppreciationShare / 10; // Annualized
+  
+  // Calculate total annual benefit (cash flow + interest savings + appreciation)
   const annualInterestSavings = totalInterestSaved / 10; // Annual portion of total savings
-  const totalAnnualBenefit = annualProfit + annualInterestSavings;
+  const totalAnnualBenefit = annualProfit + annualInterestSavings + annualAppreciationBenefit;
   
   // True ROI: Total annual benefit divided by total investment
-  // This shows the absolute return on your investment amount
   const trueAnnualROI = (totalAnnualBenefit / investmentAmount) * 100;
   
   // Total wealth impact over 10 years
   const totalCashFlow = annualProfit * 10;
-  const totalWealthCreated = totalCashFlow + totalInterestSaved;
+  const totalWealthCreated = totalCashFlow + totalInterestSaved + buyerAppreciationShare;
   
-  // 10-year projections (12% property growth, mortgage balance after 10 years)
-  const tenYearPropertyValue = propertyValue * Math.pow(1.12, 10);
-  const paymentsIn10Years = 10 * 12;
-  const remainingMortgage = loanAmount > 0 
-    ? loanAmount * Math.pow(1 + monthlyInterestRate, paymentsIn10Years) - 
-      monthlyMortgage * ((Math.pow(1 + monthlyInterestRate, paymentsIn10Years) - 1) / monthlyInterestRate)
-    : 0;
-  const tenYearEquity = tenYearPropertyValue - Math.max(0, remainingMortgage);
-  const tenYearProfit = tenYearEquity - investmentAmount + totalInterestSaved;
+  // Calculate total 10-year ROI including all components
+  const total10YearROI = (totalWealthCreated / investmentAmount) * 100;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -176,7 +174,7 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
                 <Users className="w-5 h-5" />
                 10-Year Network Projection
               </h3>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-center">
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 text-center">
                 <div>
                   <div className="text-sm text-muted-foreground">Investment</div>
                   <div className="text-lg font-bold">${investmentAmount.toLocaleString()}</div>
@@ -184,7 +182,7 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
                 <div>
                   <div className="text-sm text-muted-foreground">Cash Flow</div>
                   <div className="text-lg font-bold text-green-600">
-                    ${Math.round(annualProfit * 10).toLocaleString()}
+                    ${Math.round(totalCashFlow).toLocaleString()}
                   </div>
                 </div>
                 <div>
@@ -194,16 +192,46 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
                   </div>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">Total Benefit</div>
+                  <div className="text-sm text-muted-foreground">Property Appreciation (50%)</div>
+                  <div className="text-lg font-bold text-blue-600">
+                    ${Math.round(buyerAppreciationShare).toLocaleString()}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">Total Wealth Created</div>
                   <div className="text-lg font-bold text-primary">
-                    ${Math.round(annualProfit * 10 + totalInterestSaved).toLocaleString()}
+                    ${Math.round(totalWealthCreated).toLocaleString()}
                   </div>
                 </div>
               </div>
+              
+              {/* Property Appreciation Breakdown */}
+              <div className="mt-6 pt-4 border-t">
+                <h4 className="font-medium mb-3 text-center">Property Appreciation Breakdown</h4>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-center text-sm">
+                  <div>
+                    <div className="text-muted-foreground">Starting Value</div>
+                    <div className="font-semibold">${propertyValue.toLocaleString()}</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Final Value (Year 10)</div>
+                    <div className="font-semibold">${tenYearPropertyValue.toLocaleString()}</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Total Appreciation</div>
+                    <div className="font-semibold text-blue-600">${totalAppreciation.toLocaleString()}</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Your Share (50%)</div>
+                    <div className="font-semibold text-blue-600">${Math.round(buyerAppreciationShare).toLocaleString()}</div>
+                  </div>
+                </div>
+              </div>
+              
               <div className="mt-4 pt-4 border-t text-center">
-                <div className="text-sm text-muted-foreground">Total Return on Investment</div>
+                <div className="text-sm text-muted-foreground">Total 10-Year ROI</div>
                 <div className="text-2xl font-bold text-primary">
-                  {(((annualProfit * 10 + totalInterestSaved) / investmentAmount) * 100).toFixed(1)}%
+                  {total10YearROI.toFixed(1)}%
                 </div>
               </div>
             </CardContent>
