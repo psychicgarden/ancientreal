@@ -51,7 +51,12 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
   
   // Calculate mortgage financing returns
   const annualProfit = monthlyProfit * 12;
-  const annualYield = (annualProfit / investmentAmount) * 100;
+  const cashFlowYield = (annualProfit / investmentAmount) * 100;
+  
+  // Calculate true annual benefit including interest savings
+  const annualInterestSavings = totalInterestSaved / 10; // Annual portion of total savings
+  const trueAnnualBenefit = annualProfit + annualInterestSavings;
+  const totalROI = (trueAnnualBenefit / investmentAmount) * 100;
   
   // 10-year projections (12% property growth, mortgage balance after 10 years)
   const tenYearPropertyValue = propertyValue * Math.pow(1.12, 10);
@@ -95,7 +100,7 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
           </div>
 
           {/* Real-time Calculations */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 mb-2">
@@ -106,7 +111,7 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
                   ${Math.round(monthlyProfit).toLocaleString()}
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  Fixed monthly return
+                  ${Math.round(annualProfit).toLocaleString()}/year
                 </div>
               </CardContent>
             </Card>
@@ -115,13 +120,13 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <Home className="w-4 h-4 text-blue-500" />
-                  <span className="font-medium">Annual Yield</span>
+                  <span className="font-medium">Cash Flow Yield</span>
                 </div>
                 <div className="text-2xl font-bold text-blue-600">
-                  {annualYield.toFixed(1)}%
+                  {cashFlowYield.toFixed(1)}%
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  ${Math.round(annualProfit).toLocaleString()}/year
+                  Cash-on-cash return
                 </div>
               </CardContent>
             </Card>
@@ -140,6 +145,21 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
                 </div>
               </CardContent>
             </Card>
+
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <TrendingUp className="w-4 h-4 text-orange-500" />
+                  <span className="font-medium">True Annual ROI</span>
+                </div>
+                <div className="text-2xl font-bold text-orange-600">
+                  {totalROI.toFixed(1)}%
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Including interest savings
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* 10-Year Projection */}
@@ -149,22 +169,34 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
                 <Users className="w-5 h-5" />
                 10-Year Network Projection
               </h3>
-              <div className="grid grid-cols-3 gap-4 text-center">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-center">
                 <div>
-                  <div className="text-sm text-muted-foreground">Your Investment</div>
+                  <div className="text-sm text-muted-foreground">Investment</div>
                   <div className="text-lg font-bold">${investmentAmount.toLocaleString()}</div>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">Projected Equity</div>
+                  <div className="text-sm text-muted-foreground">Cash Flow</div>
                   <div className="text-lg font-bold text-green-600">
-                    ${Math.round(tenYearEquity).toLocaleString()}
+                    ${Math.round(annualProfit * 10).toLocaleString()}
                   </div>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">Total Profit</div>
-                  <div className="text-lg font-bold text-primary">
-                    ${Math.round(tenYearProfit).toLocaleString()}
+                  <div className="text-sm text-muted-foreground">Interest Saved</div>
+                  <div className="text-lg font-bold text-purple-600">
+                    ${Math.round(totalInterestSaved).toLocaleString()}
                   </div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">Total Benefit</div>
+                  <div className="text-lg font-bold text-primary">
+                    ${Math.round(annualProfit * 10 + totalInterestSaved).toLocaleString()}
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t text-center">
+                <div className="text-sm text-muted-foreground">Total Return on Investment</div>
+                <div className="text-2xl font-bold text-primary">
+                  {(((annualProfit * 10 + totalInterestSaved) / investmentAmount) * 100).toFixed(1)}%
                 </div>
               </div>
             </CardContent>
