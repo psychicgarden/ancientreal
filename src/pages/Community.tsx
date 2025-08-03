@@ -273,16 +273,16 @@ const Community = () => {
           </Badge>
           
           <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
-            Click. Own. Earn.
+            A New Era of Ownership.
             <br />
             <span className="bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
-              Welcome Home.
+              Click. Own. Earn.
             </span>
           </h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-4xl mx-auto leading-relaxed">
-            No banks. No agents. No borders. Just blockchain-secured ownership in sacred communities 
-            where conscious nomads gather to build wealth, connection, and transformation.
+            No banks. No borders. No bullshit.<br />
+            Curated sanctuaries where creatives renegades build wealth and community.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
