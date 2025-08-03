@@ -35,17 +35,10 @@ import { useState } from "react";
 const Community = () => {
   const [propertyValue, setPropertyValue] = useState([150000]);
   const [downPayment, setDownPayment] = useState([30000]);
-  const [selectedLocation, setSelectedLocation] = useState("tulum");
+  const [selectedLocation, setSelectedLocation] = useState("bali");
   
   // Location-based property data with realistic rental yields
   const locationData = {
-    tulum: {
-      name: "Tulum, Mexico",
-      avgPrice: 150000,
-      monthlyRent: 1800,
-      context: "High tourist demand, luxury eco-tourism market",
-      yield: 14.4
-    },
     bahia: {
       name: "Bahia, Brazil", 
       avgPrice: 120000,
@@ -69,10 +62,10 @@ const Community = () => {
     },
     bali: {
       name: "Bali, Indonesia",
-      avgPrice: 85000,
-      monthlyRent: 1200,
+      avgPrice: 135000,
+      monthlyRent: 1400,
       context: "Lowest entry cost, strong rental demand",
-      yield: 16.9
+      yield: 12.4
     }
   };
   
@@ -324,7 +317,7 @@ const Community = () => {
               {
                 step: 1,
                 title: "Discover Your Perfect Space",
-                description: "Browse curated properties in conscious communities worldwide"
+                description: "Browse curated properties worldwide"
               },
               {
                 step: 2,
@@ -344,11 +337,11 @@ const Community = () => {
             ].map((step, index) => (
               <div key={index} className="group">
                 <div className="relative mb-6">
-                  <div className="w-16 h-16 mx-auto bg-gradient-to-r from-primary to-primary/60 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <div className="w-16 h-16 mx-auto bg-gradient-to-r from-purple-500 to-orange-500 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
                     {step.step}
                   </div>
                   {index < 3 && (
-                    <div className="hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-gradient-to-r from-primary/30 to-transparent transform translate-x-8"></div>
+                    <div className="hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-gradient-to-r from-purple-300 to-orange-300/30 transform translate-x-8"></div>
                   )}
                 </div>
                 <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-primary transition-colors duration-300">{step.title}</h3>
@@ -359,87 +352,81 @@ const Community = () => {
         </div>
       </section>
 
-      {/* Renting vs Ancient Ownership */}
-      <section className="py-20 bg-gradient-to-br from-muted/20 to-muted/40">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <Badge className="mb-4">The Mathematics of Modern Nomadism</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Every decade, 50 million nomads collectively spend <span className="text-red-500">$216,000</span> on rent.<br />
-              <span className="text-primary">We transform that into $467,000 in real estate equity.</span>
-            </h2>
-          </div>
-
-          <div className="max-w-6xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-8 mb-12">
-              {/* Traditional Path */}
-              <Card className="p-8 bg-red-50 border-red-200">
-                <div className="text-center">
-                  <h3 className="text-2xl font-bold text-red-600 mb-6">Traditional Path</h3>
-                  <div className="space-y-6">
-                    <div>
-                      <div className="text-sm text-red-500 uppercase tracking-wide">Monthly Rent</div>
-                      <div className="text-4xl font-bold text-red-600">$1,800</div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-red-500 uppercase tracking-wide">Decade Total</div>
-                      <div className="text-4xl font-bold text-red-600">$216,000</div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-red-500 uppercase tracking-wide">Equity Built</div>
-                      <div className="text-4xl font-bold text-red-600">$0</div>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-
-              {/* Ancient Path */}
-              <Card className="p-8 bg-green-50 border-green-200">
-                <div className="text-center">
-                  <h3 className="text-2xl font-bold text-green-600 mb-6">Ancient Path</h3>
-                  <div className="space-y-6">
-                    <div>
-                      <div className="text-sm text-green-500 uppercase tracking-wide">Monthly Payment</div>
-                      <div className="text-4xl font-bold text-green-600">$1,456</div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-green-500 uppercase tracking-wide">Decade Total</div>
-                      <div className="text-4xl font-bold text-green-600">$204,720</div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-green-500 uppercase tracking-wide">Property Value</div>
-                      <div className="text-4xl font-bold text-green-600">$467,000</div>
-                    </div>
-                  </div>
-                </div>
-              </Card>
+        {/* The Mathematics of Modern Nomadism */}
+        <section className="py-20 bg-gradient-to-br from-muted/20 to-muted/40">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-8">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
+                The Mathematics of Modern Nomadism
+              </h2>
+              <p className="text-xl text-muted-foreground mb-8 max-w-4xl mx-auto">
+                Every decade the average digital nomad burns 216K on dead rent.<br />
+                We transform that into $467,000 in real estate equity.
+              </p>
             </div>
 
-            <div className="text-center">
-              <div className="bg-gradient-to-r from-primary to-purple-600 text-white p-8 rounded-lg mb-8">
-                <h3 className="text-2xl font-bold mb-4">The Difference</h3>
-                <p className="text-xl mb-6">Identical monthly commitment. Generational wealth outcome.</p>
-                
-                <div className="grid md:grid-cols-3 gap-6">
-                  <div>
-                    <div className="text-sm opacity-90 uppercase tracking-wide">Down Payment</div>
-                    <div className="text-3xl font-bold">$30K</div>
-                  </div>
-                  <div>
-                    <div className="text-sm opacity-90 uppercase tracking-wide">Final Equity</div>
-                    <div className="text-3xl font-bold">$467K</div>
-                  </div>
-                  <div>
-                    <div className="text-sm opacity-90 uppercase tracking-wide">Total Return</div>
-                    <div className="text-3xl font-bold">181%</div>
-                  </div>
+          <div className="grid md:grid-cols-2 gap-8 mb-8">
+            <div className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6">
+              <h4 className="text-xl font-bold mb-4 text-red-400">Traditional Path</h4>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center py-1">
+                  <span className="text-muted-foreground">Monthly Rent</span>
+                  <span className="text-lg font-semibold">$1,800</span>
+                </div>
+                <div className="flex justify-between items-center py-1">
+                  <span className="text-muted-foreground">Decade Total</span>
+                  <span className="text-lg font-semibold">$216,000</span>
+                </div>
+                <div className="flex justify-between items-center py-1">
+                  <span className="text-muted-foreground">Equity Built</span>
+                  <span className="text-lg font-semibold text-red-400">$0</span>
                 </div>
               </div>
-              
-              <Button size="lg" className="px-8 py-4 text-lg">
-                Calculate Your Returns
-              </Button>
             </div>
+
+            <div className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6">
+              <h4 className="text-xl font-bold mb-4 text-green-400">Ancient Path</h4>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center py-1">
+                  <span className="text-muted-foreground">Monthly Payment</span>
+                  <span className="text-lg font-semibold">$1,456</span>
+                </div>
+                <div className="flex justify-between items-center py-1">
+                  <span className="text-muted-foreground">Decade Total</span>
+                  <span className="text-lg font-semibold">$204,720</span>
+                </div>
+                <div className="flex justify-between items-center py-1">
+                  <span className="text-muted-foreground">Property Value</span>
+                  <span className="text-lg font-semibold text-green-400">$467,000</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center">
+            <div className="bg-gradient-to-r from-primary to-purple-600 text-white p-8 rounded-lg mb-8">
+              <h3 className="text-2xl font-bold mb-4">The Difference</h3>
+              <p className="text-xl mb-6">Identical monthly commitment. Generational wealth outcome.</p>
+              
+              <div className="grid md:grid-cols-3 gap-6">
+                <div>
+                  <div className="text-sm opacity-90 uppercase tracking-wide">Down Payment</div>
+                  <div className="text-3xl font-bold">$30K</div>
+                </div>
+                <div>
+                  <div className="text-sm opacity-90 uppercase tracking-wide">Final Equity</div>
+                  <div className="text-3xl font-bold">$467K</div>
+                </div>
+                <div>
+                  <div className="text-sm opacity-90 uppercase tracking-wide">Total Return</div>
+                  <div className="text-3xl font-bold">181%</div>
+                </div>
+              </div>
+            </div>
+            
+            <Button size="lg" className="px-8 py-4 text-lg">
+              Calculate Returns
+            </Button>
           </div>
         </div>
       </section>
