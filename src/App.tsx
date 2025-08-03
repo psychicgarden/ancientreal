@@ -13,6 +13,7 @@ import TravelerPortal from "./pages/TravelerPortal";
 import Community from "./pages/Community";
 import Developers from "./pages/Developers";
 import SmartContractTest from "./pages/SmartContractTest";
+import LegalPortal from "./pages/LegalPortal";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +34,7 @@ const App = () => (
             
             <Route path="/community" element={<Community />} />
             <Route path="/developers" element={<Developers />} />
+            <Route path="/legal" element={<LegalPortal />} />
             <Route path="/test" element={<SmartContractTest />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
