@@ -291,7 +291,7 @@ const Community = () => {
               Become a Founding Citizen
             </Button>
             <Button size="lg" variant="outline" className="px-8 py-4 text-lg bg-white/10 border-white/20 text-primary hover:bg-white/20">
-              Explore Sacred Spaces
+              Explore Spaces
             </Button>
           </div>
         </div>
