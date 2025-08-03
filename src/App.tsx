@@ -7,6 +7,7 @@ import { WalletProvider } from "@/contexts/WalletContext";
 import Index from "./pages/Index";
 import InvestorPortal from "./pages/InvestorPortal";
 import Portfolio from "./pages/Portfolio";
+import Banking from "./pages/Banking";
 import TravelerPortal from "./pages/TravelerPortal";
 
 import Community from "./pages/Community";
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/investor" element={<InvestorPortal />} />
             <Route path="/portfolio" element={<Portfolio />} />
+            <Route path="/banking" element={<Banking />} />
             <Route path="/traveler" element={<TravelerPortal />} />
             
             <Route path="/community" element={<Community />} />
