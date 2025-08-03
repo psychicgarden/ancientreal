@@ -403,53 +403,113 @@ const Portfolio = () => {
 
           {/* Legal Documents Tab */}
           <TabsContent value="legal" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileText className="h-5 w-5" />
-                  Legal Documentation
-                </CardTitle>
-                <CardDescription>
-                  Property deeds, contracts, and legal compliance documents
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  {[
-                    { name: "Property Deed (Mexico)", status: "Verified", type: "Legal" },
-                    { name: "Smart Contract ABI", status: "Active", type: "Technical" },
-                    { name: "Nevis Corp Registration", status: "Valid", type: "Corporate" },
-                    { name: "Investment Agreement", status: "Signed", type: "Contract" },
-                    { name: "Rental Management Contract", status: "Active", type: "Management" },
-                    { name: "Insurance Policy", status: "Current", type: "Insurance" }
-                  ].map((doc, i) => (
-                    <div key={i} className="flex justify-between items-center p-3 border rounded-lg">
-                      <div>
-                        <span className="font-medium">{doc.name}</span>
-                        <div className="text-sm text-muted-foreground">{doc.type}</div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="text-green-600 border-green-200">
-                          {doc.status}
-                        </Badge>
-                        <Button variant="ghost" size="sm">
-                          <ExternalLink className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
+            <div className="grid gap-4">
+              <h3 className="text-lg font-semibold">Legal Documents</h3>
+              
+              <div className="space-y-2">
+                <div className="flex items-center justify-between p-3 bg-muted rounded">
+                  <div>
+                    <div className="font-medium">Mexican Property Deed</div>
+                    <div className="text-sm text-muted-foreground">Escritura Pública - Official property registration</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-green-600 border-green-600">Verified</Badge>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setSelectedDocument('property-deed')}
+                    >
+                      View
+                    </Button>
+                  </div>
                 </div>
-
-                <div className="bg-muted/50 p-4 rounded-lg">
-                  <h4 className="font-medium mb-2">Legal Structure</h4>
-                  <p className="text-sm text-muted-foreground">
-                    This property is owned by Ancient Holdings Ltd, a Nevis Corporation, and managed 
-                    under Mexican real estate law. Your investment is secured by blockchain smart 
-                    contracts on the Avalanche network, providing transparency and automated income distribution.
-                  </p>
+                
+                <div className="flex items-center justify-between p-3 bg-muted rounded">
+                  <div>
+                    <div className="font-medium">Nevis Corporation Registration</div>
+                    <div className="text-sm text-muted-foreground">Ancient Holdings Ltd. incorporation certificate</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-green-600 border-green-600">Active</Badge>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setSelectedDocument('nevis-corp')}
+                    >
+                      View
+                    </Button>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
+                
+                <div className="flex items-center justify-between p-3 bg-muted rounded">
+                  <div>
+                    <div className="font-medium">Investment Agreement</div>
+                    <div className="text-sm text-muted-foreground">Tokenized real estate investment contract</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-green-600 border-green-600">Signed</Badge>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setSelectedDocument('investment-agreement')}
+                    >
+                      View
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between p-3 bg-muted rounded">
+                  <div>
+                    <div className="font-medium">Smart Contract Documentation</div>
+                    <div className="text-sm text-muted-foreground">Technical specs and audit reports</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-green-600 border-green-600">Audited</Badge>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setSelectedDocument('smart-contract')}
+                    >
+                      View
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between p-3 bg-muted rounded">
+                  <div>
+                    <div className="font-medium">Insurance Policy</div>
+                    <div className="text-sm text-muted-foreground">Comprehensive property insurance - $150k coverage</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-green-600 border-green-600">Active</Badge>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setSelectedDocument('insurance-policy')}
+                    >
+                      View
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="flex items-center justify-between p-3 bg-muted rounded">
+                  <div>
+                    <div className="font-medium">Rental Management Agreement</div>
+                    <div className="text-sm text-muted-foreground">Property management contract with Oaxaca Property Solutions</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-green-600 border-green-600">Active</Badge>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setSelectedDocument('rental-management')}
+                    >
+                      View
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
