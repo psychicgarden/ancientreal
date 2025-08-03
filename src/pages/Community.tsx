@@ -35,21 +35,52 @@ import { useState } from "react";
 const Community = () => {
   const [propertyValue, setPropertyValue] = useState([150000]);
   const [downPayment, setDownPayment] = useState([30000]);
+  const [selectedLocation, setSelectedLocation] = useState("tulum");
   
-  // Featured properties data for realistic calculations
-  const featuredProperties = [
-    { price: 150000, expectedReturn: 14.2 },
-    { price: 140000, expectedReturn: 11.8 },
-    { price: 160000, expectedReturn: 16.5 },
-  ];
+  // Location-based property data with realistic rental yields
+  const locationData = {
+    tulum: {
+      name: "Tulum, Mexico",
+      avgPrice: 150000,
+      monthlyRent: 1800,
+      context: "High tourist demand, luxury eco-tourism market",
+      yield: 14.4
+    },
+    bahia: {
+      name: "Bahia, Brazil", 
+      avgPrice: 120000,
+      monthlyRent: 1400,
+      context: "Growing surf tourism, lower property costs",
+      yield: 14.0
+    },
+    mykonos: {
+      name: "Mykonos, Greece",
+      avgPrice: 280000,
+      monthlyRent: 2200,
+      context: "Premium Mediterranean location, seasonal peaks",
+      yield: 9.4
+    },
+    mallorca: {
+      name: "Mallorca, Spain",
+      avgPrice: 190000,
+      monthlyRent: 1600,
+      context: "Digital nomad hub, year-round demand",
+      yield: 10.1
+    },
+    bali: {
+      name: "Bali, Indonesia",
+      avgPrice: 85000,
+      monthlyRent: 1200,
+      context: "Lowest entry cost, strong rental demand",
+      yield: 16.9
+    }
+  };
   
-  // Calculate average expected return from featured properties
-  const avgExpectedReturn = featuredProperties.reduce((sum, prop) => sum + prop.expectedReturn, 0) / featuredProperties.length;
+  const currentLocation = locationData[selectedLocation];
   
-  // Calculate ROI metrics with dynamic monthly profit based on featured properties
+  // Calculate ROI metrics based on selected location
   const monthlyPayment = ((propertyValue[0] - downPayment[0]) * 0.08) / 12;
-  const annualRentalIncome = propertyValue[0] * (avgExpectedReturn / 100);
-  const monthlyRentalIncome = annualRentalIncome / 12;
+  const monthlyRentalIncome = currentLocation.monthlyRent;
   const monthlyProfit = monthlyRentalIncome - monthlyPayment;
   const yearlyROI = ((monthlyProfit * 12) / downPayment[0]) * 100;
 
@@ -386,6 +417,38 @@ const Community = () => {
             <Card className="p-8">
               <div className="grid md:grid-cols-2 gap-12">
                 <div className="space-y-8">
+                  <div>
+                    <label className="block text-sm font-medium mb-4">Choose Location</label>
+                    <div className="grid grid-cols-1 gap-3">
+                      {Object.entries(locationData).map(([key, location]) => (
+                        <button
+                          key={key}
+                          onClick={() => {
+                            setSelectedLocation(key);
+                            setPropertyValue([location.avgPrice]);
+                          }}
+                          className={`p-4 rounded-lg border text-left transition-all ${
+                            selectedLocation === key 
+                              ? 'border-primary bg-primary/5 shadow-md' 
+                              : 'border-border hover:border-primary/50'
+                          }`}
+                        >
+                          <div className="flex justify-between items-start mb-2">
+                            <h3 className="font-semibold">{location.name}</h3>
+                            <Badge variant={selectedLocation === key ? "default" : "secondary"} className="text-xs">
+                              {location.yield}% yield
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground mb-2">{location.context}</p>
+                          <div className="flex justify-between text-sm">
+                            <span>Avg Price: ${location.avgPrice.toLocaleString()}</span>
+                            <span className="text-green-600 font-medium">${location.monthlyRent}/mo rent</span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
                   <div>
                     <label className="block text-sm font-medium mb-4">Property Value</label>
                     <Slider
