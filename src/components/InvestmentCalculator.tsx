@@ -161,10 +161,11 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
                   <span className="font-medium">Interest Eliminated</span>
                 </div>
                 <div className="text-2xl font-bold text-purple-600">
-                  ${Math.round(baselineTotalInterest - totalInterest).toLocaleString()}
+                  ${Math.max(0, Math.round(totalInterestSaved)).toLocaleString()}
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  {investmentAmount >= 150000 ? "100% Interest-Free" : "vs. baseline scenario"}
+                  {investmentAmount >= 150000 ? "100% Interest-Free" : 
+                   totalInterestSaved <= 0 ? "No additional savings" : "vs. baseline scenario"}
                 </div>
               </CardContent>
             </Card>
