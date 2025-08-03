@@ -1,11 +1,14 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { CONTRACTS, NETWORK_CONFIG, VILLAGE_MEMBERSHIP_FEE, MAZUNTE_PROPERTY } from '@/lib/contracts';
+import { web3Integration, Web3Integration } from '@/lib/web3-integration';
+import { ethers } from 'ethers';
 
 interface WalletContextType {
   isConnected: boolean;
   account: string | null;
   isLoading: boolean;
+  usdtBalance: string;
   connectWallet: () => Promise<void>;
   disconnectWallet: () => void;
   purchaseTokens: (investmentAmount?: number) => Promise<void>;
@@ -13,12 +16,18 @@ interface WalletContextType {
   joinVillage: () => Promise<void>;
   isJoiningVillage: boolean;
   checkVillageMembership: () => Promise<boolean>;
-  // Enhanced Mazunte Property Functions
-  purchaseProperty: (downPayment: number) => Promise<void>;
-  makePayment: () => Promise<void>;
+  // Enhanced Mazunte Property Functions with Real Web3 Integration
+  purchaseProperty: (downPayment: number) => Promise<{ success: boolean; mortgageId?: string; error?: string }>;
+  makePayment: () => Promise<{ success: boolean; error?: string }>;
   getMortgageDetails: () => Promise<any>;
   getMazuntePropertyStatus: () => Promise<any>;
+  getPaymentSchedule: () => Promise<any>;
+  cancelDuringCoolingOff: () => Promise<{ success: boolean; error?: string }>;
+  activateMortgage: () => Promise<{ success: boolean; error?: string }>;
+  isPaymentOverdue: () => Promise<boolean>;
   isPurchasingProperty: boolean;
+  isMakingPayment: boolean;
+  web3: Web3Integration;
 }
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
@@ -38,21 +47,51 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [isJoiningVillage, setIsJoiningVillage] = useState(false);
   const [isPurchasingProperty, setIsPurchasingProperty] = useState(false);
+  const [isMakingPayment, setIsMakingPayment] = useState(false);
+  const [usdtBalance, setUsdtBalance] = useState('0');
   const { toast } = useToast();
 
   useEffect(() => {
-    // Check if already connected
+    // Check if already connected and initialize Web3
     if (window.ethereum) {
       window.ethereum.request({ method: 'eth_accounts' })
-        .then((accounts: string[]) => {
+        .then(async (accounts: string[]) => {
           if (accounts.length > 0) {
-            setAccount(accounts[0]);
-            setIsConnected(true);
+            try {
+              await web3Integration.initialize();
+              setAccount(accounts[0]);
+              setIsConnected(true);
+              
+              // Load USDT balance
+              const balance = await web3Integration.getUSDTBalance(accounts[0]);
+              setUsdtBalance(balance);
+            } catch (error) {
+              console.error('Web3 initialization failed:', error);
+            }
           }
         })
         .catch(console.error);
     }
   }, []);
+
+  // Update USDT balance when account changes
+  useEffect(() => {
+    if (isConnected && account) {
+      const updateBalance = async () => {
+        try {
+          const balance = await web3Integration.getUSDTBalance(account);
+          setUsdtBalance(balance);
+        } catch (error) {
+          console.error('Failed to update USDT balance:', error);
+        }
+      };
+      updateBalance();
+      
+      // Set up balance update interval
+      const interval = setInterval(updateBalance, 30000); // Update every 30 seconds
+      return () => clearInterval(interval);
+    }
+  }, [isConnected, account]);
 
   const switchToAvalancheFuji = async () => {
     try {
@@ -105,13 +144,19 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       });
 
       if (accounts.length > 0) {
-        await switchToAvalancheFuji();
-        setAccount(accounts[0]);
+        await web3Integration.initialize();
+        const account = await web3Integration.getAccount();
+        
+        setAccount(account);
         setIsConnected(true);
+        
+        // Load initial USDT balance
+        const balance = await web3Integration.getUSDTBalance(account);
+        setUsdtBalance(balance);
         
         toast({
           title: "Wallet Connected",
-          description: "Connected to Avalanche Fuji - Smart contract testing enabled",
+          description: `Connected to Avalanche - USDT Balance: $${balance}`,
         });
       }
     } catch (error: any) {
@@ -153,15 +198,11 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         description: `Paying membership fee of ${VILLAGE_MEMBERSHIP_FEE} AVAX...`,
       });
 
-      const result = await executeContractCall(
-        CONTRACTS.VILLAGE_CITIZENSHIP,
-        'becomeCitizen',
-        [],
-        VILLAGE_MEMBERSHIP_FEE
-      );
+      const tx = await web3Integration.joinVillage();
+      await tx.wait();
       
       toast({
-        title: "Welcome to Mazunte Village!",
+        title: "Welcome to Mazunte Village! 🏝️",
         description: "Village membership activated. You now have full community access.",
       });
     } catch (error: any) {
@@ -180,23 +221,22 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (!isConnected || !account) return false;
     
     try {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      return Math.random() > 0.5;
+      return await web3Integration.checkVillageMembership(account);
     } catch (error) {
       console.error('Error checking village membership:', error);
       return false;
     }
   }, [isConnected, account]);
 
-  // Enhanced Mazunte Property Functions
-  const purchaseProperty = useCallback(async (downPayment: number) => {
+  // Enhanced Mazunte Property Functions with Real Web3 Integration
+  const purchaseProperty = useCallback(async (downPayment: number): Promise<{ success: boolean; mortgageId?: string; error?: string }> => {
     if (!isConnected || !account) {
       toast({
         title: "Wallet not connected",
         description: "Please connect your wallet first",
         variant: "destructive",
       });
-      return;
+      return { success: false, error: "Wallet not connected" };
     }
 
     setIsPurchasingProperty(true);
@@ -207,53 +247,83 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         description: `Processing down payment of $${downPayment.toLocaleString()}...`,
       });
 
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // Real smart contract interaction
+      const result = await web3Integration.purchaseProperty(downPayment);
+      
+      // Wait for transaction confirmation
+      await result.transaction.wait();
+      
+      // Update USDT balance
+      const newBalance = await web3Integration.getUSDTBalance(account);
+      setUsdtBalance(newBalance);
 
       toast({
-        title: "Property Purchase Successful!",
-        description: `You've successfully purchased the Mazunte property with a $${downPayment.toLocaleString()} down payment. Your mortgage has been created.`,
+        title: "Property Purchase Successful! 🏡",
+        description: `Mortgage created with ID: ${result.mortgageId}. You have a 72-hour cooling-off period.`,
       });
-    } catch (error) {
+
+      return { success: true, mortgageId: result.mortgageId };
+    } catch (error: any) {
       console.error('Property purchase failed:', error);
+      const errorMessage = error.message || "There was an error processing your property purchase.";
+      
       toast({
         title: "Purchase Failed",
-        description: "There was an error processing your property purchase. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
+      
+      return { success: false, error: errorMessage };
     } finally {
       setIsPurchasingProperty(false);
     }
   }, [isConnected, account, toast]);
 
-  const makePayment = useCallback(async () => {
+  const makePayment = useCallback(async (): Promise<{ success: boolean; error?: string }> => {
     if (!isConnected || !account) {
       toast({
         title: "Wallet not connected",
         description: "Please connect your wallet first",
         variant: "destructive",
       });
-      return;
+      return { success: false, error: "Wallet not connected" };
     }
 
+    setIsMakingPayment(true);
+    
     try {
       toast({
         title: "Processing Payment",
         description: "Making your monthly mortgage payment...",
       });
 
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Real smart contract interaction
+      const tx = await web3Integration.makePayment();
+      await tx.wait();
+      
+      // Update USDT balance
+      const newBalance = await web3Integration.getUSDTBalance(account);
+      setUsdtBalance(newBalance);
 
       toast({
-        title: "Payment Successful!",
+        title: "Payment Successful! 💰",
         description: "Your monthly mortgage payment has been processed.",
       });
-    } catch (error) {
+      
+      return { success: true };
+    } catch (error: any) {
       console.error('Payment failed:', error);
+      const errorMessage = error.message || "There was an error processing your payment.";
+      
       toast({
         title: "Payment Failed",
-        description: "There was an error processing your payment.",
+        description: errorMessage,
         variant: "destructive",
       });
+      
+      return { success: false, error: errorMessage };
+    } finally {
+      setIsMakingPayment(false);
     }
   }, [isConnected, account, toast]);
 
@@ -261,16 +331,20 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (!isConnected || !account) return null;
 
     try {
+      const details = await web3Integration.getMortgageDetails(account);
+      
       return {
-        downPayment: 30000,
-        principalAmount: 120000,
-        monthlyPayment: 1456,
-        remainingBalance: 115000,
-        nextPaymentDue: Date.now() + (25 * 24 * 60 * 60 * 1000), // 25 days from now
-        missedPayments: 0,
-        isActive: true,
-        isForeclosed: false,
-        isCompleted: false
+        downPayment: parseFloat(web3Integration.formatUSDT(details.downPayment)),
+        principalAmount: parseFloat(web3Integration.formatUSDT(details.principalAmount)),
+        monthlyPayment: parseFloat(web3Integration.formatUSDT(details.monthlyPayment)),
+        remainingBalance: parseFloat(web3Integration.formatUSDT(details.remainingBalance)),
+        nextPaymentDue: Number(details.nextPaymentDue) * 1000, // Convert to milliseconds
+        missedPayments: Number(details.missedPayments),
+        totalPaid: parseFloat(web3Integration.formatUSDT(details.totalPaid)),
+        isActive: details.isActive,
+        isForeclosed: details.isForeclosed,
+        isCompleted: details.isCompleted,
+        coolingOffActive: details.coolingOffActive
       };
     } catch (error) {
       console.error('Failed to get mortgage details:', error);
@@ -280,18 +354,107 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const getMazuntePropertyStatus = useCallback(async () => {
     try {
+      const status = await web3Integration.getPropertyStatus();
+      
       return {
-        totalValue: MAZUNTE_PROPERTY.VALUE,
-        currentValue: MAZUNTE_PROPERTY.VALUE,
-        totalDownPayments: 30000,
-        appreciationValue: 0,
-        fullyOwned: false
+        totalValue: parseFloat(web3Integration.formatUSDT(status.totalValue)),
+        currentValue: parseFloat(web3Integration.formatUSDT(status.currentValue)),
+        totalDownPayments: parseFloat(web3Integration.formatUSDT(status.totalDownPayments)),
+        appreciationValue: parseFloat(web3Integration.formatUSDT(status.appreciationValue)),
+        fullyOwned: status.fullyOwned
       };
     } catch (error) {
       console.error('Failed to get property status:', error);
       return null;
     }
   }, []);
+
+  const getPaymentSchedule = useCallback(async () => {
+    if (!isConnected || !account) return null;
+
+    try {
+      const schedule = await web3Integration.getPaymentSchedule(account);
+      
+      return schedule.map((payment: any) => ({
+        paymentNumber: Number(payment.paymentNumber),
+        principalAmount: parseFloat(web3Integration.formatUSDT(payment.principalAmount)),
+        interestAmount: parseFloat(web3Integration.formatUSDT(payment.interestAmount)),
+        remainingBalance: parseFloat(web3Integration.formatUSDT(payment.remainingBalance)),
+        dueDate: Number(payment.dueDate) * 1000, // Convert to milliseconds
+        isPaid: payment.isPaid
+      }));
+    } catch (error) {
+      console.error('Failed to get payment schedule:', error);
+      return null;
+    }
+  }, [isConnected, account]);
+
+  const cancelDuringCoolingOff = useCallback(async (): Promise<{ success: boolean; error?: string }> => {
+    if (!isConnected || !account) {
+      return { success: false, error: "Wallet not connected" };
+    }
+
+    try {
+      const tx = await web3Integration.cancelDuringCoolingOff();
+      await tx.wait();
+      
+      // Update USDT balance
+      const newBalance = await web3Integration.getUSDTBalance(account);
+      setUsdtBalance(newBalance);
+
+      toast({
+        title: "Cancellation Successful",
+        description: "Your mortgage has been cancelled and down payment refunded.",
+      });
+      
+      return { success: true };
+    } catch (error: any) {
+      const errorMessage = error.message || "Failed to cancel mortgage.";
+      toast({
+        title: "Cancellation Failed",
+        description: errorMessage,
+        variant: "destructive",
+      });
+      return { success: false, error: errorMessage };
+    }
+  }, [isConnected, account, toast]);
+
+  const activateMortgage = useCallback(async (): Promise<{ success: boolean; error?: string }> => {
+    if (!isConnected || !account) {
+      return { success: false, error: "Wallet not connected" };
+    }
+
+    try {
+      const tx = await web3Integration.activateMortgage();
+      await tx.wait();
+
+      toast({
+        title: "Mortgage Activated",
+        description: "Your mortgage is now active. First payment is due in 30 days.",
+      });
+      
+      return { success: true };
+    } catch (error: any) {
+      const errorMessage = error.message || "Failed to activate mortgage.";
+      toast({
+        title: "Activation Failed",
+        description: errorMessage,
+        variant: "destructive",
+      });
+      return { success: false, error: errorMessage };
+    }
+  }, [isConnected, account, toast]);
+
+  const isPaymentOverdue = useCallback(async (): Promise<boolean> => {
+    if (!isConnected || !account) return false;
+
+    try {
+      return await web3Integration.isPaymentOverdue(account);
+    } catch (error) {
+      console.error('Failed to check payment status:', error);
+      return false;
+    }
+  }, [isConnected, account]);
 
   const purchaseTokens = async (investmentAmount: number = 30000) => {
     if (!isConnected) {
@@ -344,6 +507,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         isConnected,
         account,
         isLoading,
+        usdtBalance,
         connectWallet,
         disconnectWallet,
         purchaseTokens,
@@ -351,12 +515,18 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         joinVillage,
         isJoiningVillage,
         checkVillageMembership,
-        // Enhanced Mazunte Property Functions
+        // Enhanced Mazunte Property Functions with Real Web3 Integration
         purchaseProperty,
         makePayment,
         getMortgageDetails,
         getMazuntePropertyStatus,
-        isPurchasingProperty
+        getPaymentSchedule,
+        cancelDuringCoolingOff,
+        activateMortgage,
+        isPaymentOverdue,
+        isPurchasingProperty,
+        isMakingPayment,
+        web3: web3Integration
       }}
     >
       {children}
