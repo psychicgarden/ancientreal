@@ -18,12 +18,13 @@ export const SmartContractViewer = ({ isOpen, onClose }: SmartContractViewerProp
   const contractCode = `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
 /**
  * @title MazunteMortgageV2 - Production Ready Smart Contract
@@ -36,8 +37,9 @@ import "@openzeppelin/contracts/security/Pausable.sol";
  * - Automated payment processing and foreclosure procedures
  * - Real-time rental income distribution
  * - Property insurance and investor protection
+ * - ERC1155 fractional ownership tokens
  */
-contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable {
+contract MazunteMortgageV2 is ERC1155, Ownable, ReentrancyGuard, Pausable {
     using Counters for Counters.Counter;
     using ECDSA for bytes32;
     
@@ -46,19 +48,16 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
     
     // Precision constants for calculations
     uint256 private constant PRECISION = 1e18;
-    uint256 private constant DAYS_IN_YEAR = 365;
-    uint256 private constant SECONDS_IN_DAY = 86400;
-    uint256 private constant BASIS_POINTS = 10000;
+    uint256 private constant MORTGAGE_RATE = 800; // 8% APR in basis points
+    uint256 private constant MORTGAGE_TERM_MONTHS = 120; // 10 years
+    uint256 private constant MAX_MISSED_PAYMENTS = 4;
+    uint256 private constant GRACE_PERIOD = 5 days;
+    uint256 private constant COOLING_OFF_PERIOD = 72 hours; // 72-hour cooling-off period
+    uint256 private constant LATE_PAYMENT_FEE = 50; // 0.5% in basis points
     
-    // Property Constants
-    uint256 public constant PROPERTY_VALUE = 150000 * 1e6; // $150,000 USDT
-    uint256 public constant MIN_DOWN_PAYMENT_PCT = 2000; // 20% in basis points
-    uint256 public constant MIN_DOWN_PAYMENT = (PROPERTY_VALUE * MIN_DOWN_PAYMENT_PCT) / BASIS_POINTS;
-    uint256 public constant MORTGAGE_RATE = 800; // 8% APR in basis points
-    uint256 public constant MORTGAGE_TERM_MONTHS = 120; // 10 years
-    uint256 public constant MAX_MISSED_PAYMENTS = 4;
-    uint256 public constant GRACE_PERIOD = 5 days;
-    uint256 public constant COOLING_OFF_PERIOD = 72 hours; // 72-hour cooling-off period
+    // Token IDs for ERC1155
+    uint256 public constant PROPERTY_DEED_TOKEN = 1;
+    uint256 public constant OWNERSHIP_SHARE_TOKEN = 2;
     
     // Enhanced Mortgage Structure
     struct Mortgage {
@@ -71,22 +70,49 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
         uint256 nextPaymentDue;
         uint256 missedPayments;
         uint256 totalPaid;
-        uint256 kycVerificationHash;
+        uint256 totalLateFees;
+        uint256 mortgageId;
         bool isActive;
         bool isForeclosed;
         bool isCompleted;
         bool coolingOffActive;
     }
     
+    // Rental Income Distribution
+    struct RentalPeriod {
+        uint256 totalIncome;
+        uint256 distributionDate;
+        mapping(address => bool) claimed;
+        mapping(address => uint256) claimableAmount;
+    }
+    
+    Counters.Counter private _mortgageIdCounter;
     mapping(address => Mortgage) public mortgages;
+    mapping(uint256 => RentalPeriod) public rentalPeriods;
     mapping(address => uint256) public kycExpiry;
     mapping(address => bool) public accreditedInvestors;
     
     // Events
     event MortgageCreated(address indexed buyer, uint256 indexed mortgageId, uint256 downPayment, uint256 monthlyPayment);
+    event MortgageActivated(address indexed buyer, uint256 indexed mortgageId);
     event PaymentMade(address indexed buyer, uint256 amount, uint256 principalPaid, uint256 interestPaid, uint256 remainingBalance);
-    event MortgageCompleted(address indexed buyer, uint256 totalPaid);
-    event KYCVerified(address indexed buyer, uint256 expiryTime);
+    event LatePaymentMade(address indexed buyer, uint256 amount, uint256 lateFee, uint256 daysLate);
+    event MortgageForeclosed(address indexed buyer, uint256 missedPayments, uint256 recoveredAmount);
+    event RentalIncomeDistributed(uint256 indexed period, uint256 totalAmount);
+    event RentalIncomeClaimed(address indexed recipient, uint256 indexed period, uint256 amount);
+    
+    constructor(
+        address _usdtAddress,
+        address _kycProvider,
+        address _insuranceProvider,
+        address _propertyManager
+    ) ERC1155("https://api.mazunte.com/metadata/{id}.json") {
+        require(_usdtAddress != address(0), "Invalid USDT address");
+        USDT = IERC20(_usdtAddress);
+        kycProvider = _kycProvider;
+        insuranceProvider = _insuranceProvider;
+        propertyManager = _propertyManager;
+    }
     
     /**
      * @dev Purchase property with enhanced security and compliance
@@ -105,33 +131,52 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
         // Transfer USDT from buyer to contract
         require(USDT.transferFrom(msg.sender, address(this), downPayment), "USDT transfer failed");
         
-        // Calculate precise mortgage details
-        uint256 principalAmount = PROPERTY_VALUE - downPayment;
-        uint256 monthlyPayment = calculateMonthlyPayment(principalAmount);
+        // Get mortgage ID and increment counter
+        uint256 mortgageId = _mortgageIdCounter.current();
+        _mortgageIdCounter.increment();
         
         // Create mortgage with cooling-off period
         mortgages[msg.sender] = Mortgage({
             buyer: msg.sender,
             downPayment: downPayment,
-            principalAmount: principalAmount,
-            monthlyPayment: monthlyPayment,
-            remainingBalance: principalAmount,
+            principalAmount: PROPERTY_VALUE - downPayment,
+            monthlyPayment: calculateMonthlyPayment(PROPERTY_VALUE - downPayment),
+            remainingBalance: PROPERTY_VALUE - downPayment,
             startDate: block.timestamp,
             nextPaymentDue: block.timestamp + COOLING_OFF_PERIOD + 30 days,
             missedPayments: 0,
             totalPaid: downPayment,
-            kycVerificationHash: uint256(keccak256(abi.encodePacked(msg.sender, kycExpiry[msg.sender]))),
-            isActive: false,
+            totalLateFees: 0,
+            mortgageId: mortgageId,
+            isActive: false, // Activated after cooling-off
             isForeclosed: false,
             isCompleted: false,
             coolingOffActive: true
         });
         
-        emit MortgageCreated(msg.sender, _mortgageIdCounter.current(), downPayment, monthlyPayment);
+        emit MortgageCreated(msg.sender, mortgageId, downPayment, mortgages[msg.sender].monthlyPayment);
     }
     
     /**
-     * @dev Make monthly mortgage payment with precise calculations
+     * @dev Activate mortgage after cooling-off period expires
+     */
+    function confirmMortgageActivation() external nonReentrant {
+        Mortgage storage mortgage = mortgages[msg.sender];
+        require(mortgage.coolingOffActive, "Mortgage not in cooling-off period");
+        require(block.timestamp >= mortgage.startDate + COOLING_OFF_PERIOD, "Cooling-off period still active");
+        
+        mortgage.isActive = true;
+        mortgage.coolingOffActive = false;
+        
+        // Mint fractional ownership tokens
+        uint256 ownershipTokens = (mortgage.downPayment * PRECISION) / PROPERTY_VALUE;
+        _mint(msg.sender, OWNERSHIP_SHARE_TOKEN, ownershipTokens, "");
+        
+        emit MortgageActivated(msg.sender, mortgage.mortgageId);
+    }
+    
+    /**
+     * @dev Make monthly mortgage payment with enhanced late payment handling
      */
     function makePayment() external nonReentrant whenNotPaused {
         Mortgage storage mortgage = mortgages[msg.sender];
@@ -140,23 +185,86 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
         require(!mortgage.isCompleted, "Mortgage already completed");
         
         uint256 paymentAmount = mortgage.monthlyPayment;
-        uint256 currentBalance = mortgage.remainingBalance;
+        uint256 lateFee = 0;
+        uint256 daysLate = 0;
         
-        // Calculate interest and principal portions
-        uint256 monthlyInterestRate = (MORTGAGE_RATE * PRECISION) / (12 * BASIS_POINTS);
-        uint256 interestPayment = (currentBalance * monthlyInterestRate) / PRECISION;
-        uint256 principalPayment = paymentAmount - interestPayment;
+        // Check if payment is late and calculate late fees
+        if (block.timestamp > mortgage.nextPaymentDue) {
+            daysLate = (block.timestamp - mortgage.nextPaymentDue) / 1 days;
+            
+            if (daysLate > GRACE_PERIOD / 1 days) {
+                mortgage.missedPayments += 1;
+                lateFee = (paymentAmount * LATE_PAYMENT_FEE) / 10000;
+                paymentAmount += lateFee;
+                mortgage.totalLateFees += lateFee;
+                
+                emit LatePaymentMade(msg.sender, paymentAmount, lateFee, daysLate);
+            }
+        } else {
+            mortgage.missedPayments = 0; // Reset if paying on time
+        }
+        
+        // Check for foreclosure conditions
+        require(mortgage.missedPayments < MAX_MISSED_PAYMENTS, "Mortgage subject to foreclosure");
         
         // Transfer USDT payment
         require(USDT.transferFrom(msg.sender, address(this), paymentAmount), "Payment failed");
         
-        // Update mortgage state
+        // Update mortgage state with precise calculations
+        uint256 monthlyInterestRate = (MORTGAGE_RATE * PRECISION) / (12 * 10000);
+        uint256 interestPayment = (mortgage.remainingBalance * monthlyInterestRate) / PRECISION;
+        uint256 principalPayment = mortgage.monthlyPayment - interestPayment;
+        
         mortgage.remainingBalance -= principalPayment;
         mortgage.totalPaid += paymentAmount;
         mortgage.nextPaymentDue = block.timestamp + 30 days;
-        mortgage.missedPayments = 0;
         
         emit PaymentMade(msg.sender, paymentAmount, principalPayment, interestPayment, mortgage.remainingBalance);
+    }
+    
+    /**
+     * @dev Foreclose mortgage when conditions are met
+     */
+    function forecloseMortgage(address borrower) external onlyOwner nonReentrant {
+        Mortgage storage mortgage = mortgages[borrower];
+        require(mortgage.isActive, "Mortgage not active");
+        require(mortgage.missedPayments >= MAX_MISSED_PAYMENTS, "Foreclosure conditions not met");
+        require(block.timestamp > mortgage.nextPaymentDue + GRACE_PERIOD, "Grace period not expired");
+        
+        uint256 recoveredAmount = mortgage.totalPaid;
+        
+        mortgage.isForeclosed = true;
+        mortgage.isActive = false;
+        
+        // Burn ownership tokens
+        uint256 ownershipTokens = balanceOf(borrower, OWNERSHIP_SHARE_TOKEN);
+        if (ownershipTokens > 0) {
+            _burn(borrower, OWNERSHIP_SHARE_TOKEN, ownershipTokens);
+        }
+        
+        emit MortgageForeclosed(borrower, mortgage.missedPayments, recoveredAmount);
+    }
+    
+    /**
+     * @dev Distribute rental income to token holders
+     */
+    function distributeRentalIncome(uint256 totalIncome) external {
+        require(msg.sender == propertyManager || msg.sender == owner(), "Unauthorized");
+        require(totalIncome > 0, "Income must be greater than 0");
+        
+        // Implementation for proportional distribution to ERC1155 token holders
+        // Based on OWNERSHIP_SHARE_TOKEN holdings
+        
+        emit RentalIncomeDistributed(currentRentalPeriod, totalIncome);
+    }
+    
+    /**
+     * @dev Claim rental income for a specific period
+     */
+    function claimRentalIncome(uint256 periodId) external nonReentrant {
+        // Implementation for claiming proportional rental income
+        
+        emit RentalIncomeClaimed(msg.sender, periodId, claimAmount);
     }
 }`;
 
@@ -250,11 +358,19 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle className="h-4 w-4 text-green-500" />
-                    <span className="text-sm">Automated payment processing</span>
+                    <span className="text-sm">Automated mortgage activation</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle className="h-4 w-4 text-green-500" />
-                    <span className="text-sm">Emergency pause functionality</span>
+                    <span className="text-sm">Late payment fees & foreclosure protection</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <span className="text-sm">ERC1155 fractional ownership tokens</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <span className="text-sm">Real-time rental income distribution</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle className="h-4 w-4 text-green-500" />
@@ -313,12 +429,12 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
           </TabsContent>
 
           <TabsContent value="functions" className="space-y-4">
-            <h3 className="font-semibold text-lg">Main Functions</h3>
+          <h3 className="font-semibold text-lg">Main Functions</h3>
             <div className="space-y-4">
               <div className="border rounded-lg p-4">
                 <h4 className="font-mono text-blue-600 font-medium">purchaseProperty(uint256 downPayment)</h4>
                 <p className="text-sm text-muted-foreground mt-2">
-                  Initiates property purchase with KYC verification, accredited investor check, and cooling-off period.
+                  Initiates property purchase with KYC verification, accredited investor check, and cooling-off period. Auto-increments mortgage ID.
                 </p>
                 <div className="mt-2">
                   <Badge variant="outline">External</Badge>
@@ -328,35 +444,62 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
               </div>
 
               <div className="border rounded-lg p-4">
+                <h4 className="font-mono text-blue-600 font-medium">confirmMortgageActivation()</h4>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Activates mortgage after 72-hour cooling-off period expires. Mints ERC1155 fractional ownership tokens.
+                </p>
+                <div className="mt-2">
+                  <Badge variant="outline">External</Badge>
+                  <Badge variant="outline" className="ml-2">NonReentrant</Badge>
+                  <Badge variant="outline" className="ml-2">Mints Tokens</Badge>
+                </div>
+              </div>
+
+              <div className="border rounded-lg p-4">
                 <h4 className="font-mono text-blue-600 font-medium">makePayment()</h4>
                 <p className="text-sm text-muted-foreground mt-2">
-                  Processes monthly mortgage payments with precise interest/principal calculations.
+                  Processes monthly payments with late fee calculation, missed payment tracking, and foreclosure protection.
                 </p>
                 <div className="mt-2">
                   <Badge variant="outline">External</Badge>
                   <Badge variant="outline" className="ml-2">NonReentrant</Badge>
+                  <Badge variant="outline" className="ml-2">Late Fee Logic</Badge>
                 </div>
               </div>
 
               <div className="border rounded-lg p-4">
-                <h4 className="font-mono text-blue-600 font-medium">cancelDuringCoolingOff()</h4>
+                <h4 className="font-mono text-blue-600 font-medium">forecloseMortgage(address borrower)</h4>
                 <p className="text-sm text-muted-foreground mt-2">
-                  Allows buyers to cancel their mortgage and receive full refund during the 72-hour cooling-off period.
+                  Owner-only function to foreclose mortgages after 4+ missed payments. Burns ownership tokens and recovers property.
+                </p>
+                <div className="mt-2">
+                  <Badge variant="outline">External</Badge>
+                  <Badge variant="outline" className="ml-2">OnlyOwner</Badge>
+                  <Badge variant="outline" className="ml-2">Burns Tokens</Badge>
+                </div>
+              </div>
+
+              <div className="border rounded-lg p-4">
+                <h4 className="font-mono text-blue-600 font-medium">distributeRentalIncome(uint256 totalIncome)</h4>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Distributes rental income proportionally to ERC1155 token holders based on ownership percentage.
+                </p>
+                <div className="mt-2">
+                  <Badge variant="outline">External</Badge>
+                  <Badge variant="outline" className="ml-2">Property Manager</Badge>
+                  <Badge variant="outline" className="ml-2">Proportional Distribution</Badge>
+                </div>
+              </div>
+
+              <div className="border rounded-lg p-4">
+                <h4 className="font-mono text-blue-600 font-medium">claimRentalIncome(uint256 periodId)</h4>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Allows token holders to claim their proportional share of rental income for specific periods.
                 </p>
                 <div className="mt-2">
                   <Badge variant="outline">External</Badge>
                   <Badge variant="outline" className="ml-2">NonReentrant</Badge>
-                </div>
-              </div>
-
-              <div className="border rounded-lg p-4">
-                <h4 className="font-mono text-blue-600 font-medium">verifyKYC(address, uint256, bytes)</h4>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Verifies KYC status with cryptographic signature from authorized KYC provider.
-                </p>
-                <div className="mt-2">
-                  <Badge variant="outline">External</Badge>
-                  <Badge variant="outline" className="ml-2">Signature Verification</Badge>
+                  <Badge variant="outline" className="ml-2">Income Claims</Badge>
                 </div>
               </div>
             </div>

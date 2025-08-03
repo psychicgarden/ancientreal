@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
@@ -21,8 +20,9 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
  * - Automated payment processing and foreclosure procedures
  * - Real-time rental income distribution
  * - Property insurance and investor protection
+ * - ERC1155 fractional ownership tokens
  */
-contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable {
+contract MazunteMortgageV2 is ERC1155, Ownable, ReentrancyGuard, Pausable {
     using Counters for Counters.Counter;
     using ECDSA for bytes32;
     
@@ -46,6 +46,11 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
     uint256 public constant COOLING_OFF_PERIOD = 10 minutes; // Shortened for demo testing
     uint256 public constant MIN_INVESTMENT = 1 * 1e6; // $1 minimum for demo testing
     uint256 public constant APPRECIATION_CAP = 11000; // 110% in basis points
+    uint256 public constant LATE_PAYMENT_FEE = 50; // 0.5% in basis points
+    
+    // Token IDs for ERC1155
+    uint256 public constant PROPERTY_DEED_TOKEN = 1;
+    uint256 public constant OWNERSHIP_SHARE_TOKEN = 2;
     
     // Legal and compliance
     address public kycProvider;
@@ -66,7 +71,9 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
         uint256 nextPaymentDue;
         uint256 missedPayments;
         uint256 totalPaid;
+        uint256 totalLateFees;
         uint256 kycVerificationHash;
+        uint256 mortgageId;
         bool isActive;
         bool isForeclosed;
         bool isCompleted;
@@ -83,6 +90,14 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
         bool isPaid;
     }
     
+    // Rental Income Distribution
+    struct RentalPeriod {
+        uint256 totalIncome;
+        uint256 distributionDate;
+        mapping(address => bool) claimed;
+        mapping(address => uint256) claimableAmount;
+    }
+    
     // Contract State
     Counters.Counter private _tokenIdCounter;
     Counters.Counter private _mortgageIdCounter;
@@ -91,6 +106,7 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
     mapping(address => PaymentSchedule[]) public paymentSchedules;
     mapping(address => uint256) public lastRentalClaim;
     mapping(address => uint256) public insurancePremiums;
+    mapping(uint256 => RentalPeriod) public rentalPeriods;
     
     address[] public mortgageHolders;
     uint256 public totalDownPayments;
@@ -98,6 +114,7 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
     uint256 public totalInsuranceFunds;
     uint256 public propertyDeedTokenId;
     uint256 public propertyAppreciationValue;
+    uint256 public currentRentalPeriod;
     bool public propertyFullyOwned;
     bool public emergencyStop;
     
@@ -110,6 +127,8 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
     // Events
     event MortgageCreated(address indexed buyer, uint256 indexed mortgageId, uint256 downPayment, uint256 monthlyPayment);
     event PaymentMade(address indexed buyer, uint256 amount, uint256 principalPaid, uint256 interestPaid, uint256 remainingBalance);
+    event LatePaymentMade(address indexed buyer, uint256 amount, uint256 lateFee, uint256 daysLate);
+    event MortgageActivated(address indexed buyer, uint256 indexed mortgageId);
     event MortgageCompleted(address indexed buyer, uint256 totalPaid);
     event MortgageForeclosed(address indexed buyer, uint256 missedPayments, uint256 recoveredAmount);
     event CoolingOffPeriodStarted(address indexed buyer, uint256 expiryTime);
@@ -117,8 +136,10 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
     event KYCVerified(address indexed buyer, uint256 expiryTime);
     event AccreditedInvestorVerified(address indexed investor);
     event PropertyDeedMinted(address indexed owner, uint256 tokenId);
+    event OwnershipTokensMinted(address indexed owner, uint256 amount);
     event AppreciationDistributed(uint256 totalAppreciation, uint256 buyerShare, uint256 ancientShare);
-    event RentalIncomeDistributed(uint256 amount, address indexed recipient, uint256 share);
+    event RentalIncomeDistributed(uint256 indexed period, uint256 totalAmount);
+    event RentalIncomeClaimed(address indexed recipient, uint256 indexed period, uint256 amount);
     event InsuranceClaimProcessed(address indexed claimant, uint256 amount, string reason);
     event EmergencyPaused(address indexed admin, string reason);
     event MultiSigTransactionProposed(bytes32 indexed transactionHash, address indexed proposer);
@@ -150,9 +171,13 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
         address _insuranceProvider,
         address _propertyManager
     ) 
-        ERC721("Mazunte Property Deed", "MAZUNTE")
-        ERC20("Mazunte Investment Token", "MAZIT")
+        ERC1155("https://api.mazunte.com/metadata/{id}.json")
     {
+        require(_usdtAddress != address(0), "Invalid USDT address");
+        require(_kycProvider != address(0), "Invalid KYC provider address");
+        require(_insuranceProvider != address(0), "Invalid insurance provider address");
+        require(_propertyManager != address(0), "Invalid property manager address");
+        
         USDT = IERC20(_usdtAddress);
         kycProvider = _kycProvider;
         insuranceProvider = _insuranceProvider;
@@ -161,6 +186,9 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
         // Initialize admin structure
         admins.push(msg.sender);
         admins.push(_kycProvider);
+        
+        // Initialize first rental period
+        currentRentalPeriod = 1;
     }
     
     /**
@@ -207,7 +235,7 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
         onlyAccredited
     {
         require(downPayment >= MIN_DOWN_PAYMENT, "Down payment below minimum 20%");
-        require(downPayment >= MIN_INVESTMENT, "Investment below minimum $1,000");
+        require(downPayment >= MIN_INVESTMENT, "Investment below minimum amount");
         require(mortgages[msg.sender].buyer == address(0), "Mortgage already exists");
         require(!propertyFullyOwned, "Property already sold");
         
@@ -221,6 +249,10 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
         uint256 principalAmount = PROPERTY_VALUE - downPayment;
         uint256 monthlyPayment = calculateMonthlyPayment(principalAmount);
         
+        // Get mortgage ID and increment counter
+        uint256 mortgageId = _mortgageIdCounter.current();
+        _mortgageIdCounter.increment();
+        
         // Create mortgage with cooling-off period
         mortgages[msg.sender] = Mortgage({
             buyer: msg.sender,
@@ -232,7 +264,9 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
             nextPaymentDue: block.timestamp + COOLING_OFF_PERIOD + 30 days,
             missedPayments: 0,
             totalPaid: downPayment,
+            totalLateFees: 0,
             kycVerificationHash: uint256(keccak256(abi.encodePacked(msg.sender, kycExpiry[msg.sender]))),
+            mortgageId: mortgageId,
             isActive: false, // Activated after cooling-off
             isForeclosed: false,
             isCompleted: false,
@@ -244,9 +278,6 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
         
         mortgageHolders.push(msg.sender);
         totalDownPayments += downPayment;
-        
-        uint256 mortgageId = _mortgageIdCounter.current();
-        _mortgageIdCounter.increment();
         
         emit MortgageCreated(msg.sender, mortgageId, downPayment, monthlyPayment);
         emit CoolingOffPeriodStarted(msg.sender, coolingOffExpiry[msg.sender]);
@@ -284,23 +315,26 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
     }
     
     /**
-     * @dev Activate mortgage after cooling-off period
+     * @dev Activate mortgage after cooling-off period expires
      */
-    function activateMortgage() external {
+    function confirmMortgageActivation() external nonReentrant {
         Mortgage storage mortgage = mortgages[msg.sender];
         require(mortgage.coolingOffActive, "Mortgage not in cooling-off period");
-        require(block.timestamp > coolingOffExpiry[msg.sender], "Cooling-off period still active");
+        require(block.timestamp >= coolingOffExpiry[msg.sender], "Cooling-off period still active");
         
         mortgage.isActive = true;
         mortgage.coolingOffActive = false;
         
-        // Mint ownership tokens
+        // Mint fractional ownership tokens based on down payment percentage
         uint256 ownershipTokens = (mortgage.downPayment * PRECISION) / PROPERTY_VALUE;
-        _mint(msg.sender, ownershipTokens);
+        _mint(msg.sender, OWNERSHIP_SHARE_TOKEN, ownershipTokens, "");
+        
+        emit MortgageActivated(msg.sender, mortgage.mortgageId);
+        emit OwnershipTokensMinted(msg.sender, ownershipTokens);
     }
     
     /**
-     * @dev Make monthly mortgage payment with precise calculations
+     * @dev Make monthly mortgage payment with enhanced late payment handling
      */
     function makePayment() external nonReentrant whenNotPaused coolingOffCompleted {
         Mortgage storage mortgage = mortgages[msg.sender];
@@ -310,16 +344,41 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
         
         uint256 paymentAmount = mortgage.monthlyPayment;
         uint256 currentBalance = mortgage.remainingBalance;
+        uint256 lateFee = 0;
+        uint256 daysLate = 0;
+        
+        // Check if payment is late and calculate late fees
+        if (block.timestamp > mortgage.nextPaymentDue) {
+            daysLate = (block.timestamp - mortgage.nextPaymentDue) / SECONDS_IN_DAY;
+            
+            if (daysLate > GRACE_PERIOD / SECONDS_IN_DAY) {
+                // Increment missed payments count
+                mortgage.missedPayments += 1;
+                
+                // Calculate late fee
+                lateFee = (paymentAmount * LATE_PAYMENT_FEE) / BASIS_POINTS;
+                paymentAmount += lateFee;
+                mortgage.totalLateFees += lateFee;
+                
+                emit LatePaymentMade(msg.sender, paymentAmount, lateFee, daysLate);
+            }
+        } else {
+            // Reset missed payments if paying on time
+            mortgage.missedPayments = 0;
+        }
+        
+        // Check for foreclosure conditions
+        require(mortgage.missedPayments < MAX_MISSED_PAYMENTS, "Mortgage subject to foreclosure");
         
         // Calculate interest and principal portions
         uint256 monthlyInterestRate = (MORTGAGE_RATE * PRECISION) / (12 * BASIS_POINTS);
         uint256 interestPayment = (currentBalance * monthlyInterestRate) / PRECISION;
-        uint256 principalPayment = paymentAmount - interestPayment;
+        uint256 principalPayment = mortgage.monthlyPayment - interestPayment;
         
         // Ensure we don't overpay
         if (principalPayment > currentBalance) {
             principalPayment = currentBalance;
-            paymentAmount = principalPayment + interestPayment;
+            paymentAmount = principalPayment + interestPayment + lateFee;
         }
         
         // Transfer USDT payment
@@ -329,7 +388,6 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
         mortgage.remainingBalance -= principalPayment;
         mortgage.totalPaid += paymentAmount;
         mortgage.nextPaymentDue = block.timestamp + 30 days;
-        mortgage.missedPayments = 0;
         
         // Update payment schedule
         _markPaymentAsPaid(msg.sender);
@@ -344,6 +402,112 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
         }
         
         emit PaymentMade(msg.sender, paymentAmount, principalPayment, interestPayment, mortgage.remainingBalance);
+    }
+    
+    /**
+     * @dev Foreclose mortgage when conditions are met
+     * @param borrower Address of the borrower to foreclose
+     */
+    function forecloseMortgage(address borrower) external onlyOwner nonReentrant {
+        Mortgage storage mortgage = mortgages[borrower];
+        require(mortgage.isActive, "Mortgage not active");
+        require(mortgage.missedPayments >= MAX_MISSED_PAYMENTS, "Foreclosure conditions not met");
+        require(block.timestamp > mortgage.nextPaymentDue + GRACE_PERIOD, "Grace period not expired");
+        
+        uint256 recoveredAmount = mortgage.totalPaid;
+        
+        // Update mortgage state
+        mortgage.isForeclosed = true;
+        mortgage.isActive = false;
+        
+        // Burn ownership tokens
+        uint256 ownershipTokens = balanceOf(borrower, OWNERSHIP_SHARE_TOKEN);
+        if (ownershipTokens > 0) {
+            _burn(borrower, OWNERSHIP_SHARE_TOKEN, ownershipTokens);
+        }
+        
+        // Remove from active holders
+        for (uint i = 0; i < mortgageHolders.length; i++) {
+            if (mortgageHolders[i] == borrower) {
+                mortgageHolders[i] = mortgageHolders[mortgageHolders.length - 1];
+                mortgageHolders.pop();
+                break;
+            }
+        }
+        
+        emit MortgageForeclosed(borrower, mortgage.missedPayments, recoveredAmount);
+    }
+    
+    /**
+     * @dev Distribute rental income to token holders
+     * @param totalIncome Total rental income for the period
+     */
+    function distributeRentalIncome(uint256 totalIncome) external {
+        require(msg.sender == propertyManager || msg.sender == owner(), "Unauthorized");
+        require(totalIncome > 0, "Income must be greater than 0");
+        
+        // Transfer rental income to contract
+        require(USDT.transferFrom(msg.sender, address(this), totalIncome), "Income transfer failed");
+        
+        RentalPeriod storage period = rentalPeriods[currentRentalPeriod];
+        period.totalIncome = totalIncome;
+        period.distributionDate = block.timestamp;
+        
+        // Calculate claimable amounts for each token holder
+        uint256 totalOwnershipTokens = 0;
+        for (uint i = 0; i < mortgageHolders.length; i++) {
+            address holder = mortgageHolders[i];
+            if (mortgages[holder].isActive || mortgages[holder].isCompleted) {
+                uint256 holderTokens = balanceOf(holder, OWNERSHIP_SHARE_TOKEN);
+                totalOwnershipTokens += holderTokens;
+            }
+        }
+        
+        if (totalOwnershipTokens > 0) {
+            for (uint i = 0; i < mortgageHolders.length; i++) {
+                address holder = mortgageHolders[i];
+                if (mortgages[holder].isActive || mortgages[holder].isCompleted) {
+                    uint256 holderTokens = balanceOf(holder, OWNERSHIP_SHARE_TOKEN);
+                    uint256 claimableAmount = (totalIncome * holderTokens) / totalOwnershipTokens;
+                    period.claimableAmount[holder] = claimableAmount;
+                }
+            }
+        }
+        
+        totalRentalIncome += totalIncome;
+        emit RentalIncomeDistributed(currentRentalPeriod, totalIncome);
+        
+        currentRentalPeriod++;
+    }
+    
+    /**
+     * @dev Claim rental income for a specific period
+     * @param periodId The rental period to claim from
+     */
+    function claimRentalIncome(uint256 periodId) external nonReentrant {
+        require(periodId < currentRentalPeriod, "Invalid period");
+        
+        RentalPeriod storage period = rentalPeriods[periodId];
+        require(!period.claimed[msg.sender], "Already claimed for this period");
+        require(period.claimableAmount[msg.sender] > 0, "No income to claim");
+        
+        uint256 claimAmount = period.claimableAmount[msg.sender];
+        period.claimed[msg.sender] = true;
+        
+        require(USDT.transfer(msg.sender, claimAmount), "Claim transfer failed");
+        
+        emit RentalIncomeClaimed(msg.sender, periodId, claimAmount);
+    }
+    
+    /**
+     * @dev Mint property deed NFT when mortgage is completed
+     */
+    function _mintPropertyDeed(address owner) internal {
+        propertyDeedTokenId = _tokenIdCounter.current();
+        _tokenIdCounter.increment();
+        
+        _mint(owner, PROPERTY_DEED_TOKEN, 1, "");
+        emit PropertyDeedMinted(owner, propertyDeedTokenId);
     }
     
     /**
@@ -451,6 +615,8 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
         uint256 nextPaymentDue,
         uint256 missedPayments,
         uint256 totalPaid,
+        uint256 totalLateFees,
+        uint256 mortgageId,
         bool isActive,
         bool isForeclosed,
         bool isCompleted,
@@ -465,6 +631,8 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
             mortgage.nextPaymentDue,
             mortgage.missedPayments,
             mortgage.totalPaid,
+            mortgage.totalLateFees,
+            mortgage.mortgageId,
             mortgage.isActive,
             mortgage.isForeclosed,
             mortgage.isCompleted,
@@ -473,11 +641,59 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
     }
     
     /**
-     * @dev Check if payment is overdue with grace period
+     * @dev Get property status with enhanced information
+     */
+    function getPropertyStatus() external view returns (
+        uint256 totalValue,
+        uint256 currentValue,
+        uint256 totalDownPayments,
+        uint256 appreciationValue,
+        uint256 totalRentalIncomeGenerated,
+        bool fullyOwned
+    ) {
+        return (
+            PROPERTY_VALUE,
+            PROPERTY_VALUE + propertyAppreciationValue,
+            totalDownPayments,
+            propertyAppreciationValue,
+            totalRentalIncome,
+            propertyFullyOwned
+        );
+    }
+    
+    /**
+     * @dev Check if payment is overdue
      */
     function isPaymentOverdue(address buyer) external view returns (bool) {
         Mortgage memory mortgage = mortgages[buyer];
-        return mortgage.isActive && 
-               block.timestamp > mortgage.nextPaymentDue + GRACE_PERIOD;
+        if (!mortgage.isActive || mortgage.isCompleted || mortgage.isForeclosed) {
+            return false;
+        }
+        return block.timestamp > mortgage.nextPaymentDue + GRACE_PERIOD;
+    }
+    
+    /**
+     * @dev Get claimable rental income for a holder
+     */
+    function getClaimableRentalIncome(address holder, uint256 periodId) external view returns (uint256) {
+        if (periodId >= currentRentalPeriod) return 0;
+        
+        RentalPeriod storage period = rentalPeriods[periodId];
+        if (period.claimed[holder]) return 0;
+        
+        return period.claimableAmount[holder];
+    }
+    
+    /**
+     * @dev Get total rental income across all periods for a holder
+     */
+    function getTotalClaimableRentalIncome(address holder) external view returns (uint256 total) {
+        for (uint256 i = 1; i < currentRentalPeriod; i++) {
+            RentalPeriod storage period = rentalPeriods[i];
+            if (!period.claimed[holder]) {
+                total += period.claimableAmount[holder];
+            }
+        }
+        return total;
     }
 }
