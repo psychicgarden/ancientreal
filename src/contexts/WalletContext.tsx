@@ -342,17 +342,31 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const nextPaymentDue = new Date();
       nextPaymentDue.setMonth(nextPaymentDue.getMonth() + 1); // Payment due in 1 month
       
-      // Use production values for realistic demo
+      // Mortgage calculation: $120K at 8% over 120 months
       const totalValue = MAZUNTE_PROPERTY.PRODUCTION.VALUE; // $150,000
       const downPayment = MAZUNTE_PROPERTY.PRODUCTION.MIN_DOWN_PAYMENT; // $30,000
       const principalAmount = totalValue - downPayment; // $120,000
-      const monthlyPayment = MAZUNTE_PROPERTY.PRODUCTION.MONTHLY_RENT; // $2,050
-      const totalMonths = MAZUNTE_PROPERTY.PRODUCTION.MORTGAGE_TERM_YEARS * 12; // 120 months
+      const totalMonths = 120; // 10 years * 12 months
+      const annualRate = 0.08; // 8%
+      const monthlyRate = annualRate / 12; // 0.006667
+      
+      // Calculate monthly payment using mortgage formula: M = P * [r(1 + r)^n] / [(1 + r)^n - 1]
+      const monthlyPayment = Math.round(
+        principalAmount * 
+        (monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / 
+        (Math.pow(1 + monthlyRate, totalMonths) - 1)
+      ); // ~$1,456
       
       // Simulate we're 8 months into the mortgage (8/120 payments made)
       const paymentsMade = 8;
-      const totalPaid = paymentsMade * monthlyPayment; // $16,400
-      const remainingBalance = principalAmount - (totalPaid * 0.6); // Assuming 60% goes to principal
+      const totalPaid = paymentsMade * monthlyPayment;
+      
+      // Calculate remaining balance after 8 payments
+      const remainingBalance = Math.round(
+        principalAmount * 
+        (Math.pow(1 + monthlyRate, totalMonths) - Math.pow(1 + monthlyRate, paymentsMade)) /
+        (Math.pow(1 + monthlyRate, totalMonths) - 1)
+      );
       
       return {
         downPayment: downPayment,
