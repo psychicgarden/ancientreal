@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Wallet, Home, TrendingUp, Users, Calendar, DollarSign, Building, FileText, BarChart3 } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Wallet, Home, TrendingUp, Users, Calendar, DollarSign, Building, FileText, BarChart3, ChevronRight } from "lucide-react";
 import { InvestorMortgageDashboard } from "@/components/InvestorMortgageDashboard";
 import { PortfolioSummary } from "@/components/PortfolioSummary";
 import { PropertyCard } from "@/components/PropertyCard";
@@ -86,6 +87,19 @@ const Portfolio = () => {
       {/* Header */}
       <div className="border-b bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-6">
+          {/* Breadcrumb Navigation */}
+          <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-4">
+            <Link 
+              to="/" 
+              className="hover:text-foreground transition-colors flex items-center gap-1"
+            >
+              <Home className="h-4 w-4" />
+              Home
+            </Link>
+            <ChevronRight className="h-4 w-4" />
+            <span className="text-foreground font-medium">Portfolio</span>
+          </nav>
+
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <h1 className="text-3xl font-bold">Property Portfolio</h1>

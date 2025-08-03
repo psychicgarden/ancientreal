@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Heart, MapPin, TrendingUp, Users, Calendar, DollarSign } from "lucide-react";
 import { useState } from "react";
+import { MortgagePaymentModal } from "@/components/MortgagePaymentModal";
 
 interface PropertyCardProps {
   id: string;
@@ -36,17 +37,18 @@ export const PropertyCard = ({
   onViewAnalytics,
 }: PropertyCardProps) => {
   const [isLiked, setIsLiked] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   const getStatusBadge = () => {
     switch (status) {
       case "owned":
-        return <Badge className="bg-green-500/10 text-green-600 border-green-500/20">Owned</Badge>;
+        return <Badge className="bg-green-600/95 text-white font-semibold border border-green-400/50 shadow-lg backdrop-blur-sm px-3 py-1">Owned</Badge>;
       case "mortgaged":
-        return <Badge className="bg-blue-500/10 text-blue-600 border-blue-500/20">Mortgaged</Badge>;
+        return <Badge className="bg-blue-600/95 text-white font-semibold border border-blue-400/50 shadow-lg backdrop-blur-sm px-3 py-1">Mortgaged</Badge>;
       case "hosted":
-        return <Badge className="bg-purple-500/10 text-purple-600 border-purple-500/20">Hosting</Badge>;
+        return <Badge className="bg-purple-600/95 text-white font-semibold border border-purple-400/50 shadow-lg backdrop-blur-sm px-3 py-1">Hosting</Badge>;
       case "available":
-        return <Badge className="bg-orange-500/10 text-orange-600 border-orange-500/20">Available</Badge>;
+        return <Badge className="bg-orange-600/95 text-white font-semibold border border-orange-400/50 shadow-lg backdrop-blur-sm px-3 py-1">Available</Badge>;
       default:
         return null;
     }
@@ -57,7 +59,7 @@ export const PropertyCard = ({
       case "mortgaged":
         return (
           <div className="flex gap-2">
-            <Button size="sm" onClick={onMakePayment} className="flex-1">
+            <Button size="sm" onClick={() => setIsPaymentModalOpen(true)} className="flex-1">
               Make Payment
             </Button>
             <Button size="sm" variant="outline" onClick={onViewAnalytics}>
@@ -106,7 +108,7 @@ export const PropertyCard = ({
           alt={title}
           className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
         />
-        <div className="absolute top-3 left-3">
+        <div className="absolute bottom-3 left-3">
           {getStatusBadge()}
         </div>
         <button
@@ -167,6 +169,18 @@ export const PropertyCard = ({
           </div>
         </div>
       </CardContent>
+
+      <MortgagePaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        property={{
+          id,
+          title,
+          location,
+          image,
+          value
+        }}
+      />
     </Card>
   );
 };
