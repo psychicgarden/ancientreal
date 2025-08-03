@@ -43,9 +43,9 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
 
   // Calculate investment metrics
   const ownershipPercentage = (investment / project.targetFunding) * 100;
-  const projectedValue = (investment / project.presalePrice) * project.publicPrice;
+  const projectedValue = investment * (100 / 85); // 85% presale to 100% public (17.65% ROI)
   const projectedProfit = projectedValue - investment;
-  const roi = ((projectedValue - investment) / investment) * 100;
+  const roi = 17.65; // Fixed ROI based on 85% presale pricing
   const remainingFunding = project.targetFunding - project.currentFunding;
 
   const handleInvestment = async () => {
@@ -105,14 +105,14 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
               value={[investment]}
               onValueChange={(value) => setInvestment(value[0])}
               min={project.minInvestment}
-              max={Math.min(remainingFunding, 100000)}
+              max={remainingFunding}
               step={100}
               className="w-full"
             />
             
             <div className="flex justify-between text-sm text-muted-foreground">
               <span>Min: ${project.minInvestment.toLocaleString()}</span>
-              <span>Max: ${Math.min(remainingFunding, 100000).toLocaleString()}</span>
+              <span>Max: ${remainingFunding.toLocaleString()}</span>
             </div>
 
             <div className="flex gap-2">
@@ -162,40 +162,22 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
             </Card>
           </div>
 
-          {/* Investment Options */}
+          {/* Investment Returns */}
           <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
             <CardContent className="p-6">
               <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <Home className="h-5 w-5" />
-                Your Investment Options at Completion
+                <TrendingUp className="h-5 w-5" />
+                Your Profit at Project Completion
               </h3>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 bg-background/50 rounded-lg border">
-                  <div className="font-medium text-green-600 mb-2">Option A: Cash Out</div>
-                  <div className="text-2xl font-bold">${projectedProfit.toLocaleString()}</div>
-                  <div className="text-sm text-muted-foreground">
-                    Profit ({roi.toFixed(1)}% ROI)
-                  </div>
+              <div className="text-center p-6 bg-background/50 rounded-lg border">
+                <div className="font-medium text-green-600 mb-2">Cash Out Profit</div>
+                <div className="text-3xl font-bold text-green-600">${projectedProfit.toLocaleString()}</div>
+                <div className="text-lg text-muted-foreground mt-2">
+                  {roi}% ROI on your ${investment.toLocaleString()} investment
                 </div>
-                
-                <div className="p-4 bg-background/50 rounded-lg border">
-                  <div className="font-medium text-blue-600 mb-2">Option B: Buy Property</div>
-                  <div className="text-2xl font-bold">${investment.toLocaleString()}</div>
-                  <div className="text-sm text-muted-foreground">
-                    Use your original investment as full payment
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-4 p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
-                <div className="text-sm">
-                  <div className="font-medium text-blue-700 dark:text-blue-300">
-                    Best Case Scenario:
-                  </div>
-                  <div className="text-muted-foreground mt-1">
-                    Cash out your ${projectedProfit.toLocaleString()} profit, then use it as a down payment to buy the property with a mortgage - effectively getting 15% off!
-                  </div>
+                <div className="text-sm text-muted-foreground mt-3">
+                  Use your profit for anything - property down payments, other investments, or cash out entirely
                 </div>
               </div>
             </CardContent>
