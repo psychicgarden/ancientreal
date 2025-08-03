@@ -1,12 +1,27 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Settings, Beaker } from "lucide-react";
 import { useWallet } from "@/contexts/WalletContext";
 import { Link } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isConnected, account, isLoading, connectWallet, disconnectWallet } = useWallet();
+  const [isDeveloperPanelOpen, setIsDeveloperPanelOpen] = useState(false);
+  const { 
+    isConnected, 
+    account, 
+    isLoading, 
+    connectWallet, 
+    disconnectWallet,
+    isDemoMode,
+    toggleDemoMode,
+    usdtBalance,
+    getTestTokens
+  } = useWallet();
 
   const formatAddress = (address: string) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -44,6 +59,70 @@ const Header = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-6">
+            {/* Demo Mode Developer Panel */}
+            <Popover open={isDeveloperPanelOpen} onOpenChange={setIsDeveloperPanelOpen}>
+              <PopoverTrigger asChild>
+                <div className="flex items-center space-x-2 cursor-pointer">
+                  {isDemoMode && (
+                    <Badge variant="secondary" className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200">
+                      Demo Mode
+                    </Badge>
+                  )}
+                  <Button variant="ghost" size="sm" className="p-2">
+                    <Settings className="h-4 w-4" />
+                  </Button>
+                </div>
+              </PopoverTrigger>
+              <PopoverContent className="w-80" align="end">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium flex items-center gap-2">
+                      <Beaker className="h-4 w-4" />
+                      Developer Tools
+                    </h4>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <div className="text-sm font-medium">Demo Mode</div>
+                      <div className="text-xs text-muted-foreground">
+                        Use test tokens instead of real payments
+                      </div>
+                    </div>
+                    <Switch
+                      checked={isDemoMode}
+                      onCheckedChange={toggleDemoMode}
+                    />
+                  </div>
+
+                  {isDemoMode && (
+                    <>
+                      <Separator />
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm">Test USDT Balance:</span>
+                          <span className="text-sm font-mono">{usdtBalance}</span>
+                        </div>
+                        
+                        <Button 
+                          onClick={getTestTokens}
+                          disabled={isLoading}
+                          size="sm"
+                          className="w-full"
+                        >
+                          {isLoading ? "Getting Tokens..." : "Get Test Tokens"}
+                        </Button>
+                        
+                        <p className="text-xs text-muted-foreground">
+                          Test tokens for development and demo purposes only
+                        </p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </PopoverContent>
+            </Popover>
+
             {isConnected ? (
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-muted-foreground">
