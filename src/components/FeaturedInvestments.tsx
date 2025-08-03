@@ -16,8 +16,8 @@ const FeaturedInvestments = () => {
     isConnected, 
     purchaseTokens, 
     isPurchasing,
-    investInMazunte,
-    isInvestingInMazunte,
+    purchaseProperty,
+    isPurchasingProperty,
     getMazuntePropertyStatus 
   } = useWallet();
   const [calculatorOpen, setCalculatorOpen] = useState(false);

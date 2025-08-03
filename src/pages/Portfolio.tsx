@@ -33,10 +33,10 @@ const Portfolio = () => {
     isConnected, 
     account, 
     connectWallet, 
-    getMazunteInvestorDetails, 
+    getMortgageDetails, 
     getMazuntePropertyStatus,
-    claimRentalIncome,
-    isInvestingInMazunte
+    makePayment,
+    isPurchasingProperty
   } = useWallet();
   
   const { toast } = useToast();
@@ -53,12 +53,20 @@ const Portfolio = () => {
       }
 
       try {
-        const [investor, property] = await Promise.all([
-          getMazunteInvestorDetails(),
+        const [mortgage, property] = await Promise.all([
+          getMortgageDetails(),
           getMazuntePropertyStatus()
         ]);
         
-        setInvestorData(investor);
+        // Transform mortgage data to match old investor data structure for compatibility
+        const transformedInvestorData = mortgage ? {
+          investmentAmount: mortgage.downPayment,
+          tokenBalance: mortgage.downPayment,
+          ownershipPercentage: (mortgage.downPayment / MAZUNTE_PROPERTY.VALUE) * 10000, // Convert to basis points
+          claimableRental: 0 // No claimable rental in mortgage model
+        } : null;
+        
+        setInvestorData(transformedInvestorData);
         setPropertyData(property);
       } catch (error) {
         console.error('Failed to fetch portfolio data:', error);
@@ -73,7 +81,7 @@ const Portfolio = () => {
     };
 
     fetchPortfolioData();
-  }, [isConnected, getMazunteInvestorDetails, getMazuntePropertyStatus, toast]);
+  }, [isConnected, getMortgageDetails, getMazuntePropertyStatus, toast]);
 
   if (!isConnected) {
     return (
@@ -186,10 +194,10 @@ const Portfolio = () => {
                   <Button 
                     size="sm" 
                     className="mt-2 w-full" 
-                    onClick={claimRentalIncome}
-                    disabled={!investorData?.claimableRental}
+                    onClick={makePayment}
+                    disabled={!investorData || isPurchasingProperty}
                   >
-                    Claim Income
+                    Make Payment
                   </Button>
                 </CardContent>
               </Card>

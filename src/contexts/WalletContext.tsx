@@ -13,12 +13,12 @@ interface WalletContextType {
   joinVillage: () => Promise<void>;
   isJoiningVillage: boolean;
   checkVillageMembership: () => Promise<boolean>;
-  // Mazunte Property Functions
-  investInMazunte: (amount: number) => Promise<void>;
-  claimRentalIncome: () => Promise<void>;
-  getMazunteInvestorDetails: () => Promise<any>;
+  // Enhanced Mazunte Property Functions
+  purchaseProperty: (downPayment: number) => Promise<void>;
+  makePayment: () => Promise<void>;
+  getMortgageDetails: () => Promise<any>;
   getMazuntePropertyStatus: () => Promise<any>;
-  isInvestingInMazunte: boolean;
+  isPurchasingProperty: boolean;
 }
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
@@ -37,7 +37,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [isLoading, setIsLoading] = useState(false);
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [isJoiningVillage, setIsJoiningVillage] = useState(false);
-  const [isInvestingInMazunte, setIsInvestingInMazunte] = useState(false);
+  const [isPurchasingProperty, setIsPurchasingProperty] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -188,8 +188,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   }, [isConnected, account]);
 
-  // Mazunte Property Investment Functions
-  const investInMazunte = useCallback(async (amount: number) => {
+  // Enhanced Mazunte Property Functions
+  const purchaseProperty = useCallback(async (downPayment: number) => {
     if (!isConnected || !account) {
       toast({
         title: "Wallet not connected",
@@ -199,33 +199,33 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       return;
     }
 
-    setIsInvestingInMazunte(true);
+    setIsPurchasingProperty(true);
     
     try {
       toast({
-        title: "Investment Processing",
-        description: `Investing $${amount.toLocaleString()} in Mazunte property...`,
+        title: "Processing Property Purchase",
+        description: `Processing down payment of $${downPayment.toLocaleString()}...`,
       });
 
       await new Promise(resolve => setTimeout(resolve, 3000));
 
       toast({
-        title: "Investment Successful!",
-        description: `You've successfully invested $${amount.toLocaleString()} in Mazunte property. You now own ${((amount / MAZUNTE_PROPERTY.VALUE) * 100).toFixed(2)}% of the property.`,
+        title: "Property Purchase Successful!",
+        description: `You've successfully purchased the Mazunte property with a $${downPayment.toLocaleString()} down payment. Your mortgage has been created.`,
       });
     } catch (error) {
-      console.error('Investment failed:', error);
+      console.error('Property purchase failed:', error);
       toast({
-        title: "Investment Failed",
-        description: "There was an error processing your investment. Please try again.",
+        title: "Purchase Failed",
+        description: "There was an error processing your property purchase. Please try again.",
         variant: "destructive",
       });
     } finally {
-      setIsInvestingInMazunte(false);
+      setIsPurchasingProperty(false);
     }
   }, [isConnected, account, toast]);
 
-  const claimRentalIncome = useCallback(async () => {
+  const makePayment = useCallback(async () => {
     if (!isConnected || !account) {
       toast({
         title: "Wallet not connected",
@@ -237,38 +237,43 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     try {
       toast({
-        title: "Claiming Rental Income",
-        description: "Processing your rental income claim...",
+        title: "Processing Payment",
+        description: "Making your monthly mortgage payment...",
       });
 
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       toast({
-        title: "Rental Income Claimed!",
-        description: "Your rental income has been successfully claimed.",
+        title: "Payment Successful!",
+        description: "Your monthly mortgage payment has been processed.",
       });
     } catch (error) {
-      console.error('Rental claim failed:', error);
+      console.error('Payment failed:', error);
       toast({
-        title: "Claim Failed",
-        description: "There was an error claiming your rental income.",
+        title: "Payment Failed",
+        description: "There was an error processing your payment.",
         variant: "destructive",
       });
     }
   }, [isConnected, account, toast]);
 
-  const getMazunteInvestorDetails = useCallback(async () => {
+  const getMortgageDetails = useCallback(async () => {
     if (!isConnected || !account) return null;
 
     try {
       return {
-        investmentAmount: 50000,
-        tokenBalance: 50000,
-        ownershipPercentage: 3333,
-        claimableRental: 683
+        downPayment: 30000,
+        principalAmount: 120000,
+        monthlyPayment: 1456,
+        remainingBalance: 115000,
+        nextPaymentDue: Date.now() + (25 * 24 * 60 * 60 * 1000), // 25 days from now
+        missedPayments: 0,
+        isActive: true,
+        isForeclosed: false,
+        isCompleted: false
       };
     } catch (error) {
-      console.error('Failed to get investor details:', error);
+      console.error('Failed to get mortgage details:', error);
       return null;
     }
   }, [isConnected, account]);
@@ -277,9 +282,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     try {
       return {
         totalValue: MAZUNTE_PROPERTY.VALUE,
-        invested: 125000,
-        remaining: 25000,
-        monthlyRent: MAZUNTE_PROPERTY.MONTHLY_RENT,
+        currentValue: MAZUNTE_PROPERTY.VALUE,
+        totalDownPayments: 30000,
+        appreciationValue: 0,
         fullyOwned: false
       };
     } catch (error) {
@@ -346,12 +351,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         joinVillage,
         isJoiningVillage,
         checkVillageMembership,
-        // Mazunte Property Functions
-        investInMazunte,
-        claimRentalIncome,
-        getMazunteInvestorDetails,
+        // Enhanced Mazunte Property Functions
+        purchaseProperty,
+        makePayment,
+        getMortgageDetails,
         getMazuntePropertyStatus,
-        isInvestingInMazunte
+        isPurchasingProperty
       }}
     >
       {children}
