@@ -301,20 +301,39 @@ const Community = () => {
               Explore Sacred Spaces
             </Button>
           </div>
+        </div>
+      </section>
+
+      {/* Your Journey to Ownership */}
+      <section className="py-24 bg-gradient-to-br from-background to-muted/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="max-w-3xl mx-auto mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+              Your Journey to Ownership
+            </h2>
+            <h3 className="text-2xl md:text-3xl font-semibold mb-4 text-foreground/90">
+              Four Steps to Sacred Ownership
+            </h3>
+            <p className="text-xl text-muted-foreground">
+              From discovery to passive income - your journey to conscious homeownership starts here.
+            </p>
+          </div>
           
-          <div className="flex flex-wrap justify-center gap-8 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <Globe className="h-5 w-5" />
-              <span>500+ Conscious Investors</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <MapPin className="h-5 w-5" />
-              <span>12 Sacred Locations</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              <span>Average 150% ROI</span>
-            </div>
+          <div className="grid md:grid-cols-4 gap-8">
+            {ownershipJourney.map((step, index) => (
+              <div key={index} className="group">
+                <div className="relative mb-6">
+                  <div className="w-16 h-16 mx-auto bg-gradient-to-r from-primary to-primary/60 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                    {step.step}
+                  </div>
+                  {index < ownershipJourney.length - 1 && (
+                    <div className="hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-gradient-to-r from-primary/30 to-transparent transform translate-x-8"></div>
+                  )}
+                </div>
+                <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-primary transition-colors duration-300">{step.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">{step.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -323,80 +342,82 @@ const Community = () => {
       <section className="py-20 bg-gradient-to-br from-muted/20 to-muted/40">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <Badge className="mb-4">The Old Way vs The Ancient Way</Badge>
+            <Badge className="mb-4">The Mathematics of Modern Nomadism</Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Renting vs <span className="text-primary">Owning with Ancient</span>
+              Every decade, 50 million nomads collectively spend <span className="text-red-500">$216,000</span> on rent.<br />
+              <span className="text-primary">We transform that into $467,000 in real estate equity.</span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Stop throwing money into the void. Start building generational wealth in communities that align with your values.
-            </p>
           </div>
 
           <div className="max-w-6xl mx-auto">
-            <div className="grid gap-8">
-              {rentingVsOwning.map((comparison, index) => (
-                <Card key={index} className="p-8 hover:shadow-xl transition-all duration-300">
-                  <div className="grid md:grid-cols-3 gap-8 items-center">
-                    <div className="text-center">
-                      <div className="text-4xl mb-4">{comparison.rentingIcon}</div>
-                      <h3 className="font-semibold text-lg mb-2">{comparison.category}</h3>
-                      <p className="text-muted-foreground">{comparison.renting}</p>
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
+              {/* Traditional Path */}
+              <Card className="p-8 bg-red-50 border-red-200">
+                <div className="text-center">
+                  <h3 className="text-2xl font-bold text-red-600 mb-6">Traditional Path</h3>
+                  <div className="space-y-6">
+                    <div>
+                      <div className="text-sm text-red-500 uppercase tracking-wide">Monthly Rent</div>
+                      <div className="text-4xl font-bold text-red-600">$1,800</div>
                     </div>
-                    
-                    <div className="flex justify-center">
-                      <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                        <ArrowRight className="h-8 w-8 text-primary" />
-                      </div>
+                    <div>
+                      <div className="text-sm text-red-500 uppercase tracking-wide">Decade Total</div>
+                      <div className="text-4xl font-bold text-red-600">$216,000</div>
                     </div>
-                    
-                    <div className="text-center">
-                      <div className="text-4xl mb-4">{comparison.ancientIcon}</div>
-                      <h3 className="font-semibold text-lg mb-2 text-primary">{comparison.category}</h3>
-                      <p className="text-muted-foreground font-medium">{comparison.ancient}</p>
+                    <div>
+                      <div className="text-sm text-red-500 uppercase tracking-wide">Equity Built</div>
+                      <div className="text-4xl font-bold text-red-600">$0</div>
                     </div>
                   </div>
-                </Card>
-              ))}
+                </div>
+              </Card>
+
+              {/* Ancient Path */}
+              <Card className="p-8 bg-green-50 border-green-200">
+                <div className="text-center">
+                  <h3 className="text-2xl font-bold text-green-600 mb-6">Ancient Path</h3>
+                  <div className="space-y-6">
+                    <div>
+                      <div className="text-sm text-green-500 uppercase tracking-wide">Monthly Payment</div>
+                      <div className="text-4xl font-bold text-green-600">$1,456</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-green-500 uppercase tracking-wide">Decade Total</div>
+                      <div className="text-4xl font-bold text-green-600">$204,720</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-green-500 uppercase tracking-wide">Property Value</div>
+                      <div className="text-4xl font-bold text-green-600">$467,000</div>
+                    </div>
+                  </div>
+                </div>
+              </Card>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* 4-Step Ownership Journey */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <Badge className="mb-4">Your Journey to Ownership</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Four Steps to <span className="text-primary">Sacred Ownership</span>
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              From discovery to passive income - your journey to conscious homeownership starts here.
-            </p>
-          </div>
-
-          <div className="max-w-6xl mx-auto">
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {ownershipJourney.map((step, index) => (
-                <Card key={index} className="relative group hover:scale-105 transition-all duration-300 overflow-hidden">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${step.color} opacity-10 group-hover:opacity-20 transition-opacity`} />
-                  
-                  <CardHeader className="relative z-10 text-center pb-4">
-                    <div className="mx-auto mb-4 p-4 bg-white rounded-full w-fit shadow-lg">
-                      <step.icon className="h-8 w-8 text-primary" />
-                    </div>
-                    <Badge variant="secondary" className="mb-2">Step {step.step}</Badge>
-                    <CardTitle className="text-xl">{step.title}</CardTitle>
-                  </CardHeader>
-                  
-                  <CardContent className="relative z-10 text-center">
-                    <p className="text-muted-foreground mb-4">{step.description}</p>
-                    <div className="text-sm font-medium text-primary bg-primary/10 rounded-full px-4 py-2">
-                      {step.action}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+            <div className="text-center">
+              <div className="bg-gradient-to-r from-primary to-purple-600 text-white p-8 rounded-lg mb-8">
+                <h3 className="text-2xl font-bold mb-4">The Difference</h3>
+                <p className="text-xl mb-6">Identical monthly commitment. Generational wealth outcome.</p>
+                
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div>
+                    <div className="text-sm opacity-90 uppercase tracking-wide">Down Payment</div>
+                    <div className="text-3xl font-bold">$30K</div>
+                  </div>
+                  <div>
+                    <div className="text-sm opacity-90 uppercase tracking-wide">Final Equity</div>
+                    <div className="text-3xl font-bold">$467K</div>
+                  </div>
+                  <div>
+                    <div className="text-sm opacity-90 uppercase tracking-wide">Total Return</div>
+                    <div className="text-3xl font-bold">181%</div>
+                  </div>
+                </div>
+              </div>
+              
+              <Button size="lg" className="px-8 py-4 text-lg">
+                Calculate Your Returns
+              </Button>
             </div>
           </div>
         </div>
