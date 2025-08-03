@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { useWallet } from "@/contexts/WalletContext";
 import { useToast } from "@/hooks/use-toast";
+import { NETWORK_CONFIG, CONTRACTS } from "@/lib/contracts";
 import { 
   Building2, 
   DollarSign, 
@@ -81,6 +82,12 @@ export const InvestorMortgageDashboard = () => {
         variant: "destructive",
       });
     }
+  };
+
+  const handleViewOnExplorer = () => {
+    const explorerUrl = NETWORK_CONFIG.blockExplorerUrls[0];
+    const targetUrl = `${explorerUrl}address/${account}`;
+    window.open(targetUrl, '_blank');
   };
 
   if (!isConnected) {
@@ -371,7 +378,12 @@ export const InvestorMortgageDashboard = () => {
           {isPurchasingProperty ? "Processing Payment..." : "Make Monthly Payment"}
         </Button>
         
-        <Button variant="outline" size="lg" className="w-full">
+        <Button 
+          variant="outline" 
+          size="lg" 
+          className="w-full"
+          onClick={handleViewOnExplorer}
+        >
           <ExternalLink className="h-4 w-4 mr-2" />
           View on Blockchain Explorer
         </Button>
