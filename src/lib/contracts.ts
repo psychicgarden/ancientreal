@@ -1,17 +1,46 @@
 // Smart Contract Configuration for Avalanche Fuji Testnet
 
 export const CONTRACTS = {
-  // Mazunte Property Mortgage Contract
+  // Enhanced Mazunte Property Mortgage Contract with USDT
   MAZUNTE_MORTGAGE: {
     address: "0x1234567890123456789012345678901234567890", // Placeholder - deploy real contract
     abi: [
-      "function invest(uint256 amount) external payable",
-      "function claimRentalIncome() external",
-      "function getInvestorDetails(address investor) external view returns (uint256, uint256, uint256, uint256)",
+      // Core mortgage functions
+      "function purchaseProperty(uint256 downPayment) external",
+      "function makePayment() external",
+      "function checkPaymentStatus(address buyer) external",
+      
+      // Owner/Admin functions
+      "function setPropertyAppreciation(uint256 newValue) external",
+      "function distributeAppreciation() external",
+      
+      // View functions
+      "function getMortgageDetails(address buyer) external view returns (uint256, uint256, uint256, uint256, uint256, uint256, bool, bool, bool)",
       "function getPropertyStatus() external view returns (uint256, uint256, uint256, uint256, bool)",
+      "function getMortgageHolders() external view returns (address[])",
+      "function isPaymentOverdue(address buyer) external view returns (bool)",
       "function calculateMonthlyPayment(uint256 principal) external pure returns (uint256)",
-      "event InvestmentMade(address indexed investor, uint256 amount, uint256 tokens)",
-      "event RentalIncomeDistributed(uint256 amount, uint256 timestamp)"
+      
+      // Events
+      "event MortgageCreated(address indexed buyer, uint256 downPayment, uint256 monthlyPayment)",
+      "event MortgagePaymentMade(address indexed buyer, uint256 amount, uint256 remainingBalance)",
+      "event MortgageCompleted(address indexed buyer, uint256 totalPaid)",
+      "event MortgageForeclosed(address indexed buyer, uint256 missedPayments)",
+      "event PropertyDeedMinted(address indexed owner, uint256 tokenId)",
+      "event AppreciationDistributed(uint256 totalAppreciation, uint256 buyerShare, uint256 ancientShare, uint256 lenderShare)"
+    ]
+  },
+
+  // USDT Token Contract (Fuji Testnet)
+  USDT: {
+    address: "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7", // Fuji USDT
+    abi: [
+      "function balanceOf(address account) external view returns (uint256)",
+      "function transfer(address to, uint256 amount) external returns (bool)",
+      "function transferFrom(address from, address to, uint256 amount) external returns (bool)",
+      "function approve(address spender, uint256 amount) external returns (bool)",
+      "function allowance(address owner, address spender) external view returns (uint256)",
+      "function decimals() external view returns (uint8)"
     ]
   },
 

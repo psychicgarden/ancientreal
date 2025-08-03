@@ -3,119 +3,226 @@ pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 /**
  * @title MazunteMortgage
- * @dev Smart contract for the Mazunte property mortgage system
+ * @dev Enhanced smart contract for the Mazunte property rent-to-own system
  * Property Value: $150,000 USD
- * Monthly Rent: $2,050 USD
+ * Down Payment: 20% ($30,000)
+ * Mortgage Term: 10 years @ 8% APR
+ * Default Trigger: 4 missed payments
+ * Appreciation Split: Buyer 50%, Ancient 40%, Lenders 10% (capped at 110%)
  * Legal Owner: Ancient Holdings Ltd (Nevis Corp)
  */
 contract MazunteMortgage is ERC721, ERC20, Ownable, ReentrancyGuard {
     using Counters for Counters.Counter;
     
-    // Property Details
-    uint256 public constant PROPERTY_VALUE = 150000 * 10**6; // $150k in USDC (6 decimals)
-    uint256 public constant MONTHLY_RENT = 2050 * 10**6; // $2,050 in USDC
-    uint256 public constant MIN_DOWN_PAYMENT = 30000 * 10**6; // $30k minimum
+    // USDT Contract (Fuji Testnet)
+    IERC20 public constant USDT = IERC20(0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7); // Fuji USDT
+    
+    // Property Constants
+    uint256 public constant PROPERTY_VALUE = 150000 * 10**6; // $150k USDT (6 decimals)
+    uint256 public constant DOWN_PAYMENT_PERCENT = 20; // 20%
+    uint256 public constant MIN_DOWN_PAYMENT = (PROPERTY_VALUE * DOWN_PAYMENT_PERCENT) / 100; // $30k
     uint256 public constant MORTGAGE_RATE = 800; // 8% APR (basis points)
     uint256 public constant MORTGAGE_TERM_MONTHS = 120; // 10 years
+    uint256 public constant MAX_MISSED_PAYMENTS = 4; // Foreclosure trigger
+    uint256 public constant APPRECIATION_CAP = 110; // 110% cap
     
-    // Contract state
+    // Appreciation Split (percentages)
+    uint256 public constant BUYER_SPLIT = 50; // 50%
+    uint256 public constant ANCIENT_SPLIT = 40; // 40%
+    uint256 public constant LENDER_SPLIT = 10; // 10%
+    
+    // Mortgage Structure
+    struct Mortgage {
+        address buyer;
+        uint256 downPayment;
+        uint256 principalAmount;
+        uint256 monthlyPayment;
+        uint256 remainingBalance;
+        uint256 startDate;
+        uint256 nextPaymentDue;
+        uint256 missedPayments;
+        bool isActive;
+        bool isForeclosed;
+        bool isCompleted;
+    }
+    
+    // Contract State
     Counters.Counter private _tokenIdCounter;
-    mapping(address => uint256) public investments;
+    mapping(address => Mortgage) public mortgages;
     mapping(address => uint256) public lastRentalClaim;
-    uint256 public totalInvested;
+    address[] public mortgageHolders;
+    uint256 public totalDownPayments;
     uint256 public totalRentalIncome;
     uint256 public propertyDeedTokenId;
+    uint256 public propertyAppreciationValue;
     bool public propertyFullyOwned;
     
     // Events
-    event InvestmentMade(address indexed investor, uint256 amount, uint256 tokens);
-    event RentalIncomeDistributed(uint256 amount, uint256 timestamp);
-    event MortgagePaymentMade(uint256 amount, uint256 remainingBalance);
+    event MortgageCreated(address indexed buyer, uint256 downPayment, uint256 monthlyPayment);
+    event MortgagePaymentMade(address indexed buyer, uint256 amount, uint256 remainingBalance);
+    event MortgageCompleted(address indexed buyer, uint256 totalPaid);
+    event MortgageForeclosed(address indexed buyer, uint256 missedPayments);
     event PropertyDeedMinted(address indexed owner, uint256 tokenId);
+    event AppreciationDistributed(uint256 totalAppreciation, uint256 buyerShare, uint256 ancientShare, uint256 lenderShare);
+    event RentalIncomeDistributed(uint256 amount, uint256 timestamp);
     
     constructor() 
         ERC721("Mazunte Property Deed", "MAZUNTE")
         ERC20("Mazunte Investment Token", "MAZIT")
     {
-        _mint(address(this), PROPERTY_VALUE); // Mint total property value in tokens
+        // No initial token minting - tokens created per mortgage
     }
     
     /**
-     * @dev Invest in the Mazunte property
-     * @param amount Investment amount in USDC (6 decimals)
+     * @dev Purchase property with mortgage (20% down payment)
+     * @param downPayment Down payment amount in USDT (must be >= 20% of property value)
      */
-    function invest(uint256 amount) external payable nonReentrant {
-        require(amount >= MIN_DOWN_PAYMENT, "Investment below minimum");
-        require(totalInvested + amount <= PROPERTY_VALUE, "Investment exceeds property value");
+    function purchaseProperty(uint256 downPayment) external nonReentrant {
+        require(downPayment >= MIN_DOWN_PAYMENT, "Down payment below minimum 20%");
+        require(mortgages[msg.sender].buyer == address(0), "Mortgage already exists");
+        require(!propertyFullyOwned, "Property already sold");
         
-        // Calculate investment tokens (1:1 ratio with USDC)
-        uint256 tokens = amount;
+        // Transfer USDT from buyer to contract
+        require(USDT.transferFrom(msg.sender, address(this), downPayment), "USDT transfer failed");
         
-        // Transfer tokens to investor
-        _transfer(address(this), msg.sender, tokens);
+        // Calculate mortgage details
+        uint256 principalAmount = PROPERTY_VALUE - downPayment;
+        uint256 monthlyPayment = calculateMonthlyPayment(principalAmount);
         
-        // Update investment tracking
-        investments[msg.sender] += amount;
-        totalInvested += amount;
-        lastRentalClaim[msg.sender] = block.timestamp;
+        // Create mortgage
+        mortgages[msg.sender] = Mortgage({
+            buyer: msg.sender,
+            downPayment: downPayment,
+            principalAmount: principalAmount,
+            monthlyPayment: monthlyPayment,
+            remainingBalance: principalAmount,
+            startDate: block.timestamp,
+            nextPaymentDue: block.timestamp + 30 days,
+            missedPayments: 0,
+            isActive: true,
+            isForeclosed: false,
+            isCompleted: false
+        });
         
-        // Check if property is fully owned
-        if (totalInvested >= PROPERTY_VALUE && !propertyFullyOwned) {
+        mortgageHolders.push(msg.sender);
+        totalDownPayments += downPayment;
+        
+        // Mint property tokens to buyer (represents ownership stake)
+        uint256 ownershipTokens = (downPayment * PROPERTY_VALUE) / PROPERTY_VALUE;
+        _mint(msg.sender, ownershipTokens);
+        
+        emit MortgageCreated(msg.sender, downPayment, monthlyPayment);
+    }
+    
+    /**
+     * @dev Make monthly mortgage payment
+     */
+    function makePayment() external nonReentrant {
+        Mortgage storage mortgage = mortgages[msg.sender];
+        require(mortgage.isActive, "No active mortgage");
+        require(!mortgage.isForeclosed, "Mortgage foreclosed");
+        require(!mortgage.isCompleted, "Mortgage already completed");
+        
+        uint256 paymentAmount = mortgage.monthlyPayment;
+        
+        // Transfer USDT payment
+        require(USDT.transferFrom(msg.sender, address(this), paymentAmount), "Payment failed");
+        
+        // Update mortgage balance
+        mortgage.remainingBalance -= paymentAmount;
+        mortgage.nextPaymentDue = block.timestamp + 30 days;
+        mortgage.missedPayments = 0; // Reset missed payments
+        
+        // Check if mortgage is fully paid
+        if (mortgage.remainingBalance == 0) {
+            mortgage.isCompleted = true;
+            mortgage.isActive = false;
             propertyFullyOwned = true;
-            _mintPropertyDeed();
+            _mintPropertyDeed(msg.sender);
+            emit MortgageCompleted(msg.sender, mortgage.downPayment + (mortgage.principalAmount));
         }
         
-        emit InvestmentMade(msg.sender, amount, tokens);
+        emit MortgagePaymentMade(msg.sender, paymentAmount, mortgage.remainingBalance);
     }
     
     /**
-     * @dev Mint property deed NFT when fully owned
+     * @dev Check for overdue payments and handle defaults
      */
-    function _mintPropertyDeed() internal {
+    function checkPaymentStatus(address buyer) external {
+        Mortgage storage mortgage = mortgages[buyer];
+        require(mortgage.isActive, "No active mortgage");
+        require(!mortgage.isForeclosed, "Already foreclosed");
+        
+        if (block.timestamp > mortgage.nextPaymentDue) {
+            mortgage.missedPayments++;
+            mortgage.nextPaymentDue = block.timestamp + 30 days;
+            
+            // Trigger foreclosure after 4 missed payments
+            if (mortgage.missedPayments >= MAX_MISSED_PAYMENTS) {
+                mortgage.isForeclosed = true;
+                mortgage.isActive = false;
+                
+                // Burn buyer's tokens (they lose ownership)
+                uint256 buyerTokens = balanceOf(buyer);
+                if (buyerTokens > 0) {
+                    _burn(buyer, buyerTokens);
+                }
+                
+                emit MortgageForeclosed(buyer, mortgage.missedPayments);
+            }
+        }
+    }
+    
+    /**
+     * @dev Set property appreciation value (owner only)
+     * @param newValue New property value in USDT
+     */
+    function setPropertyAppreciation(uint256 newValue) external onlyOwner {
+        require(newValue >= PROPERTY_VALUE, "Value cannot decrease");
+        
+        // Cap appreciation at 110%
+        uint256 maxValue = (PROPERTY_VALUE * APPRECIATION_CAP) / 100;
+        if (newValue > maxValue) {
+            newValue = maxValue;
+        }
+        
+        propertyAppreciationValue = newValue;
+    }
+    
+    /**
+     * @dev Distribute appreciation after 10 years (or when property is sold)
+     */
+    function distributeAppreciation() external onlyOwner {
+        require(propertyAppreciationValue > PROPERTY_VALUE, "No appreciation to distribute");
+        require(block.timestamp >= mortgages[msg.sender].startDate + (10 * 365 days), "10 year term not reached");
+        
+        uint256 totalAppreciation = propertyAppreciationValue - PROPERTY_VALUE;
+        
+        // Calculate splits
+        uint256 buyerShare = (totalAppreciation * BUYER_SPLIT) / 100;
+        uint256 ancientShare = (totalAppreciation * ANCIENT_SPLIT) / 100;
+        uint256 lenderShare = (totalAppreciation * LENDER_SPLIT) / 100;
+        
+        // Transfer appreciation shares (simplified - would use actual USDT transfers)
+        emit AppreciationDistributed(totalAppreciation, buyerShare, ancientShare, lenderShare);
+    }
+    
+    /**
+     * @dev Mint property deed NFT when mortgage is completed
+     */
+    function _mintPropertyDeed(address owner) internal {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
-        _safeMint(address(this), tokenId); // Mint to contract initially
+        _safeMint(owner, tokenId);
         propertyDeedTokenId = tokenId;
-        emit PropertyDeedMinted(address(this), tokenId);
-    }
-    
-    /**
-     * @dev Distribute monthly rental income
-     */
-    function distributeRentalIncome() external onlyOwner {
-        require(totalInvested > 0, "No investments yet");
-        
-        uint256 managementFee = (MONTHLY_RENT * 10) / 100; // 10% management fee
-        uint256 maintenanceReserve = (MONTHLY_RENT * 5) / 100; // 5% maintenance
-        uint256 distributableIncome = MONTHLY_RENT - managementFee - maintenanceReserve;
-        
-        totalRentalIncome += distributableIncome;
-        
-        emit RentalIncomeDistributed(distributableIncome, block.timestamp);
-    }
-    
-    /**
-     * @dev Claim rental income based on ownership percentage
-     */
-    function claimRentalIncome() external nonReentrant {
-        require(investments[msg.sender] > 0, "No investment found");
-        require(totalRentalIncome > 0, "No rental income to claim");
-        
-        uint256 ownershipPercentage = (investments[msg.sender] * 10000) / totalInvested;
-        uint256 claimableAmount = (totalRentalIncome * ownershipPercentage) / 10000;
-        
-        // Reset claimable amount (simplified for demo)
-        lastRentalClaim[msg.sender] = block.timestamp;
-        
-        // In production, would transfer USDC to investor
-        // For demo, we emit event
-        emit RentalIncomeDistributed(claimableAmount, block.timestamp);
+        emit PropertyDeedMinted(owner, tokenId);
     }
     
     /**
@@ -129,18 +236,31 @@ contract MazunteMortgage is ERC721, ERC20, Ownable, ReentrancyGuard {
     }
     
     /**
-     * @dev Get investor details
+     * @dev Get mortgage details for a buyer
      */
-    function getInvestorDetails(address investor) external view returns (
-        uint256 investmentAmount,
-        uint256 tokenBalance,
-        uint256 ownershipPercentage,
-        uint256 claimableRental
+    function getMortgageDetails(address buyer) external view returns (
+        uint256 downPayment,
+        uint256 principalAmount,
+        uint256 monthlyPayment,
+        uint256 remainingBalance,
+        uint256 nextPaymentDue,
+        uint256 missedPayments,
+        bool isActive,
+        bool isForeclosed,
+        bool isCompleted
     ) {
-        investmentAmount = investments[investor];
-        tokenBalance = balanceOf(investor);
-        ownershipPercentage = totalInvested > 0 ? (investmentAmount * 10000) / totalInvested : 0;
-        claimableRental = totalRentalIncome > 0 ? (totalRentalIncome * ownershipPercentage) / 10000 : 0;
+        Mortgage memory mortgage = mortgages[buyer];
+        return (
+            mortgage.downPayment,
+            mortgage.principalAmount,
+            mortgage.monthlyPayment,
+            mortgage.remainingBalance,
+            mortgage.nextPaymentDue,
+            mortgage.missedPayments,
+            mortgage.isActive,
+            mortgage.isForeclosed,
+            mortgage.isCompleted
+        );
     }
     
     /**
@@ -148,15 +268,32 @@ contract MazunteMortgage is ERC721, ERC20, Ownable, ReentrancyGuard {
      */
     function getPropertyStatus() external view returns (
         uint256 totalValue,
-        uint256 invested,
-        uint256 remaining,
-        uint256 monthlyRent,
+        uint256 currentValue,
+        uint256 totalDownPayments,
+        uint256 appreciationValue,
         bool fullyOwned
     ) {
-        totalValue = PROPERTY_VALUE;
-        invested = totalInvested;
-        remaining = PROPERTY_VALUE - totalInvested;
-        monthlyRent = MONTHLY_RENT;
-        fullyOwned = propertyFullyOwned;
+        return (
+            PROPERTY_VALUE,
+            propertyAppreciationValue > 0 ? propertyAppreciationValue : PROPERTY_VALUE,
+            totalDownPayments,
+            propertyAppreciationValue,
+            propertyFullyOwned
+        );
+    }
+    
+    /**
+     * @dev Get all mortgage holders
+     */
+    function getMortgageHolders() external view returns (address[] memory) {
+        return mortgageHolders;
+    }
+    
+    /**
+     * @dev Check if payment is overdue
+     */
+    function isPaymentOverdue(address buyer) external view returns (bool) {
+        Mortgage memory mortgage = mortgages[buyer];
+        return mortgage.isActive && block.timestamp > mortgage.nextPaymentDue;
     }
 }
