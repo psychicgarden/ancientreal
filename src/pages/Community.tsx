@@ -478,22 +478,6 @@ const Community = () => {
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium mb-4">Property Value</label>
-                    <Slider
-                      value={propertyValue}
-                      onValueChange={setPropertyValue}
-                      max={500000}
-                      min={100000}
-                      step={10000}
-                      className="w-full"
-                    />
-                    <div className="flex justify-between text-sm text-muted-foreground mt-2">
-                      <span>$100k</span>
-                      <span className="font-bold text-primary">${propertyValue[0].toLocaleString()}</span>
-                      <span>$500k</span>
-                    </div>
-                  </div>
 
                   <div>
                     <label className="block text-sm font-medium mb-4">Down Payment (20%)</label>
