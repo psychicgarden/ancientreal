@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { useWallet } from "@/contexts/WalletContext";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,28 +18,28 @@ const Header = () => {
         <div className="flex items-center justify-between h-24">
           {/* Logo */}
           <div className="flex items-center">
-            <a href="/" className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent hover:opacity-80 transition-opacity">
+            <Link to="/" className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent hover:opacity-80 transition-opacity">
               Ancient
-            </a>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="/investor" className="text-foreground/80 hover:text-foreground transition-colors">
+            <Link to="/investor" className="text-foreground/80 hover:text-foreground transition-colors">
               Invest
-            </a>
-            <a href="/portfolio" className="text-foreground/80 hover:text-foreground transition-colors">
+            </Link>
+            <Link to="/portfolio" className="text-foreground/80 hover:text-foreground transition-colors">
               Portfolio
-            </a>
-            <a href="/traveler" className="text-foreground/80 hover:text-foreground transition-colors">
+            </Link>
+            <Link to="/traveler" className="text-foreground/80 hover:text-foreground transition-colors">
               Travel
-            </a>
-            <a href="/community" className="text-foreground/80 hover:text-foreground transition-colors">
+            </Link>
+            <Link to="/community" className="text-foreground/80 hover:text-foreground transition-colors">
               Community
-            </a>
-            <a href="/developers" className="text-foreground/80 hover:text-foreground transition-colors">
+            </Link>
+            <Link to="/developers" className="text-foreground/80 hover:text-foreground transition-colors">
               Developers
-            </a>
+            </Link>
           </nav>
 
           {/* Desktop Actions */}
@@ -77,21 +78,21 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden py-6 border-t border-border/50">
             <nav className="flex flex-col space-y-4">
-              <a href="/investor" className="text-foreground/80 hover:text-foreground transition-colors">
+              <Link to="/investor" className="text-foreground/80 hover:text-foreground transition-colors">
                 Invest
-              </a>
-              <a href="/portfolio" className="text-foreground/80 hover:text-foreground transition-colors">
+              </Link>
+              <Link to="/portfolio" className="text-foreground/80 hover:text-foreground transition-colors">
                 Portfolio
-              </a>
-              <a href="/traveler" className="text-foreground/80 hover:text-foreground transition-colors">
+              </Link>
+              <Link to="/traveler" className="text-foreground/80 hover:text-foreground transition-colors">
                 Travel
-              </a>
-              <a href="/community" className="text-foreground/80 hover:text-foreground transition-colors">
+              </Link>
+              <Link to="/community" className="text-foreground/80 hover:text-foreground transition-colors">
                 Community
-              </a>
-              <a href="/developers" className="text-foreground/80 hover:text-foreground transition-colors">
+              </Link>
+              <Link to="/developers" className="text-foreground/80 hover:text-foreground transition-colors">
                 Developers
-              </a>
+              </Link>
               <div className="flex flex-col space-y-2 pt-4">
                 {isConnected ? (
                   <div className="space-y-2">
