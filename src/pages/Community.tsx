@@ -522,46 +522,6 @@ const Community = () => {
         </div>
       </section>
 
-      {/* Vibe Check - Why Ancient */}
-      <section className="py-20 bg-gradient-to-br from-purple-500/10 to-pink-500/10">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <Badge className="mb-4">✨ Vibe Check</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Why <span className="text-primary">Ancient</span>?
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              We're not just selling properties - we're curating sacred spaces where conscious souls gather to build the future.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-16">
-            {vibeReasons.map((reason, index) => (
-              <Card key={index} className="p-8 hover:shadow-xl transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm">
-                <div className="flex items-start gap-4">
-                  <div className={`p-3 rounded-full bg-gradient-to-br ${reason.gradient} flex-shrink-0`}>
-                    <reason.icon className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold mb-2">{reason.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed">{reason.description}</p>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-
-          <div className="text-center">
-            <p className="text-2xl font-medium text-primary mb-6">
-              "You're not just buying into an investment.<br />You're joining a movement."
-            </p>
-            <Button size="lg" className="px-8 py-4">
-              Join the Revolution
-            </Button>
-          </div>
-        </div>
-      </section>
-
       {/* Community Life & Events */}
       <section className="py-20">
         <div className="container mx-auto px-4">
@@ -605,6 +565,47 @@ const Community = () => {
           </div>
         </div>
       </section>
+
+      {/* Vibe Check - Why Ancient */}
+      <section className="py-20 bg-gradient-to-br from-purple-500/10 to-pink-500/10">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <Badge className="mb-4">✨ Vibe Check</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Why <span className="text-primary">Ancient</span>?
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              We're not just selling properties - we're curating sacred spaces where conscious souls gather to build the future.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-16">
+            {vibeReasons.map((reason, index) => (
+              <Card key={index} className="p-8 hover:shadow-xl transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm">
+                <div className="flex items-start gap-4">
+                  <div className={`p-3 rounded-full bg-gradient-to-br ${reason.gradient} flex-shrink-0`}>
+                    <reason.icon className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">{reason.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{reason.description}</p>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <p className="text-2xl font-medium text-primary mb-6">
+              "You're not just buying into an investment.<br />You're joining a movement."
+            </p>
+            <Button size="lg" className="px-8 py-4">
+              Join the Revolution
+            </Button>
+          </div>
+        </div>
+      </section>
+
 
       {/* Success Stories */}
       <section className="py-20 bg-gradient-to-br from-muted/20 to-muted/40">
