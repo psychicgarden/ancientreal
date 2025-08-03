@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { CONTRACTS, NETWORK_CONFIG, VILLAGE_MEMBERSHIP_FEE } from '@/lib/contracts';
+import { CONTRACTS, NETWORK_CONFIG, VILLAGE_MEMBERSHIP_FEE, MAZUNTE_PROPERTY } from '@/lib/contracts';
 
 interface WalletContextType {
   isConnected: boolean;
@@ -13,6 +13,12 @@ interface WalletContextType {
   joinVillage: () => Promise<void>;
   isJoiningVillage: boolean;
   checkVillageMembership: () => Promise<boolean>;
+  // Mazunte Property Functions
+  investInMazunte: (amount: number) => Promise<void>;
+  claimRentalIncome: () => Promise<void>;
+  getMazunteInvestorDetails: () => Promise<any>;
+  getMazuntePropertyStatus: () => Promise<any>;
+  isInvestingInMazunte: boolean;
 }
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
@@ -25,14 +31,13 @@ export const useWallet = () => {
   return context;
 };
 
-// Network configuration moved to contracts.ts
-
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [account, setAccount] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [isJoiningVillage, setIsJoiningVillage] = useState(false);
+  const [isInvestingInMazunte, setIsInvestingInMazunte] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -56,7 +61,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         params: [{ chainId: NETWORK_CONFIG.chainId }],
       });
     } catch (switchError: any) {
-      // This error code indicates that the chain has not been added to MetaMask
       if (switchError.code === 4902) {
         try {
           await window.ethereum.request({
@@ -72,24 +76,11 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   };
 
-  const getProvider = () => {
-    if (!window.ethereum) {
-      throw new Error('MetaMask not installed');
-    }
-    return window.ethereum;
-  };
-
   const executeContractCall = async (contractConfig: any, method: string, params: any[] = [], value?: string) => {
-    const provider = getProvider();
-    
     try {
       // For this demo, we'll simulate the contract calls
-      // In production, you would use ethers.js or web3.js here
       const txHash = "0x" + Math.random().toString(16).slice(2, 66);
-      
-      // Simulate transaction delay
       await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 3000));
-      
       return { hash: txHash, success: true };
     } catch (error) {
       console.error('Contract call failed:', error);
@@ -109,15 +100,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     setIsLoading(true);
     try {
-      // Request account access
       const accounts = await window.ethereum.request({
         method: 'eth_requestAccounts',
       });
 
       if (accounts.length > 0) {
-        // Switch to Avalanche Fuji
         await switchToAvalancheFuji();
-        
         setAccount(accounts[0]);
         setIsConnected(true);
         
@@ -165,10 +153,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         description: `Paying membership fee of ${VILLAGE_MEMBERSHIP_FEE} AVAX...`,
       });
 
-      // Execute village membership contract call
       const result = await executeContractCall(
-        CONTRACTS.VILLAGE_MEMBERSHIP,
-        'joinVillage',
+        CONTRACTS.VILLAGE_CITIZENSHIP,
+        'becomeCitizen',
         [],
         VILLAGE_MEMBERSHIP_FEE
       );
@@ -176,16 +163,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       toast({
         title: "Welcome to Mazunte Village!",
         description: "Village membership activated. You now have full community access.",
-        action: (
-          <a 
-            href={`https://testnet.snowtrace.io/tx/${result.hash}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500 hover:underline text-sm"
-          >
-            View Transaction
-          </a>
-        ),
       });
     } catch (error: any) {
       console.error('Error joining village:', error);
@@ -199,19 +176,117 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   };
 
-  const checkVillageMembership = async (): Promise<boolean> => {
+  const checkVillageMembership = useCallback(async (): Promise<boolean> => {
     if (!isConnected || !account) return false;
     
     try {
-      // In production, this would call the smart contract
-      // For demo, we'll simulate the check
       await new Promise(resolve => setTimeout(resolve, 500));
-      return Math.random() > 0.5; // Random membership status for demo
+      return Math.random() > 0.5;
     } catch (error) {
       console.error('Error checking village membership:', error);
       return false;
     }
-  };
+  }, [isConnected, account]);
+
+  // Mazunte Property Investment Functions
+  const investInMazunte = useCallback(async (amount: number) => {
+    if (!isConnected || !account) {
+      toast({
+        title: "Wallet not connected",
+        description: "Please connect your wallet first",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsInvestingInMazunte(true);
+    
+    try {
+      toast({
+        title: "Investment Processing",
+        description: `Investing $${amount.toLocaleString()} in Mazunte property...`,
+      });
+
+      await new Promise(resolve => setTimeout(resolve, 3000));
+
+      toast({
+        title: "Investment Successful!",
+        description: `You've successfully invested $${amount.toLocaleString()} in Mazunte property. You now own ${((amount / MAZUNTE_PROPERTY.VALUE) * 100).toFixed(2)}% of the property.`,
+      });
+    } catch (error) {
+      console.error('Investment failed:', error);
+      toast({
+        title: "Investment Failed",
+        description: "There was an error processing your investment. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsInvestingInMazunte(false);
+    }
+  }, [isConnected, account, toast]);
+
+  const claimRentalIncome = useCallback(async () => {
+    if (!isConnected || !account) {
+      toast({
+        title: "Wallet not connected",
+        description: "Please connect your wallet first",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      toast({
+        title: "Claiming Rental Income",
+        description: "Processing your rental income claim...",
+      });
+
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      toast({
+        title: "Rental Income Claimed!",
+        description: "Your rental income has been successfully claimed.",
+      });
+    } catch (error) {
+      console.error('Rental claim failed:', error);
+      toast({
+        title: "Claim Failed",
+        description: "There was an error claiming your rental income.",
+        variant: "destructive",
+      });
+    }
+  }, [isConnected, account, toast]);
+
+  const getMazunteInvestorDetails = useCallback(async () => {
+    if (!isConnected || !account) return null;
+
+    try {
+      return {
+        investmentAmount: 50000,
+        tokenBalance: 50000,
+        ownershipPercentage: 3333,
+        claimableRental: 683
+      };
+    } catch (error) {
+      console.error('Failed to get investor details:', error);
+      return null;
+    }
+  }, [isConnected, account]);
+
+  const getMazuntePropertyStatus = useCallback(async () => {
+    try {
+      return {
+        totalValue: MAZUNTE_PROPERTY.VALUE,
+        invested: 125000,
+        remaining: 25000,
+        monthlyRent: MAZUNTE_PROPERTY.MONTHLY_RENT,
+        fullyOwned: false
+      };
+    } catch (error) {
+      console.error('Failed to get property status:', error);
+      return null;
+    }
+  }, []);
 
   const purchaseTokens = async (investmentAmount: number = 30000) => {
     if (!isConnected) {
@@ -226,37 +301,25 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setIsPurchasing(true);
     
     try {
-      // Calculate token details
       const propertyValue = 150000;
       const monthlyProfit = Math.round(((investmentAmount / propertyValue) * 943));
-      const tokens = investmentAmount; // 1 token per $1 invested
+      const tokens = investmentAmount;
       
       toast({
         title: "Processing Token Purchase",
         description: `Purchasing ${tokens.toLocaleString()} MAZUNTE tokens for $${investmentAmount.toLocaleString()}...`,
       });
 
-      // Execute token purchase contract call
       const result = await executeContractCall(
-        CONTRACTS.MAZUNTE_TOKEN,
-        'purchase',
-        [tokens],
-        (investmentAmount * 0.001).toString() // Convert USD to AVAX (rough estimate)
+        CONTRACTS.MAZUNTE_MORTGAGE,
+        'invest',
+        [investmentAmount * 1000000],
+        '0'
       );
       
       toast({
         title: "Success! You are now a Mazunte Village Founding Citizen",
         description: `Investment: $${investmentAmount.toLocaleString()} | Monthly Yield: $${monthlyProfit} | Tokens: ${tokens.toLocaleString()}`,
-        action: (
-          <a 
-            href={`https://testnet.snowtrace.io/tx/${result.hash}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500 hover:underline text-sm"
-          >
-            View Transaction
-          </a>
-        ),
       });
     } catch (error: any) {
       console.error('Error purchasing tokens:', error);
@@ -283,6 +346,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         joinVillage,
         isJoiningVillage,
         checkVillageMembership,
+        // Mazunte Property Functions
+        investInMazunte,
+        claimRentalIncome,
+        getMazunteInvestorDetails,
+        getMazuntePropertyStatus,
+        isInvestingInMazunte
       }}
     >
       {children}

@@ -1,17 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { TrendingUp, Calculator, MapPin } from "lucide-react";
 import { useWallet } from "@/contexts/WalletContext";
+import { MAZUNTE_PROPERTY } from "@/lib/contracts";
 import PropertyInvestmentCalculator from "@/components/PropertyInvestmentCalculator";
 import villaTulum from "@/assets/villa-tulum.jpg";
 import beachChalet from "@/assets/beach-chalet.jpg";
 import villaCorfu from "@/assets/villa-corfu-greece.jpg";
 
 const FeaturedInvestments = () => {
-  const { isConnected, purchaseTokens, isPurchasing } = useWallet();
+  const { 
+    isConnected, 
+    purchaseTokens, 
+    isPurchasing,
+    investInMazunte,
+    isInvestingInMazunte,
+    getMazuntePropertyStatus 
+  } = useWallet();
   const [calculatorOpen, setCalculatorOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
 

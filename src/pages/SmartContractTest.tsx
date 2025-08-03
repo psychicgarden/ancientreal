@@ -98,11 +98,11 @@ const SmartContractTest = () => {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Village Contract:</span>
-                    <span className="font-mono text-sm">{CONTRACTS.VILLAGE_MEMBERSHIP.address}</span>
+                    <span className="font-mono text-sm">{CONTRACTS.VILLAGE_CITIZENSHIP.address}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Token Contract:</span>
-                    <span className="font-mono text-sm">{CONTRACTS.MAZUNTE_TOKEN.address}</span>
+                    <span className="text-muted-foreground">Mazunte Contract:</span>
+                    <span className="font-mono text-sm">{CONTRACTS.MAZUNTE_MORTGAGE.address}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Token Symbol:</span>
