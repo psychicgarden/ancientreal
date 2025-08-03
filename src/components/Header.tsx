@@ -27,6 +27,9 @@ const Header = () => {
             <a href="/investor" className="text-foreground/80 hover:text-foreground transition-colors">
               Investor
             </a>
+            <a href="/portfolio" className="text-foreground/80 hover:text-foreground transition-colors">
+              Portfolio
+            </a>
             <a href="/traveler" className="text-foreground/80 hover:text-foreground transition-colors">
               Travel
             </a>
@@ -77,6 +80,9 @@ const Header = () => {
             <nav className="flex flex-col space-y-4">
               <a href="/investor" className="text-foreground/80 hover:text-foreground transition-colors">
                 Investor
+              </a>
+              <a href="/portfolio" className="text-foreground/80 hover:text-foreground transition-colors">
+                Portfolio
               </a>
               <a href="/traveler" className="text-foreground/80 hover:text-foreground transition-colors">
                 Travel

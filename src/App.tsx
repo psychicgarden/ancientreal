@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { WalletProvider } from "@/contexts/WalletContext";
 import Index from "./pages/Index";
 import InvestorPortal from "./pages/InvestorPortal";
+import Portfolio from "./pages/Portfolio";
 import TravelerPortal from "./pages/TravelerPortal";
 import HostDashboard from "./pages/HostDashboard";
 import Developers from "./pages/Developers";
@@ -24,6 +25,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/investor" element={<InvestorPortal />} />
+            <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/traveler" element={<TravelerPortal />} />
             <Route path="/host" element={<HostDashboard />} />
             <Route path="/developers" element={<Developers />} />

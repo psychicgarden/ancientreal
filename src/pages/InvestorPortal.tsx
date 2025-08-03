@@ -29,8 +29,8 @@ const InvestorPortal = () => {
             <Button variant="default" size="lg">
               Browse Properties
             </Button>
-            <Button variant="outline" size="lg">
-              View Portfolio
+            <Button size="lg" variant="outline" asChild>
+              <a href="/portfolio">View Portfolio</a>
             </Button>
           </div>
         </div>
