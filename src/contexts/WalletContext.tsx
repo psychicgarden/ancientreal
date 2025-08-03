@@ -337,19 +337,33 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const getMortgageDetails = useCallback(async () => {
     if (!isConnected || !account) return null;
 
-    // Demo mode: return mock mortgage data
+    // Demo mode: return mock mortgage data with realistic production values
     if (isDemoMode) {
       const nextPaymentDue = new Date();
-      nextPaymentDue.setDate(nextPaymentDue.getDate() + 15); // Payment due in 15 days
+      nextPaymentDue.setMonth(nextPaymentDue.getMonth() + 1); // Payment due in 1 month
+      
+      // Use production values for realistic demo
+      const totalValue = MAZUNTE_PROPERTY.PRODUCTION.VALUE; // $150,000
+      const downPayment = MAZUNTE_PROPERTY.PRODUCTION.MIN_DOWN_PAYMENT; // $30,000
+      const principalAmount = totalValue - downPayment; // $120,000
+      const monthlyPayment = MAZUNTE_PROPERTY.PRODUCTION.MONTHLY_RENT; // $2,050
+      const totalMonths = MAZUNTE_PROPERTY.PRODUCTION.MORTGAGE_TERM_YEARS * 12; // 120 months
+      
+      // Simulate we're 8 months into the mortgage (8/120 payments made)
+      const paymentsMade = 8;
+      const totalPaid = paymentsMade * monthlyPayment; // $16,400
+      const remainingBalance = principalAmount - (totalPaid * 0.6); // Assuming 60% goes to principal
       
       return {
-        downPayment: MAZUNTE_PROPERTY.DEMO.MIN_DOWN_PAYMENT,
-        principalAmount: MAZUNTE_PROPERTY.DEMO.VALUE - MAZUNTE_PROPERTY.DEMO.MIN_DOWN_PAYMENT,
-        monthlyPayment: MAZUNTE_PROPERTY.DEMO.MONTHLY_RENT,
-        remainingBalance: (MAZUNTE_PROPERTY.DEMO.VALUE - MAZUNTE_PROPERTY.DEMO.MIN_DOWN_PAYMENT) * 0.85, // 85% remaining
+        downPayment: downPayment,
+        principalAmount: principalAmount,
+        monthlyPayment: monthlyPayment,
+        remainingBalance: remainingBalance,
         nextPaymentDue: nextPaymentDue.getTime(),
         missedPayments: 0,
-        totalPaid: (MAZUNTE_PROPERTY.DEMO.VALUE - MAZUNTE_PROPERTY.DEMO.MIN_DOWN_PAYMENT) * 0.15, // 15% paid
+        totalPaid: totalPaid,
+        paymentsRemaining: totalMonths - paymentsMade,
+        totalPayments: totalMonths,
         isActive: true,
         isForeclosed: false,
         isCompleted: false,
@@ -380,13 +394,16 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [isConnected, account, isDemoMode]);
 
   const getMazuntePropertyStatus = useCallback(async () => {
-    // Demo mode: return mock property data
+    // Demo mode: return mock property data with realistic production values
     if (isDemoMode) {
-      const appreciationValue = MAZUNTE_PROPERTY.DEMO.VALUE * 0.12; // 12% appreciation
+      const totalValue = MAZUNTE_PROPERTY.PRODUCTION.VALUE; // $150,000
+      const appreciationValue = totalValue * 0.08; // 8% appreciation = $12,000
+      const currentValue = totalValue + appreciationValue; // $162,000
+      
       return {
-        totalValue: MAZUNTE_PROPERTY.DEMO.VALUE,
-        currentValue: MAZUNTE_PROPERTY.DEMO.VALUE + appreciationValue,
-        totalDownPayments: MAZUNTE_PROPERTY.DEMO.MIN_DOWN_PAYMENT,
+        totalValue: totalValue,
+        currentValue: currentValue,
+        totalDownPayments: MAZUNTE_PROPERTY.PRODUCTION.MIN_DOWN_PAYMENT, // $30,000
         appreciationValue: appreciationValue,
         fullyOwned: false
       };
