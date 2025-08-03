@@ -98,7 +98,16 @@ const InvestorPortal = () => {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Button variant="default" size="lg">
+            <Button 
+              variant="default" 
+              size="lg"
+              onClick={() => {
+                const propertiesSection = document.querySelector('h2');
+                if (propertiesSection) {
+                  propertiesSection.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+            >
               Browse Properties
             </Button>
             <Button size="lg" variant="outline" asChild>

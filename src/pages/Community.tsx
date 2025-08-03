@@ -286,12 +286,16 @@ const Community = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button size="lg" className="group px-8 py-4 text-lg">
-              <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
-              Become a Founding Citizen
+            <Button size="lg" className="group px-8 py-4 text-lg" asChild>
+              <a href="/community">
+                <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
+                Become a Founding Citizen
+              </a>
             </Button>
-            <Button size="lg" variant="outline" className="px-8 py-4 text-lg bg-white/10 border-white/20 text-primary hover:bg-white/20">
-              Explore Spaces
+            <Button size="lg" variant="outline" className="px-8 py-4 text-lg bg-white/10 border-white/20 text-primary hover:bg-white/20" asChild>
+              <a href="/investor">
+                Explore Spaces
+              </a>
             </Button>
           </div>
         </div>
