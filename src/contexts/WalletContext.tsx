@@ -337,6 +337,26 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const getMortgageDetails = useCallback(async () => {
     if (!isConnected || !account) return null;
 
+    // Demo mode: return mock mortgage data
+    if (isDemoMode) {
+      const nextPaymentDue = new Date();
+      nextPaymentDue.setDate(nextPaymentDue.getDate() + 15); // Payment due in 15 days
+      
+      return {
+        downPayment: MAZUNTE_PROPERTY.DEMO.MIN_DOWN_PAYMENT,
+        principalAmount: MAZUNTE_PROPERTY.DEMO.VALUE - MAZUNTE_PROPERTY.DEMO.MIN_DOWN_PAYMENT,
+        monthlyPayment: MAZUNTE_PROPERTY.DEMO.MONTHLY_RENT,
+        remainingBalance: (MAZUNTE_PROPERTY.DEMO.VALUE - MAZUNTE_PROPERTY.DEMO.MIN_DOWN_PAYMENT) * 0.85, // 85% remaining
+        nextPaymentDue: nextPaymentDue.getTime(),
+        missedPayments: 0,
+        totalPaid: (MAZUNTE_PROPERTY.DEMO.VALUE - MAZUNTE_PROPERTY.DEMO.MIN_DOWN_PAYMENT) * 0.15, // 15% paid
+        isActive: true,
+        isForeclosed: false,
+        isCompleted: false,
+        coolingOffActive: false
+      };
+    }
+
     try {
       const details = await web3Integration.getMortgageDetails(account);
       
@@ -357,9 +377,21 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       console.error('Failed to get mortgage details:', error);
       return null;
     }
-  }, [isConnected, account]);
+  }, [isConnected, account, isDemoMode]);
 
   const getMazuntePropertyStatus = useCallback(async () => {
+    // Demo mode: return mock property data
+    if (isDemoMode) {
+      const appreciationValue = MAZUNTE_PROPERTY.DEMO.VALUE * 0.12; // 12% appreciation
+      return {
+        totalValue: MAZUNTE_PROPERTY.DEMO.VALUE,
+        currentValue: MAZUNTE_PROPERTY.DEMO.VALUE + appreciationValue,
+        totalDownPayments: MAZUNTE_PROPERTY.DEMO.MIN_DOWN_PAYMENT,
+        appreciationValue: appreciationValue,
+        fullyOwned: false
+      };
+    }
+
     try {
       const status = await web3Integration.getPropertyStatus();
       
@@ -374,7 +406,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       console.error('Failed to get property status:', error);
       return null;
     }
-  }, []);
+  }, [isDemoMode]);
 
   const getPaymentSchedule = useCallback(async () => {
     if (!isConnected || !account) return null;
