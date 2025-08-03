@@ -1,9 +1,11 @@
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PresaleProgress } from "@/components/PresaleProgress";
+import { ProjectInvestmentModal } from "@/components/ProjectInvestmentModal";
 import Header from "@/components/Header"; // Fixed import
 import baliJungleResort from "@/assets/bali-jungle-resort.jpg";
 import ecoSmartCity from "@/assets/eco-smart-city.jpg";
@@ -227,6 +229,14 @@ const Developers = () => {
     }
   ];
 
+  const [selectedProject, setSelectedProject] = useState<typeof currentProjects[0] | null>(null);
+  const [investmentModalOpen, setInvestmentModalOpen] = useState(false);
+
+  const handleInvestClick = (project: typeof currentProjects[0]) => {
+    setSelectedProject(project);
+    setInvestmentModalOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -437,8 +447,12 @@ const Developers = () => {
                     ))}
                   </div>
                   
-                  <Button className="w-full" variant={project.presalePercentage >= 80 ? "default" : "outline"}>
-                    {project.presalePercentage >= 80 ? "View Greenlit Project" : "Support Project"}
+                  <Button 
+                    className="w-full" 
+                    variant={project.status === "presale" ? "default" : "outline"}
+                    onClick={() => handleInvestClick(project)}
+                  >
+                    {project.status === "presale" ? "Invest Now" : "View Project"}
                   </Button>
                 </CardContent>
               </Card>
@@ -653,6 +667,15 @@ const Developers = () => {
           </div>
         </div>
       </section>
+
+      {/* Investment Modal */}
+      {selectedProject && (
+        <ProjectInvestmentModal
+          open={investmentModalOpen}
+          onOpenChange={setInvestmentModalOpen}
+          project={selectedProject}
+        />
+      )}
     </div>
   );
 };
