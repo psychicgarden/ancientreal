@@ -1,170 +1,242 @@
-import Header from "@/components/Header";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, PieChart, DollarSign, BarChart3 } from "lucide-react";
-import villaBahia from "@/assets/loft-bahia.jpg";
-import villaMexico from "@/assets/penthouse-mexico.jpg";
-import villaGreece from "@/assets/apartment-greece.jpg";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useWallet } from "@/contexts/WalletContext";
+import { InvestorMortgageDashboard } from "@/components/InvestorMortgageDashboard";
+import Header from "@/components/Header";
+import { 
+  Wallet, 
+  Building2, 
+  TrendingUp, 
+  FileText, 
+  Shield,
+  BarChart3,
+  DollarSign
+} from "lucide-react";
 
 const InvestorPortal = () => {
+  const { 
+    isConnected, 
+    account, 
+    connectWallet,
+    getMortgageDetails,
+    getMazuntePropertyStatus
+  } = useWallet();
+
+  const [investorData, setInvestorData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchInvestorData = async () => {
+      if (!isConnected) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const [mortgage, property] = await Promise.all([
+          getMortgageDetails(),
+          getMazuntePropertyStatus()
+        ]);
+        
+        setInvestorData({ mortgage, property });
+      } catch (error) {
+        console.error('Failed to fetch investor data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInvestorData();
+  }, [isConnected, getMortgageDetails, getMazuntePropertyStatus]);
+
+  if (!isConnected) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background to-background/80">
+        <Header />
+        <div className="container mx-auto px-6 py-24">
+          <div className="max-w-md mx-auto">
+            <Card>
+              <CardHeader className="text-center">
+                <Wallet className="h-12 w-12 mx-auto mb-4 text-primary" />
+                <CardTitle>Connect Your Wallet</CardTitle>
+                <CardDescription>
+                  Connect your wallet to access your Ancient investment portal
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button onClick={connectWallet} className="w-full" size="lg">
+                  Connect Wallet
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-background to-background/80">
       <Header />
       
-      {/* Hero Section */}
-      <section className="pt-32 pb-8 px-6">
-        <div className="container mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              <span className="bg-gradient-primary bg-clip-text text-transparent">
-                Investor Portal
-              </span>
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Fractional property ownership through blockchain tokens. Invest in global real estate with AI-driven analytics and instant liquidity.
-            </p>
-          </div>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Button variant="default" size="lg">
-              Browse Properties
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <a href="/portfolio">View Portfolio</a>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Investment Features */}
-      <section className="pb-16 px-6">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="bg-gradient-card border-accent/20">
-              <CardHeader>
-                <PieChart className="w-8 h-8 text-gold mb-2" />
-                <CardTitle>Fractional Ownership</CardTitle>
-                <CardDescription>
-                  Own portions of premium properties worldwide
-                </CardDescription>
-              </CardHeader>
-            </Card>
-            
-            <Card className="bg-gradient-card border-accent/20">
-              <CardHeader>
-                <BarChart3 className="w-8 h-8 text-gold mb-2" />
-                <CardTitle>AI Analytics</CardTitle>
-                <CardDescription>
-                  Predictive yield forecasts and portfolio optimization
-                </CardDescription>
-              </CardHeader>
-            </Card>
-            
-            <Card className="bg-gradient-card border-accent/20">
-              <CardHeader>
-                <DollarSign className="w-8 h-8 text-gold mb-2" />
-                <CardTitle>Instant Liquidity</CardTitle>
-                <CardDescription>
-                  Sell property tokens on secondary markets in minutes
-                </CardDescription>
-              </CardHeader>
-            </Card>
-            
-            <Card className="bg-gradient-card border-accent/20">
-              <CardHeader>
-                <TrendingUp className="w-8 h-8 text-gold mb-2" />
-                <CardTitle>Average 12.5% Returns</CardTitle>
-                <CardDescription>
-                  Consistent returns from rental income and appreciation
-                </CardDescription>
-              </CardHeader>
-            </Card>
+      {/* Header */}
+      <div className="bg-card/50 border-b">
+        <div className="container mx-auto px-6 py-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold">Investor Portal</h1>
+              <p className="text-muted-foreground mt-1">
+                Connected: {account?.slice(0, 6)}...{account?.slice(-4)}
+              </p>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="text-right">
+                <div className="text-sm text-muted-foreground">Portfolio Value</div>
+                <div className="text-2xl font-bold">
+                  {investorData?.mortgage?.downPayment ? 
+                    `$${investorData.mortgage.downPayment.toLocaleString()}` : 
+                    '$0'
+                  }
+                </div>
+              </div>
+              <Shield className="h-8 w-8 text-green-500" />
+            </div>
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* Active Campaigns Placeholder */}
-      <section className="pb-16 px-6">
-        <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">Active Property Campaigns</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card className="bg-gradient-card border-accent/20">
-              <CardContent className="p-6">
-                <div className="aspect-video bg-cover bg-center rounded-lg mb-4" 
-                     style={{ backgroundImage: `url(${villaBahia})` }}></div>
-                <h3 className="text-xl font-semibold mb-2">Artist Loft Bahia</h3>
-                <p className="text-muted-foreground mb-2">Salvador, Bahia, Brazil</p>
-                <p className="text-sm text-muted-foreground mb-4">Industrial-chic loft with ocean views in the historic Pelourinho district</p>
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-sm text-muted-foreground">Funded: 82%</span>
-                  <span className="text-sm font-semibold">$165K Target</span>
+      <div className="container mx-auto px-6 py-8">
+        <Tabs defaultValue="mortgage" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="mortgage">Mortgage</TabsTrigger>
+            <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
+            <TabsTrigger value="documents">Documents</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          </TabsList>
+
+          {/* Mortgage Tab */}
+          <TabsContent value="mortgage">
+            <InvestorMortgageDashboard />
+          </TabsContent>
+
+          {/* Portfolio Tab */}
+          <TabsContent value="portfolio" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Building2 className="h-5 w-5" />
+                  Property Portfolio
+                </CardTitle>
+                <CardDescription>
+                  Your real estate investments and ownership stakes
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-8">
+                  <Building2 className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                  <h3 className="text-lg font-semibold mb-2">Mazunte Art Deco Loft</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Your first property investment in the Ancient network
+                  </p>
+                  <div className="grid grid-cols-3 gap-4 max-w-md mx-auto">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold">20%</div>
+                      <div className="text-sm text-muted-foreground">Down Payment</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold">10</div>
+                      <div className="text-sm text-muted-foreground">Year Term</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold">8%</div>
+                      <div className="text-sm text-muted-foreground">Interest Rate</div>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-sm text-muted-foreground">Min. Investment:</span>
-                  <span className="text-sm font-semibold text-gold">$250</span>
-                </div>
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-sm text-muted-foreground">Est. Annual Yield:</span>
-                  <span className="text-sm font-semibold text-green-500">11.2%</span>
-                </div>
-                <Button className="w-full" variant="default">
-                  Invest Now
-                </Button>
               </CardContent>
             </Card>
+          </TabsContent>
 
-            <Card className="bg-gradient-card border-accent/20">
-              <CardContent className="p-6">
-                <div className="aspect-video bg-cover bg-center rounded-lg mb-4" 
-                     style={{ backgroundImage: `url(${villaMexico})` }}></div>
-                <h3 className="text-xl font-semibold mb-2">Beach Penthouse Tulum</h3>
-                <p className="text-muted-foreground mb-2">Tulum, Quintana Roo, Mexico</p>
-                <p className="text-sm text-muted-foreground mb-4">Rooftop penthouse with private terrace and jacuzzi near cenotes</p>
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-sm text-muted-foreground">Funded: 75%</span>
-                  <span className="text-sm font-semibold">$152K Target</span>
+          {/* Documents Tab */}
+          <TabsContent value="documents" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5" />
+                  Legal Documents
+                </CardTitle>
+                <CardDescription>
+                  Important legal and investment documentation
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Button variant="outline" className="justify-start h-auto p-4">
+                    <div className="text-left">
+                      <div className="font-semibold">Property Deed</div>
+                      <div className="text-sm text-muted-foreground">Legal ownership documentation</div>
+                    </div>
+                  </Button>
+                  <Button variant="outline" className="justify-start h-auto p-4">
+                    <div className="text-left">
+                      <div className="font-semibold">Mortgage Agreement</div>
+                      <div className="text-sm text-muted-foreground">Smart contract terms</div>
+                    </div>
+                  </Button>
+                  <Button variant="outline" className="justify-start h-auto p-4">
+                    <div className="text-left">
+                      <div className="font-semibold">Insurance Policy</div>
+                      <div className="text-sm text-muted-foreground">Property protection coverage</div>
+                    </div>
+                  </Button>
+                  <Button variant="outline" className="justify-start h-auto p-4">
+                    <div className="text-left">
+                      <div className="font-semibold">Nevis Corp Registration</div>
+                      <div className="text-sm text-muted-foreground">Legal entity documentation</div>
+                    </div>
+                  </Button>
                 </div>
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-sm text-muted-foreground">Min. Investment:</span>
-                  <span className="text-sm font-semibold text-gold">$200</span>
-                </div>
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-sm text-muted-foreground">Est. Annual Yield:</span>
-                  <span className="text-sm font-semibold text-green-500">13.8%</span>
-                </div>
-                <Button className="w-full" variant="default">
-                  Invest Now
-                </Button>
               </CardContent>
             </Card>
+          </TabsContent>
 
-            <Card className="bg-gradient-card border-accent/20">
-              <CardContent className="p-6">
-                <div className="aspect-video bg-cover bg-center rounded-lg mb-4" 
-                     style={{ backgroundImage: `url(${villaGreece})` }}></div>
-                <h3 className="text-xl font-semibold mb-2">Modern Caldera Apartment</h3>
-                <p className="text-muted-foreground mb-2">Oia, Santorini, Greece</p>
-                <p className="text-sm text-muted-foreground mb-4">Minimalist apartment with private balcony overlooking the caldera</p>
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-sm text-muted-foreground">Funded: 91%</span>
-                  <span className="text-sm font-semibold">$178K Target</span>
+          {/* Analytics Tab */}
+          <TabsContent value="analytics" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5" />
+                  Investment Analytics
+                </CardTitle>
+                <CardDescription>
+                  Performance metrics and projections
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="text-center p-4 bg-green-50 dark:bg-green-950/20 rounded-lg">
+                    <DollarSign className="h-8 w-8 mx-auto mb-2 text-green-600" />
+                    <div className="text-2xl font-bold text-green-600">$594</div>
+                    <div className="text-sm text-muted-foreground">Monthly Cash Flow</div>
+                  </div>
+                  <div className="text-center p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
+                    <TrendingUp className="h-8 w-8 mx-auto mb-2 text-blue-600" />
+                    <div className="text-2xl font-bold text-blue-600">181%</div>
+                    <div className="text-sm text-muted-foreground">10-Year ROI</div>
+                  </div>
+                  <div className="text-center p-4 bg-purple-50 dark:bg-purple-950/20 rounded-lg">
+                    <Building2 className="h-8 w-8 mx-auto mb-2 text-purple-600" />
+                    <div className="text-2xl font-bold text-purple-600">$467k</div>
+                    <div className="text-sm text-muted-foreground">Projected Value</div>
+                  </div>
                 </div>
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-sm text-muted-foreground">Min. Investment:</span>
-                  <span className="text-sm font-semibold text-gold">$300</span>
-                </div>
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-sm text-muted-foreground">Est. Annual Yield:</span>
-                  <span className="text-sm font-semibold text-green-500">10.5%</span>
-                </div>
-                <Button className="w-full" variant="default">
-                  Invest Now
-                </Button>
               </CardContent>
             </Card>
-          </div>
-        </div>
-      </section>
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 };

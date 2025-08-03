@@ -7,6 +7,7 @@ import { TrendingUp, Calculator, MapPin } from "lucide-react";
 import { useWallet } from "@/contexts/WalletContext";
 import { MAZUNTE_PROPERTY } from "@/lib/contracts";
 import PropertyInvestmentCalculator from "@/components/PropertyInvestmentCalculator";
+import { PropertyPurchaseModal } from "@/components/PropertyPurchaseModal";
 import villaTulum from "@/assets/villa-tulum.jpg";
 import beachChalet from "@/assets/beach-chalet.jpg";
 import villaCorfu from "@/assets/villa-corfu-greece.jpg";
@@ -21,6 +22,7 @@ const FeaturedInvestments = () => {
     getMazuntePropertyStatus 
   } = useWallet();
   const [calculatorOpen, setCalculatorOpen] = useState(false);
+  const [purchaseModalOpen, setPurchaseModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
 
   // Hardcoded blockchain data for Mazunte property
@@ -219,14 +221,15 @@ const FeaturedInvestments = () => {
                       <Button 
                         className="w-full" 
                         size="lg"
-                        onClick={() => purchaseTokens(property.downPayment)}
-                        disabled={isPurchasing || !isConnected}
+                        onClick={() => {
+                          setSelectedProperty(property);
+                          setPurchaseModalOpen(true);
+                        }}
+                        disabled={isPurchasing}
                       >
                         {isPurchasing 
                           ? "Processing..." 
-                          : !isConnected 
-                            ? "Connect Wallet First"
-                            : "Become a Founding Citizen"
+                          : "Become a Founding Citizen"
                         }
                       </Button>
                       <Button 
@@ -282,6 +285,13 @@ const FeaturedInvestments = () => {
       <PropertyInvestmentCalculator 
         open={calculatorOpen} 
         onOpenChange={setCalculatorOpen}
+        property={selectedProperty}
+      />
+
+      {/* Property Purchase Modal */}
+      <PropertyPurchaseModal 
+        isOpen={purchaseModalOpen}
+        onClose={() => setPurchaseModalOpen(false)}
         property={selectedProperty}
       />
     </section>
