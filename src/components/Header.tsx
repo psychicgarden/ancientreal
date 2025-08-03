@@ -39,7 +39,7 @@ const Header = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden lg:flex items-center space-x-8">
             <Link to="/investor" className="text-foreground/80 hover:text-foreground transition-colors">
               Invest
             </Link>
@@ -52,110 +52,99 @@ const Header = () => {
             <Link to="/community" className="text-foreground/80 hover:text-foreground transition-colors">
               Community
             </Link>
-            <Link to="/developers" className="text-foreground/80 hover:text-foreground transition-colors">
-              Developers
-            </Link>
           </nav>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center space-x-6">
-            {/* Demo Mode Developer Panel */}
-            <Popover open={isDeveloperPanelOpen} onOpenChange={setIsDeveloperPanelOpen}>
-              <PopoverTrigger asChild>
-                <div className="flex items-center space-x-2 cursor-pointer">
-                  {isDemoMode && (
-                    <Badge variant="secondary" className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200">
-                      Demo Mode
-                    </Badge>
-                  )}
-                  <Button variant="ghost" size="sm" className="p-2">
-                    <Settings className="h-4 w-4" />
-                  </Button>
-                </div>
-              </PopoverTrigger>
-              <PopoverContent className="w-80" align="end">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-medium flex items-center gap-2">
-                      <Beaker className="h-4 w-4" />
-                      Developer Tools
-                    </h4>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <div className="text-sm font-medium">Demo Mode</div>
-                      <div className="text-xs text-muted-foreground">
-                        Use test tokens instead of real payments
-                      </div>
-                    </div>
-                    <Switch
-                      checked={isDemoMode}
-                      onCheckedChange={toggleDemoMode}
-                    />
-                  </div>
-
-                  {isDemoMode && (
-                    <>
-                      <Separator />
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm">Test USDT Balance:</span>
-                          <span className="text-sm font-mono">{usdtBalance}</span>
-                        </div>
-                        
-                        <Button 
-                          onClick={getTestTokens}
-                          disabled={isLoading}
-                          size="sm"
-                          className="w-full"
-                        >
-                          {isLoading ? "Getting Tokens..." : "Get Test Tokens"}
-                        </Button>
-                        
-                        <p className="text-xs text-muted-foreground">
-                          Test tokens for development and demo purposes only
-                        </p>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </PopoverContent>
-            </Popover>
-
+          <div className="hidden lg:flex items-center space-x-4">
             {isConnected ? (
-              <div className="flex items-center space-x-4">
-                <span className="text-sm text-muted-foreground">
+              <div className="flex items-center space-x-3">
+                <span className="text-sm text-muted-foreground font-mono bg-muted/50 px-3 py-1 rounded-full">
                   {formatAddress(account!)}
                 </span>
-                <Button variant="outline" onClick={disconnectWallet}>
+                <Button variant="outline" size="sm" onClick={disconnectWallet}>
                   Disconnect
                 </Button>
               </div>
             ) : (
               <Button 
                 variant="outline" 
+                size="sm"
                 onClick={connectWallet}
                 disabled={isLoading}
               >
                 {isLoading ? "Connecting..." : "Connect Wallet"}
               </Button>
             )}
-            <Button variant="default">Sign In</Button>
+
+            {/* Demo Mode Controls - Subtle */}
+            {isDemoMode && (
+              <Popover open={isDeveloperPanelOpen} onOpenChange={setIsDeveloperPanelOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 opacity-60 hover:opacity-100">
+                    <Settings className="h-3 w-3" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-72" align="end">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium flex items-center gap-2">
+                        <Beaker className="h-4 w-4" />
+                        Developer Tools
+                      </h4>
+                      <Badge variant="secondary" className="text-xs">
+                        Demo
+                      </Badge>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <div className="text-sm font-medium">Demo Mode</div>
+                        <div className="text-xs text-muted-foreground">
+                          Test environment
+                        </div>
+                      </div>
+                      <Switch
+                        checked={isDemoMode}
+                        onCheckedChange={toggleDemoMode}
+                      />
+                    </div>
+
+                    <Separator />
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm">Test Balance:</span>
+                        <span className="text-sm font-mono">{usdtBalance} USDT</span>
+                      </div>
+                      
+                      <Button 
+                        onClick={getTestTokens}
+                        disabled={isLoading}
+                        size="sm"
+                        className="w-full"
+                      >
+                        {isLoading ? "Getting..." : "Get Test Tokens"}
+                      </Button>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            )}
+
+            <Button variant="default" size="sm">Sign In</Button>
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2"
+            className="lg:hidden p-2"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden py-6 border-t border-border/50">
+          <div className="lg:hidden py-6 border-t border-border/50">
             <nav className="flex flex-col space-y-4">
               <Link to="/investor" className="text-foreground/80 hover:text-foreground transition-colors">
                 Invest
@@ -169,15 +158,13 @@ const Header = () => {
               <Link to="/community" className="text-foreground/80 hover:text-foreground transition-colors">
                 Community
               </Link>
-              <Link to="/developers" className="text-foreground/80 hover:text-foreground transition-colors">
-                Developers
-              </Link>
-              <div className="flex flex-col space-y-2 pt-4">
+              
+              <div className="flex flex-col space-y-3 pt-4 border-t border-border/50">
                 {isConnected ? (
-                  <div className="space-y-2">
-                    <span className="text-sm text-muted-foreground px-3">
+                  <div className="space-y-3">
+                    <div className="text-sm text-muted-foreground font-mono bg-muted/50 px-3 py-2 rounded">
                       {formatAddress(account!)}
-                    </span>
+                    </div>
                     <Button variant="outline" onClick={disconnectWallet} className="w-full">
                       Disconnect
                     </Button>
@@ -192,7 +179,19 @@ const Header = () => {
                     {isLoading ? "Connecting..." : "Connect Wallet"}
                   </Button>
                 )}
-                <Button variant="default">Sign In</Button>
+                
+                {/* Demo Mode Toggle for Mobile */}
+                {isDemoMode && (
+                  <div className="flex items-center justify-between py-2">
+                    <span className="text-sm">Demo Mode</span>
+                    <Switch
+                      checked={isDemoMode}
+                      onCheckedChange={toggleDemoMode}
+                    />
+                  </div>
+                )}
+                
+                <Button variant="default" className="w-full">Sign In</Button>
               </div>
             </nav>
           </div>
