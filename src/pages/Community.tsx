@@ -575,7 +575,7 @@ const Community = () => {
               Why <span className="text-primary">Ancient</span>?
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              We're not just selling properties - we're curating sacred spaces where conscious souls gather to build the future.
+              This isn't real estate. It's access. Access to places that mean something. Spaces designed for those who don't just want to own — they want to belong.
             </p>
           </div>
 
