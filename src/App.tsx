@@ -8,7 +8,7 @@ import Index from "./pages/Index";
 import InvestorPortal from "./pages/InvestorPortal";
 import Portfolio from "./pages/Portfolio";
 import TravelerPortal from "./pages/TravelerPortal";
-import HostDashboard from "./pages/HostDashboard";
+
 import Community from "./pages/Community";
 import Developers from "./pages/Developers";
 import SmartContractTest from "./pages/SmartContractTest";
@@ -28,7 +28,7 @@ const App = () => (
             <Route path="/investor" element={<InvestorPortal />} />
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/traveler" element={<TravelerPortal />} />
-            <Route path="/host" element={<HostDashboard />} />
+            
             <Route path="/community" element={<Community />} />
             <Route path="/developers" element={<Developers />} />
             <Route path="/test" element={<SmartContractTest />} />

@@ -1,5 +1,7 @@
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MapPin, Users, TrendingUp, Heart } from "lucide-react";
+import { Heart, MapPin, TrendingUp, Users, Calendar, DollarSign } from "lucide-react";
 import { useState } from "react";
 
 interface PropertyCardProps {
@@ -7,124 +9,164 @@ interface PropertyCardProps {
   image: string;
   title: string;
   location: string;
-  price: number;
-  sharePrice: number;
-  totalShares: number;
-  availableShares: number;
-  expectedReturn: number;
-  type: string;
+  status: "owned" | "mortgaged" | "hosted" | "available";
+  value: number;
+  equity?: number;
+  monthlyIncome?: number;
+  occupancyRate?: number;
+  onManage?: () => void;
+  onListForTravel?: () => void;
+  onMakePayment?: () => void;
+  onViewAnalytics?: () => void;
 }
 
-const PropertyCard = ({
+export const PropertyCard = ({
+  id,
   image,
   title,
   location,
-  price,
-  sharePrice,
-  totalShares,
-  availableShares,
-  expectedReturn,
-  type,
+  status,
+  value,
+  equity,
+  monthlyIncome,
+  occupancyRate,
+  onManage,
+  onListForTravel,
+  onMakePayment,
+  onViewAnalytics,
 }: PropertyCardProps) => {
   const [isLiked, setIsLiked] = useState(false);
-  const percentageSold = ((totalShares - availableShares) / totalShares) * 100;
+
+  const getStatusBadge = () => {
+    switch (status) {
+      case "owned":
+        return <Badge className="bg-green-500/10 text-green-600 border-green-500/20">Owned</Badge>;
+      case "mortgaged":
+        return <Badge className="bg-blue-500/10 text-blue-600 border-blue-500/20">Mortgaged</Badge>;
+      case "hosted":
+        return <Badge className="bg-purple-500/10 text-purple-600 border-purple-500/20">Hosting</Badge>;
+      case "available":
+        return <Badge className="bg-orange-500/10 text-orange-600 border-orange-500/20">Available</Badge>;
+      default:
+        return null;
+    }
+  };
+
+  const getActionButtons = () => {
+    switch (status) {
+      case "mortgaged":
+        return (
+          <div className="flex gap-2">
+            <Button size="sm" onClick={onMakePayment} className="flex-1">
+              Make Payment
+            </Button>
+            <Button size="sm" variant="outline" onClick={onViewAnalytics}>
+              Analytics
+            </Button>
+          </div>
+        );
+      case "owned":
+        return (
+          <div className="flex gap-2">
+            <Button size="sm" onClick={onListForTravel} className="flex-1">
+              List for Travel
+            </Button>
+            <Button size="sm" variant="outline" onClick={onViewAnalytics}>
+              Analytics
+            </Button>
+          </div>
+        );
+      case "hosted":
+        return (
+          <div className="flex gap-2">
+            <Button size="sm" onClick={onManage} className="flex-1">
+              Manage Bookings
+            </Button>
+            <Button size="sm" variant="outline" onClick={onViewAnalytics}>
+              Analytics
+            </Button>
+          </div>
+        );
+      case "available":
+        return (
+          <Button size="sm" onClick={onListForTravel} className="w-full">
+            Start Hosting
+          </Button>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div className="group bg-gradient-card rounded-2xl shadow-card hover:shadow-luxury transition-all duration-500 overflow-hidden border border-border/50">
-      {/* Image */}
-      <div className="relative overflow-hidden">
+    <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300">
+      <div className="relative">
         <img
           src={image}
           alt={title}
-          className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
         />
-        <div className="absolute top-4 left-4 bg-primary/90 backdrop-blur-sm text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
-          {type}
+        <div className="absolute top-3 left-3">
+          {getStatusBadge()}
         </div>
         <button
           onClick={() => setIsLiked(!isLiked)}
-          className="absolute top-4 right-4 w-10 h-10 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-background transition-colors"
+          className="absolute top-3 right-3 p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-colors"
         >
           <Heart
-            className={`w-5 h-5 transition-colors ${
-              isLiked ? "fill-red-500 text-red-500" : "text-foreground/60"
+            className={`h-4 w-4 ${
+              isLiked ? "fill-red-500 text-red-500" : "text-muted-foreground"
             }`}
           />
         </button>
-        
-        {/* Progress Indicator */}
-        <div className="absolute bottom-4 left-4 right-4">
-          <div className="bg-background/90 backdrop-blur-sm rounded-lg p-3">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-medium">Funding Progress</span>
-              <span className="text-sm font-bold text-primary">
-                {percentageSold.toFixed(0)}% Sold
-              </span>
-            </div>
-            <div className="w-full bg-muted rounded-full h-2">
-              <div
-                className="bg-gradient-primary h-2 rounded-full transition-all duration-500"
-                style={{ width: `${percentageSold}%` }}
-              />
-            </div>
-          </div>
-        </div>
       </div>
 
-      {/* Content */}
-      <div className="p-6">
-        <div className="flex items-start justify-between mb-4">
+      <CardContent className="p-4">
+        <div className="space-y-3">
           <div>
-            <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
-              {title}
-            </h3>
-            <div className="flex items-center text-muted-foreground mb-2">
-              <MapPin className="w-4 h-4 mr-1" />
-              <span className="text-sm">{location}</span>
+            <h3 className="font-semibold text-lg leading-tight">{title}</h3>
+            <div className="flex items-center text-muted-foreground text-sm mt-1">
+              <MapPin className="h-3 w-3 mr-1" />
+              {location}
             </div>
           </div>
-        </div>
 
-        {/* Pricing */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <div>
-            <div className="text-2xl font-bold text-foreground">
-              ${price.toLocaleString()}
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div>
+              <div className="text-muted-foreground">Property Value</div>
+              <div className="font-semibold">${value.toLocaleString()}</div>
             </div>
-            <div className="text-sm text-muted-foreground">Total Value</div>
+            {equity && (
+              <div>
+                <div className="text-muted-foreground">Your Equity</div>
+                <div className="font-semibold text-green-600">${equity.toLocaleString()}</div>
+              </div>
+            )}
+            {monthlyIncome && (
+              <div>
+                <div className="text-muted-foreground flex items-center">
+                  <DollarSign className="h-3 w-3 mr-1" />
+                  Monthly Income
+                </div>
+                <div className="font-semibold text-blue-600">${monthlyIncome.toLocaleString()}</div>
+              </div>
+            )}
+            {occupancyRate && (
+              <div>
+                <div className="text-muted-foreground flex items-center">
+                  <Calendar className="h-3 w-3 mr-1" />
+                  Occupancy
+                </div>
+                <div className="font-semibold">{occupancyRate}%</div>
+              </div>
+            )}
           </div>
-          <div>
-            <div className="text-2xl font-bold text-primary">
-              ${sharePrice.toLocaleString()}
-            </div>
-            <div className="text-sm text-muted-foreground">Per Share</div>
-          </div>
-        </div>
 
-        {/* Stats */}
-        <div className="flex items-center justify-between mb-6 text-sm">
-          <div className="flex items-center text-muted-foreground">
-            <Users className="w-4 h-4 mr-1" />
-            <span>{availableShares} shares left</span>
-          </div>
-          <div className="flex items-center text-accent">
-            <TrendingUp className="w-4 h-4 mr-1" />
-            <span className="font-semibold">{expectedReturn}% expected return</span>
+          <div className="pt-2">
+            {getActionButtons()}
           </div>
         </div>
-
-        {/* Actions */}
-        <div className="flex gap-3">
-          <Button className="flex-1" size="lg">
-            Invest Now
-          </Button>
-          <Button variant="outline" size="lg">
-            20% Down Purchase
-          </Button>
-        </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
-
-export default PropertyCard;

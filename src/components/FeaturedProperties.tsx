@@ -1,4 +1,4 @@
-import PropertyCard from "./PropertyCard";
+import OriginalPropertyCard from "./OriginalPropertyCard";
 import property1 from "@/assets/property-1.jpg";
 import property2 from "@/assets/property-2.jpg";
 import property3 from "@/assets/property-3.jpg";
@@ -65,7 +65,7 @@ const FeaturedProperties = () => {
         {/* Properties Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {properties.map((property) => (
-            <PropertyCard key={property.id} {...property} />
+            <OriginalPropertyCard key={property.id} {...property} />
           ))}
         </div>
 

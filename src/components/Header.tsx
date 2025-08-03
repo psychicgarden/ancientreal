@@ -25,16 +25,13 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <a href="/investor" className="text-foreground/80 hover:text-foreground transition-colors">
-              Investor
+              Invest
             </a>
             <a href="/portfolio" className="text-foreground/80 hover:text-foreground transition-colors">
               Portfolio
             </a>
             <a href="/traveler" className="text-foreground/80 hover:text-foreground transition-colors">
               Travel
-            </a>
-            <a href="/host" className="text-foreground/80 hover:text-foreground transition-colors">
-              Host
             </a>
             <a href="/community" className="text-foreground/80 hover:text-foreground transition-colors">
               Community
@@ -81,16 +78,13 @@ const Header = () => {
           <div className="md:hidden py-6 border-t border-border/50">
             <nav className="flex flex-col space-y-4">
               <a href="/investor" className="text-foreground/80 hover:text-foreground transition-colors">
-                Investor
+                Invest
               </a>
               <a href="/portfolio" className="text-foreground/80 hover:text-foreground transition-colors">
                 Portfolio
               </a>
               <a href="/traveler" className="text-foreground/80 hover:text-foreground transition-colors">
                 Travel
-              </a>
-              <a href="/host" className="text-foreground/80 hover:text-foreground transition-colors">
-                Host
               </a>
               <a href="/community" className="text-foreground/80 hover:text-foreground transition-colors">
                 Community
