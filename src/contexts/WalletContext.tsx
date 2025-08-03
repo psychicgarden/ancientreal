@@ -340,7 +340,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     // Demo mode: return mock mortgage data with realistic production values
     if (isDemoMode) {
       const nextPaymentDue = new Date();
-      nextPaymentDue.setMonth(nextPaymentDue.getMonth() + 1); // Payment due in 1 month (30 days)
+      nextPaymentDue.setDate(nextPaymentDue.getDate() + 30); // Payment due in 30 days
       
       // Just made the down payment, so this is the start of the mortgage
       const totalValue = MAZUNTE_PROPERTY.PRODUCTION.VALUE; // $150,000
