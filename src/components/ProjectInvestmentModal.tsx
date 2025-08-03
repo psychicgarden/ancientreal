@@ -43,9 +43,9 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
 
   // Calculate investment metrics
   const ownershipPercentage = (investment / project.targetFunding) * 100;
-  const projectedValue = investment * (100 / 85); // 85% presale to 100% public (17.65% ROI)
+  const projectedValue = investment * 1.15; // 15% markup from presale to public
   const projectedProfit = projectedValue - investment;
-  const roi = 17.65; // Fixed ROI based on 85% presale pricing
+  const roi = 15; // 15% ROI on presale investments
   const remainingFunding = project.targetFunding - project.currentFunding;
 
   const handleInvestment = async () => {
