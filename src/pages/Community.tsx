@@ -36,10 +36,21 @@ const Community = () => {
   const [propertyValue, setPropertyValue] = useState([150000]);
   const [downPayment, setDownPayment] = useState([30000]);
   
-  // Calculate ROI metrics
+  // Featured properties data for realistic calculations
+  const featuredProperties = [
+    { price: 150000, expectedReturn: 14.2 },
+    { price: 140000, expectedReturn: 11.8 },
+    { price: 160000, expectedReturn: 16.5 },
+  ];
+  
+  // Calculate average expected return from featured properties
+  const avgExpectedReturn = featuredProperties.reduce((sum, prop) => sum + prop.expectedReturn, 0) / featuredProperties.length;
+  
+  // Calculate ROI metrics with dynamic monthly profit based on featured properties
   const monthlyPayment = ((propertyValue[0] - downPayment[0]) * 0.08) / 12;
-  const rentalYield = propertyValue[0] * 0.08;
-  const monthlyProfit = (rentalYield / 12) - monthlyPayment;
+  const annualRentalIncome = propertyValue[0] * (avgExpectedReturn / 100);
+  const monthlyRentalIncome = annualRentalIncome / 12;
+  const monthlyProfit = monthlyRentalIncome - monthlyPayment;
   const yearlyROI = ((monthlyProfit * 12) / downPayment[0]) * 100;
 
   // Property comparison data
