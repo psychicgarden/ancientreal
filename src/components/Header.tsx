@@ -14,12 +14,15 @@ const Header = () => {
   const { 
     isConnected, 
     account, 
+    chainId,
+    networkName,
     isLoading, 
     connectWallet, 
     disconnectWallet,
     isDemoMode,
     toggleDemoMode,
     usdtBalance,
+    ethBalance,
     getTestTokens
   } = useWallet();
 
@@ -123,13 +126,62 @@ const Header = () => {
               </PopoverContent>
             </Popover>
 
-            <Button 
-              variant="outline" 
-              onClick={isConnected ? disconnectWallet : connectWallet}
-              disabled={isLoading}
-            >
-              {isLoading ? "Connecting..." : isConnected ? "Connected" : "Connect Wallet"}
-            </Button>
+            {isConnected ? (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    {account ? formatAddress(account) : "Connected"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80" align="end">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium">Wallet Info</h4>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={disconnectWallet}
+                      >
+                        Disconnect
+                      </Button>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">Address:</span>
+                        <span className="text-sm font-mono">{account ? formatAddress(account) : 'N/A'}</span>
+                      </div>
+                      
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">Network:</span>
+                        <span className="text-sm">{networkName}</span>
+                      </div>
+                      
+                      {!isDemoMode && (
+                        <div className="flex justify-between">
+                          <span className="text-sm text-muted-foreground">ETH Balance:</span>
+                          <span className="text-sm font-mono">{ethBalance}</span>
+                        </div>
+                      )}
+                      
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">USDT Balance:</span>
+                        <span className="text-sm font-mono">{usdtBalance}</span>
+                      </div>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            ) : (
+              <Button 
+                variant="outline" 
+                onClick={connectWallet}
+                disabled={isLoading}
+              >
+                {isLoading ? "Connecting..." : "Connect Wallet"}
+              </Button>
+            )}
             <Button variant="default">Sign In</Button>
           </div>
 
@@ -162,14 +214,33 @@ const Header = () => {
                 Developers
               </Link>
               <div className="flex flex-col space-y-2 pt-4">
-                <Button 
-                  variant="outline" 
-                  onClick={isConnected ? disconnectWallet : connectWallet}
-                  disabled={isLoading}
-                  className="w-full"
-                >
-                  {isLoading ? "Connecting..." : isConnected ? "Connected" : "Connect Wallet"}
-                </Button>
+                {isConnected ? (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between p-2 bg-muted rounded">
+                      <span className="text-sm">Connected: {account ? formatAddress(account) : 'N/A'}</span>
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Network: {networkName}
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      onClick={disconnectWallet}
+                      className="w-full"
+                    >
+                      Disconnect
+                    </Button>
+                  </div>
+                ) : (
+                  <Button 
+                    variant="outline" 
+                    onClick={connectWallet}
+                    disabled={isLoading}
+                    className="w-full"
+                  >
+                    {isLoading ? "Connecting..." : "Connect Wallet"}
+                  </Button>
+                )}
                 <Button variant="default">Sign In</Button>
               </div>
             </nav>

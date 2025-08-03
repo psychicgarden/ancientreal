@@ -7,8 +7,11 @@ import { ethers } from 'ethers';
 interface WalletContextType {
   isConnected: boolean;
   account: string | null;
+  chainId: string | null;
+  networkName: string;
   isLoading: boolean;
   usdtBalance: string;
+  ethBalance: string;
   connectWallet: () => Promise<void>;
   disconnectWallet: () => void;
   purchaseTokens: (investmentAmount?: number) => Promise<void>;
@@ -48,15 +51,34 @@ export const useWallet = () => {
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [account, setAccount] = useState<string | null>(null);
+  const [chainId, setChainId] = useState<string | null>(null);
+  const [networkName, setNetworkName] = useState("Unknown");
   const [isLoading, setIsLoading] = useState(false);
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [isJoiningVillage, setIsJoiningVillage] = useState(false);
   const [isPurchasingProperty, setIsPurchasingProperty] = useState(false);
   const [isMakingPayment, setIsMakingPayment] = useState(false);
   const [usdtBalance, setUsdtBalance] = useState('0');
-  const [isDemoMode, setIsDemoMode] = useState(true); // Start in demo mode
+  const [ethBalance, setEthBalance] = useState('0');
+  const [isDemoMode, setIsDemoMode] = useState(false); // Start in real mode by default
   const [isGettingTestTokens, setIsGettingTestTokens] = useState(false);
   const { toast } = useToast();
+
+  // Helper function to get network name from chainId
+  const getNetworkName = (chainId: string): string => {
+    const networks: { [key: string]: string } = {
+      '0x1': 'Ethereum Mainnet',
+      '0x89': 'Polygon',
+      '0xa86a': 'Avalanche',
+      '0x38': 'BSC',
+      '0xa4b1': 'Arbitrum',
+      '0x2a': 'Kovan Testnet',
+      '0x5': 'Goerli Testnet',
+      '0xaa36a7': 'Sepolia Testnet',
+      '0x13881': 'Mumbai Testnet'
+    };
+    return networks[chainId] || `Network ${chainId}`;
+  };
 
   useEffect(() => {
     // Check if already connected and initialize Web3
@@ -65,40 +87,73 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         .then(async (accounts: string[]) => {
           if (accounts.length > 0) {
             try {
-              await web3Integration.initialize();
+              const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+              
               setAccount(accounts[0]);
+              setChainId(chainId);
+              setNetworkName(getNetworkName(chainId));
               setIsConnected(true);
               
-              // Load USDT balance
-              const balance = await web3Integration.getUSDTBalance(accounts[0]);
-              setUsdtBalance(balance);
+              // Try to initialize web3 and get balances
+              await web3Integration.initialize();
             } catch (error) {
               console.error('Web3 initialization failed:', error);
             }
           }
         })
         .catch(console.error);
+
+      // Listen for account and network changes
+      window.ethereum.on('accountsChanged', (accounts: string[]) => {
+        if (accounts.length === 0) {
+          disconnectWallet();
+        } else {
+          setAccount(accounts[0]);
+        }
+      });
+
+      window.ethereum.on('chainChanged', (chainId: string) => {
+        setChainId(chainId);
+        setNetworkName(getNetworkName(chainId));
+      });
     }
   }, []);
 
-  // Update USDT balance when account changes
+  // Update balances when account or network changes
   useEffect(() => {
-    if (isConnected && account) {
-      const updateBalance = async () => {
+    if (isConnected && account && !isDemoMode) {
+      const updateBalances = async () => {
         try {
-          const balance = await web3Integration.getUSDTBalance(account);
-          setUsdtBalance(balance);
+          // Get ETH balance
+          const ethBalanceHex = await window.ethereum.request({
+            method: 'eth_getBalance',
+            params: [account, 'latest']
+          });
+          const ethBalance = (parseInt(ethBalanceHex, 16) / 1e18).toFixed(4);
+          setEthBalance(ethBalance);
+
+          // Try to get USDT balance if contract exists
+          try {
+            const usdtBalance = await web3Integration.getUSDTBalance(account);
+            setUsdtBalance(usdtBalance);
+          } catch (error) {
+            setUsdtBalance("Contract not available");
+          }
         } catch (error) {
-          console.error('Failed to update USDT balance:', error);
+          console.error('Failed to update balances:', error);
         }
       };
-      updateBalance();
+      
+      updateBalances();
       
       // Set up balance update interval
-      const interval = setInterval(updateBalance, 30000); // Update every 30 seconds
+      const interval = setInterval(updateBalances, 30000); // Update every 30 seconds
       return () => clearInterval(interval);
+    } else if (isDemoMode) {
+      setEthBalance("2.5");
+      setUsdtBalance("1000");
     }
-  }, [isConnected, account]);
+  }, [isConnected, account, chainId, isDemoMode]);
 
   const switchToAvalancheFuji = async () => {
     try {
@@ -146,29 +201,46 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     setIsLoading(true);
     try {
+      if (isDemoMode) {
+        // Simulate wallet connection in demo mode
+        setTimeout(() => {
+          setAccount("0x742d35Cc6635C0532925a3b8C2Fb74E4b2A4b2a");
+          setChainId("0x1");
+          setNetworkName("Demo Network");
+          setIsConnected(true);
+          setUsdtBalance("1000");
+          setEthBalance("2.5");
+          setIsLoading(false);
+          
+          toast({
+            title: "Demo Wallet Connected",
+            description: "Connected to demo wallet with test tokens",
+          });
+        }, 1000);
+        return;
+      }
+
+      // Request account access
       const accounts = await window.ethereum.request({
         method: 'eth_requestAccounts',
       });
 
       if (accounts.length > 0) {
-        await web3Integration.initialize();
-        const account = await web3Integration.getAccount();
+        const account = accounts[0];
+        
+        // Get current network
+        const chainId = await window.ethereum.request({
+          method: 'eth_chainId',
+        });
         
         setAccount(account);
+        setChainId(chainId);
+        setNetworkName(getNetworkName(chainId));
         setIsConnected(true);
-        
-        // Load initial USDT balance
-        try {
-          const balance = await web3Integration.getUSDTBalance(account);
-          setUsdtBalance(balance);
-        } catch (balanceError) {
-          console.warn('Failed to get USDT balance, setting to 0:', balanceError);
-          setUsdtBalance('1000'); // Set demo balance if contract doesn't exist
-        }
         
         toast({
           title: "Wallet Connected",
-          description: `Connected to Avalanche - USDT Balance: $${usdtBalance}`,
+          description: `Connected to ${getNetworkName(chainId)}`,
         });
       }
     } catch (error: any) {
@@ -185,7 +257,11 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const disconnectWallet = () => {
     setAccount(null);
+    setChainId(null);
+    setNetworkName("Unknown");
     setIsConnected(false);
+    setUsdtBalance('0');
+    setEthBalance('0');
     toast({
       title: "Wallet Disconnected",
       description: "Your wallet has been disconnected",
@@ -615,8 +691,11 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       value={{
         isConnected,
         account,
+        chainId,
+        networkName,
         isLoading,
         usdtBalance,
+        ethBalance,
         connectWallet,
         disconnectWallet,
         purchaseTokens,
