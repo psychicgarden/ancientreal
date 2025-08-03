@@ -1,119 +1,225 @@
 import Header from "@/components/Header";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Slider } from "@/components/ui/slider";
 import { 
-  Users, 
-  MapPin, 
+  Home, 
+  TrendingUp, 
   Shield, 
-  Clock, 
-  Star, 
-  MessageCircle, 
-  Camera,
+  Globe, 
+  Heart, 
+  Users, 
+  Music, 
+  Flower,
+  Calendar,
+  MapPin,
+  Star,
   DollarSign,
-  Home,
-  Heart,
-  Globe,
+  Clock,
   CheckCircle,
-  Calendar
+  ArrowRight,
+  Zap,
+  Play,
+  PiggyBank,
+  Building,
+  TreePine,
+  Waves,
+  Sun,
+  Moon
 } from "lucide-react";
+import { useState } from "react";
 
 const Community = () => {
-  const managementTiers = [
+  const [propertyValue, setPropertyValue] = useState([150000]);
+  const [downPayment, setDownPayment] = useState([30000]);
+  
+  // Calculate ROI metrics
+  const monthlyPayment = ((propertyValue[0] - downPayment[0]) * 0.08) / 12;
+  const rentalYield = propertyValue[0] * 0.08;
+  const monthlyProfit = (rentalYield / 12) - monthlyPayment;
+  const yearlyROI = ((monthlyProfit * 12) / downPayment[0]) * 100;
+
+  // Property comparison data
+  const rentingVsOwning = [
     {
-      name: "Essential",
-      price: "5%",
-      description: "Basic oversight and maintenance",
-      features: [
-        "Monthly property inspections",
-        "Basic maintenance coordination",
-        "Rental income collection",
-        "Monthly photo reports"
-      ],
-      icon: <Home className="h-6 w-6" />
+      category: "Monthly Payment",
+      renting: "Pay rent forever",
+      ancient: "Build equity with each payment",
+      rentingIcon: "💸",
+      ancientIcon: "🏡"
     },
     {
-      name: "Premium",
-      price: "8%",
-      description: "Full-service property management",
-      features: [
-        "Weekly property checks",
-        "Guest experience management",
-        "24/7 emergency response",
-        "Professional cleaning service",
-        "Marketing optimization"
-      ],
-      icon: <Star className="h-6 w-6" />,
-      popular: true
+      category: "Financial Future", 
+      renting: "Zero ownership, zero returns",
+      ancient: "Earn rental income + appreciation",
+      rentingIcon: "📉",
+      ancientIcon: "📈"
     },
     {
-      name: "Concierge",
-      price: "12%",
-      description: "White-glove investment experience",
-      features: [
-        "Daily property monitoring",
-        "Personal concierge service",
-        "Interior design updates",
-        "Investment optimization",
-        "Tax documentation support"
-      ],
-      icon: <Shield className="h-6 w-6" />
+      category: "Legal Complexity",
+      renting: "Lease restrictions & rent hikes", 
+      ancient: "We handle everything legally",
+      rentingIcon: "📋",
+      ancientIcon: "✨"
+    },
+    {
+      category: "Investment Control",
+      renting: "Subject to landlord decisions",
+      ancient: "You own, you decide",
+      rentingIcon: "🚫", 
+      ancientIcon: "👑"
     }
   ];
 
+  // Journey steps
+  const ownershipJourney = [
+    {
+      step: 1,
+      title: "Discover Your Sacred Space",
+      description: "Browse curated properties in conscious communities worldwide",
+      icon: Globe,
+      action: "Explore vetted homes in Tulum, Bali, Portugal & beyond",
+      color: "from-blue-500 to-purple-600"
+    },
+    {
+      step: 2, 
+      title: "One-Click Ownership",
+      description: "Pay 20% down with USDT - no banks, no paperwork nightmares",
+      icon: Zap,
+      action: "Smart contract handles everything instantly",
+      color: "from-purple-500 to-pink-600"
+    },
+    {
+      step: 3,
+      title: "We Handle Everything", 
+      description: "Legal, taxes, maintenance, tenants - completely hands-off",
+      icon: Shield,
+      action: "Relax while we manage your investment",
+      color: "from-pink-500 to-orange-600"
+    },
+    {
+      step: 4,
+      title: "Earn & Build Wealth",
+      description: "Receive rental yields, track appreciation, exit with profit",
+      icon: TrendingUp, 
+      action: "Watch your wealth grow passively",
+      color: "from-orange-500 to-green-600"
+    }
+  ];
+
+  // Community features
+  const communityFeatures = [
+    {
+      title: "Ecstatic Dance Sessions",
+      description: "Weekly movement medicine gatherings that connect body, spirit, and community",
+      icon: Music,
+      frequency: "Every Friday",
+      vibe: "🌊 Flow State",
+      image: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=300&h=200&fit=crop"
+    },
+    {
+      title: "Wellness Workshops", 
+      description: "Breathwork, meditation, sound healing, and transformative practices",
+      icon: Flower,
+      frequency: "3x per week",
+      vibe: "🧘‍♀️ Inner Peace",
+      image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=300&h=200&fit=crop"
+    },
+    {
+      title: "Nomad Coworking Hubs",
+      description: "Collaborative spaces with starlink internet and inspiring views", 
+      icon: Users,
+      frequency: "Daily",
+      vibe: "💻 Flow Productivity",
+      image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=300&h=200&fit=crop"
+    },
+    {
+      title: "Investment Mastery",
+      description: "Learn advanced DeFi, real estate, and wealth-building strategies",
+      icon: TrendingUp,
+      frequency: "Monthly",
+      vibe: "📈 Abundance Mindset",
+      image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=300&h=200&fit=crop"
+    },
+    {
+      title: "Live Music & Arts",
+      description: "Local musicians, artists, and creative expression in paradise",
+      icon: Music,
+      frequency: "Weekends",
+      vibe: "🎵 Creative Flow",
+      image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=200&fit=crop"
+    },
+    {
+      title: "Sacred Ceremonies",
+      description: "New moon circles, cacao ceremonies, and consciousness expansion",
+      icon: Moon,
+      frequency: "Monthly",
+      vibe: "🌙 Mystical",
+      image: "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=300&h=200&fit=crop"
+    }
+  ];
+
+  // Investor testimonials
   const investorStories = [
     {
-      name: "Sarah Chen",
-      location: "NYC → Oaxaca",
-      avatar: "/placeholder.svg",
-      story: "Living in Manhattan, I never thought I could own a vacation rental in Mexico. Ancient's community made it seamless.",
-      return: "18% ROI",
-      timeframe: "6 months"
+      name: "Luna Martinez",
+      location: "Traveling between properties",
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b9412b03?w=150&h=150&fit=crop&crop=face",
+      story: "Ancient isn't just an investment - it's a lifestyle. I own three homes in sacred communities and my life has never been more abundant.",
+      roi: "147%",
+      timeframe: "18 months",
+      community: "Tulum Village",
+      monthlyEarnings: "$4,200"
     },
     {
-      name: "Marcus Thompson",
-      location: "London → Tulum",
-      avatar: "/placeholder.svg", 
-      story: "The property management team treats my villa like their own. I get weekly updates and beautiful photos.",
-      return: "22% ROI",
-      timeframe: "1 year"
+      name: "River Thompson",
+      location: "Bali, Indonesia", 
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+      story: "The magic happens in the intersection of conscious living and smart investing. Ancient made both possible.",
+      roi: "189%",
+      timeframe: "24 months", 
+      community: "Bali Collective",
+      monthlyEarnings: "$3,800"
     },
     {
-      name: "Elena Rodriguez",
-      location: "Toronto → Bahía",
-      avatar: "/placeholder.svg",
-      story: "I was nervous about remote ownership, but the local partners became like family. Best investment decision ever.",
-      return: "25% ROI",
-      timeframe: "8 months"
+      name: "Sage Williams",
+      location: "Costa Rica",
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+      story: "From broke digital nomad to owning jungle retreats. Ancient transformed my relationship with money and home.",
+      roi: "156%", 
+      timeframe: "20 months",
+      community: "Jungle Lodge Collective",
+      monthlyEarnings: "$2,900"
     }
   ];
 
-  const localPartners = [
+  const vibeReasons = [
     {
-      name: "Oaxaca Property Solutions",
-      location: "Oaxaca, Mexico",
-      speciality: "Beachfront Villas",
-      rating: 4.9,
-      properties: 24,
-      services: ["24/7 Support", "Emergency Response", "Guest Services"]
+      title: "Consciousness First",
+      description: "We're not just building wealth - we're cultivating conscious communities that elevate human potential",
+      icon: Heart,
+      gradient: "from-pink-400 to-rose-600"
     },
     {
-      name: "Tulum Estate Management",
-      location: "Tulum, Mexico", 
-      speciality: "Jungle Retreats",
-      rating: 4.8,
-      properties: 18,
-      services: ["Eco-Tourism", "Cultural Experiences", "Maintenance"]
+      title: "Global Sacred Spaces",
+      description: "Each property is chosen for its energy, beauty, and connection to local wisdom traditions",
+      icon: TreePine,
+      gradient: "from-green-400 to-emerald-600"
     },
     {
-      name: "Bahía Property Care",
-      location: "Bahía, Brazil",
-      speciality: "Luxury Rentals",
-      rating: 4.9,
-      properties: 31,
-      services: ["Concierge", "Cleaning", "Marketing"]
+      title: "No Traditional Bullshit",
+      description: "Skip banks, brokers, and bureaucracy. Pure blockchain magic meets ancient wisdom",
+      icon: Zap,
+      gradient: "from-yellow-400 to-orange-600"
+    },
+    {
+      title: "Community Over Competition",
+      description: "We're building a tribe of conscious investors who lift each other up",
+      icon: Users,
+      gradient: "from-blue-400 to-purple-600"
     }
   ];
 
@@ -121,75 +227,291 @@ const Community = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      {/* Hero Section */}
-      <section className="pt-24 pb-12 bg-gradient-to-b from-background to-muted/20">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-4xl mx-auto">
-            <Badge className="mb-4 text-sm">Community-Powered Investment</Badge>
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Invest Globally, 
-              <span className="bg-gradient-primary bg-clip-text text-transparent"> Manage Locally</span>
-            </h1>
-            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              Join a community of global investors who own premium vacation rentals managed by trusted local partners. 
-              From NYC to Oaxaca, from London to Tulum - distance is no barrier to smart real estate investment.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Globe className="h-4 w-4" />
-                <span>500+ Global Investors</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4" />
-                <span>12 Exotic Locations</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Shield className="h-4 w-4" />
-                <span>100% Managed Properties</span>
-              </div>
+      {/* Hero Section with Video Background Feel */}
+      <section className="relative pt-24 pb-16 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-purple-500/20 to-pink-500/20" />
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop')] bg-cover bg-center opacity-10" />
+        
+        <div className="relative container mx-auto px-4 text-center">
+          <Badge className="mb-6 text-sm px-4 py-2 bg-white/10 text-white border-white/20">
+            ✨ Conscious Ownership Revolution
+          </Badge>
+          
+          <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
+            Click. Own. Earn.
+            <br />
+            <span className="bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+              Welcome Home.
+            </span>
+          </h1>
+          
+          <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-4xl mx-auto leading-relaxed">
+            No banks. No agents. No borders. Just blockchain-secured ownership in sacred communities 
+            where conscious nomads gather to build wealth, connection, and transformation.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <Button size="lg" className="group px-8 py-4 text-lg">
+              <Play className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
+              Become a Founding Citizen
+            </Button>
+            <Button size="lg" variant="outline" className="px-8 py-4 text-lg bg-white/10 border-white/20 text-primary hover:bg-white/20">
+              Explore Sacred Spaces
+            </Button>
+          </div>
+          
+          <div className="flex flex-wrap justify-center gap-8 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <Globe className="h-5 w-5" />
+              <span>500+ Conscious Investors</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <MapPin className="h-5 w-5" />
+              <span>12 Sacred Locations</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5" />
+              <span>Average 150% ROI</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Management Tiers */}
-      <section className="py-16">
+      {/* Renting vs Ancient Ownership */}
+      <section className="py-20 bg-gradient-to-br from-muted/20 to-muted/40">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Choose Your Management Level</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              From basic oversight to white-glove service, we have the perfect management solution for your investment style and peace of mind.
+          <div className="text-center mb-16">
+            <Badge className="mb-4">The Old Way vs The Ancient Way</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Renting vs <span className="text-primary">Owning with Ancient</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Stop throwing money into the void. Start building generational wealth in communities that align with your values.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {managementTiers.map((tier, index) => (
-              <Card key={index} className={`relative ${tier.popular ? 'ring-2 ring-primary shadow-lg scale-105' : ''}`}>
-                {tier.popular && (
-                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    Most Popular
-                  </Badge>
-                )}
-                <CardHeader className="text-center">
-                  <div className="mx-auto mb-4 p-3 bg-primary/10 rounded-full w-fit">
-                    {tier.icon}
+          <div className="max-w-6xl mx-auto">
+            <div className="grid gap-8">
+              {rentingVsOwning.map((comparison, index) => (
+                <Card key={index} className="p-8 hover:shadow-xl transition-all duration-300">
+                  <div className="grid md:grid-cols-3 gap-8 items-center">
+                    <div className="text-center">
+                      <div className="text-4xl mb-4">{comparison.rentingIcon}</div>
+                      <h3 className="font-semibold text-lg mb-2">{comparison.category}</h3>
+                      <p className="text-muted-foreground">{comparison.renting}</p>
+                    </div>
+                    
+                    <div className="flex justify-center">
+                      <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                        <ArrowRight className="h-8 w-8 text-primary" />
+                      </div>
+                    </div>
+                    
+                    <div className="text-center">
+                      <div className="text-4xl mb-4">{comparison.ancientIcon}</div>
+                      <h3 className="font-semibold text-lg mb-2 text-primary">{comparison.category}</h3>
+                      <p className="text-muted-foreground font-medium">{comparison.ancient}</p>
+                    </div>
                   </div>
-                  <CardTitle className="text-2xl">{tier.name}</CardTitle>
-                  <div className="text-3xl font-bold text-primary">{tier.price}</div>
-                  <CardDescription className="text-base">{tier.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3">
-                    {tier.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-center gap-2">
-                        <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
-                        <span className="text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Button className="w-full mt-6" variant={tier.popular ? "default" : "outline"}>
-                    Select {tier.name}
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4-Step Ownership Journey */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <Badge className="mb-4">Your Journey to Ownership</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Four Steps to <span className="text-primary">Sacred Ownership</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              From discovery to passive income - your journey to conscious homeownership starts here.
+            </p>
+          </div>
+
+          <div className="max-w-6xl mx-auto">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {ownershipJourney.map((step, index) => (
+                <Card key={index} className="relative group hover:scale-105 transition-all duration-300 overflow-hidden">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${step.color} opacity-10 group-hover:opacity-20 transition-opacity`} />
+                  
+                  <CardHeader className="relative z-10 text-center pb-4">
+                    <div className="mx-auto mb-4 p-4 bg-white rounded-full w-fit shadow-lg">
+                      <step.icon className="h-8 w-8 text-primary" />
+                    </div>
+                    <Badge variant="secondary" className="mb-2">Step {step.step}</Badge>
+                    <CardTitle className="text-xl">{step.title}</CardTitle>
+                  </CardHeader>
+                  
+                  <CardContent className="relative z-10 text-center">
+                    <p className="text-muted-foreground mb-4">{step.description}</p>
+                    <div className="text-sm font-medium text-primary bg-primary/10 rounded-full px-4 py-2">
+                      {step.action}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ROI Calculator */}
+      <section className="py-20 bg-gradient-to-br from-primary/5 to-purple-500/5">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <Badge className="mb-4">Interactive Calculator</Badge>
+              <h2 className="text-4xl font-bold mb-6">Your Path to Financial Freedom</h2>
+              <p className="text-xl text-muted-foreground">
+                See how your investment grows with our transparent ownership model.
+              </p>
+            </div>
+
+            <Card className="p-8">
+              <div className="grid md:grid-cols-2 gap-12">
+                <div className="space-y-8">
+                  <div>
+                    <label className="block text-sm font-medium mb-4">Property Value</label>
+                    <Slider
+                      value={propertyValue}
+                      onValueChange={setPropertyValue}
+                      max={500000}
+                      min={100000}
+                      step={10000}
+                      className="w-full"
+                    />
+                    <div className="flex justify-between text-sm text-muted-foreground mt-2">
+                      <span>$100k</span>
+                      <span className="font-bold text-primary">${propertyValue[0].toLocaleString()}</span>
+                      <span>$500k</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-4">Down Payment (20%)</label>
+                    <div className="text-3xl font-bold text-primary mb-2">
+                      ${(propertyValue[0] * 0.2).toLocaleString()}
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Secure ownership with just 20% down via USDT payment
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border">
+                    <div className="flex items-center gap-2 mb-2">
+                      <TrendingUp className="h-5 w-5 text-green-600" />
+                      <span className="font-medium">Annual ROI</span>
+                    </div>
+                    <div className="text-3xl font-bold text-green-600">
+                      {yearlyROI.toFixed(1)}%
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-4 bg-muted/50 rounded-lg">
+                      <div className="text-sm text-muted-foreground mb-1">Monthly Payment</div>
+                      <div className="text-xl font-bold">${monthlyPayment.toFixed(0)}</div>
+                    </div>
+                    <div className="p-4 bg-muted/50 rounded-lg">
+                      <div className="text-sm text-muted-foreground mb-1">Monthly Profit</div>
+                      <div className="text-xl font-bold text-green-600">+${monthlyProfit.toFixed(0)}</div>
+                    </div>
+                  </div>
+
+                  <Button className="w-full" size="lg">
+                    Start Building Wealth
                   </Button>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Vibe Check - Why Ancient */}
+      <section className="py-20 bg-gradient-to-br from-purple-500/10 to-pink-500/10">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <Badge className="mb-4">✨ Vibe Check</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Why <span className="text-primary">Ancient</span>?
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              We're not just selling properties - we're curating sacred spaces where conscious souls gather to build the future.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-16">
+            {vibeReasons.map((reason, index) => (
+              <Card key={index} className="p-8 hover:shadow-xl transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm">
+                <div className="flex items-start gap-4">
+                  <div className={`p-3 rounded-full bg-gradient-to-br ${reason.gradient} flex-shrink-0`}>
+                    <reason.icon className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">{reason.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">{reason.description}</p>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <p className="text-2xl font-medium text-primary mb-6">
+              "You're not just buying into an investment.<br />You're joining a movement."
+            </p>
+            <Button size="lg" className="px-8 py-4">
+              Join the Revolution
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Community Life & Events */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <Badge className="mb-4">Living the Vision</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              More Than Real Estate - <span className="text-primary">It's a Lifestyle</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Ecstatic dance, workshops, live music, yoga, ceremonies - experience what happens when conscious entrepreneurs gather in paradise.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            {communityFeatures.map((feature, index) => (
+              <Card key={index} className="group overflow-hidden hover:shadow-xl transition-all duration-300">
+                <div className="aspect-video overflow-hidden">
+                  <img 
+                    src={feature.image} 
+                    alt={feature.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
+                
+                <CardHeader>
+                  <div className="flex items-center justify-between mb-2">
+                    <Badge variant="secondary">{feature.frequency}</Badge>
+                    <span className="text-sm">{feature.vibe}</span>
+                  </div>
+                  <CardTitle className="flex items-center gap-2">
+                    <feature.icon className="h-5 w-5 text-primary" />
+                    {feature.title}
+                  </CardTitle>
+                </CardHeader>
+                
+                <CardContent>
+                  <p className="text-muted-foreground">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -197,36 +519,54 @@ const Community = () => {
         </div>
       </section>
 
-      {/* Investor Stories */}
-      <section className="py-16 bg-muted/20">
+      {/* Success Stories */}
+      <section className="py-20 bg-gradient-to-br from-muted/20 to-muted/40">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Global Investors, Local Success</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Hear from investors who've built successful vacation rental portfolios across continents with Ancient's community support.
+          <div className="text-center mb-16">
+            <Badge className="mb-4">Success Stories</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              From Renters to <span className="text-primary">Global Homeowners</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Real people, real properties, real transformation. Their stories could be yours.
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {investorStories.map((story, index) => (
-              <Card key={index} className="h-full">
+              <Card key={index} className="h-full hover:shadow-xl transition-all duration-300">
                 <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <Avatar>
+                  <div className="flex items-center gap-4 mb-4">
+                    <Avatar className="w-16 h-16">
                       <AvatarImage src={story.avatar} />
                       <AvatarFallback>{story.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                     </Avatar>
                     <div>
-                      <h3 className="font-semibold">{story.name}</h3>
+                      <h3 className="font-bold text-lg">{story.name}</h3>
                       <p className="text-sm text-muted-foreground">{story.location}</p>
+                      <Badge variant="secondary" className="text-xs">{story.community}</Badge>
                     </div>
                   </div>
                 </CardHeader>
+                
                 <CardContent>
-                  <p className="text-muted-foreground mb-4 italic">"{story.story}"</p>
-                  <div className="flex justify-between items-center">
-                    <Badge variant="secondary">{story.return}</Badge>
-                    <span className="text-sm text-muted-foreground">{story.timeframe}</span>
+                  <blockquote className="text-muted-foreground mb-6 italic leading-relaxed">
+                    "{story.story}"
+                  </blockquote>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="text-center p-3 bg-green-50 rounded-lg">
+                      <div className="text-2xl font-bold text-green-600">{story.roi}</div>
+                      <div className="text-xs text-green-600 font-medium">Total ROI</div>
+                    </div>
+                    <div className="text-center p-3 bg-blue-50 rounded-lg">
+                      <div className="text-2xl font-bold text-blue-600">{story.monthlyEarnings}</div>
+                      <div className="text-xs text-blue-600 font-medium">Monthly Income</div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 text-center">
+                    <span className="text-sm text-muted-foreground">{story.timeframe} of ownership</span>
                   </div>
                 </CardContent>
               </Card>
@@ -235,205 +575,29 @@ const Community = () => {
         </div>
       </section>
 
-      {/* Local Partners */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Trusted Local Partners</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Our carefully vetted property management partners provide on-ground expertise and 24/7 support for your investments.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {localPartners.map((partner, index) => (
-              <Card key={index}>
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle className="text-lg">{partner.name}</CardTitle>
-                      <p className="text-sm text-muted-foreground flex items-center gap-1">
-                        <MapPin className="h-3 w-3" />
-                        {partner.location}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span className="text-sm font-medium">{partner.rating}</span>
-                    </div>
-                  </div>
-                  <Badge variant="outline">{partner.speciality}</Badge>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1">
-                      <Home className="h-4 w-4" />
-                      {partner.properties} Properties
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    {partner.services.map((service, idx) => (
-                      <Badge key={idx} variant="secondary" className="mr-2 mb-1">
-                        {service}
-                      </Badge>
-                    ))}
-                  </div>
-                  <Button variant="outline" className="w-full mt-4">
-                    View Partner Profile
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Community Features */}
-      <section className="py-16 bg-muted/20">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Community Benefits</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Being part of Ancient means joining a community of like-minded investors with shared resources and support.
-            </p>
-          </div>
-
-          <Tabs defaultValue="forum" className="max-w-4xl mx-auto">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="forum">Investor Forum</TabsTrigger>
-              <TabsTrigger value="events">Local Events</TabsTrigger>
-              <TabsTrigger value="resources">Resources</TabsTrigger>
-              <TabsTrigger value="updates">Live Updates</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="forum" className="mt-8">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <MessageCircle className="h-5 w-5" />
-                    Community Discussions
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="border-l-4 border-primary pl-4">
-                    <h4 className="font-medium">Best practices for Oaxaca season planning?</h4>
-                    <p className="text-sm text-muted-foreground">Marcus Thompson • 2 hours ago • 12 replies</p>
-                  </div>
-                  <div className="border-l-4 border-muted pl-4">
-                    <h4 className="font-medium">Insurance tips for international properties</h4>
-                    <p className="text-sm text-muted-foreground">Sarah Chen • 5 hours ago • 8 replies</p>
-                  </div>
-                  <div className="border-l-4 border-muted pl-4">
-                    <h4 className="font-medium">Tax optimization strategies for 2024</h4>
-                    <p className="text-sm text-muted-foreground">Elena Rodriguez • 1 day ago • 24 replies</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="events" className="mt-8">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Calendar className="h-5 w-5" />
-                    Upcoming Events
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex justify-between items-center p-4 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium">Oaxaca Property Tour</h4>
-                      <p className="text-sm text-muted-foreground">March 15-17, 2024</p>
-                    </div>
-                    <Badge>Virtual + In-Person</Badge>
-                  </div>
-                  <div className="flex justify-between items-center p-4 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium">Investor Meetup NYC</h4>
-                      <p className="text-sm text-muted-foreground">March 22, 2024</p>
-                    </div>
-                    <Badge variant="secondary">In-Person</Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="resources" className="mt-8">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Resource Library</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="p-4 border rounded-lg">
-                      <h4 className="font-medium mb-2">International Property Guide</h4>
-                      <p className="text-sm text-muted-foreground">Complete guide to remote property ownership</p>
-                    </div>
-                    <div className="p-4 border rounded-lg">
-                      <h4 className="font-medium mb-2">Tax Optimization Handbook</h4>
-                      <p className="text-sm text-muted-foreground">Maximize returns across jurisdictions</p>
-                    </div>
-                    <div className="p-4 border rounded-lg">
-                      <h4 className="font-medium mb-2">Market Analysis Reports</h4>
-                      <p className="text-sm text-muted-foreground">Quarterly insights on global vacation rental markets</p>
-                    </div>
-                    <div className="p-4 border rounded-lg">
-                      <h4 className="font-medium mb-2">Legal Documentation Templates</h4>
-                      <p className="text-sm text-muted-foreground">Standardized contracts and agreements</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="updates" className="mt-8">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Camera className="h-5 w-5" />
-                    Live Property Updates
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center gap-4 p-4 border rounded-lg">
-                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                      <CheckCircle className="h-6 w-6 text-green-600" />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-medium">Villa Oaxaca - Weekly Inspection Complete</h4>
-                      <p className="text-sm text-muted-foreground">All systems operational • 2 hours ago</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 p-4 border rounded-lg">
-                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <DollarSign className="h-6 w-6 text-blue-600" />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-medium">Rental Payment Received</h4>
-                      <p className="text-sm text-muted-foreground">$2,850 deposited to your account • 1 day ago</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 bg-gradient-primary text-white">
+      {/* Final CTA */}
+      <section className="py-20 bg-gradient-to-br from-primary to-purple-600 text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Join Our Global Community?</h2>
-          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Start your journey as a global real estate investor with local expertise and community support every step of the way.
+          <h2 className="text-4xl md:text-6xl font-bold mb-6">
+            Own Your Future Home Today
+          </h2>
+          <p className="text-xl mb-10 max-w-3xl mx-auto opacity-90">
+            Join hundreds of conscious investors building wealth in sacred communities worldwide. 
+            Your journey to financial freedom and spiritual alignment starts with a single click.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary">
-              Browse Properties
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <Button size="lg" variant="secondary" className="px-8 py-4 text-lg">
+              <Zap className="mr-2 h-5 w-5" />
+              Start with $30,000
             </Button>
-            <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-primary">
-              Schedule Consultation
+            <Button size="lg" variant="outline" className="px-8 py-4 text-lg border-white/20 text-white hover:bg-white/10">
+              Schedule Sacred Property Tour
             </Button>
+          </div>
+          
+          <div className="text-sm opacity-75">
+            ✨ No banks • No brokers • No bullshit • Just pure ownership magic ✨
           </div>
         </div>
       </section>
