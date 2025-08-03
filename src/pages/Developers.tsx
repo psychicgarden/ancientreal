@@ -89,7 +89,7 @@ const Developers = () => {
       targetFunding: 450000,
       currentFunding: 382500,
       presalePrice: 45000,
-      publicPrice: 56250,
+      publicPrice: 52941, // 17.65% markup from presale (45k is 85% of 52.9k)
       roi: "Est. 29%",
       timeline: "12 months",
       backers: 167,
@@ -115,7 +115,7 @@ const Developers = () => {
       targetFunding: 750000,
       currentFunding: 525000,
       presalePrice: 75000,
-      publicPrice: 93750,
+      publicPrice: 88235, // 17.65% markup from presale (75k is 85% of 88.2k)
       roi: "Est. 38%",
       timeline: "20 months",
       backers: 298,
@@ -141,7 +141,7 @@ const Developers = () => {
       targetFunding: 920000,
       currentFunding: 734000,
       presalePrice: 92000,
-      publicPrice: 115000,
+      publicPrice: 108235, // 17.65% markup from presale (92k is 85% of 108.2k)
       roi: "Est. 45%",
       timeline: "16 months",
       backers: 421,
