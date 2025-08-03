@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { PresaleProgress } from "@/components/PresaleProgress";
 import Header from "@/components/Header"; // Fixed import
 import baliJungleResort from "@/assets/bali-jungle-resort.jpg";
 import ecoSmartCity from "@/assets/eco-smart-city.jpg";
@@ -87,12 +88,21 @@ const Developers = () => {
       description: "Modern coliving spaces with integrated coworking facilities across Southeast Asia.",
       targetFunding: 450000,
       currentFunding: 382500,
+      presalePrice: 45000,
+      publicPrice: 56250,
       roi: "Est. 29%",
       timeline: "12 months",
       backers: 167,
       image: bohoColivingSpace,
       tags: ["Coliving", "Remote Work", "Community"],
       presalePercentage: 85,
+      progress: 85,
+      presaleThreshold: 80,
+      daoFunded: 382500,
+      publicFunding: 0,
+      status: "funded" as const,
+      unitsTotal: 10,
+      unitsSold: 8,
       minInvestment: 500,
       estimatedYield: "14.2%",
       developerStory: "DAO funding eliminated our biggest risk - we focus purely on building."
@@ -104,12 +114,21 @@ const Developers = () => {
       description: "Authentic Berber-style eco luxury riad retreat center in Morocco's Sahara with traditional architecture.",
       targetFunding: 750000,
       currentFunding: 525000,
+      presalePrice: 75000,
+      publicPrice: 93750,
       roi: "Est. 38%",
       timeline: "20 months",
       backers: 298,
       image: "https://images.unsplash.com/photo-1482881497185-d4a9ddbe4151?w=800&h=600&fit=crop",
       tags: ["Berber Architecture", "Eco-Luxury", "Desert Retreat"],
       presalePercentage: 70,
+      progress: 70,
+      presaleThreshold: 80,
+      daoFunded: 525000,
+      publicFunding: 0,
+      status: "presale" as const,
+      unitsTotal: 10,
+      unitsSold: 7,
       minInvestment: 300,
       estimatedYield: "12.8%",
       developerStory: "Traditional funding rejected us 3 times. DAO believed in our vision."
@@ -121,12 +140,21 @@ const Developers = () => {
       description: "Vertical farming towers with residential units - food production meets urban living.",
       targetFunding: 920000,
       currentFunding: 734000,
+      presalePrice: 92000,
+      publicPrice: 115000,
       roi: "Est. 45%",
       timeline: "16 months",
       backers: 421,
       image: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&h=600&fit=crop",
       tags: ["AgriTech", "Urban", "Innovation"],
       presalePercentage: 80,
+      progress: 80,
+      presaleThreshold: 80,
+      daoFunded: 734000,
+      publicFunding: 0,
+      status: "funded" as const,
+      unitsTotal: 10,
+      unitsSold: 8,
       minInvestment: 750,
       estimatedYield: "16.5%",
       developerStory: "We reached 80% presale threshold! Greenlit for full DAO funding."
@@ -380,33 +408,22 @@ const Developers = () => {
                   <p className="text-muted-foreground mb-2">by {project.creator}</p>
                   <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
                   
-                  {/* Progress bar */}
-                  <div className="mb-4">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm text-muted-foreground">Presale Progress: {project.presalePercentage}%</span>
-                      <span className="text-sm font-semibold">${project.targetFunding.toLocaleString()} Target</span>
-                    </div>
-                    <Progress value={project.presalePercentage} className="h-2" />
-                    {project.presalePercentage >= 80 && (
-                      <div className="text-xs text-green-600 font-semibold mt-1">✅ Greenlit for DAO funding!</div>
-                    )}
-                  </div>
+                  {/* Enhanced Presale Progress */}
+                  <PresaleProgress project={project} />
                   
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="text-sm text-muted-foreground">Min. Investment:</span>
-                    <span className="text-sm font-semibold text-gold">${project.minInvestment}</span>
-                  </div>
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="text-sm text-muted-foreground">Est. Annual Yield:</span>
-                    <span className="text-sm font-semibold text-green-500">{project.estimatedYield}</span>
-                  </div>
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="text-sm text-muted-foreground">Community Backers:</span>
-                    <span className="text-sm font-semibold">{project.backers}</span>
+                  <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="text-muted-foreground">Min. Investment:</span>
+                      <div className="font-semibold">${project.minInvestment}</div>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Est. Annual Yield:</span>
+                      <div className="font-semibold text-green-500">{project.estimatedYield}</div>
+                    </div>
                   </div>
 
                   {/* Developer testimonial */}
-                  <div className="bg-primary/5 rounded-lg p-3 mb-4">
+                  <div className="bg-primary/5 rounded-lg p-3 my-4">
                     <p className="text-xs italic text-muted-foreground">
                       "{project.developerStory}"
                     </p>

@@ -68,6 +68,31 @@ export const CONTRACTS = {
       "event RentalCollected(string indexed propertyId, uint256 amount, uint256 timestamp)",
       "event IncomeDistributed(string indexed propertyId, address indexed investor, uint256 amount)"
     ]
+  },
+
+  // Developer Presale Contract
+  DEVELOPER_PRESALE: {
+    address: "0x4567890123456789012345678901234567890123", // Placeholder - deploy real contract
+    abi: [
+      // Presale functions
+      "function createPresale(string memory projectId, uint256 targetFunding, uint256 presalePrice, uint256 publicPrice, uint256 thresholdPercentage) external",
+      "function participateInPresale(string memory projectId, uint256 amount) external",
+      "function checkPresaleStatus(string memory projectId) external view returns (bool, uint256, uint256, uint256)",
+      "function activatePublicSale(string memory projectId) external",
+      "function claimTokens(string memory projectId) external",
+      
+      // View functions
+      "function getPresaleDetails(string memory projectId) external view returns (uint256, uint256, uint256, uint256, uint256, bool, bool)",
+      "function getUserPresaleAmount(string memory projectId, address user) external view returns (uint256)",
+      "function getPresaleParticipants(string memory projectId) external view returns (address[])",
+      
+      // Events
+      "event PresaleCreated(string indexed projectId, uint256 targetFunding, uint256 presalePrice, uint256 publicPrice)",
+      "event PresaleParticipation(string indexed projectId, address indexed participant, uint256 amount)",
+      "event PresaleThresholdReached(string indexed projectId, uint256 totalRaised)",
+      "event PublicSaleActivated(string indexed projectId, uint256 publicPrice)",
+      "event TokensClaimed(string indexed projectId, address indexed participant, uint256 amount)"
+    ]
   }
 };
 
