@@ -41,11 +41,13 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
     setInvestment(project.minInvestment);
   }, [project.minInvestment]);
 
-  // Calculate investment metrics
-  const ownershipPercentage = (investment / project.targetFunding) * 100;
-  const projectedValue = investment * 1.15; // 15% markup from presale to public
-  const projectedProfit = projectedValue - investment;
-  const roi = 15; // 15% ROI on presale investments
+  // Calculate investment metrics with 3% platform fee
+  const platformFee = investment * 0.03; // 3% platform fee for development investments
+  const netInvestment = investment - platformFee; // Amount that goes to project funding
+  const ownershipPercentage = (netInvestment / project.targetFunding) * 100;
+  const projectedValue = netInvestment * 1.15; // 15% markup from presale to public (on net investment)
+  const projectedProfit = projectedValue - investment; // Total profit after fee
+  const roi = ((projectedValue - investment) / investment) * 100; // ROI on total investment including fee
   const remainingFunding = project.targetFunding - project.currentFunding;
 
   const handleInvestment = async () => {
@@ -99,6 +101,20 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
             <div className="flex items-center justify-between">
               <Label htmlFor="investment">Investment Amount</Label>
               <Badge variant="secondary">${investment.toLocaleString()}</Badge>
+            </div>
+            
+            {/* Platform Fee Notice */}
+            <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg text-sm">
+              <div>
+                <span className="font-medium">Platform Fee (3%):</span>
+                <span className="text-muted-foreground ml-2">Covers smart contracts, legal, and operations</span>
+              </div>
+              <Badge variant="outline">${platformFee.toLocaleString()}</Badge>
+            </div>
+            
+            <div className="flex items-center justify-between p-3 bg-primary/5 rounded-lg text-sm">
+              <span className="font-medium">Amount to Project Funding:</span>
+              <Badge variant="default">${netInvestment.toLocaleString()}</Badge>
             </div>
             
             <Slider
@@ -174,7 +190,7 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
                 <div className="font-medium text-green-600 mb-2">Cash Out Profit</div>
                 <div className="text-3xl font-bold text-green-600">${projectedProfit.toLocaleString()}</div>
                 <div className="text-lg text-muted-foreground mt-2">
-                  {roi}% ROI on your ${investment.toLocaleString()} investment
+                  {roi.toFixed(1)}% ROI on your ${investment.toLocaleString()} investment
                 </div>
                 <div className="text-sm text-muted-foreground mt-3">
                   Use your profit for anything - property down payments, other investments, or cash out entirely

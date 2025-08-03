@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useWallet } from "@/contexts/WalletContext";
 import { InvestorMortgageDashboard } from "@/components/InvestorMortgageDashboard";
+import { PortfolioSummary } from "@/components/PortfolioSummary";
 import Header from "@/components/Header";
 import { 
   Wallet, 
@@ -123,11 +124,13 @@ const Portfolio = () => {
 
           {/* Portfolio Tab */}
           <TabsContent value="portfolio" className="space-y-6">
+            <PortfolioSummary />
+            
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Building2 className="h-5 w-5" />
-                  Property Portfolio
+                  Property Holdings
                 </CardTitle>
                 <CardDescription>
                   Your real estate investments and ownership stakes

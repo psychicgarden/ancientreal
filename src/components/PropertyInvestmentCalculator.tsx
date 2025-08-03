@@ -33,13 +33,15 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
   // Early return AFTER all hooks
   if (!property) return null;
 
-  // Investment calculations - Dynamic Mortgage Model
+  // Investment calculations - Dynamic Mortgage Model with 3% platform fee
   const investmentAmount = investment[0];
+  const platformFee = investmentAmount * 0.03; // 3% platform fee for property purchases
+  const netInvestment = investmentAmount - platformFee; // Actual amount going to property
   const propertyValue = property.totalValue;
   const monthlyRent = property.monthlyRent;
   
-  // Calculate mortgage payment based on down payment
-  const loanAmount = propertyValue - investmentAmount;
+  // Calculate mortgage payment based on net investment (after platform fee)
+  const loanAmount = propertyValue - netInvestment;
   const annualInterestRate = 0.08; // 8% annual rate
   const monthlyInterestRate = annualInterestRate / 12;
   const loanTermMonths = 10 * 12; // 10 years
@@ -107,6 +109,20 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
             <div className="flex justify-between items-center">
               <label className="text-sm font-medium">Investment Amount</label>
               <span className="text-xl font-bold">${investmentAmount.toLocaleString()}</span>
+            </div>
+            
+            {/* Platform Fee Notice */}
+            <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg text-sm">
+              <div>
+                <span className="font-medium">Platform Fee (3%):</span>
+                <span className="text-muted-foreground ml-2">Transaction processing & legal documentation</span>
+              </div>
+              <span className="font-bold">${platformFee.toLocaleString()}</span>
+            </div>
+            
+            <div className="flex items-center justify-between p-3 bg-primary/5 rounded-lg text-sm">
+              <span className="font-medium">Net Amount to Property:</span>
+              <span className="font-bold">${netInvestment.toLocaleString()}</span>
             </div>
             <div className="px-3">
               <Slider
@@ -196,8 +212,9 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
               </h3>
               <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 text-center">
                 <div>
-                  <div className="text-sm text-muted-foreground">Investment</div>
+                  <div className="text-sm text-muted-foreground">Total Investment</div>
                   <div className="text-lg font-bold">${investmentAmount.toLocaleString()}</div>
+                  <div className="text-xs text-muted-foreground">(includes 3% fee)</div>
                 </div>
                 <div>
                   <div className="text-sm text-muted-foreground">Cash Flow</div>
