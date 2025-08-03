@@ -19,6 +19,7 @@ import {
   Wallet,
   AlertTriangle
 } from "lucide-react";
+import { SmartContractViewer } from "./SmartContractViewer";
 
 interface PropertyPurchaseModalProps {
   isOpen: boolean;
@@ -31,6 +32,7 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
   const { toast } = useToast();
   const [kycComplete, setKycComplete] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [showSmartContract, setShowSmartContract] = useState(false);
 
   const handlePurchase = async () => {
     if (!isConnected) {
@@ -250,7 +252,12 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
                 <span>Property Deed:</span>
                 <span className="font-medium">NFT (ERC721)</span>
               </div>
-              <Button variant="outline" size="sm" className="w-full">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full"
+                onClick={() => setShowSmartContract(true)}
+              >
                 <ExternalLink className="h-4 w-4 mr-2" />
                 View Smart Contract
               </Button>
@@ -322,6 +329,12 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
             </Button>
           </div>
         </div>
+        
+        {/* Smart Contract Viewer Modal */}
+        <SmartContractViewer 
+          isOpen={showSmartContract}
+          onClose={() => setShowSmartContract(false)}
+        />
       </DialogContent>
     </Dialog>
   );
