@@ -20,6 +20,7 @@ import {
   FileText,
   BarChart3
 } from "lucide-react";
+import Header from "@/components/Header";
 import { DocumentViewer } from '@/components/legal-documents/DocumentViewer';
 import { MexicanPropertyDeed } from '@/components/legal-documents/MexicanPropertyDeed';
 import { NevisCorpRegistration } from '@/components/legal-documents/NevisCorpRegistration';
@@ -83,26 +84,7 @@ const Portfolio = () => {
     fetchPortfolioData();
   }, [isConnected, getMortgageDetails, getMazuntePropertyStatus, toast]);
 
-  if (!isConnected) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background to-background/80 flex items-center justify-center p-6">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <Wallet className="h-12 w-12 mx-auto mb-4 text-primary" />
-            <CardTitle>Connect Your Wallet</CardTitle>
-            <CardDescription>
-              Connect your wallet to view your Ancient investment portfolio
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={connectWallet} className="w-full">
-              Connect Wallet
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  // Show content regardless of wallet connection status, but with limited functionality
 
   if (loading) {
     return (
@@ -121,7 +103,8 @@ const Portfolio = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-background/80">
-      {/* Header */}
+      <Header />
+      {/* Portfolio Header */}
       <div className="bg-card/50 border-b">
         <div className="container mx-auto px-6 py-8">
           <div className="flex items-center justify-between">
