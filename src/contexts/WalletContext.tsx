@@ -340,12 +340,13 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     // Demo mode: return mock mortgage data with realistic production values
     if (isDemoMode) {
       const nextPaymentDue = new Date();
-      nextPaymentDue.setMonth(nextPaymentDue.getMonth() + 1); // Payment due in 1 month
+      nextPaymentDue.setMonth(nextPaymentDue.getMonth() + 1); // Payment due in 1 month (30 days)
       
-      // Mortgage calculation: $120K at 8% over 120 months
+      // Just made the down payment, so this is the start of the mortgage
       const totalValue = MAZUNTE_PROPERTY.PRODUCTION.VALUE; // $150,000
       const downPayment = MAZUNTE_PROPERTY.PRODUCTION.MIN_DOWN_PAYMENT; // $30,000
       const principalAmount = totalValue - downPayment; // $120,000
+      const remainingBalance = principalAmount; // Full $120,000 since no payments made yet
       const totalMonths = 120; // 10 years * 12 months
       const annualRate = 0.08; // 8%
       const monthlyRate = annualRate / 12; // 0.006667
@@ -357,26 +358,15 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         (Math.pow(1 + monthlyRate, totalMonths) - 1)
       ); // ~$1,456
       
-      // Simulate we're 8 months into the mortgage (8/120 payments made)
-      const paymentsMade = 8;
-      const totalPaid = paymentsMade * monthlyPayment;
-      
-      // Calculate remaining balance after 8 payments
-      const remainingBalance = Math.round(
-        principalAmount * 
-        (Math.pow(1 + monthlyRate, totalMonths) - Math.pow(1 + monthlyRate, paymentsMade)) /
-        (Math.pow(1 + monthlyRate, totalMonths) - 1)
-      );
-      
       return {
         downPayment: downPayment,
         principalAmount: principalAmount,
         monthlyPayment: monthlyPayment,
-        remainingBalance: remainingBalance,
+        remainingBalance: remainingBalance, // Full $120,000
         nextPaymentDue: nextPaymentDue.getTime(),
         missedPayments: 0,
-        totalPaid: totalPaid,
-        paymentsRemaining: totalMonths - paymentsMade,
+        totalPaid: 0, // No payments made yet
+        paymentsRemaining: totalMonths, // All 120 payments remaining
         totalPayments: totalMonths,
         isActive: true,
         isForeclosed: false,
