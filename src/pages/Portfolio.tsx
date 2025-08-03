@@ -159,7 +159,7 @@ const Portfolio = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    ${investorData?.investmentAmount.toLocaleString() || '0'}
+                    ${investorData?.investmentAmount?.toLocaleString() || '0'}
                   </div>
                   <p className="text-xs text-muted-foreground">
                     {ownershipPercentage.toFixed(2)}% ownership
@@ -174,7 +174,7 @@ const Portfolio = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold text-green-600">
-                    ${monthlyRentalIncome.toLocaleString()}
+                    ${monthlyRentalIncome?.toLocaleString() || '0'}
                   </div>
                   <p className="text-xs text-muted-foreground">
                     {annualYield.toFixed(1)}% annual yield
@@ -249,7 +249,7 @@ const Portfolio = () => {
                         className="h-2"
                       />
                       <p className="text-xs text-muted-foreground mt-1">
-                        ${propertyData?.invested.toLocaleString() || '0'} of ${MAZUNTE_PROPERTY.VALUE.toLocaleString()} raised
+                        ${propertyData?.invested?.toLocaleString() || '0'} of ${MAZUNTE_PROPERTY.VALUE?.toLocaleString() || '0'} raised
                       </p>
                     </div>
                   </div>
@@ -300,7 +300,7 @@ const Portfolio = () => {
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">MAZIT Tokens:</span>
-                        <span className="font-medium">{investorData?.tokenBalance.toLocaleString() || '0'}</span>
+                        <span className="font-medium">{investorData?.tokenBalance?.toLocaleString() || '0'}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Ownership %:</span>
@@ -367,13 +367,13 @@ const Portfolio = () => {
                   <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg">
                     <div className="text-sm text-blue-600 dark:text-blue-400">YTD Total</div>
                     <div className="text-2xl font-bold text-blue-700 dark:text-blue-300">
-                      ${(monthlyRentalIncome * 8).toLocaleString()}
+                      ${((monthlyRentalIncome || 0) * 8).toLocaleString()}
                     </div>
                   </div>
                   <div className="bg-purple-50 dark:bg-purple-950/20 p-4 rounded-lg">
                     <div className="text-sm text-purple-600 dark:text-purple-400">Annual Projection</div>
                     <div className="text-2xl font-bold text-purple-700 dark:text-purple-300">
-                      ${(monthlyRentalIncome * 12).toLocaleString()}
+                      ${((monthlyRentalIncome || 0) * 12).toLocaleString()}
                     </div>
                   </div>
                 </div>
