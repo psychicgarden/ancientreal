@@ -97,7 +97,7 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
             <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg text-sm">
               <div>
                 <span className="font-medium">Platform Fee (3%):</span>
-                <span className="text-muted-foreground ml-2">Transaction processing & legal documentation</span>
+                <span className="text-muted-foreground ml-2">Done-for-you legal compliance & deal processing</span>
               </div>
               <span className="font-bold">${platformFee.toLocaleString()}</span>
             </div>
