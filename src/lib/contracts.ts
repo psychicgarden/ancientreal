@@ -89,13 +89,26 @@ export const NETWORK_CONFIG = {
 
 // Mazunte Property Constants
 export const MAZUNTE_PROPERTY = {
-  VALUE: 150000, // $150,000 USD
-  MIN_DOWN_PAYMENT: 30000, // $30,000 USD minimum
-  MONTHLY_RENT: 2050, // $2,050 USD
-  MORTGAGE_RATE: 8, // 8% APR
-  MORTGAGE_TERM_YEARS: 10,
-  MANAGEMENT_FEE: 10, // 10%
-  MAINTENANCE_RESERVE: 5 // 5%
+  // Production values
+  PRODUCTION: {
+    VALUE: 150000, // $150,000 USD
+    MIN_DOWN_PAYMENT: 30000, // $30,000 USD minimum
+    MONTHLY_RENT: 2050, // $2,050 USD
+    MORTGAGE_RATE: 8, // 8% APR
+    MORTGAGE_TERM_YEARS: 10,
+    MANAGEMENT_FEE: 10, // 10%
+    MAINTENANCE_RESERVE: 5 // 5%
+  },
+  // Demo values (1000x reduced)
+  DEMO: {
+    VALUE: 150, // $150 USD
+    MIN_DOWN_PAYMENT: 30, // $30 USD minimum
+    MONTHLY_RENT: 2.05, // $2.05 USD
+    MORTGAGE_RATE: 8, // 8% APR
+    MORTGAGE_TERM_YEARS: 10,
+    MANAGEMENT_FEE: 10, // 10%
+    MAINTENANCE_RESERVE: 5 // 5%
+  }
 };
 
 export const VILLAGE_CITIZENSHIP_FEE = "0.1"; // 0.1 AVAX

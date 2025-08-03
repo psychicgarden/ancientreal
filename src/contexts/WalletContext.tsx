@@ -28,6 +28,11 @@ interface WalletContextType {
   isPurchasingProperty: boolean;
   isMakingPayment: boolean;
   web3: Web3Integration;
+  // Demo Mode
+  isDemoMode: boolean;
+  toggleDemoMode: () => void;
+  getTestTokens: () => Promise<{ success: boolean; error?: string }>;
+  isGettingTestTokens: boolean;
 }
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
@@ -49,6 +54,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [isPurchasingProperty, setIsPurchasingProperty] = useState(false);
   const [isMakingPayment, setIsMakingPayment] = useState(false);
   const [usdtBalance, setUsdtBalance] = useState('0');
+  const [isDemoMode, setIsDemoMode] = useState(true); // Start in demo mode
+  const [isGettingTestTokens, setIsGettingTestTokens] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -456,6 +463,49 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   }, [isConnected, account]);
 
+  // Demo Mode Functions
+  const toggleDemoMode = () => {
+    setIsDemoMode(!isDemoMode);
+    toast({
+      title: isDemoMode ? "Live Mode Activated" : "Demo Mode Activated",
+      description: isDemoMode ? "You're now using live blockchain values" : "You're now using demo values for testing",
+    });
+  };
+
+  const getTestTokens = async (): Promise<{ success: boolean; error?: string }> => {
+    if (!isDemoMode) {
+      return { success: false, error: "Test tokens only available in demo mode" };
+    }
+
+    setIsGettingTestTokens(true);
+    
+    try {
+      // Simulate faucet delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // In demo mode, just add test tokens to balance
+      const currentBalance = parseFloat(usdtBalance) || 0;
+      const newBalance = (currentBalance + 1000).toString();
+      setUsdtBalance(newBalance);
+      
+      toast({
+        title: "Test Tokens Received! 🪙",
+        description: `Added 1,000 test USDT to your balance. New balance: $${newBalance}`,
+      });
+      
+      return { success: true };
+    } catch (error: any) {
+      toast({
+        title: "Test Token Request Failed",
+        description: error.message || "Failed to get test tokens. Please try again.",
+        variant: "destructive",
+      });
+      return { success: false, error: error.message };
+    } finally {
+      setIsGettingTestTokens(false);
+    }
+  };
+
   const purchaseTokens = async (investmentAmount: number = 30000) => {
     if (!isConnected) {
       toast({
@@ -469,7 +519,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setIsPurchasing(true);
     
     try {
-      const propertyValue = 150000;
+      const propertyConfig = isDemoMode ? MAZUNTE_PROPERTY.DEMO : MAZUNTE_PROPERTY.PRODUCTION;
+      const propertyValue = propertyConfig.VALUE;
       const monthlyProfit = Math.round(((investmentAmount / propertyValue) * 943));
       const tokens = investmentAmount;
       
@@ -526,7 +577,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         isPaymentOverdue,
         isPurchasingProperty,
         isMakingPayment,
-        web3: web3Integration
+        web3: web3Integration,
+        // Demo Mode
+        isDemoMode,
+        toggleDemoMode,
+        getTestTokens,
+        isGettingTestTokens
       }}
     >
       {children}

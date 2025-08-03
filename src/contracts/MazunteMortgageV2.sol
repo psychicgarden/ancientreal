@@ -35,16 +35,16 @@ contract MazunteMortgageV2 is ERC721, ERC20, Ownable, ReentrancyGuard, Pausable 
     uint256 private constant SECONDS_IN_DAY = 86400;
     uint256 private constant BASIS_POINTS = 10000;
     
-    // Property Constants
-    uint256 public constant PROPERTY_VALUE = 150000 * 1e6; // $150k USDT (6 decimals)
+    // Property Constants - Demo Mode (1000x reduced for testing)
+    uint256 public constant PROPERTY_VALUE = 150 * 1e6; // $150 USDT (was $150k)
     uint256 public constant MIN_DOWN_PAYMENT_PCT = 2000; // 20% in basis points
     uint256 public constant MIN_DOWN_PAYMENT = (PROPERTY_VALUE * MIN_DOWN_PAYMENT_PCT) / BASIS_POINTS;
     uint256 public constant MORTGAGE_RATE = 800; // 8% APR in basis points
     uint256 public constant MORTGAGE_TERM_MONTHS = 120; // 10 years
     uint256 public constant MAX_MISSED_PAYMENTS = 4;
     uint256 public constant GRACE_PERIOD = 5 days; // Grace period for late payments
-    uint256 public constant COOLING_OFF_PERIOD = 3 days; // 72-hour cooling-off period
-    uint256 public constant MIN_INVESTMENT = 1000 * 1e6; // $1,000 minimum for legal compliance
+    uint256 public constant COOLING_OFF_PERIOD = 10 minutes; // Shortened for demo testing
+    uint256 public constant MIN_INVESTMENT = 1 * 1e6; // $1 minimum for demo testing
     uint256 public constant APPRECIATION_CAP = 11000; // 110% in basis points
     
     // Legal and compliance
