@@ -116,7 +116,7 @@ export const InvestorMortgageDashboard = () => {
   }
 
   const daysUntilPayment = mortgageData.nextPaymentDue 
-    ? Math.ceil((mortgageData.nextPaymentDue * 1000 - Date.now()) / (1000 * 60 * 60 * 24))
+    ? Math.ceil((mortgageData.nextPaymentDue - Date.now()) / (1000 * 60 * 60 * 24))
     : 0;
   
   const isPaymentOverdue = daysUntilPayment < 0;
@@ -250,7 +250,7 @@ export const InvestorMortgageDashboard = () => {
             </div>
             <p className="text-xs text-muted-foreground">
               {mortgageData.nextPaymentDue ? 
-                new Date(mortgageData.nextPaymentDue * 1000).toLocaleDateString() : 
+                new Date(mortgageData.nextPaymentDue).toLocaleDateString() : 
                 'Not scheduled'
               }
             </p>
