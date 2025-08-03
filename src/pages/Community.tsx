@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Slider } from "@/components/ui/slider";
@@ -28,7 +29,10 @@ import {
   TreePine,
   Waves,
   Sun,
-  Moon
+  Moon,
+  Wallet,
+  Lock,
+  Unlock
 } from "lucide-react";
 import { useState } from "react";
 
@@ -431,6 +435,191 @@ const Community = () => {
             <Button size="lg" className="px-8 py-4 text-lg">
               Calculate Returns
             </Button>
+          </div>
+        </div>
+      </section>
+      {/* Three-Tier Banking Portal */}
+      <section className="py-20 bg-gradient-to-br from-background to-muted/10">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Choose Your Investment Strategy</h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Three complementary approaches to wealth building designed for different risk tolerances and goals.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            
+            {/* Ancient Savings */}
+            <Card className="relative overflow-hidden bg-card/50 backdrop-blur-sm border border-border/30 hover:border-green-500/50 transition-all duration-300 hover:shadow-xl group">
+              <CardHeader className="text-center pb-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Wallet className="w-8 h-8 text-white" />
+                </div>
+                <CardTitle className="text-2xl">Ancient Savings</CardTitle>
+                <CardDescription>Ultra-liquid, risk-free yield</CardDescription>
+                <div className="text-3xl font-bold text-green-600 mt-2">7.5% - 8.5%</div>
+                <Badge variant="secondary" className="w-fit mx-auto mt-2 bg-green-500/10 text-green-600">
+                  <Unlock className="w-3 h-3 mr-1" />
+                  Ultra Liquid
+                </Badge>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex items-center text-sm">
+                    <Zap className="w-4 h-4 mr-2 text-green-500" />
+                    Instant withdrawals, no penalties
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <Shield className="w-4 h-4 mr-2 text-green-500" />
+                    Backed by first-lien mortgages
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <Home className="w-4 h-4 mr-2 text-green-500" />
+                    One-click home purchase transfers
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <Lock className="w-4 h-4 mr-2 text-green-500" />
+                    Insurance fund protection
+                  </div>
+                </div>
+                
+                <div className="pt-4 border-t border-border/30">
+                  <div className="text-sm text-muted-foreground mb-2">Current Pool Status</div>
+                  <Progress value={75} className="mb-2 h-2" />
+                  <div className="text-xs text-muted-foreground">$2.4M available for mortgages</div>
+                </div>
+
+                <Button 
+                  className="w-full mt-6 group-hover:scale-105 transition-transform" 
+                  asChild
+                >
+                  <a href="/banking">
+                    Start Earning <ArrowRight className="w-4 h-4 ml-2" />
+                  </a>
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Property Development */}
+            <Card className="relative overflow-hidden bg-card/50 backdrop-blur-sm border border-border/30 hover:border-blue-500/50 transition-all duration-300 hover:shadow-xl group">
+              <CardHeader className="text-center pb-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <TrendingUp className="w-8 h-8 text-white" />
+                </div>
+                <CardTitle className="text-2xl">Property Development</CardTitle>
+                <CardDescription>Active investment opportunities</CardDescription>
+                <div className="text-3xl font-bold text-blue-600 mt-2">12% - 15%</div>
+                <Badge variant="secondary" className="w-fit mx-auto mt-2 bg-blue-500/10 text-blue-600">
+                  <Clock className="w-3 h-3 mr-1" />
+                  6-18 Months
+                </Badge>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex items-center text-sm">
+                    <TrendingUp className="w-4 h-4 mr-2 text-blue-500" />
+                    Higher projected returns
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <Users className="w-4 h-4 mr-2 text-blue-500" />
+                    Fractional project investment
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <Clock className="w-4 h-4 mr-2 text-blue-500" />
+                    Project-based lock-ups
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <Shield className="w-4 h-4 mr-2 text-blue-500" />
+                    Due diligence required
+                  </div>
+                </div>
+                
+                <div className="pt-4 border-t border-border/30">
+                  <div className="text-sm text-muted-foreground mb-2">Active Projects</div>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-xs">
+                      <span>Mazunte Villa Complex</span>
+                      <span className="text-green-600">87% funded</span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span>Tulum Eco Resort</span>
+                      <span className="text-blue-600">43% funded</span>
+                    </div>
+                  </div>
+                </div>
+
+                <Button 
+                  className="w-full mt-6 group-hover:scale-105 transition-transform" 
+                  variant="outline"
+                  asChild
+                >
+                  <a href="/investor">
+                    Browse Projects <ArrowRight className="w-4 h-4 ml-2" />
+                  </a>
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Village Citizenship */}
+            <Card className="relative overflow-hidden bg-card/50 backdrop-blur-sm border border-border/30 hover:border-purple-500/50 transition-all duration-300 hover:shadow-xl group">
+              <CardHeader className="text-center pb-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-violet-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Home className="w-8 h-8 text-white" />
+                </div>
+                <CardTitle className="text-2xl">Village Citizenship</CardTitle>
+                <CardDescription>Property ownership + community</CardDescription>
+                <div className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-violet-600 bg-clip-text text-transparent mt-2">Own + Earn</div>
+                <Badge variant="secondary" className="w-fit mx-auto mt-2 bg-purple-500/10 text-purple-600">
+                  <Lock className="w-3 h-3 mr-1" />
+                  Long-term
+                </Badge>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex items-center text-sm">
+                    <Home className="w-4 h-4 mr-2 text-purple-500" />
+                    Actual property ownership
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <TrendingUp className="w-4 h-4 mr-2 text-purple-500" />
+                    Property appreciation
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <Wallet className="w-4 h-4 mr-2 text-purple-500" />
+                    Rental income distribution
+                  </div>
+                  <div className="flex items-center text-sm">
+                    <Users className="w-4 h-4 mr-2 text-purple-500" />
+                    Exclusive community access
+                  </div>
+                </div>
+                
+                <div className="pt-4 border-t border-border/30">
+                  <div className="text-sm text-muted-foreground mb-2">Available Properties</div>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-xs">
+                      <span>Beachfront Villas</span>
+                      <span className="text-primary">From $180K</span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span>Jungle Lofts</span>
+                      <span className="text-primary">From $95K</span>
+                    </div>
+                  </div>
+                </div>
+
+                <Button 
+                  className="w-full mt-6 group-hover:scale-105 transition-transform" 
+                  variant="outline"
+                  asChild
+                >
+                  <a href="/developers">
+                    Explore Properties <ArrowRight className="w-4 h-4 ml-2" />
+                  </a>
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
