@@ -26,7 +26,8 @@ const Hero = () => {
           </h1>
 
           {/* Subheading */}
-          <p className="text-xl text-accent-foreground/80 mb-12 max-w-3xl mx-auto leading-relaxed md:text-xl">50 Million digital nomads seeking homeownership abroad and can't get a mortgage. 
+          <p className="text-xl text-accent-foreground/80 mb-12 max-w-3xl mx-auto leading-relaxed md:text-xl">50 Million digital nomads seeking homeownership abroad and can't get a mortgage. 
+<br />
 We Solve That.</p>
 
           {/* CTA Buttons */}
