@@ -4,7 +4,7 @@ import { TrendingUp, Calculator } from "lucide-react";
 
 const MissedOpportunitySection = () => {
   return (
-    <section className="py-24 px-6">
+    <section className="py-8 px-6">
       <div className="container mx-auto">
         <div className="max-w-6xl mx-auto">
           
