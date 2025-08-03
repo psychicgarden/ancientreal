@@ -1,151 +1,123 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, DollarSign, Home, Calculator } from "lucide-react";
+import { TrendingUp, Calculator } from "lucide-react";
 
 const MissedOpportunitySection = () => {
   return (
-    <section className="py-20 px-6 bg-gradient-to-br from-primary/5 to-secondary/5">
+    <section className="py-24 px-6">
       <div className="container mx-auto">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Main Headline */}
-          <div className="mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              The Missed{" "}
-              <span className="bg-gradient-primary bg-clip-text text-transparent">
-                $216K
-              </span>{" "}
-              Opportunity
+        <div className="max-w-6xl mx-auto">
+          
+          {/* Elegant Header */}
+          <div className="text-center mb-20">
+            <h2 className="text-5xl md:text-6xl font-light mb-8 tracking-tight">
+              The Mathematics of
+              <br />
+              <span className="font-normal text-gold">Modern Nomadism</span>
             </h2>
-            <div className="bg-card/80 backdrop-blur-sm p-8 rounded-2xl border border-accent/20 mb-8">
-              <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed">
-                <span className="font-semibold text-foreground">50M nomads</span> burn{" "}
-                <span className="font-semibold text-red-500">$216K in rent</span> every decade.
-                <br />
-                <span className="font-semibold text-foreground">Ancient</span> flips that into{" "}
-                <span className="font-semibold text-green-500">$467K+ net equity</span>.
+            <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto leading-relaxed">
+              Every decade, 50 million nomads collectively spend $216,000 on rent.
+              <br />
+              We transform that into $467,000 in real estate equity.
+            </p>
+          </div>
+
+          {/* Comparison Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
+            
+            {/* Traditional Path */}
+            <Card className="bg-background/60 backdrop-blur-sm border-border/50 overflow-hidden">
+              <CardContent className="p-8">
+                <div className="mb-6">
+                  <h3 className="text-2xl font-light mb-2 text-muted-foreground">Traditional Path</h3>
+                  <div className="h-px bg-gradient-to-r from-muted-foreground/20 to-transparent"></div>
+                </div>
+                
+                <div className="space-y-6">
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground font-light">Monthly Rent</span>
+                    <span className="text-2xl font-light">$1,800</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground font-light">Decade Total</span>
+                    <span className="text-2xl font-light">$216,000</span>
+                  </div>
+                  <div className="h-px bg-gradient-to-r from-muted-foreground/10 to-transparent my-6"></div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground font-light">Equity Built</span>
+                    <span className="text-3xl font-light text-muted-foreground">$0</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Ancient Path */}
+            <Card className="bg-background/60 backdrop-blur-sm border-gold/20 overflow-hidden relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-gold/5 to-transparent"></div>
+              <CardContent className="p-8 relative">
+                <div className="mb-6">
+                  <h3 className="text-2xl font-light mb-2 text-gold">Ancient Path</h3>
+                  <div className="h-px bg-gradient-to-r from-gold/30 to-transparent"></div>
+                </div>
+                
+                <div className="space-y-6">
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground font-light">Monthly Payment</span>
+                    <span className="text-2xl font-light">$1,456</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground font-light">Decade Total</span>
+                    <span className="text-2xl font-light">$204,720</span>
+                  </div>
+                  <div className="h-px bg-gradient-to-r from-gold/20 to-transparent my-6"></div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground font-light">Property Value</span>
+                    <span className="text-3xl font-light text-gold">$467,000</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Elegant Stats */}
+          <div className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-2xl p-12 mb-16">
+            <div className="text-center mb-12">
+              <h3 className="text-3xl font-light mb-4">The Difference</h3>
+              <p className="text-lg text-muted-foreground font-light">
+                Identical monthly commitment. Generational wealth outcome.
               </p>
             </div>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Why flush money down the drain when you could be building generational wealth? 
-              Our smart contract mortgages turn your rent payments into property ownership.
-            </p>
-          </div>
-
-          {/* Comparison Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-            {/* Traditional Renting */}
-            <Card className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-950/20 dark:to-red-900/20 border-red-200 dark:border-red-800">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-red-700 dark:text-red-400">
-                  <DollarSign className="h-6 w-6" />
-                  Traditional Nomad Path
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Monthly Rent:</span>
-                    <span className="font-semibold text-red-600">$1,800</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">10-Year Total:</span>
-                    <span className="font-semibold text-red-600">$216,000</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Equity Built:</span>
-                    <span className="font-bold text-red-700">$0</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Ownership:</span>
-                    <span className="font-bold text-red-700">Nothing</span>
-                  </div>
-                </div>
-                <div className="pt-4 border-t border-red-200 dark:border-red-800">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-red-700">💸</div>
-                    <div className="text-sm text-red-600 font-medium">Money Gone Forever</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Ancient Mortgage */}
-            <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/20 dark:to-green-900/20 border-green-200 dark:border-green-800">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-green-700 dark:text-green-400">
-                  <Home className="h-6 w-6" />
-                  Ancient Mortgage Path
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Monthly Payment:</span>
-                    <span className="font-semibold text-green-600">$1,456</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">10-Year Total:</span>
-                    <span className="font-semibold text-green-600">$204,720</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Property Value:</span>
-                    <span className="font-bold text-green-700">$467,000</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Your Equity:</span>
-                    <span className="font-bold text-green-700">$467,000</span>
-                  </div>
-                </div>
-                <div className="pt-4 border-t border-green-200 dark:border-green-800">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-green-700">🏡</div>
-                    <div className="text-sm text-green-600 font-medium">Full Ownership + Equity</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Net Difference */}
-          <div className="bg-gradient-to-r from-gold/10 to-primary/10 p-8 rounded-2xl border border-gold/20 mb-12">
-            <h3 className="text-2xl font-bold mb-4">
-              The{" "}
-              <span className="bg-gradient-primary bg-clip-text text-transparent">
-                $467K+ Difference
-              </span>
-            </h3>
-            <p className="text-lg text-muted-foreground mb-6">
-              Same monthly expense. Completely different financial outcome.
-              <br />
-              <strong>Plus you own a home in paradise.</strong>
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
               <div className="text-center">
-                <div className="text-3xl font-bold text-gold">$30K</div>
-                <div className="text-sm text-muted-foreground">Down Payment</div>
+                <div className="text-4xl font-light text-gold mb-2">$30K</div>
+                <div className="text-sm text-muted-foreground font-light tracking-wide uppercase">Down Payment</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-gold">$467K</div>
-                <div className="text-sm text-muted-foreground">Property Value (Year 10)</div>
+                <div className="text-4xl font-light text-gold mb-2">$467K</div>
+                <div className="text-sm text-muted-foreground font-light tracking-wide uppercase">Final Equity</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-gold">181%</div>
-                <div className="text-sm text-muted-foreground">Total ROI</div>
+                <div className="text-4xl font-light text-gold mb-2">181%</div>
+                <div className="text-sm text-muted-foreground font-light tracking-wide uppercase">Total Return</div>
               </div>
             </div>
           </div>
 
-          {/* CTA */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="text-lg px-8 py-4">
-              <Calculator className="w-5 h-5 mr-2" />
-              Calculate Your Savings
-            </Button>
-            <Button variant="outline" size="lg" className="text-lg px-8 py-4">
-              <TrendingUp className="w-5 h-5 mr-2" />
-              View Properties
-            </Button>
+          {/* Minimal CTA */}
+          <div className="text-center">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+              <Button variant="outline" size="lg" className="font-light text-base px-8 py-4">
+                <Calculator className="w-4 h-4 mr-3" />
+                Calculate Returns
+              </Button>
+              <Button size="lg" className="font-light text-base px-8 py-4">
+                <TrendingUp className="w-4 h-4 mr-3" />
+                Explore Properties
+              </Button>
+            </div>
           </div>
+
         </div>
       </div>
     </section>
