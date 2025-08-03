@@ -312,7 +312,7 @@ const Community = () => {
               Your Journey to Ownership
             </h2>
             <h3 className="text-2xl md:text-3xl font-semibold mb-4 text-foreground/90">
-              Four Steps to Sacred Ownership
+              Four Steps to Global Homeownership
             </h3>
             <p className="text-xl text-muted-foreground">
               From discovery to passive income - your journey to conscious homeownership starts here.
@@ -320,13 +320,34 @@ const Community = () => {
           </div>
           
           <div className="grid md:grid-cols-4 gap-8">
-            {ownershipJourney.map((step, index) => (
+            {[
+              {
+                step: 1,
+                title: "Discover Your Perfect Space",
+                description: "Browse curated properties in conscious communities worldwide"
+              },
+              {
+                step: 2,
+                title: "One-Click Ownership", 
+                description: "Pay 20% down with USDT - no banks, no paperwork nightmares"
+              },
+              {
+                step: 3,
+                title: "We Handle Everything",
+                description: "Legal, taxes, maintenance, tenants - completely hands-off"
+              },
+              {
+                step: 4,
+                title: "Earn & Build Wealth",
+                description: "Receive rental yields, track appreciation, exit with profit"
+              }
+            ].map((step, index) => (
               <div key={index} className="group">
                 <div className="relative mb-6">
                   <div className="w-16 h-16 mx-auto bg-gradient-to-r from-primary to-primary/60 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
                     {step.step}
                   </div>
-                  {index < ownershipJourney.length - 1 && (
+                  {index < 3 && (
                     <div className="hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-gradient-to-r from-primary/30 to-transparent transform translate-x-8"></div>
                   )}
                 </div>
