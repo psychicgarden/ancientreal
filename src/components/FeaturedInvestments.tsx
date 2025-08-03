@@ -95,179 +95,202 @@ const FeaturedInvestments = () => {
   ];
 
   return (
-    <section className="py-16 px-6">
+    <section className="py-20 px-6 bg-gradient-to-br from-background via-background to-muted/5">
       <div className="container mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 tracking-tight">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-light mb-6 tracking-tight leading-tight">
             Sustainable Living
             <br />
-            <span className="text-muted-foreground font-light">20% Down Financing</span>
+            <span className="text-2xl md:text-3xl text-muted-foreground font-extralight">20% Down Financing</span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Thoughtfully curated eco-luxury residences. 
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-light">
+            Thoughtfully curated eco-luxury residences.<br />
             Modern financing for conscious living.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
           {properties.map((property, index) => (
-            <Card key={index} className="bg-gradient-card border-accent/20">
-              <CardContent className="p-6">
-                <div className="aspect-video bg-muted rounded-lg mb-4 relative overflow-hidden">
+            <Card key={index} className="bg-card/40 backdrop-blur-sm border border-border/30 hover:border-border/60 transition-all duration-500 hover:shadow-2xl group overflow-hidden">
+              <CardContent className="p-0">
+                
+                {/* Image Header */}
+                <div className="aspect-[4/3] relative overflow-hidden">
                   <img 
                     src={property.image} 
                     alt={property.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
-                  <Badge className="absolute top-2 right-2 bg-accent text-accent-foreground">
-                    {property.type}
-                  </Badge>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+                  
+                  {/* Availability Badge */}
+                  <div className="absolute top-4 left-4 bg-background/90 backdrop-blur-sm rounded-lg px-3 py-1.5">
+                    <div className="text-xs font-medium text-muted-foreground mb-1">Availability</div>
+                    <div className="text-sm font-semibold">{property.propertiesSold}/{property.totalProperties} sold</div>
+                  </div>
+                  
                   {property.isBlockchain && isConnected && (
-                    <Badge className="absolute top-2 left-2 bg-green-500 text-white">
-                      🔗 LIVE BLOCKCHAIN
+                    <Badge className="absolute top-4 right-4 bg-green-500/90 text-white backdrop-blur-sm">
+                      🔗 LIVE
                     </Badge>
                   )}
                 </div>
-                
-                <div className="mb-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm text-muted-foreground">Availability</span>
-                    <span className="text-sm font-semibold">{property.propertiesSold}/{property.totalProperties} sold</span>
+
+                <div className="p-6">
+                  {/* Property Title & Location */}
+                  <div className="mb-6">
+                    <h3 className="text-2xl font-semibold mb-2 leading-tight">{property.name}</h3>
+                    <p className="text-muted-foreground flex items-center gap-2 font-light">
+                      <MapPin className="w-4 h-4" />
+                      {property.location}
+                    </p>
                   </div>
-                  <Progress value={(property.propertiesSold / property.totalProperties) * 100} className="h-2" />
-                </div>
 
-                <h3 className="text-xl font-semibold mb-1">{property.name}</h3>
-                <p className="text-muted-foreground mb-4 flex items-center gap-1">
-                  <MapPin className="w-4 h-4" />
-                  {property.location}
-                </p>
-
-                {property.isVillage ? (
-                  <div className="space-y-4 mb-6">
-                    {/* Network Investment */}
-                    <div className="bg-card/50 p-4 rounded-lg border">
-                       <h4 className="font-semibold mb-3">NETWORK INVESTMENT</h4>
-                       <div className="space-y-2 text-sm">
-                         <div className="flex justify-between">
-                           <span>List Price:</span>
-                           <span className="font-semibold">${property.listPrice.toLocaleString()}</span>
-                         </div>
-                         <div className="flex justify-between">
-                           <span>Citizenship Cost:</span>
-                           <span className="font-semibold">${property.downPayment.toLocaleString()} (founding member rate)</span>
-                         </div>
-                        <div className="flex justify-between">
-                          <span>Monthly Network Yield:</span>
-                          <span className="font-semibold text-green-600">${property.monthlyProfit}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>10-Year Village Value:</span>
-                          <span className="font-semibold">${property.networkValue.toLocaleString()}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Access:</span>
-                          <span className="font-semibold">Entire Ancient archipelago</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Immediate Cash Flow */}
-                    <div className="bg-card/50 p-4 rounded-lg border">
-                      <h4 className="font-semibold mb-3">IMMEDIATE CASH FLOW</h4>
-                      <div className="flex justify-between items-center text-lg">
-                        <div className="text-center">
-                          <div className="text-green-600 font-bold">${property.monthlyRent}</div>
-                          <div className="text-xs text-muted-foreground">Monthly Rent</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-red-600 font-bold">-${property.monthlyPayment}</div>
-                          <div className="text-xs text-muted-foreground">Mortgage</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-primary font-bold">= +${property.monthlyProfit}</div>
-                          <div className="text-xs text-muted-foreground">PROFIT/Month</div>
-                        </div>
-                      </div>
-                    </div>
+                  {/* Availability Progress */}
+                  <div className="mb-6">
+                    <Progress 
+                      value={(property.propertiesSold / property.totalProperties) * 100} 
+                      className="h-1.5" 
+                    />
                   </div>
-                ) : (
-                  <div className="space-y-3 mb-6">
-                    <div className="bg-card/50 p-4 rounded-lg border">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">Total Value</span>
-                        <span className="text-lg font-semibold">${property.totalValue.toLocaleString()}</span>
-                      </div>
-                      <div className="flex justify-between items-center mt-2">
-                        <span className="text-sm text-muted-foreground">Down Payment</span>
-                        <span className="text-xl font-bold">${property.downPayment.toLocaleString()}</span>
-                      </div>
-                      <div className="flex justify-between items-center mt-1">
-                        <span className="text-sm text-muted-foreground">Monthly ({property.mortgageTerm})</span>
-                        <span className="text-lg font-semibold">${property.monthlyPayment.toLocaleString()}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                      <span className="text-sm text-muted-foreground">Expected Return</span>
-                      <span className="font-semibold text-primary">{property.expectedReturn}% annually</span>
-                    </div>
-                  </div>
-                )}
 
-                <div className="space-y-2">
                   {property.isVillage ? (
-                    <>
+                    <div className="space-y-6 mb-8">
+                      
+                      {/* Network Investment Section */}
+                      <div className="bg-gradient-to-br from-muted/30 to-muted/10 rounded-xl p-5 border border-border/20">
+                        <h4 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase mb-4">Network Investment</h4>
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-muted-foreground">List Price:</span>
+                            <span className="text-lg font-semibold">${property.listPrice.toLocaleString()}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-muted-foreground">Citizenship Cost:</span>
+                            <div className="text-right">
+                              <div className="text-lg font-bold text-primary">${property.downPayment.toLocaleString()}</div>
+                              <div className="text-xs text-muted-foreground">(founding member rate)</div>
+                            </div>
+                          </div>
+                          <div className="h-px bg-gradient-to-r from-border/50 to-transparent my-3" />
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-muted-foreground">Monthly Network Yield:</span>
+                            <span className="text-lg font-bold text-green-600">${property.monthlyProfit}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-muted-foreground">10-Year Village Value:</span>
+                            <span className="text-lg font-bold">${property.networkValue.toLocaleString()}</span>
+                          </div>
+                          <div className="flex justify-between items-start pt-2">
+                            <span className="text-sm text-muted-foreground">Access:</span>
+                            <div className="text-right">
+                              <div className="text-sm font-semibold">Entire Ancient</div>
+                              <div className="text-xs text-muted-foreground">archipelago</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Immediate Cash Flow Section */}
+                      <div className="bg-gradient-to-br from-muted/20 to-muted/5 rounded-xl p-5 border border-border/20">
+                        <h4 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase mb-4">Immediate Cash Flow</h4>
+                        <div className="flex justify-between items-center">
+                          <div className="text-center flex-1">
+                            <div className="text-2xl font-bold text-green-600 mb-1">${property.monthlyRent}</div>
+                            <div className="text-xs text-muted-foreground uppercase tracking-wide">Monthly Rent</div>
+                          </div>
+                          <div className="text-center flex-1">
+                            <div className="text-2xl font-bold text-red-500 mb-1">-${property.monthlyPayment}</div>
+                            <div className="text-xs text-muted-foreground uppercase tracking-wide">Mortgage</div>
+                          </div>
+                          <div className="text-center flex-1">
+                            <div className="text-2xl font-bold text-primary mb-1">+${property.monthlyProfit}</div>
+                            <div className="text-xs text-muted-foreground uppercase tracking-wide">Profit/Month</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-4 mb-8">
+                      <div className="bg-gradient-to-br from-muted/30 to-muted/10 rounded-xl p-5 border border-border/20">
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-muted-foreground">Total Value</span>
+                            <span className="text-xl font-semibold">${property.totalValue.toLocaleString()}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-muted-foreground">Down Payment</span>
+                            <span className="text-2xl font-bold text-primary">${property.downPayment.toLocaleString()}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-muted-foreground">Monthly ({property.mortgageTerm})</span>
+                            <span className="text-lg font-semibold">${property.monthlyPayment.toLocaleString()}</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-between items-center p-4 bg-muted/20 rounded-lg border border-border/20">
+                        <span className="text-sm text-muted-foreground">Expected Return</span>
+                        <span className="text-lg font-bold text-primary">{property.expectedReturn}% annually</span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Action Buttons */}
+                  <div className="space-y-3">
+                    {property.isVillage ? (
+                      <>
+                        <Button 
+                          className="w-full h-12 text-base font-medium hover:scale-[1.02] transition-transform" 
+                          size="lg"
+                          onClick={() => {
+                            setSelectedProperty(property);
+                            setPurchaseModalOpen(true);
+                          }}
+                          disabled={isPurchasing}
+                        >
+                          {isPurchasing 
+                            ? "Processing..." 
+                            : "Become a Founding Citizen"
+                          }
+                        </Button>
+                        <Button 
+                          className="w-full h-11 font-medium" 
+                          variant="outline"
+                          onClick={() => {
+                            setSelectedProperty(property);
+                            setCalculatorOpen(true);
+                          }}
+                        >
+                          <Calculator className="w-4 h-4 mr-2" />
+                          Calculate Network Returns
+                        </Button>
+                      </>
+                    ) : property.isBlockchain ? (
                       <Button 
-                        className="w-full" 
+                        className="w-full h-12 text-base font-medium hover:scale-[1.02] transition-transform" 
                         size="lg"
-                        onClick={() => {
-                          setSelectedProperty(property);
-                          setPurchaseModalOpen(true);
-                        }}
-                        disabled={isPurchasing}
+                        onClick={() => purchaseTokens()}
+                        disabled={isPurchasing || !isConnected}
                       >
                         {isPurchasing 
                           ? "Processing..." 
-                          : "Become a Founding Citizen"
+                          : !isConnected 
+                            ? "Connect Wallet to Purchase"
+                            : "Purchase Mortgage Tokens"
                         }
                       </Button>
-                      <Button 
-                        className="w-full" 
-                        variant="outline"
-                        onClick={() => {
-                          setSelectedProperty(property);
-                          setCalculatorOpen(true);
-                        }}
-                      >
-                        <Calculator className="w-4 h-4 mr-2" />
-                        Calculate Network Returns
+                    ) : (
+                      <Button className="w-full h-12 text-base font-medium" size="lg" disabled>
+                        Coming Soon - Tokenization
                       </Button>
-                    </>
-                  ) : property.isBlockchain ? (
-                    <Button 
-                      className="w-full" 
-                      size="lg"
-                      onClick={() => purchaseTokens()}
-                      disabled={isPurchasing || !isConnected}
-                    >
-                      {isPurchasing 
-                        ? "Processing..." 
-                        : !isConnected 
-                          ? "Connect Wallet to Purchase"
-                          : "Purchase Mortgage Tokens"
-                      }
-                    </Button>
-                  ) : (
-                    <Button className="w-full" size="lg" disabled>
-                      Coming Soon - Tokenization
-                    </Button>
-                  )}
-                  {!property.isVillage && (
-                    <Button className="w-full" variant="outline">
-                      Schedule Viewing
-                    </Button>
-                  )}
+                    )}
+                    {!property.isVillage && (
+                      <Button className="w-full h-11 font-medium" variant="outline">
+                        Schedule Viewing
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -275,7 +298,7 @@ const FeaturedInvestments = () => {
         </div>
 
         <div className="text-center">
-          <Button variant="outline" size="lg">
+          <Button variant="outline" size="lg" className="px-8 py-3 text-base font-medium hover:scale-105 transition-transform">
             View All Properties
           </Button>
         </div>
