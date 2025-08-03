@@ -14,7 +14,7 @@ const Header = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
       <div className="container mx-auto px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-24">
           {/* Logo */}
           <div className="flex items-center">
             <a href="/" className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent hover:opacity-80 transition-opacity">
@@ -42,9 +42,9 @@ const Header = () => {
           </nav>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-6">
             {isConnected ? (
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-4">
                 <span className="text-sm text-muted-foreground">
                   {formatAddress(account!)}
                 </span>
@@ -61,8 +61,7 @@ const Header = () => {
                 {isLoading ? "Connecting..." : "Connect Wallet"}
               </Button>
             )}
-            <Button variant="ghost">Sign In</Button>
-            <Button variant="default">Get Started</Button>
+            <Button variant="default">Sign In</Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -113,8 +112,7 @@ const Header = () => {
                     {isLoading ? "Connecting..." : "Connect Wallet"}
                   </Button>
                 )}
-                <Button variant="ghost">Sign In</Button>
-                <Button variant="default">Get Started</Button>
+                <Button variant="default">Sign In</Button>
               </div>
             </nav>
           </div>
