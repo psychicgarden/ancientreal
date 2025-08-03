@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PresaleProgress } from "@/components/PresaleProgress";
 import { ProjectInvestmentModal } from "@/components/ProjectInvestmentModal";
 import Header from "@/components/Header"; // Fixed import
-import baliJungleResort from "@/assets/bali-jungle-resort.jpg";
+import villaBali from "@/assets/villa-bali.jpg";
 import ecoSmartCity from "@/assets/eco-smart-city.jpg";
 import bohoColivingSpace from "@/assets/boho-coliving-space.jpg";
 import { 
@@ -38,7 +38,7 @@ const Developers = () => {
       roi: "41%",
       timeline: "18 months",
       backers: 234,
-      image: baliJungleResort,
+      image: villaBali,
       tags: ["Real Estate", "Eco-Tourism"],
       selloutTime: "4 days",
       developerProfit: 350000,
