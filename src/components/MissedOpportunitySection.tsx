@@ -9,7 +9,7 @@ const MissedOpportunitySection = () => {
         <div className="max-w-6xl mx-auto">
           
           {/* Elegant Header */}
-          <div className="text-center mb-20">
+          <div className="text-center mb-12">
             <h2 className="text-5xl md:text-6xl font-light mb-8 tracking-tight">
               The Mathematics of
               <br />
