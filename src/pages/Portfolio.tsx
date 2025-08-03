@@ -20,6 +20,13 @@ import {
   FileText,
   BarChart3
 } from "lucide-react";
+import { DocumentViewer } from '@/components/legal-documents/DocumentViewer';
+import { MexicanPropertyDeed } from '@/components/legal-documents/MexicanPropertyDeed';
+import { NevisCorpRegistration } from '@/components/legal-documents/NevisCorpRegistration';
+import { InvestmentAgreement } from '@/components/legal-documents/InvestmentAgreement';
+import { SmartContractDocumentation } from '@/components/legal-documents/SmartContractDocumentation';
+import { InsurancePolicy } from '@/components/legal-documents/InsurancePolicy';
+import { RentalManagementAgreement } from '@/components/legal-documents/RentalManagementAgreement';
 
 const Portfolio = () => {
   const { 
@@ -36,6 +43,7 @@ const Portfolio = () => {
   const [investorData, setInvestorData] = useState<any>(null);
   const [propertyData, setPropertyData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPortfolioData = async () => {
@@ -445,6 +453,28 @@ const Portfolio = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Document Viewer Modal */}
+      <DocumentViewer
+        isOpen={!!selectedDocument}
+        onClose={() => setSelectedDocument(null)}
+        title={
+          selectedDocument === 'property-deed' ? 'Mexican Property Deed - Escritura Pública' :
+          selectedDocument === 'nevis-corp' ? 'Nevis Corporation Registration Certificate' :
+          selectedDocument === 'investment-agreement' ? 'Investment Agreement Contract' :
+          selectedDocument === 'smart-contract' ? 'Smart Contract Technical Documentation' :
+          selectedDocument === 'insurance-policy' ? 'Property Insurance Policy' :
+          selectedDocument === 'rental-management' ? 'Rental Management Agreement' :
+          'Legal Document'
+        }
+      >
+        {selectedDocument === 'property-deed' && <MexicanPropertyDeed />}
+        {selectedDocument === 'nevis-corp' && <NevisCorpRegistration />}
+        {selectedDocument === 'investment-agreement' && <InvestmentAgreement />}
+        {selectedDocument === 'smart-contract' && <SmartContractDocumentation />}
+        {selectedDocument === 'insurance-policy' && <InsurancePolicy />}
+        {selectedDocument === 'rental-management' && <RentalManagementAgreement />}
+      </DocumentViewer>
     </div>
   );
 };
