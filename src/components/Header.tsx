@@ -123,24 +123,13 @@ const Header = () => {
               </PopoverContent>
             </Popover>
 
-            {isConnected ? (
-              <div className="flex items-center space-x-4">
-                <span className="text-sm text-muted-foreground">
-                  {formatAddress(account!)}
-                </span>
-                <Button variant="outline" onClick={disconnectWallet}>
-                  Disconnect
-                </Button>
-              </div>
-            ) : (
-              <Button 
-                variant="outline" 
-                onClick={connectWallet}
-                disabled={isLoading}
-              >
-                {isLoading ? "Connecting..." : "Connect Wallet"}
-              </Button>
-            )}
+            <Button 
+              variant="outline" 
+              onClick={isConnected ? disconnectWallet : connectWallet}
+              disabled={isLoading}
+            >
+              {isLoading ? "Connecting..." : isConnected ? "Connected" : "Connect Wallet"}
+            </Button>
             <Button variant="default">Sign In</Button>
           </div>
 
@@ -173,25 +162,14 @@ const Header = () => {
                 Developers
               </Link>
               <div className="flex flex-col space-y-2 pt-4">
-                {isConnected ? (
-                  <div className="space-y-2">
-                    <span className="text-sm text-muted-foreground px-3">
-                      {formatAddress(account!)}
-                    </span>
-                    <Button variant="outline" onClick={disconnectWallet} className="w-full">
-                      Disconnect
-                    </Button>
-                  </div>
-                ) : (
-                  <Button 
-                    variant="outline" 
-                    onClick={connectWallet}
-                    disabled={isLoading}
-                    className="w-full"
-                  >
-                    {isLoading ? "Connecting..." : "Connect Wallet"}
-                  </Button>
-                )}
+                <Button 
+                  variant="outline" 
+                  onClick={isConnected ? disconnectWallet : connectWallet}
+                  disabled={isLoading}
+                  className="w-full"
+                >
+                  {isLoading ? "Connecting..." : isConnected ? "Connected" : "Connect Wallet"}
+                </Button>
                 <Button variant="default">Sign In</Button>
               </div>
             </nav>
