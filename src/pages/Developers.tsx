@@ -65,52 +65,52 @@ const Developers = () => {
     fetchProjects();
   }, [toast]);
 
-  // Mock success stories with compelling metrics
+  // Mock success stories matching the exact format from screenshots
   const soldOutStories = [
     {
       id: 'success-1',
-      title: 'DeFi Liquidity Protocol',
-      creator_name: 'Sarah Chen',
-      description: 'Revolutionary automated market maker with advanced yield farming capabilities.',
-      target_funding: 850000,
-      current_funding: 850000,
-      min_investment: 70000,
-      estimated_yield: 240,
-      image_url: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=800&q=80',
-      timeline: 'Sold out in 4 days',
-      development_time: '6 weeks',
-      profit_percentage: 240,
-      category: 'DeFi'
+      title: 'Bali Eco Resort Complex',
+      creator_name: 'Tropical Builders Co.',
+      description: 'Luxury eco-resort with 45 units in Canggu. Sold out in 4 days DAO funding.',
+      initial_funding: 850000,
+      current_value: 1200000,
+      developer_profit: 350000,
+      community_backers: 234,
+      timeline: 'SOLD OUT IN 4 DAYS',
+      development_time: '18 months',
+      roi_percentage: 41,
+      quote: "Zero upfront cost. We provided full funding after community validation.",
+      image_url: '/lovable-uploads/38aa4546-27b8-4fd1-8977-b15beec529d9.png'
     },
     {
       id: 'success-2', 
-      title: 'NFT Gaming Marketplace',
-      creator_name: 'Marcus Rodriguez',
-      description: 'Cross-chain gaming marketplace enabling true ownership of in-game assets.',
-      target_funding: 1200000,
-      current_funding: 1200000,
-      min_investment: 70000,
-      estimated_yield: 185,
-      image_url: 'https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?auto=format&fit=crop&w=800&q=80',
-      timeline: 'Sold out in 2.5 weeks',
-      development_time: '8 weeks',
-      profit_percentage: 185,
-      category: 'Gaming'
+      title: 'Smart City Infrastructure',
+      creator_name: 'NextGen Urban',
+      description: 'IoT-enabled smart city project with blockchain integration for 200+ residential units',
+      initial_funding: 1200000,
+      current_value: 1950000,
+      developer_profit: 750000,
+      community_backers: 456,
+      timeline: 'SOLD OUT IN 6 DAYS',
+      development_time: '24 months',
+      roi_percentage: 63,
+      quote: "Community funded, DAO approved. Developer kept 60% equity with zero risk.",
+      image_url: '/lovable-uploads/38aa4546-27b8-4fd1-8977-b15beec529d9.png'
     },
     {
       id: 'success-3',
-      title: 'Green Energy Oracle',
-      creator_name: 'Elena Vasquez',
-      description: 'Real-time renewable energy data oracle for smart contract verification.',
-      target_funding: 650000,
-      current_funding: 650000,
-      min_investment: 70000,
-      estimated_yield: 156,
-      image_url: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=80',
-      timeline: 'Sold out in 11 days',
-      development_time: '4 weeks',
-      profit_percentage: 156,
-      category: 'Infrastructure'
+      title: 'Renewable Energy Villas',
+      creator_name: 'GreenTech Developments',
+      description: 'Self-sustaining villa complex with solar integration. Sold out in 2.5 weeks.',
+      initial_funding: 650000,
+      current_value: 920000,
+      developer_profit: 270000,
+      community_backers: 189,
+      timeline: 'SOLD OUT IN 2.5 WEEKS',
+      development_time: '15 months',
+      roi_percentage: 42,
+      quote: "From idea to fully funded in 45 days. No personal investment required.",
+      image_url: '/lovable-uploads/38aa4546-27b8-4fd1-8977-b15beec529d9.png'
     }
   ];
 
@@ -266,10 +266,10 @@ const Developers = () => {
 
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {soldOutStories.map((project) => (
-              <Card key={project.id} className="group hover:shadow-xl transition-all duration-300 border-border/50 hover:border-green-600/20 relative overflow-hidden bg-gradient-to-br from-green-50/50 to-emerald-50/50">
-                {/* Success badges */}
-                <div className="absolute top-4 right-4 z-10 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
-                  ✅ SOLD OUT
+              <Card key={project.id} className="group hover:shadow-xl transition-all duration-300 border-border/50 hover:border-green-600/20 relative overflow-hidden">
+                {/* Success badge overlay */}
+                <div className="absolute top-4 left-4 z-10 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
+                  {project.timeline}
                 </div>
                 
                 <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 rounded-t-lg flex items-center justify-center relative overflow-hidden">
@@ -278,24 +278,20 @@ const Developers = () => {
                     alt={project.title}
                     className="w-full h-full object-cover"
                   />
-                  {/* Profit overlay */}
-                  <div className="absolute bottom-3 left-3 bg-green-600/95 text-white px-2 py-1 rounded text-sm font-bold shadow-lg">
-                    +{project.profit_percentage}% PROFIT
-                  </div>
-                  {/* Speed overlay */}
-                  <div className="absolute top-3 left-3 bg-blue-600/95 text-white px-2 py-1 rounded text-xs font-bold shadow-lg">
-                    ⚡ {project.timeline}
+                  {/* ROI overlay */}
+                  <div className="absolute bottom-4 left-4 bg-green-600/95 text-white px-3 py-2 rounded text-lg font-bold shadow-lg">
+                    +{project.roi_percentage}% ROI
                   </div>
                 </div>
                 
                 <CardHeader className="pb-3">
                   <div className="flex justify-between items-start mb-2">
                     <Badge className="bg-green-600/20 text-green-700 border border-green-600/30">
-                      🚀 Completed
+                      Completed
                     </Badge>
-                    <div className="flex items-center text-sm text-green-600 font-semibold">
+                    <div className="flex items-center text-sm text-muted-foreground">
                       <Clock className="h-4 w-4 mr-1" />
-                      Built in {project.development_time}
+                      {project.development_time}
                     </div>
                   </div>
                   <CardTitle className="text-xl group-hover:text-green-600 transition-colors">
@@ -309,37 +305,32 @@ const Developers = () => {
                     {project.description}
                   </p>
                   
-                  {/* Success metrics */}
-                  <div className="bg-green-50/80 border border-green-200/50 rounded-lg p-4 mb-4 space-y-2">
+                  {/* Financial metrics */}
+                  <div className="space-y-3 mb-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-green-700">Total Funding</span>
-                      <span className="font-bold text-green-600">${project.target_funding?.toLocaleString()}</span>
+                      <span className="text-sm text-muted-foreground">Initial DAO Funding</span>
+                      <span className="font-bold text-green-600">${project.initial_funding?.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-green-700">Investor Profit</span>
-                      <span className="font-bold text-green-600">+{project.profit_percentage}%</span>
+                      <span className="text-sm text-muted-foreground">Current Value</span>
+                      <span className="font-bold">${project.current_value?.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-green-700">Development Time</span>
-                      <span className="font-bold text-green-600">{project.development_time}</span>
+                      <span className="text-sm text-muted-foreground">Developer Profit</span>
+                      <span className="font-bold text-green-600">${project.developer_profit?.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-green-700">Sellout Speed</span>
-                      <span className="font-bold text-green-600">{project.timeline}</span>
+                      <span className="text-sm text-muted-foreground">Community Backers</span>
+                      <span className="font-bold">{project.community_backers}</span>
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap gap-1 mb-4">
-                    <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
-                      {project.category}
-                    </Badge>
-                    <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700">
-                      Fast Delivery
-                    </Badge>
+                  <div className="bg-muted/50 p-3 rounded-lg mb-4 italic text-sm text-muted-foreground">
+                    "{project.quote}"
                   </div>
 
                   <Button className="w-full bg-green-600 hover:bg-green-700 text-white border-none">
-                    📊 View Success Story
+                    View Full Case Study
                   </Button>
                 </CardContent>
               </Card>
