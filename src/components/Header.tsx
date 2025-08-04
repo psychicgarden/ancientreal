@@ -8,7 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 
-const Header = () => {
+function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeveloperPanelOpen, setIsDeveloperPanelOpen] = useState(false);
   const { 
