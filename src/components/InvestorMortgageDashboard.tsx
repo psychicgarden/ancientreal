@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { useWallet } from "@/contexts/WalletContext";
 import { useToast } from "@/hooks/use-toast";
 import { NETWORK_CONFIG, CONTRACTS } from "@/lib/contracts";
+import { supabase } from "@/integrations/supabase/client";
+import { MortgagePaymentModal } from "@/components/MortgagePaymentModal";
 import { 
   Building2, 
   DollarSign, 
@@ -23,8 +25,6 @@ export const InvestorMortgageDashboard = () => {
   const { 
     isConnected, 
     account, 
-    getMortgageDetails, 
-    getMazuntePropertyStatus,
     makePayment,
     isPurchasingProperty 
   } = useWallet();
@@ -32,25 +32,69 @@ export const InvestorMortgageDashboard = () => {
   const { toast } = useToast();
   const [mortgageData, setMortgageData] = useState<any>(null);
   const [propertyData, setPropertyData] = useState<any>(null);
+  const [userProperty, setUserProperty] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchMortgageData = async () => {
-      if (!isConnected) {
+      if (!isConnected || !account) {
         setLoading(false);
         return;
       }
 
       try {
-        const [mortgage, property] = await Promise.all([
-          getMortgageDetails(),
-          getMazuntePropertyStatus()
-        ]);
+        setLoading(true);
+        console.log('Fetching mortgage details for account:', account);
         
-        setMortgageData(mortgage);
-        setPropertyData(property);
+        // Fetch data from Supabase instead of smart contracts
+        const { data: properties, error: propertiesError } = await supabase
+          .from('user_properties')
+          .select('*')
+          .eq('user_wallet_address', account.toLowerCase())
+          .eq('is_active', true);
+
+        if (propertiesError) {
+          throw propertiesError;
+        }
+
+        if (properties && properties.length > 0) {
+          const property = properties[0]; // Use first active property
+          setUserProperty(property);
+          
+          // Transform data to match expected format
+          const mortgageDetails = {
+            isActive: property.remaining_balance > 0,
+            principalAmount: property.purchase_price - property.down_payment,
+            remainingBalance: property.remaining_balance,
+            monthlyPayment: property.monthly_payment,
+            nextPaymentDue: Date.now() + 30 * 24 * 60 * 60 * 1000, // Next month
+            isOverdue: false, // Could be calculated based on last payment
+            daysPastDue: 0,
+            missedPayments: 0,
+            startDate: Math.floor(new Date(property.purchase_date).getTime() / 1000),
+            downPayment: property.down_payment,
+            isCompleted: property.remaining_balance <= 0,
+            isForeclosed: false
+          };
+
+          const propertyDetails = {
+            propertyValue: property.current_value,
+            equity: property.current_value * (property.equity_percentage / 100),
+            monthlyRental: 2500, // Sample data
+            occupancyRate: 95
+          };
+
+          setMortgageData(mortgageDetails);
+          setPropertyData(propertyDetails);
+        } else {
+          // No properties found
+          setMortgageData({ isActive: false });
+          setPropertyData(null);
+          setUserProperty(null);
+        }
       } catch (error) {
-        console.error('Failed to fetch mortgage data:', error);
+        console.error('Error fetching mortgage data:', error);
         toast({
           title: "Data Loading Error",
           description: "Failed to load mortgage data. Please try again.",
@@ -62,26 +106,10 @@ export const InvestorMortgageDashboard = () => {
     };
 
     fetchMortgageData();
-  }, [isConnected, getMortgageDetails, getMazuntePropertyStatus, toast]);
+  }, [isConnected, account, toast]);
 
-  const handleMakePayment = async () => {
-    try {
-      await makePayment();
-      toast({
-        title: "Payment Successful",
-        description: "Your mortgage payment has been processed on the blockchain.",
-      });
-      // Refresh data after payment
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    } catch (error) {
-      toast({
-        title: "Payment Failed",
-        description: "There was an error processing your payment. Please try again.",
-        variant: "destructive",
-      });
-    }
+  const handleMakePayment = () => {
+    setPaymentModalOpen(true);
   };
 
   const handleViewOnExplorer = () => {
@@ -377,6 +405,22 @@ export const InvestorMortgageDashboard = () => {
         >
           {isPurchasingProperty ? "Processing Payment..." : "Make Monthly Payment"}
         </Button>
+        
+        {userProperty && (
+          <MortgagePaymentModal 
+            isOpen={paymentModalOpen}
+            onClose={() => setPaymentModalOpen(false)}
+            property={{
+              id: userProperty.id,
+              title: userProperty.property_name,
+              location: userProperty.property_location,
+              image: userProperty.image_url || "/src/assets/villa-bali.jpg",
+              value: userProperty.current_value,
+              monthlyPayment: userProperty.monthly_payment,
+              remainingBalance: userProperty.remaining_balance
+            }}
+          />
+        )}
         
         <Button 
           variant="outline" 

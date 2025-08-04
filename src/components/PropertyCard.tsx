@@ -195,7 +195,9 @@ export const PropertyCard = ({
           title,
           location,
           image,
-          value
+          value,
+          monthlyPayment: 2500, // Default value for PropertyCard usage
+          remainingBalance: 150000 // Default value for PropertyCard usage
         }}
       />
     </Card>

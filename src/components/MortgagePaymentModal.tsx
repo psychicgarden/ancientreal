@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { Shield, AlertTriangle, CreditCard, Home, Clock, DollarSign } from "lucide-react";
 import { useWallet } from "@/contexts/WalletContext";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface MortgagePaymentModalProps {
   isOpen: boolean;
@@ -18,6 +19,8 @@ interface MortgagePaymentModalProps {
     location: string;
     image: string;
     value: number;
+    monthlyPayment: number;
+    remainingBalance: number;
   };
 }
 
@@ -28,16 +31,16 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property }: MortgagePaym
   const { account, makePayment } = useWallet();
   const { toast } = useToast();
 
-  // Mock mortgage details - in real app this would come from blockchain
+  // Use real property data for payment details
   const mortgageDetails = {
-    monthlyPayment: 2847.32,
-    principalAmount: 1892.15,
-    interestAmount: 955.17,
-    remainingBalance: 187250.00,
-    nextDueDate: "2024-09-15",
-    loanAmount: 200000.00,
-    interestRate: 5.75,
-    termRemaining: "27 years, 3 months"
+    monthlyPayment: property.monthlyPayment,
+    principalAmount: property.monthlyPayment * 0.65, // Approximate principal portion
+    interestAmount: property.monthlyPayment * 0.35, // Approximate interest portion
+    remainingBalance: property.remainingBalance,
+    nextDueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Next month
+    loanAmount: property.remainingBalance + 50000, // Approximate original loan
+    interestRate: 8.0,
+    termRemaining: "9 years, 2 months" // Approximate
   };
 
   const transactionFee = 0.0023; // AVAX
@@ -55,12 +58,46 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property }: MortgagePaym
 
     setIsProcessing(true);
     try {
+      // Use the makePayment from WalletContext and update database
       await makePayment();
+      
+      // Update remaining balance in database
+      const { error } = await supabase
+        .from('user_properties')
+        .update({ 
+          remaining_balance: Math.max(0, property.remainingBalance - property.monthlyPayment),
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', property.id);
+
+      if (error) {
+        console.error('Error updating property balance:', error);
+      }
+
+      // Record payment in payment history
+      await supabase
+        .from('payment_history')
+        .insert({
+          user_wallet_address: account?.toLowerCase(),
+          property_id: property.id,
+          payment_amount: property.monthlyPayment,
+          remaining_balance_after: Math.max(0, property.remainingBalance - property.monthlyPayment),
+          status: 'completed'
+        });
+
       toast({
         title: "Payment Successful",
         description: "Your mortgage payment has been processed successfully.",
       });
+      
       onClose();
+      setStep('review');
+      setHasAcceptedTerms(false);
+      
+      // Refresh the page after a short delay
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (error) {
       toast({
         title: "Payment Failed",

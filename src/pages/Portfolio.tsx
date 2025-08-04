@@ -141,7 +141,7 @@ const Portfolio = () => {
   // Convert database properties to display format
   const displayProperties = userProperties.length > 0 ? userProperties.map(prop => ({
     id: prop.id,
-    image: "/placeholder.svg", // Default image
+    image: prop.image_url || "/src/assets/villa-bali.jpg", // Use database image_url or fallback
     title: prop.property_name,
     location: prop.property_location,
     status: prop.is_active ? "mortgaged" as const : "pending" as const,

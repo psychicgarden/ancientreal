@@ -14,6 +14,56 @@ export type Database = {
   }
   public: {
     Tables: {
+      payment_history: {
+        Row: {
+          created_at: string
+          id: string
+          payment_amount: number
+          payment_date: string
+          payment_type: string
+          property_id: string | null
+          remaining_balance_after: number
+          status: string
+          transaction_hash: string | null
+          updated_at: string
+          user_wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          payment_amount: number
+          payment_date?: string
+          payment_type?: string
+          property_id?: string | null
+          remaining_balance_after: number
+          status?: string
+          transaction_hash?: string | null
+          updated_at?: string
+          user_wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          payment_amount?: number
+          payment_date?: string
+          payment_type?: string
+          property_id?: string | null
+          remaining_balance_after?: number
+          status?: string
+          transaction_hash?: string | null
+          updated_at?: string
+          user_wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_history_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "user_properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       properties: {
         Row: {
           address: string
@@ -45,6 +95,7 @@ export type Database = {
           down_payment: number
           equity_percentage: number
           id: string
+          image_url: string | null
           is_active: boolean
           monthly_payment: number
           mortgage_id: string | null
@@ -62,6 +113,7 @@ export type Database = {
           down_payment: number
           equity_percentage?: number
           id?: string
+          image_url?: string | null
           is_active?: boolean
           monthly_payment?: number
           mortgage_id?: string | null
@@ -79,6 +131,7 @@ export type Database = {
           down_payment?: number
           equity_percentage?: number
           id?: string
+          image_url?: string | null
           is_active?: boolean
           monthly_payment?: number
           mortgage_id?: string | null
