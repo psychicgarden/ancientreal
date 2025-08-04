@@ -9,6 +9,9 @@ import { Wallet, Home, TrendingUp, Users, Calendar, DollarSign, Building, FileTe
 import { InvestorMortgageDashboard } from "@/components/InvestorMortgageDashboard";
 import { PortfolioSummary } from "@/components/PortfolioSummary";
 import { PropertyCard } from "@/components/PropertyCard";
+import { EnhancedPortfolioAnalytics } from "@/components/EnhancedPortfolioAnalytics";
+import { TrustSignals } from "@/components/TrustSignals";
+import { CompetitorComparison } from "@/components/CompetitorComparison";
 import { toast } from "sonner";
 
 // Sample property data - in real app this would come from API
@@ -78,6 +81,15 @@ const Portfolio = () => {
   const totalMonthlyIncome = sampleProperties.reduce((sum, prop) => sum + prop.monthlyIncome, 0);
   const avgOccupancy = sampleProperties.reduce((sum, prop) => sum + prop.occupancyRate, 0) / sampleProperties.length;
 
+  // Portfolio data for enhanced analytics
+  const portfolioData = {
+    totalInvestment: 1500000,
+    currentValue: totalValue,
+    availableProfits: 125000,
+    activeProperties: sampleProperties.length,
+    monthlyIncome: totalMonthlyIncome
+  };
+
   const handlePropertyAction = (action: string, propertyId: string) => {
     toast.success(`${action} action for property ${propertyId}`);
   };
@@ -124,10 +136,14 @@ const Portfolio = () => {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:w-fit">
+          <TabsList className="grid w-full grid-cols-6 lg:w-fit">
             <TabsTrigger value="properties" className="flex items-center gap-2">
               <Home className="h-4 w-4" />
               My Properties
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="flex items-center gap-2">
+              <BarChart3 className="h-4 w-4" />
+              Analytics
             </TabsTrigger>
             <TabsTrigger value="mortgage" className="flex items-center gap-2">
               <Building className="h-4 w-4" />
@@ -140,6 +156,10 @@ const Portfolio = () => {
             <TabsTrigger value="documents" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
               Legal & Documents
+            </TabsTrigger>
+            <TabsTrigger value="comparison" className="flex items-center gap-2">
+              <TrendingUp className="h-4 w-4" />
+              Comparison
             </TabsTrigger>
           </TabsList>
 
@@ -212,6 +232,18 @@ const Portfolio = () => {
                 ))}
               </div>
             </div>
+          </TabsContent>
+
+          {/* Advanced Analytics Tab */}
+          <TabsContent value="analytics" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-2xl font-bold">Advanced Portfolio Analytics</h3>
+              <Badge>Premium Analytics</Badge>
+            </div>
+            
+            <EnhancedPortfolioAnalytics portfolioData={portfolioData} />
+            
+            <TrustSignals />
           </TabsContent>
 
           {/* Mortgage & Financing Tab */}
@@ -321,6 +353,16 @@ const Portfolio = () => {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Platform Comparison Tab */}
+          <TabsContent value="comparison" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-2xl font-bold">Why Boho Shares Leads the Market</h3>
+              <Badge className="bg-primary/10 text-primary">Technical Leadership</Badge>
+            </div>
+            
+            <CompetitorComparison />
           </TabsContent>
         </Tabs>
       </div>
