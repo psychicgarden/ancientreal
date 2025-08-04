@@ -38,6 +38,60 @@ export type Database = {
         }
         Relationships: []
       }
+      user_properties: {
+        Row: {
+          created_at: string
+          current_value: number
+          down_payment: number
+          equity_percentage: number
+          id: string
+          is_active: boolean
+          monthly_payment: number
+          mortgage_id: string | null
+          property_location: string
+          property_name: string
+          purchase_date: string
+          purchase_price: number
+          remaining_balance: number
+          updated_at: string
+          user_wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          current_value?: number
+          down_payment: number
+          equity_percentage?: number
+          id?: string
+          is_active?: boolean
+          monthly_payment?: number
+          mortgage_id?: string | null
+          property_location: string
+          property_name: string
+          purchase_date?: string
+          purchase_price: number
+          remaining_balance?: number
+          updated_at?: string
+          user_wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          current_value?: number
+          down_payment?: number
+          equity_percentage?: number
+          id?: string
+          is_active?: boolean
+          monthly_payment?: number
+          mortgage_id?: string | null
+          property_location?: string
+          property_name?: string
+          purchase_date?: string
+          purchase_price?: number
+          remaining_balance?: number
+          updated_at?: string
+          user_wallet_address?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
