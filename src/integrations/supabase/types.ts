@@ -88,6 +88,51 @@ export type Database = {
         }
         Relationships: []
       }
+      staking_transactions: {
+        Row: {
+          amount: number
+          block_number: number | null
+          created_at: string
+          gas_price: number | null
+          gas_used: number | null
+          id: string
+          metadata: Json | null
+          status: string
+          transaction_hash: string | null
+          transaction_type: string
+          updated_at: string
+          user_wallet_address: string
+        }
+        Insert: {
+          amount: number
+          block_number?: number | null
+          created_at?: string
+          gas_price?: number | null
+          gas_used?: number | null
+          id?: string
+          metadata?: Json | null
+          status?: string
+          transaction_hash?: string | null
+          transaction_type: string
+          updated_at?: string
+          user_wallet_address: string
+        }
+        Update: {
+          amount?: number
+          block_number?: number | null
+          created_at?: string
+          gas_price?: number | null
+          gas_used?: number | null
+          id?: string
+          metadata?: Json | null
+          status?: string
+          transaction_hash?: string | null
+          transaction_type?: string
+          updated_at?: string
+          user_wallet_address?: string
+        }
+        Relationships: []
+      }
       user_properties: {
         Row: {
           created_at: string
@@ -140,6 +185,42 @@ export type Database = {
           purchase_date?: string
           purchase_price?: number
           remaining_balance?: number
+          updated_at?: string
+          user_wallet_address?: string
+        }
+        Relationships: []
+      }
+      user_staking: {
+        Row: {
+          created_at: string
+          current_apy: number
+          id: string
+          is_active: boolean
+          last_yield_calculation: string
+          total_earned: number
+          total_staked: number
+          updated_at: string
+          user_wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          current_apy?: number
+          id?: string
+          is_active?: boolean
+          last_yield_calculation?: string
+          total_earned?: number
+          total_staked?: number
+          updated_at?: string
+          user_wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          current_apy?: number
+          id?: string
+          is_active?: boolean
+          last_yield_calculation?: string
+          total_earned?: number
+          total_staked?: number
           updated_at?: string
           user_wallet_address?: string
         }
@@ -198,7 +279,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      calculate_daily_yield: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
