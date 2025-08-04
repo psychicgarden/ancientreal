@@ -104,38 +104,40 @@ const Portfolio = () => {
 
     fetchUserData();
 
-    // Set up realtime subscription
-    const channel = supabase
-      .channel('portfolio-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'user_properties',
-          filter: `user_wallet_address=eq.${account?.toLowerCase()}`
-        },
-        () => {
-          fetchUserData(); // Refetch data when changes occur
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'user_transactions',
-          filter: `user_wallet_address=eq.${account?.toLowerCase()}`
-        },
-        () => {
-          fetchUserData(); // Refetch data when changes occur
-        }
-      )
-      .subscribe();
+    // Set up realtime subscription only if account exists
+    if (account) {
+      const channel = supabase
+        .channel('portfolio-changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'user_properties',
+            filter: `user_wallet_address=eq.${account.toLowerCase()}`
+          },
+          () => {
+            fetchUserData(); // Refetch data when changes occur
+          }
+        )
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'user_transactions',
+            filter: `user_wallet_address=eq.${account.toLowerCase()}`
+          },
+          () => {
+            fetchUserData(); // Refetch data when changes occur
+          }
+        )
+        .subscribe();
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
   }, [isConnected, account]);
 
   // Convert database properties to display format
