@@ -442,6 +442,10 @@ const Portfolio = () => {
 
           {/* Developer Investments Tab */}
           <TabsContent value="developer-investments" className="space-y-6">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold">Developer Investments</h3>
+              <Badge variant="secondary">Active Tracking</Badge>
+            </div>
             <DeveloperInvestmentsAnalytics />
           </TabsContent>
 
