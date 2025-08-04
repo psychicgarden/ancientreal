@@ -21,9 +21,12 @@ interface CollateralPosition {
 }
 
 export const CollateralLending = () => {
+  const { isConnected, connectWallet } = useWallet();
+  const { toast } = useToast();
   const [selectedCollateral, setSelectedCollateral] = useState('');
   const [loanAmount, setLoanAmount] = useState('');
   const [loanDuration, setLoanDuration] = useState([30]);
+  const [isCreatingLoan, setIsCreatingLoan] = useState(false);
 
   const userTokens = [
     { symbol: 'BAHIA', balance: 2.5, value: 4125, propertyName: 'Bahia Artist Loft' },
@@ -71,7 +74,53 @@ export const CollateralLending = () => {
     (parseFloat(loanAmount) / maxLoanAmount) * 70 : 0;
 
   const interestRate = calculateInterestRate(currentLtv, loanDuration[0]);
-
+  
+  const handleCreateLoan = async () => {
+    if (!selectedCollateral || !loanAmount || !isConnected) {
+      toast({
+        title: "Connection Required",
+        description: "Please connect wallet and fill all fields",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setIsCreatingLoan(true);
+    
+    try {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      toast({
+        title: "Loan Created Successfully",
+        description: `Borrowed $${parseFloat(loanAmount).toLocaleString()} USDT against ${selectedCollateral} collateral`,
+      });
+      
+      // Store loan in localStorage for portfolio tracking
+      const loans = JSON.parse(localStorage.getItem('userLoans') || '[]');
+      const newLoan = {
+        id: Date.now(),
+        collateralToken: selectedCollateral,
+        loanAmount: parseFloat(loanAmount),
+        interestRate: interestRate,
+        duration: loanDuration[0],
+        created: new Date().toISOString(),
+        status: 'active'
+      };
+      loans.push(newLoan);
+      localStorage.setItem('userLoans', JSON.stringify(loans));
+      
+      setLoanAmount('');
+      setSelectedCollateral('');
+    } catch (error) {
+      toast({
+        title: "Loan Creation Failed",
+        description: "Unable to create loan. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsCreatingLoan(false);
+    }
+  };
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'healthy': return 'text-green-600';
@@ -182,9 +231,10 @@ export const CollateralLending = () => {
 
                 <Button 
                   className="w-full"
-                  disabled={!loanAmount || parseFloat(loanAmount) <= 0 || parseFloat(loanAmount) > maxLoanAmount}
+                  onClick={handleCreateLoan}
+                  disabled={isCreatingLoan || !selectedCollateral || !loanAmount || parseFloat(loanAmount) <= 0 || parseFloat(loanAmount) > maxLoanAmount}
                 >
-                  Create Loan
+                  {isCreatingLoan ? "Creating Loan..." : "Create Loan"}
                 </Button>
               </>
             )}

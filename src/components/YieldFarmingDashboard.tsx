@@ -135,6 +135,19 @@ export const YieldFarmingDashboard = () => {
         description: `Successfully staked ${stakeAmount} ${selectedPool.stakingToken} in ${selectedPool.name}`,
       });
       
+      // Store stake in localStorage for portfolio tracking
+      const stakes = JSON.parse(localStorage.getItem('userStakes') || '[]');
+      const newStake = {
+        id: Date.now(),
+        poolName: selectedPool.name,
+        amount: parseFloat(stakeAmount),
+        token: selectedPool.stakingToken,
+        apy: selectedPool.apy,
+        created: new Date().toISOString()
+      };
+      stakes.push(newStake);
+      localStorage.setItem('userStakes', JSON.stringify(stakes));
+      
       setStakeAmount('');
     } catch (error) {
       toast({

@@ -93,6 +93,20 @@ export const SecondaryMarketplace = () => {
         description: `Successfully ${tradeType === 'buy' ? 'purchased' : 'sold'} ${tradeAmount} ${selectedToken.tokenSymbol} for $${totalCost.toFixed(2)}`,
       });
       
+      // Store trade in localStorage for portfolio tracking
+      const trades = JSON.parse(localStorage.getItem('userTrades') || '[]');
+      const newTrade = {
+        id: Date.now(),
+        type: tradeType,
+        token: selectedToken.tokenSymbol,
+        amount: parseFloat(tradeAmount),
+        price: selectedToken.price,
+        value: totalCost,
+        created: new Date().toISOString()
+      };
+      trades.push(newTrade);
+      localStorage.setItem('userTrades', JSON.stringify(trades));
+      
       setTradeAmount('');
     } catch (error) {
       toast({
