@@ -8,9 +8,9 @@ import { useWallet } from "@/contexts/WalletContext";
 import PropertyInvestmentCalculator from "@/components/PropertyInvestmentCalculator";
 import { PropertyPurchaseModal } from "@/components/PropertyPurchaseModal";
 import { LiquidityTradingHub } from "@/components/LiquidityTradingHub";
-import villaBahia from "@/assets/loft-bahia.jpg";
-import villaMexico from "@/assets/penthouse-mexico.jpg";
-import villaGreece from "@/assets/apartment-greece.jpg";
+import villaLuxury from "@/assets/villa-soho-inspired.jpg";
+import beachfrontLuxury from "@/assets/beachfront-luxury.jpg";
+import apartmentLuxury from "@/assets/apartment-eco-luxury.jpg";
 
 const InvestorPortal = () => {
   const { isConnected, isPurchasing } = useWallet();
@@ -36,7 +36,7 @@ const InvestorPortal = () => {
       totalProperties: 8,
       mortgageTerm: "10 years",
       expectedReturn: 15.8,
-      image: villaBahia,
+      image: villaLuxury,
       isBlockchain: true,
       isVillage: false
     },
@@ -56,7 +56,7 @@ const InvestorPortal = () => {
       totalProperties: 6,
       mortgageTerm: "10 years", 
       expectedReturn: 16.2,
-      image: villaMexico,
+      image: beachfrontLuxury,
       isBlockchain: true,
       isVillage: false
     },
@@ -76,7 +76,7 @@ const InvestorPortal = () => {
       totalProperties: 4,
       mortgageTerm: "10 years",
       expectedReturn: 15.9,
-      image: villaGreece,
+      image: apartmentLuxury,
       isBlockchain: true,
       isVillage: false
     }

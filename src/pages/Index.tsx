@@ -1,6 +1,10 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import TrustBadgesStrip from "@/components/TrustBadgesStrip";
 import FeaturedInvestments from "@/components/FeaturedInvestments";
+import InvestorTestimonials from "@/components/InvestorTestimonials";
+import ClearInvestmentFlow from "@/components/ClearInvestmentFlow";
+import InvestmentGuarantees from "@/components/InvestmentGuarantees";
 import MissedOpportunitySection from "@/components/MissedOpportunitySection";
 import TwoWaysToInvest from "@/components/TwoWaysToInvest";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,7 +29,11 @@ const Index = () => {
     <div className="min-h-screen">
       <Header />
       <Hero />
+      <TrustBadgesStrip />
+      <ClearInvestmentFlow />
       <FeaturedInvestments />
+      <InvestorTestimonials />
+      <InvestmentGuarantees />
       <MissedOpportunitySection />
       <TwoWaysToInvest />
       
