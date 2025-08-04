@@ -8,9 +8,9 @@ import { useWallet } from "@/contexts/WalletContext";
 import { MAZUNTE_PROPERTY } from "@/lib/contracts";
 import PropertyInvestmentCalculator from "@/components/PropertyInvestmentCalculator";
 import { PropertyPurchaseModal } from "@/components/PropertyPurchaseModal";
-import villaLuxury from "@/assets/villa-soho-inspired.jpg";
-import beachfrontLuxury from "@/assets/beachfront-luxury.jpg";
-import apartmentLuxury from "@/assets/apartment-eco-luxury.jpg";
+import villaTulum from "@/assets/villa-tulum.jpg";
+import beachChalet from "@/assets/beach-chalet.jpg";
+import villaCorfu from "@/assets/villa-corfu-greece.jpg";
 
 const FeaturedInvestments = () => {
   const { 
@@ -50,7 +50,7 @@ const FeaturedInvestments = () => {
       totalProperties: 15,
       mortgageTerm: "10 years",
       expectedReturn: isConnected ? 181 : 16.8,
-      image: villaLuxury,
+      image: villaTulum,
       isBlockchain: true,
       isVillage: true
     },
@@ -69,7 +69,7 @@ const FeaturedInvestments = () => {
       totalProperties: 12,
       mortgageTerm: "10 years",
       expectedReturn: 15.2,
-      image: beachfrontLuxury,
+      image: beachChalet,
       isBlockchain: false,
       isVillage: true
     },
@@ -88,7 +88,7 @@ const FeaturedInvestments = () => {
       totalProperties: 10,
       mortgageTerm: "10 years",
       expectedReturn: 17.8,
-      image: apartmentLuxury,
+      image: villaCorfu,
       isBlockchain: false,
       isVillage: true
     }
