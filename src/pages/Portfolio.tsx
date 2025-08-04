@@ -10,10 +10,11 @@ import { InvestorMortgageDashboard } from "@/components/InvestorMortgageDashboar
 import { PortfolioSummary } from "@/components/PortfolioSummary";
 import { PropertyCard } from "@/components/PropertyCard";
 import { EnhancedPortfolioAnalytics } from "@/components/EnhancedPortfolioAnalytics";
+import { DeveloperInvestmentsAnalytics } from "@/components/DeveloperInvestmentsAnalytics";
 import { TrustSignals } from "@/components/TrustSignals";
 import { CompetitorComparison } from "@/components/CompetitorComparison";
-import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 // Sample property data - in real app this would come from API
 const sampleProperties = [
@@ -297,7 +298,7 @@ const Portfolio = () => {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6 lg:w-fit">
+          <TabsList className="grid w-full grid-cols-7 lg:w-fit">
             <TabsTrigger value="properties" className="flex items-center gap-2">
               <Home className="h-4 w-4" />
               My Properties
@@ -305,6 +306,10 @@ const Portfolio = () => {
             <TabsTrigger value="analytics" className="flex items-center gap-2">
               <BarChart3 className="h-4 w-4" />
               Analytics
+            </TabsTrigger>
+            <TabsTrigger value="developer-investments" className="flex items-center gap-2">
+              <TrendingUp className="h-4 w-4" />
+              Developer Investments
             </TabsTrigger>
             <TabsTrigger value="mortgage" className="flex items-center gap-2">
               <Building className="h-4 w-4" />
@@ -433,6 +438,11 @@ const Portfolio = () => {
             <EnhancedPortfolioAnalytics portfolioData={portfolioData} />
             
             <TrustSignals />
+          </TabsContent>
+
+          {/* Developer Investments Tab */}
+          <TabsContent value="developer-investments" className="space-y-6">
+            <DeveloperInvestmentsAnalytics />
           </TabsContent>
 
           {/* Mortgage & Financing Tab */}
