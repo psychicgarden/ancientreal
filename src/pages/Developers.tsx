@@ -114,8 +114,69 @@ const Developers = () => {
     }
   ];
 
-  // Filter active projects from database
-  const currentProjects = projects.filter(p => p.project_status === 'active');
+  // Current projects seeking 80% - hardcoded to match screenshot
+  const currentProjects = [
+    {
+      id: 'coliving-hub',
+      title: 'Digital Nomad Coliving Hub',
+      creator_name: 'Remote Work Studios',
+      description: 'Modern coliving spaces designed for digital nomads with high-speed internet, coworking areas, and community events.',
+      target_funding: 450000,
+      current_funding: 382500,
+      presale_price: 382500,
+      min_investment: 75000,
+      estimated_yield: 22,
+      project_status: 'funded',
+      timeline: '12 months',
+      image_url: '/lovable-uploads/015a9138-e480-455a-85e1-42b34dcc742f.png',
+      presale_percentage: 85,
+      status_badge: 'Funded - Development Starting',
+      units_sold: '8/10',
+      public_markup: '+17.6%',
+      development_approved: true,
+      category: 'Real Estate'
+    },
+    {
+      id: 'riad-retreat',
+      title: 'Berber Eco Luxury Riad Retreat',
+      creator_name: 'Atlas Desert Developments',
+      description: 'Authentic Moroccan riad converted into an eco-luxury retreat with traditional architecture and modern sustainability features.',
+      target_funding: 750000,
+      current_funding: 525000,
+      presale_price: 525000,
+      min_investment: 75000,
+      estimated_yield: 28,
+      project_status: 'presale_active',
+      timeline: '18 months',
+      image_url: '/lovable-uploads/015a9138-e480-455a-85e1-42b34dcc742f.png',
+      presale_percentage: 70,
+      status_badge: 'Presale Active',
+      units_sold: '7/10',
+      public_markup: '+17.6%',
+      threshold_needed: 75000,
+      category: 'Hospitality'
+    },
+    {
+      id: 'vertical-farm',
+      title: 'Urban Vertical Farm Complex',
+      creator_name: 'AgriTech Builders',
+      description: 'Innovative vertical farming facility using hydroponic technology to produce organic vegetables in urban environments.',
+      target_funding: 920000,
+      current_funding: 734000,
+      presale_price: 734000,
+      min_investment: 75000,
+      estimated_yield: 31,
+      project_status: 'funded',
+      timeline: '15 months',
+      image_url: '/lovable-uploads/015a9138-e480-455a-85e1-42b34dcc742f.png',
+      presale_percentage: 80,
+      status_badge: 'Funded - Development Starting',
+      units_sold: '8/10',
+      public_markup: '+17.6%',
+      development_approved: true,
+      category: 'Agriculture'
+    }
+  ];
 
   const benefits = [
     {
@@ -371,26 +432,54 @@ const Developers = () => {
                           No Image
                         </div>
                       )}
-                      {/* Funding percentage overlay */}
+                      {/* Presale percentage overlay */}
                       <div className="absolute top-3 right-3 bg-blue-600/90 text-white px-2 py-1 rounded text-sm font-bold">
-                        {Math.round(fundingPercentage)}% FUNDED
+                        {project.presale_percentage}% PRESOLD
                       </div>
+                      
+                      {/* Development Approved notification */}
+                      {project.development_approved && (
+                        <div className="absolute top-3 left-3 bg-green-600/95 text-white px-2 py-1 rounded text-xs font-semibold">
+                          🎉 Development Approved!
+                        </div>
+                      )}
+                      
+                      {/* Threshold needed notification */}
+                      {project.threshold_needed && (
+                        <div className="absolute bottom-3 left-3 bg-orange-600/95 text-white px-2 py-1 rounded text-xs font-semibold">
+                          ${project.threshold_needed?.toLocaleString()} needed to reach threshold
+                        </div>
+                      )}
                     </div>
                     
                     <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
                     <p className="text-muted-foreground mb-2">by {project.creator_name}</p>
+                    
+                    {/* Status badge */}
+                    <div className="mb-3">
+                      <Badge 
+                        className={`${
+                          project.project_status === 'funded' 
+                            ? 'bg-green-600/20 text-green-700 border-green-600/30' 
+                            : 'bg-orange-600/20 text-orange-700 border-orange-600/30'
+                        }`}
+                      >
+                        {project.status_badge}
+                      </Badge>
+                    </div>
+                    
                     <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
                     
-                    {/* Funding Progress */}
+                    {/* Presale Progress */}
                     <div className="mb-4">
                       <div className="flex justify-between text-sm mb-2">
-                        <span>Funding Progress</span>
-                        <span className="font-semibold">{Math.round(fundingPercentage)}%</span>
+                        <span>Presale Progress</span>
+                        <span className="font-semibold">{project.presale_percentage}%</span>
                       </div>
-                      <Progress value={fundingPercentage} className="h-2" />
+                      <Progress value={project.presale_percentage} className="h-2" />
                       <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                        <span>${project.current_funding?.toLocaleString()}</span>
-                        <span>${project.target_funding?.toLocaleString()}</span>
+                        <span>Units Sold: {project.units_sold}</span>
+                        <span>Public Markup: {project.public_markup}</span>
                       </div>
                     </div>
                     
