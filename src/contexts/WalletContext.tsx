@@ -466,11 +466,70 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       console.error('Property purchase failed:', error);
       const errorMessage = error.message || "There was an error processing your property purchase.";
       
-      toast({
-        title: "Purchase Failed",
-        description: errorMessage,
-        variant: "destructive",
-      });
+      // CRITICAL FIX: Save to database even if blockchain fails (Live Mode fallback)
+      if (!isDemoMode && account) {
+        console.log('Blockchain failed, saving failed purchase to database for user visibility...');
+        
+        const fallbackMortgageId = `pending_${Date.now()}`;
+        
+        // Save property to database with "pending" status
+        const propertyData = {
+          user_wallet_address: account.toLowerCase(),
+          property_name: 'Mazunte Beach Property',
+          property_location: 'Mazunte, Oaxaca, Mexico',
+          purchase_price: 150000,
+          down_payment: downPayment,
+          mortgage_id: fallbackMortgageId,
+          current_value: 150000,
+          monthly_payment: 1456,
+          remaining_balance: 150000 - downPayment,
+          equity_percentage: (downPayment / 150000) * 100,
+          is_active: false // Mark as inactive since blockchain failed
+        };
+
+        try {
+          const { error: dbError } = await supabase
+            .from('user_properties')
+            .insert([propertyData]);
+
+          if (!dbError) {
+            // Also log the failed transaction
+            const transactionData = {
+              user_wallet_address: account.toLowerCase(),
+              transaction_hash: `failed_tx_${Date.now()}`,
+              transaction_type: 'property_purchase',
+              amount: downPayment,
+              currency: 'USDT',
+              status: 'failed',
+              metadata: {
+                mortgageId: fallbackMortgageId,
+                propertyName: 'Mazunte Beach Property',
+                propertyValue: 150000,
+                errorMessage,
+                smartContractError: true
+              }
+            };
+
+            await supabase
+              .from('user_transactions')
+              .insert([transactionData]);
+
+            toast({
+              title: "Purchase Saved (Blockchain Failed)",
+              description: "Your purchase attempt was saved. Enable Demo Mode to complete purchases successfully.",
+              variant: "destructive",
+            });
+          }
+        } catch (dbError) {
+          console.error('Failed to save failed purchase to database:', dbError);
+        }
+      } else {
+        toast({
+          title: "Purchase Failed",
+          description: errorMessage,
+          variant: "destructive",
+        });
+      }
       
       return { success: false, error: errorMessage };
     } finally {

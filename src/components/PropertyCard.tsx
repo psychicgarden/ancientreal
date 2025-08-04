@@ -10,11 +10,13 @@ interface PropertyCardProps {
   image: string;
   title: string;
   location: string;
-  status: "owned" | "mortgaged" | "hosted" | "available";
+  status: "owned" | "mortgaged" | "hosted" | "available" | "pending";
   value: number;
   equity?: number;
   monthlyIncome?: number;
   occupancyRate?: number;
+  isPending?: boolean;
+  failureReason?: string | null;
   onManage?: () => void;
   onListForTravel?: () => void;
   onMakePayment?: () => void;
@@ -31,6 +33,8 @@ export const PropertyCard = ({
   equity,
   monthlyIncome,
   occupancyRate,
+  isPending,
+  failureReason,
   onManage,
   onListForTravel,
   onMakePayment,
@@ -49,6 +53,8 @@ export const PropertyCard = ({
         return <Badge className="bg-purple-600/95 text-white font-semibold border border-purple-400/50 shadow-lg backdrop-blur-sm px-3 py-1">Hosting</Badge>;
       case "available":
         return <Badge className="bg-orange-600/95 text-white font-semibold border border-orange-400/50 shadow-lg backdrop-blur-sm px-3 py-1">Available</Badge>;
+      case "pending":
+        return <Badge className="bg-red-600/95 text-white font-semibold border border-red-400/50 shadow-lg backdrop-blur-sm px-3 py-1">Purchase Failed</Badge>;
       default:
         return null;
     }
@@ -94,6 +100,17 @@ export const PropertyCard = ({
           <Button size="sm" onClick={onListForTravel} className="w-full">
             Start Hosting
           </Button>
+        );
+      case "pending":
+        return (
+          <div className="space-y-2">
+            <p className="text-xs text-red-600 font-medium">
+              {failureReason || "Purchase failed - blockchain issue"}
+            </p>
+            <Button size="sm" variant="destructive" className="w-full" disabled>
+              Enable Demo Mode to Retry
+            </Button>
+          </div>
         );
       default:
         return null;

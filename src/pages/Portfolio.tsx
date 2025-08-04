@@ -69,11 +69,12 @@ const Portfolio = () => {
 
       setLoading(true);
       try {
-        // Fetch user properties
+        // Fetch user properties (including failed purchases for transparency)
         const { data: properties, error: propError } = await supabase
           .from('user_properties')
           .select('*')
-          .eq('user_wallet_address', account.toLowerCase());
+          .eq('user_wallet_address', account.toLowerCase())
+          .order('created_at', { ascending: false });
 
         if (propError) {
           console.error('Error fetching properties:', propError);
@@ -143,14 +144,16 @@ const Portfolio = () => {
     image: "/placeholder.svg", // Default image
     title: prop.property_name,
     location: prop.property_location,
-    status: "mortgaged" as const,
+    status: prop.is_active ? "mortgaged" as const : "pending" as const,
     value: prop.current_value,
     equity: (prop.current_value * prop.equity_percentage) / 100,
     monthlyIncome: prop.monthly_payment * 0.7, // Estimate rental income
     occupancyRate: 85, // Default occupancy rate
     downPayment: prop.down_payment,
     mortgageId: prop.mortgage_id,
-    remainingBalance: prop.remaining_balance
+    remainingBalance: prop.remaining_balance,
+    isPending: !prop.is_active, // Show if purchase failed/pending
+    failureReason: prop.is_active ? null : "Smart contract deployment required"
   })) : sampleProperties; // Fallback to sample data if no real properties
 
   if (!isConnected) {

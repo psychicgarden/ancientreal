@@ -31,8 +31,28 @@ function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
-      <div className="container mx-auto px-6 lg:px-8">
+    <>
+      {/* CRITICAL: Live Mode Warning Banner - Impossible to Miss */}
+      {!isDemoMode && (
+        <div className="fixed top-0 left-0 right-0 z-[60] bg-gradient-to-r from-red-500 to-orange-500 text-white px-4 py-3 text-center shadow-lg">
+          <div className="flex items-center justify-center gap-3 text-sm font-medium">
+            <span className="flex items-center gap-2">
+              ⚠️ LIVE MODE: Smart contracts not deployed! Purchases will fail.
+            </span>
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="bg-white/20 border-white/30 text-white hover:bg-white/30 text-xs py-1 px-3"
+              onClick={toggleDemoMode}
+            >
+              Switch to Demo Mode
+            </Button>
+          </div>
+        </div>
+      )}
+      
+      <header className={`fixed left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50 ${!isDemoMode ? 'top-12' : 'top-0'}`}>
+        <div className="container mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-24">
           {/* Logo */}
           <div className="flex items-center">
@@ -267,6 +287,7 @@ function Header() {
         )}
       </div>
     </header>
+    </>
   );
 };
 
