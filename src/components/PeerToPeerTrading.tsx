@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Users, MessageSquare, Handshake, Star, Clock, DollarSign, Shield } from "lucide-react";
+import { useWallet } from "@/contexts/WalletContext";
+import { useToast } from "@/hooks/use-toast";
 
 interface TradeOffer {
   id: string;
@@ -34,10 +36,14 @@ interface TradeRequest {
 }
 
 export const PeerToPeerTrading = () => {
+  const { isConnected, connectWallet } = useWallet();
+  const { toast } = useToast();
   const [selectedOffer, setSelectedOffer] = useState<TradeOffer | null>(null);
   const [offerAmount, setOfferAmount] = useState('');
   const [offerPrice, setOfferPrice] = useState('');
   const [tradeMessage, setTradeMessage] = useState('');
+  const [isCreatingOffer, setIsCreatingOffer] = useState(false);
+  const [isAccepting, setIsAccepting] = useState(false);
 
   const tradeOffers: TradeOffer[] = [
     {
@@ -123,21 +129,100 @@ export const PeerToPeerTrading = () => {
     }
   ];
 
-  const handleCreateOffer = () => {
-    if (!offerAmount || !offerPrice) return;
-    console.log('Creating P2P trade offer:', { offerAmount, offerPrice });
-    // Integration with smart contract escrow system
+  const handleCreateOffer = async () => {
+    if (!offerAmount || !offerPrice || !isConnected) {
+      toast({
+        title: "Connection Required",
+        description: "Please connect your wallet to create offers",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setIsCreatingOffer(true);
+    
+    try {
+      // Simulate smart contract escrow creation
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      toast({
+        title: "Offer Created",
+        description: `Successfully created offer for ${offerAmount} tokens at $${offerPrice} each`,
+      });
+      
+      setOfferAmount('');
+      setOfferPrice('');
+    } catch (error) {
+      toast({
+        title: "Offer Failed",
+        description: "Unable to create offer. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsCreatingOffer(false);
+    }
   };
 
-  const handleAcceptOffer = (offer: TradeOffer) => {
-    console.log('Accepting offer:', offer.id);
-    // Integration with smart contract escrow system
+  const handleAcceptOffer = async (offer: TradeOffer) => {
+    if (!isConnected) {
+      toast({
+        title: "Connection Required",
+        description: "Please connect your wallet to accept offers",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setIsAccepting(true);
+    
+    try {
+      // Simulate smart contract escrow execution
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      toast({
+        title: "Offer Accepted",
+        description: `Successfully accepted ${offer.user}'s offer for ${offer.amount} ${offer.tokenSymbol}`,
+      });
+    } catch (error) {
+      toast({
+        title: "Accept Failed",
+        description: "Unable to accept offer. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsAccepting(false);
+    }
   };
 
-  const handleMakeCounterOffer = () => {
-    if (!selectedOffer || !offerAmount || !offerPrice) return;
-    console.log('Making counter offer to:', selectedOffer.user);
-    // Integration with smart contract escrow system
+  const handleMakeCounterOffer = async () => {
+    if (!selectedOffer || !offerAmount || !offerPrice || !isConnected) {
+      toast({
+        title: "Connection Required",
+        description: "Please connect your wallet to make counter offers",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    try {
+      // Simulate smart contract counter offer
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      toast({
+        title: "Counter Offer Sent",
+        description: `Counter offer sent to ${selectedOffer.user}`,
+      });
+      
+      setSelectedOffer(null);
+      setOfferAmount('');
+      setOfferPrice('');
+    } catch (error) {
+      toast({
+        title: "Counter Offer Failed",
+        description: "Unable to send counter offer. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   const getRatingStars = (rating: number) => {
@@ -274,9 +359,15 @@ export const PeerToPeerTrading = () => {
 
                     <Button 
                       className="w-full"
-                      onClick={() => handleAcceptOffer(selectedOffer)}
+                      onClick={isConnected ? () => handleAcceptOffer(selectedOffer) : connectWallet}
+                      disabled={isAccepting}
                     >
-                      Accept Offer (${selectedOffer.totalValue.toLocaleString()})
+                      {isAccepting 
+                        ? "Processing..." 
+                        : !isConnected 
+                          ? "Connect Wallet to Trade"
+                          : `Accept Offer ($${selectedOffer.totalValue.toLocaleString()})`
+                      }
                     </Button>
 
                     <div className="border-t pt-4">
@@ -470,13 +561,18 @@ export const PeerToPeerTrading = () => {
                 </div>
               </div>
 
-              <Button 
-                className="w-full"
-                onClick={handleCreateOffer}
-                disabled={!offerAmount || !offerPrice}
-              >
-                Create Trade Offer
-              </Button>
+                <Button 
+                  className="w-full"
+                  onClick={isConnected ? handleCreateOffer : connectWallet}
+                  disabled={isCreatingOffer || (isConnected && (!offerAmount || !offerPrice))}
+                >
+                  {isCreatingOffer 
+                    ? "Creating Offer..." 
+                    : !isConnected 
+                      ? "Connect Wallet to Create Offer"
+                      : "Create Trade Offer"
+                  }
+                </Button>
             </CardContent>
           </Card>
         </TabsContent>

@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Zap, DollarSign, TrendingUp, BarChart3, Clock, Coins } from "lucide-react";
+import { useWallet } from "@/contexts/WalletContext";
+import { useToast } from "@/hooks/use-toast";
 
 interface YieldPool {
   id: string;
@@ -33,9 +35,14 @@ interface UserPosition {
 }
 
 export const YieldFarmingDashboard = () => {
+  const { isConnected, connectWallet } = useWallet();
+  const { toast } = useToast();
   const [selectedPool, setSelectedPool] = useState<YieldPool | null>(null);
   const [stakeAmount, setStakeAmount] = useState('');
   const [withdrawAmount, setWithdrawAmount] = useState('');
+  const [isStaking, setIsStaking] = useState(false);
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
+  const [isClaimingRewards, setIsClaimingRewards] = useState(false);
 
   const yieldPools: YieldPool[] = [
     {
@@ -107,21 +114,103 @@ export const YieldFarmingDashboard = () => {
   const totalRewardsValue = userPositions.reduce((sum, pos) => sum + pos.rewards, 0);
   const averageAPY = userPositions.reduce((sum, pos, _, arr) => sum + pos.apy / arr.length, 0);
 
-  const handleStake = () => {
-    if (!selectedPool || !stakeAmount) return;
-    console.log(`Staking ${stakeAmount} ${selectedPool.stakingToken} in ${selectedPool.name}`);
-    // Integration with YieldFarmingManager smart contract
+  const handleStake = async () => {
+    if (!selectedPool || !stakeAmount || !isConnected) {
+      toast({
+        title: "Connection Required",
+        description: "Please connect your wallet to stake",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setIsStaking(true);
+    
+    try {
+      // Simulate smart contract staking transaction
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      toast({
+        title: "Staking Successful",
+        description: `Successfully staked ${stakeAmount} ${selectedPool.stakingToken} in ${selectedPool.name}`,
+      });
+      
+      setStakeAmount('');
+    } catch (error) {
+      toast({
+        title: "Staking Failed",
+        description: "Unable to process staking. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsStaking(false);
+    }
   };
 
-  const handleWithdraw = () => {
-    if (!selectedPool || !withdrawAmount) return;
-    console.log(`Withdrawing ${withdrawAmount} ${selectedPool.stakingToken} from ${selectedPool.name}`);
-    // Integration with YieldFarmingManager smart contract
+  const handleWithdraw = async () => {
+    if (!selectedPool || !withdrawAmount || !isConnected) {
+      toast({
+        title: "Connection Required",
+        description: "Please connect your wallet to withdraw",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setIsWithdrawing(true);
+    
+    try {
+      // Simulate smart contract withdrawal transaction
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      toast({
+        title: "Withdrawal Successful",
+        description: `Successfully withdrew ${withdrawAmount} ${selectedPool.stakingToken} from ${selectedPool.name}`,
+      });
+      
+      setWithdrawAmount('');
+    } catch (error) {
+      toast({
+        title: "Withdrawal Failed",
+        description: "Unable to process withdrawal. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsWithdrawing(false);
+    }
   };
 
-  const handleClaimRewards = (poolId: string) => {
-    console.log(`Claiming rewards from pool ${poolId}`);
-    // Integration with YieldFarmingManager smart contract
+  const handleClaimRewards = async (poolId: string) => {
+    if (!isConnected) {
+      toast({
+        title: "Connection Required",
+        description: "Please connect your wallet to claim rewards",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setIsClaimingRewards(true);
+    
+    try {
+      // Simulate smart contract claim rewards transaction
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      const pool = yieldPools.find(p => p.id === poolId);
+      
+      toast({
+        title: "Rewards Claimed",
+        description: `Successfully claimed ${pool?.userRewards.toFixed(2)} BOHO tokens`,
+      });
+    } catch (error) {
+      toast({
+        title: "Claim Failed",
+        description: "Unable to claim rewards. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsClaimingRewards(false);
+    }
   };
 
   return (
@@ -297,10 +386,15 @@ export const YieldFarmingDashboard = () => {
 
                   <Button 
                     className="w-full"
-                    onClick={handleStake}
-                    disabled={!stakeAmount || parseFloat(stakeAmount) <= 0}
+                    onClick={isConnected ? handleStake : connectWallet}
+                    disabled={isStaking || (isConnected && (!stakeAmount || parseFloat(stakeAmount) <= 0))}
                   >
-                    Stake {selectedPool.stakingToken}
+                    {isStaking 
+                      ? "Staking..." 
+                      : !isConnected 
+                        ? "Connect Wallet to Stake"
+                        : `Stake ${selectedPool.stakingToken}`
+                    }
                   </Button>
 
                   {selectedPool.userStaked > 0 && (
@@ -321,17 +415,17 @@ export const YieldFarmingDashboard = () => {
                           variant="outline" 
                           className="flex-1"
                           onClick={handleWithdraw}
-                          disabled={!withdrawAmount || parseFloat(withdrawAmount) <= 0}
+                          disabled={isWithdrawing || !withdrawAmount || parseFloat(withdrawAmount) <= 0}
                         >
-                          Withdraw
+                          {isWithdrawing ? "Withdrawing..." : "Withdraw"}
                         </Button>
                         <Button 
                           variant="outline" 
                           className="flex-1"
                           onClick={() => handleClaimRewards(selectedPool.id)}
-                          disabled={selectedPool.userRewards <= 0}
+                          disabled={isClaimingRewards || selectedPool.userRewards <= 0}
                         >
-                          Claim Rewards
+                          {isClaimingRewards ? "Claiming..." : "Claim Rewards"}
                         </Button>
                       </div>
                     </>

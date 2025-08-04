@@ -8,6 +8,7 @@ import { useWallet } from "@/contexts/WalletContext";
 import { MAZUNTE_PROPERTY } from "@/lib/contracts";
 import PropertyInvestmentCalculator from "@/components/PropertyInvestmentCalculator";
 import { PropertyPurchaseModal } from "@/components/PropertyPurchaseModal";
+import { Link } from "react-router-dom";
 import villaTulum from "@/assets/villa-tulum.jpg";
 import beachChalet from "@/assets/beach-chalet.jpg";
 import villaCorfu from "@/assets/villa-corfu-greece.jpg";
@@ -298,8 +299,13 @@ const FeaturedInvestments = () => {
         </div>
 
         <div className="text-center">
-          <Button variant="outline" size="lg" className="px-8 py-3 text-base font-medium hover:scale-105 transition-transform">
-            View All Properties
+          <Button 
+            variant="outline" 
+            size="lg" 
+            className="px-8 py-3 text-base font-medium hover:scale-105 transition-transform"
+            asChild
+          >
+            <Link to="/investor">View All Properties</Link>
           </Button>
         </div>
       </div>

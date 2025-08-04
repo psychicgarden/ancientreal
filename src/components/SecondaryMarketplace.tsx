@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { TrendingUp, DollarSign, ArrowUpDown, Users, Clock, Zap } from "lucide-react";
+import { useWallet } from "@/contexts/WalletContext";
+import { useToast } from "@/hooks/use-toast";
 
 interface TokenListing {
   id: string;
@@ -21,9 +23,12 @@ interface TokenListing {
 }
 
 export const SecondaryMarketplace = () => {
+  const { isConnected, connectWallet } = useWallet();
+  const { toast } = useToast();
   const [selectedToken, setSelectedToken] = useState<TokenListing | null>(null);
   const [tradeAmount, setTradeAmount] = useState('');
   const [tradeType, setTradeType] = useState<'buy' | 'sell'>('buy');
+  const [isTrading, setIsTrading] = useState(false);
 
   const tokenListings: TokenListing[] = [
     {
@@ -64,11 +69,40 @@ export const SecondaryMarketplace = () => {
     }
   ];
 
-  const handleTrade = () => {
-    if (!selectedToken || !tradeAmount) return;
+  const handleTrade = async () => {
+    if (!selectedToken || !tradeAmount || !isConnected) {
+      toast({
+        title: "Connection Required",
+        description: "Please connect your wallet to trade",
+        variant: "destructive"
+      });
+      return;
+    }
     
-    console.log(`${tradeType.toUpperCase()}: ${tradeAmount} ${selectedToken.tokenSymbol} tokens`);
-    // Integration with SecondaryMarketplace smart contract would go here
+    setIsTrading(true);
+    
+    try {
+      // Simulate smart contract trade execution
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      const totalCost = parseFloat(tradeAmount) * selectedToken.price;
+      const fee = totalCost * 0.003;
+      
+      toast({
+        title: "Trade Executed",
+        description: `Successfully ${tradeType === 'buy' ? 'purchased' : 'sold'} ${tradeAmount} ${selectedToken.tokenSymbol} for $${totalCost.toFixed(2)}`,
+      });
+      
+      setTradeAmount('');
+    } catch (error) {
+      toast({
+        title: "Trade Failed",
+        description: "Unable to execute trade. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsTrading(false);
+    }
   };
 
   return (
@@ -246,10 +280,15 @@ export const SecondaryMarketplace = () => {
 
                   <Button 
                     className="w-full" 
-                    onClick={handleTrade}
-                    disabled={!tradeAmount || parseFloat(tradeAmount) <= 0}
+                    onClick={isConnected ? handleTrade : connectWallet}
+                    disabled={isTrading || (isConnected && (!tradeAmount || parseFloat(tradeAmount) <= 0))}
                   >
-                    {tradeType === 'buy' ? 'Buy' : 'Sell'} {selectedToken.tokenSymbol}
+                    {isTrading 
+                      ? "Processing..." 
+                      : !isConnected 
+                        ? "Connect Wallet to Trade"
+                        : `${tradeType === 'buy' ? 'Buy' : 'Sell'} ${selectedToken.tokenSymbol}`
+                    }
                   </Button>
                 </CardContent>
               </Card>

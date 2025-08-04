@@ -19,6 +19,7 @@ import {
   Clock,
   Users
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   return (
@@ -85,9 +86,9 @@ const Index = () => {
                   className="w-full mt-6 group-hover:scale-105 transition-transform" 
                   asChild
                 >
-                  <a href="/banking">
+                  <Link to="/banking">
                     Start Earning <ArrowRight className="w-4 h-4 ml-2" />
-                  </a>
+                  </Link>
                 </Button>
               </CardContent>
             </Card>
@@ -145,9 +146,9 @@ const Index = () => {
                   variant="outline"
                   asChild
                 >
-                  <a href="/investor">
+                  <Link to="/investor">
                     Browse Projects <ArrowRight className="w-4 h-4 ml-2" />
-                  </a>
+                  </Link>
                 </Button>
               </CardContent>
             </Card>
@@ -205,9 +206,9 @@ const Index = () => {
                   variant="outline"
                   asChild
                 >
-                  <a href="/developers">
+                  <Link to="/developers">
                     Explore Properties <ArrowRight className="w-4 h-4 ml-2" />
-                  </a>
+                  </Link>
                 </Button>
               </CardContent>
             </Card>
