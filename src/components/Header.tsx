@@ -63,6 +63,19 @@ function Header() {
             </Link>
           </nav>
 
+          {/* Demo Mode Toggle - Prominent for users */}
+          <div className="hidden md:flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20">
+            <Switch
+              id="demo-mode-header"
+              checked={isDemoMode}
+              onCheckedChange={toggleDemoMode}
+              className="scale-75"
+            />
+            <label htmlFor="demo-mode-header" className="text-xs font-medium text-orange-600 cursor-pointer">
+              {isDemoMode ? 'DEMO MODE' : 'LIVE MODE'}
+            </label>
+          </div>
+
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-6">
             {/* Demo Mode Developer Panel */}
