@@ -493,10 +493,18 @@ export const YieldFarmingDashboard = () => {
                     variant="outline" 
                     size="sm"
                     onClick={() => handleClaimRewards(position.poolId)}
+                    disabled={isClaimingRewards}
                   >
-                    Claim Rewards
+                    {isClaimingRewards ? "Claiming..." : "Claim Rewards"}
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => {
+                      setSelectedPool(yieldPools.find(p => p.id === position.poolId) || null);
+                      setStakeAmount('');
+                    }}
+                  >
                     Add Stake
                   </Button>
                   <Button variant="outline" size="sm">
