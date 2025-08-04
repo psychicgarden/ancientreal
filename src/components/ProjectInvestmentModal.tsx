@@ -17,13 +17,12 @@ interface ProjectInvestmentModalProps {
   project: {
     id: string;
     title: string;
-    presalePrice: number;
-    publicPrice: number;
-    targetFunding: number;
-    currentFunding: number;
-    minInvestment: number;
-    estimatedYield: string;
-    status: "presale" | "funded" | "public" | "completed";
+    presale_price: number;
+    target_funding: number;
+    current_funding: number;
+    min_investment: number;
+    estimated_yield: number;
+    project_status: string;
     timeline: string;
   };
 }
@@ -33,23 +32,23 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
   onOpenChange, 
   project 
 }) => {
-  const [investment, setInvestment] = useState(project.minInvestment);
+  const [investment, setInvestment] = useState(project.min_investment || 100);
   const [isProcessing, setIsProcessing] = useState(false);
   const { isConnected, connectWallet, account } = useWallet();
   const { toast } = useToast();
 
   useEffect(() => {
-    setInvestment(project.minInvestment);
-  }, [project.minInvestment]);
+    setInvestment(project.min_investment || 100);
+  }, [project.min_investment]);
 
   // Calculate investment metrics with 3% platform fee
   const platformFee = investment * 0.03; // 3% platform fee for development investments
   const netInvestment = investment - platformFee; // Amount that goes to project funding
-  const ownershipPercentage = (netInvestment / project.targetFunding) * 100;
+  const ownershipPercentage = (netInvestment / (project.target_funding || 1)) * 100;
   const projectedValue = netInvestment * 1.15; // 15% markup from presale to public (on net investment)
   const projectedProfit = projectedValue - investment; // Total profit after fee
   const roi = ((projectedValue - investment) / investment) * 100; // ROI on total investment including fee
-  const remainingFunding = project.targetFunding - project.currentFunding;
+  const remainingFunding = (project.target_funding || 0) - (project.current_funding || 0);
 
   const handleInvestment = async () => {
     if (!isConnected || !account) {
@@ -85,7 +84,7 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
       const { error: projectError } = await supabase
         .from('developer_projects')
         .update({
-          current_funding: project.currentFunding + investment
+          current_funding: (project.current_funding || 0) + investment
         })
         .eq('id', project.id);
 
@@ -173,15 +172,15 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
             <Slider
               value={[investment]}
               onValueChange={(value) => setInvestment(value[0])}
-              min={project.minInvestment}
-              max={remainingFunding}
+              min={project.min_investment || 100}
+              max={Math.max(remainingFunding, project.min_investment || 100)}
               step={100}
               className="w-full"
             />
             
             <div className="flex justify-between text-sm text-muted-foreground">
-              <span>Min: ${project.minInvestment.toLocaleString()}</span>
-              <span>Max: ${remainingFunding.toLocaleString()}</span>
+              <span>Min: ${(project.min_investment || 100).toLocaleString()}</span>
+              <span>Max: ${Math.max(remainingFunding, project.min_investment || 100).toLocaleString()}</span>
             </div>
 
             <div className="flex gap-2">
@@ -189,15 +188,15 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
                 type="number"
                 value={investment}
                 onChange={(e) => setInvestment(Number(e.target.value))}
-                min={project.minInvestment}
-                max={remainingFunding}
+                min={project.min_investment || 100}
+                max={Math.max(remainingFunding, project.min_investment || 100)}
                 step={100}
                 className="flex-1"
               />
               <Button 
                 variant="outline" 
-                onClick={() => setInvestment(project.minInvestment * 5)}
-                disabled={project.minInvestment * 5 > remainingFunding}
+                onClick={() => setInvestment((project.min_investment || 100) * 5)}
+                disabled={(project.min_investment || 100) * 5 > Math.max(remainingFunding, project.min_investment || 100)}
               >
                 5x Min
               </Button>
@@ -258,8 +257,8 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
               <div className="font-medium">Project Timeline</div>
               <div className="text-sm text-muted-foreground">{project.timeline} to completion</div>
             </div>
-            <Badge variant={project.status === "presale" ? "secondary" : "default"}>
-              {project.status === "presale" ? "Presale Active" : project.status}
+            <Badge variant={project.project_status === "presale" ? "secondary" : "default"}>
+              {project.project_status === "presale" ? "Presale Active" : project.project_status}
             </Badge>
           </div>
         </div>
@@ -270,7 +269,7 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
           </Button>
           <Button 
             onClick={handleInvestment}
-            disabled={isProcessing || investment < project.minInvestment}
+            disabled={isProcessing || investment < (project.min_investment || 100)}
             className="min-w-[120px]"
           >
             {isProcessing ? (
