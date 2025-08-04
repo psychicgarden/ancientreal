@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import { Badge } from "@/components/ui/badge";
-import { StakingInterface } from "@/components/StakingInterface";
+import BankingInterface from "@/components/BankingInterface";
 
 const Banking = () => {
   return (
@@ -27,8 +27,8 @@ const Banking = () => {
         </div>
       </section>
 
-      {/* Staking Interface */}
-      <StakingInterface />
+      {/* Banking Interface */}
+      <BankingInterface />
     </div>
   );
 };
