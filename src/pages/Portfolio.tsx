@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useWallet } from "@/contexts/WalletContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
-import { Wallet, Home, TrendingUp, Users, Calendar, DollarSign, Building, FileText, BarChart3, ChevronRight } from "lucide-react";
+import { Wallet, Home, TrendingUp, Users, Calendar, DollarSign, Building, FileText, BarChart3, ChevronRight, Loader2 } from "lucide-react";
 import { InvestorMortgageDashboard } from "@/components/InvestorMortgageDashboard";
 import { PortfolioSummary } from "@/components/PortfolioSummary";
 import { PropertyCard } from "@/components/PropertyCard";
@@ -13,6 +13,7 @@ import { EnhancedPortfolioAnalytics } from "@/components/EnhancedPortfolioAnalyt
 import { TrustSignals } from "@/components/TrustSignals";
 import { CompetitorComparison } from "@/components/CompetitorComparison";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 // Sample property data - in real app this would come from API
 const sampleProperties = [
@@ -54,6 +55,103 @@ const sampleProperties = [
 const Portfolio = () => {
   const { isConnected, account, connectWallet } = useWallet();
   const [activeTab, setActiveTab] = useState("properties");
+  const [userProperties, setUserProperties] = useState<any[]>([]);
+  const [userTransactions, setUserTransactions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch user's properties and transactions from database
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!isConnected || !account) {
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      try {
+        // Fetch user properties
+        const { data: properties, error: propError } = await supabase
+          .from('user_properties')
+          .select('*')
+          .eq('user_wallet_address', account.toLowerCase());
+
+        if (propError) {
+          console.error('Error fetching properties:', propError);
+        } else {
+          setUserProperties(properties || []);
+        }
+
+        // Fetch user transactions
+        const { data: transactions, error: txError } = await supabase
+          .from('user_transactions')
+          .select('*')
+          .eq('user_wallet_address', account.toLowerCase())
+          .order('created_at', { ascending: false });
+
+        if (txError) {
+          console.error('Error fetching transactions:', txError);
+        } else {
+          setUserTransactions(transactions || []);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        toast.error('Failed to load portfolio data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+
+    // Set up realtime subscription
+    const channel = supabase
+      .channel('portfolio-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'user_properties',
+          filter: `user_wallet_address=eq.${account?.toLowerCase()}`
+        },
+        () => {
+          fetchUserData(); // Refetch data when changes occur
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'user_transactions',
+          filter: `user_wallet_address=eq.${account?.toLowerCase()}`
+        },
+        () => {
+          fetchUserData(); // Refetch data when changes occur
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [isConnected, account]);
+
+  // Convert database properties to display format
+  const displayProperties = userProperties.length > 0 ? userProperties.map(prop => ({
+    id: prop.id,
+    image: "/placeholder.svg", // Default image
+    title: prop.property_name,
+    location: prop.property_location,
+    status: "mortgaged" as const,
+    value: prop.current_value,
+    equity: (prop.current_value * prop.equity_percentage) / 100,
+    monthlyIncome: prop.monthly_payment * 0.7, // Estimate rental income
+    occupancyRate: 85, // Default occupancy rate
+    downPayment: prop.down_payment,
+    mortgageId: prop.mortgage_id,
+    remainingBalance: prop.remaining_balance
+  })) : sampleProperties; // Fallback to sample data if no real properties
 
   if (!isConnected) {
     return (
@@ -76,17 +174,36 @@ const Portfolio = () => {
     );
   }
 
-  const totalValue = sampleProperties.reduce((sum, prop) => sum + prop.value, 0);
-  const totalEquity = sampleProperties.reduce((sum, prop) => sum + prop.equity, 0);
-  const totalMonthlyIncome = sampleProperties.reduce((sum, prop) => sum + prop.monthlyIncome, 0);
-  const avgOccupancy = sampleProperties.reduce((sum, prop) => sum + prop.occupancyRate, 0) / sampleProperties.length;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 flex flex-col items-center justify-center p-4">
+        <div className="max-w-md w-full text-center space-y-6">
+          <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+            <Loader2 className="h-8 w-8 text-primary animate-spin" />
+          </div>
+          <div className="space-y-2">
+            <h1 className="text-2xl font-bold">Loading Portfolio</h1>
+            <p className="text-muted-foreground">
+              Fetching your properties and transactions from the blockchain...
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const totalValue = displayProperties.reduce((sum, prop) => sum + prop.value, 0);
+  const totalEquity = displayProperties.reduce((sum, prop) => sum + prop.equity, 0);
+  const totalMonthlyIncome = displayProperties.reduce((sum, prop) => sum + prop.monthlyIncome, 0);
+  const avgOccupancy = displayProperties.length > 0 ? displayProperties.reduce((sum, prop) => sum + prop.occupancyRate, 0) / displayProperties.length : 0;
 
   // Portfolio data for enhanced analytics
+  const totalInvestment = userProperties.reduce((sum, prop) => sum + prop.down_payment, 0) || 1500000;
   const portfolioData = {
-    totalInvestment: 1500000,
+    totalInvestment,
     currentValue: totalValue,
-    availableProfits: 125000,
-    activeProperties: sampleProperties.length,
+    availableProfits: Math.max(0, totalValue - totalInvestment),
+    activeProperties: displayProperties.length,
     monthlyIncome: totalMonthlyIncome
   };
 
@@ -194,7 +311,7 @@ const Portfolio = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm text-muted-foreground">Properties</p>
-                      <p className="text-xl font-bold">{sampleProperties.length}</p>
+                      <p className="text-xl font-bold">{displayProperties.length}</p>
                     </div>
                     <Home className="h-8 w-8 text-purple-500" />
                   </div>
@@ -219,18 +336,35 @@ const Portfolio = () => {
                 <h2 className="text-xl font-semibold">Your Properties</h2>
                 <Button>Add Property</Button>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {sampleProperties.map((property) => (
-                  <PropertyCard
-                    key={property.id}
-                    {...property}
-                    onManage={() => handlePropertyAction("Manage", property.id)}
-                    onListForTravel={() => handlePropertyAction("List for Travel", property.id)}
-                    onMakePayment={() => handlePropertyAction("Make Payment", property.id)}
-                    onViewAnalytics={() => handlePropertyAction("View Analytics", property.id)}
-                  />
-                ))}
-              </div>
+              {userProperties.length === 0 ? (
+                <Card className="p-8 text-center">
+                  <div className="space-y-4">
+                    <Home className="h-12 w-12 text-muted-foreground mx-auto" />
+                    <div>
+                      <h3 className="text-lg font-semibold">No Properties Yet</h3>
+                      <p className="text-muted-foreground">
+                        Visit the Investor Portal to purchase your first property
+                      </p>
+                    </div>
+                    <Link to="/investor">
+                      <Button>Browse Properties</Button>
+                    </Link>
+                  </div>
+                </Card>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {displayProperties.map((property) => (
+                    <PropertyCard
+                      key={property.id}
+                      {...property}
+                      onManage={() => handlePropertyAction("Manage", property.id)}
+                      onListForTravel={() => handlePropertyAction("List for Travel", property.id)}
+                      onMakePayment={() => handlePropertyAction("Make Payment", property.id)}
+                      onViewAnalytics={() => handlePropertyAction("View Analytics", property.id)}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </TabsContent>
 

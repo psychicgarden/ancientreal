@@ -92,6 +92,54 @@ export type Database = {
         }
         Relationships: []
       }
+      user_transactions: {
+        Row: {
+          amount: number
+          block_number: number | null
+          created_at: string
+          currency: string
+          gas_price: number | null
+          gas_used: number | null
+          id: string
+          metadata: Json | null
+          status: string
+          transaction_hash: string
+          transaction_type: string
+          updated_at: string
+          user_wallet_address: string
+        }
+        Insert: {
+          amount: number
+          block_number?: number | null
+          created_at?: string
+          currency?: string
+          gas_price?: number | null
+          gas_used?: number | null
+          id?: string
+          metadata?: Json | null
+          status?: string
+          transaction_hash: string
+          transaction_type: string
+          updated_at?: string
+          user_wallet_address: string
+        }
+        Update: {
+          amount?: number
+          block_number?: number | null
+          created_at?: string
+          currency?: string
+          gas_price?: number | null
+          gas_used?: number | null
+          id?: string
+          metadata?: Json | null
+          status?: string
+          transaction_hash?: string
+          transaction_type?: string
+          updated_at?: string
+          user_wallet_address?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
