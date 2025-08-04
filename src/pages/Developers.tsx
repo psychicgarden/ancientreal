@@ -1,15 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PresaleProgress } from "@/components/PresaleProgress";
 import { ProjectInvestmentModal } from "@/components/ProjectInvestmentModal";
-import Header from "@/components/Header"; // Fixed import
-import villaBali from "@/assets/villa-bali.jpg";
-import ecoSmartCity from "@/assets/eco-smart-city.jpg";
-import bohoColivingSpace from "@/assets/boho-coliving-space.jpg";
+import Header from "@/components/Header";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Rocket, 
   Users, 
@@ -26,142 +24,50 @@ import {
 } from "lucide-react";
 
 const Developers = () => {
-  // Best Sold-Out Success Stories (Featured at Top)
-  const soldOutStories = [
-    {
-      id: 1,
-      title: "Bali Eco Resort Complex",
-      creator: "Tropical Builders Co.",
-      description: "Luxury eco-resort with 45 units in Canggu. Sold out in 4 days after DAO funding.",
-      initialFunding: 850000,
-      currentValue: 1200000,
-      roi: "41%",
-      timeline: "18 months",
-      backers: 234,
-      image: villaBali,
-      tags: ["Real Estate", "Eco-Tourism"],
-      selloutTime: "4 days",
-      developerProfit: 350000,
-      developerStory: "Zero upfront cost. We provided full funding after community validation.",
-      presalePercentage: 100
-    },
-    {
-      id: 2,
-      title: "Smart City Infrastructure",
-      creator: "NextGen Urban",
-      description: "IoT-enabled smart city project with blockchain integration for 200+ residential units",
-      initialFunding: 1200000,
-      currentValue: 1950000,
-      roi: "63%",
-      timeline: "24 months",
-      backers: 456,
-      image: ecoSmartCity,
-      tags: ["Smart City", "IoT", "Blockchain"],
-      selloutTime: "6 days",
-      developerProfit: 750000,
-      developerStory: "Community funded, DAO approved. Developer kept 60% equity with zero risk.",
-      presalePercentage: 100
-    },
-    {
-      id: 3,
-      title: "Renewable Energy Villas",
-      creator: "GreenTech Developments",
-      description: "Self-sustaining villa complex with solar integration. Sold out in 2.5 weeks.",
-      initialFunding: 650000,
-      currentValue: 920000,
-      roi: "42%",
-      timeline: "15 months",
-      backers: 189,
-      image: "https://images.unsplash.com/photo-1493397212122-2b85dda8106b?w=800&h=600&fit=crop",
-      tags: ["Renewable Energy", "Sustainability"],
-      selloutTime: "2.5 weeks",
-      developerProfit: 270000,
-      developerStory: "From idea to fully funded in 45 days. No personal investment required.",
-      presalePercentage: 100
-    }
-  ];
+  const { toast } = useToast();
+  const [projects, setProjects] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [investmentModalOpen, setInvestmentModalOpen] = useState(false);
 
-  // Current Projects Seeking Presales (80% threshold for greenlight)
-  const currentProjects = [
-    {
-      id: 4,
-      title: "Digital Nomad Coliving Hub",
-      creator: "Remote Work Studios",
-      description: "Modern coliving spaces with integrated coworking facilities across Southeast Asia.",
-      targetFunding: 450000,
-      currentFunding: 382500,
-      presalePrice: 45000,
-      publicPrice: 52941, // 17.65% markup from presale (45k is 85% of 52.9k)
-      roi: "Est. 29%",
-      timeline: "12 months",
-      backers: 167,
-      image: bohoColivingSpace,
-      tags: ["Coliving", "Remote Work", "Community"],
-      presalePercentage: 85,
-      progress: 85,
-      presaleThreshold: 80,
-      daoFunded: 382500,
-      publicFunding: 0,
-      status: "funded" as const,
-      unitsTotal: 10,
-      unitsSold: 8,
-      minInvestment: 500,
-      estimatedYield: "14.2%",
-      developerStory: "DAO funding eliminated our biggest risk - we focus purely on building."
-    },
-    {
-      id: 5,
-      title: "Berber Eco Luxury Riad Retreat",
-      creator: "Atlas Desert Developments",
-      description: "Authentic Berber-style eco luxury riad retreat center in Morocco's Sahara with traditional architecture.",
-      targetFunding: 750000,
-      currentFunding: 525000,
-      presalePrice: 75000,
-      publicPrice: 88235, // 17.65% markup from presale (75k is 85% of 88.2k)
-      roi: "Est. 38%",
-      timeline: "20 months",
-      backers: 298,
-      image: "https://images.unsplash.com/photo-1482881497185-d4a9ddbe4151?w=800&h=600&fit=crop",
-      tags: ["Berber Architecture", "Eco-Luxury", "Desert Retreat"],
-      presalePercentage: 70,
-      progress: 70,
-      presaleThreshold: 80,
-      daoFunded: 525000,
-      publicFunding: 0,
-      status: "presale" as const,
-      unitsTotal: 10,
-      unitsSold: 7,
-      minInvestment: 300,
-      estimatedYield: "12.8%",
-      developerStory: "Traditional funding rejected us 3 times. DAO believed in our vision."
-    },
-    {
-      id: 6,
-      title: "Urban Vertical Farm Complex",
-      creator: "AgriTech Builders",
-      description: "Vertical farming towers with residential units - food production meets urban living.",
-      targetFunding: 920000,
-      currentFunding: 734000,
-      presalePrice: 92000,
-      publicPrice: 108235, // 17.65% markup from presale (92k is 85% of 108.2k)
-      roi: "Est. 45%",
-      timeline: "16 months",
-      backers: 421,
-      image: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&h=600&fit=crop",
-      tags: ["AgriTech", "Urban", "Innovation"],
-      presalePercentage: 80,
-      progress: 80,
-      presaleThreshold: 80,
-      daoFunded: 734000,
-      publicFunding: 0,
-      status: "funded" as const,
-      unitsTotal: 10,
-      unitsSold: 8,
-      minInvestment: 750,
-      estimatedYield: "16.5%",
-      developerStory: "We reached 80% presale threshold! Greenlit for full DAO funding."
-    }
-  ];
+  // Fetch real projects from database
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('developer_projects')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error('Error fetching projects:', error);
+          toast({
+            title: "Error",
+            description: "Failed to load projects",
+            variant: "destructive"
+          });
+          return;
+        }
+
+        setProjects(data || []);
+      } catch (error) {
+        console.error('Error:', error);
+        toast({
+          title: "Error", 
+          description: "Failed to load projects",
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, [toast]);
+
+  // Filter projects by status
+  const soldOutStories = projects.filter(p => p.project_status === 'completed');
+  const currentProjects = projects.filter(p => p.project_status === 'active');
 
   const benefits = [
     {
@@ -229,13 +135,24 @@ const Developers = () => {
     }
   ];
 
-  const [selectedProject, setSelectedProject] = useState<typeof currentProjects[0] | null>(null);
-  const [investmentModalOpen, setInvestmentModalOpen] = useState(false);
-
-  const handleInvestClick = (project: typeof currentProjects[0]) => {
+  const handleInvestClick = (project: any) => {
     setSelectedProject(project);
     setInvestmentModalOpen(true);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Loading projects...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -300,22 +217,26 @@ const Developers = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {soldOutStories.map((project) => (
+            {soldOutStories.length > 0 ? soldOutStories.map((project) => (
               <Card key={project.id} className="group hover:shadow-xl transition-all duration-300 border-border/50 hover:border-primary/20 relative overflow-hidden">
                 {/* Sold out badge */}
                 <div className="absolute top-4 right-4 z-10 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                  SOLD OUT IN {project.selloutTime.toUpperCase()}
+                  COMPLETED
                 </div>
                 
                 <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 rounded-t-lg flex items-center justify-center relative overflow-hidden">
-                  <img 
-                    src={project.image} 
-                    alt={project.title}
-                    className="w-full h-full object-cover"
-                  />
+                  {project.image_url ? (
+                    <img 
+                      src={project.image_url} 
+                      alt={project.title}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="text-muted-foreground">No Image</div>
+                  )}
                   {/* ROI overlay */}
                   <div className="absolute bottom-3 left-3 bg-green-600/90 text-white px-2 py-1 rounded text-sm font-bold">
-                    +{project.roi} ROI
+                    {project.estimated_yield}% Yield
                   </div>
                 </div>
                 
@@ -326,13 +247,13 @@ const Developers = () => {
                     </Badge>
                     <div className="flex items-center text-sm text-muted-foreground">
                       <Clock className="h-4 w-4 mr-1" />
-                      {project.timeline}
+                      {project.timeline || 'TBD'}
                     </div>
                   </div>
                   <CardTitle className="text-xl group-hover:text-primary transition-colors">
                     {project.title}
                   </CardTitle>
-                  <p className="text-sm text-muted-foreground">by {project.creator}</p>
+                  <p className="text-sm text-muted-foreground">by {project.creator_name}</p>
                 </CardHeader>
                 
                 <CardContent>
@@ -343,36 +264,23 @@ const Developers = () => {
                   {/* Financial highlights */}
                   <div className="bg-muted/30 rounded-lg p-4 mb-4 space-y-2">
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Initial DAO Funding</span>
-                      <span className="font-bold text-green-600">${project.initialFunding.toLocaleString()}</span>
+                      <span className="text-sm text-muted-foreground">Target Funding</span>
+                      <span className="font-bold text-green-600">${project.target_funding?.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Current Value</span>
-                      <span className="font-bold">${project.currentValue.toLocaleString()}</span>
+                      <span className="text-sm text-muted-foreground">Current Funding</span>
+                      <span className="font-bold">${project.current_funding?.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Developer Profit</span>
-                      <span className="font-bold text-green-600">${project.developerProfit.toLocaleString()}</span>
+                      <span className="text-sm text-muted-foreground">Min Investment</span>
+                      <span className="font-bold text-green-600">${project.min_investment?.toLocaleString()}</span>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Community Backers</span>
-                      <span className="font-semibold">{project.backers}</span>
-                    </div>
-                  </div>
-
-                  {/* Developer testimonial */}
-                  <div className="bg-primary/5 rounded-lg p-3 mb-4">
-                    <p className="text-sm italic text-muted-foreground">
-                      "{project.developerStory}"
-                    </p>
                   </div>
 
                   <div className="flex flex-wrap gap-1 mb-4">
-                    {project.tags.map((tag) => (
-                      <Badge key={tag} variant="secondary" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
+                    <Badge variant="secondary" className="text-xs">
+                      {project.category || 'Development'}
+                    </Badge>
                   </div>
 
                   <Button className="w-full" variant="outline">
@@ -380,7 +288,11 @@ const Developers = () => {
                   </Button>
                 </CardContent>
               </Card>
-            ))}
+            )) : (
+              <div className="col-span-full text-center py-8">
+                <p className="text-muted-foreground">No completed projects yet.</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -399,64 +311,86 @@ const Developers = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {currentProjects.map((project) => (
-              <Card key={project.id} className="bg-gradient-card border-accent/20 hover:shadow-xl transition-all duration-300">
-                <CardContent className="p-6">
-                  <div className="aspect-video bg-cover bg-center rounded-lg mb-4 relative overflow-hidden">
-                    <img 
-                      src={project.image} 
-                      alt={project.title}
-                      className="w-full h-full object-cover"
-                    />
-                    {/* Presale percentage overlay */}
-                    <div className="absolute top-3 right-3 bg-blue-600/90 text-white px-2 py-1 rounded text-sm font-bold">
-                      {project.presalePercentage}% PRESOLD
+            {currentProjects.length > 0 ? currentProjects.map((project) => {
+              const fundingPercentage = project.target_funding > 0 ? (project.current_funding / project.target_funding) * 100 : 0;
+              
+              return (
+                <Card key={project.id} className="bg-gradient-card border-accent/20 hover:shadow-xl transition-all duration-300">
+                  <CardContent className="p-6">
+                    <div className="aspect-video bg-cover bg-center rounded-lg mb-4 relative overflow-hidden">
+                      {project.image_url ? (
+                        <img 
+                          src={project.image_url} 
+                          alt={project.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center text-muted-foreground">
+                          No Image
+                        </div>
+                      )}
+                      {/* Funding percentage overlay */}
+                      <div className="absolute top-3 right-3 bg-blue-600/90 text-white px-2 py-1 rounded text-sm font-bold">
+                        {Math.round(fundingPercentage)}% FUNDED
+                      </div>
                     </div>
-                  </div>
-                  
-                  <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                  <p className="text-muted-foreground mb-2">by {project.creator}</p>
-                  <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
-                  
-                  {/* Enhanced Presale Progress */}
-                  <PresaleProgress project={project} />
-                  
-                  <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="text-muted-foreground">Min. Investment:</span>
-                      <div className="font-semibold">${project.minInvestment}</div>
+                    
+                    <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+                    <p className="text-muted-foreground mb-2">by {project.creator_name}</p>
+                    <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
+                    
+                    {/* Funding Progress */}
+                    <div className="mb-4">
+                      <div className="flex justify-between text-sm mb-2">
+                        <span>Funding Progress</span>
+                        <span className="font-semibold">{Math.round(fundingPercentage)}%</span>
+                      </div>
+                      <Progress value={fundingPercentage} className="h-2" />
+                      <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                        <span>${project.current_funding?.toLocaleString()}</span>
+                        <span>${project.target_funding?.toLocaleString()}</span>
+                      </div>
                     </div>
-                    <div>
-                      <span className="text-muted-foreground">Est. Annual Yield:</span>
-                      <div className="font-semibold text-green-500">{project.estimatedYield}</div>
+                    
+                    <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-muted-foreground">Funding Goal</p>
+                        <p className="font-semibold">${project.target_funding?.toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Presale Price</p>
+                        <p className="font-semibold">${project.presale_price?.toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Timeline</p>
+                        <p className="font-semibold">{project.timeline || 'TBD'}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Min Investment</p>
+                        <p className="font-semibold">${project.min_investment?.toLocaleString()}</p>
+                      </div>
                     </div>
-                  </div>
-
-                  {/* Developer testimonial */}
-                  <div className="bg-primary/5 rounded-lg p-3 my-4">
-                    <p className="text-xs italic text-muted-foreground">
-                      "{project.developerStory}"
-                    </p>
-                  </div>
-
-                  <div className="flex flex-wrap gap-1 mb-4">
-                    {project.tags.map((tag) => (
-                      <Badge key={tag} variant="secondary" className="text-xs">
-                        {tag}
+                    
+                    <div className="flex flex-wrap gap-1 mt-4 mb-4">
+                      <Badge variant="secondary" className="text-xs">
+                        {project.category || 'Development'}
                       </Badge>
-                    ))}
-                  </div>
-                  
-                  <Button 
-                    className="w-full" 
-                    variant={project.status === "presale" ? "default" : "outline"}
-                    onClick={() => handleInvestClick(project)}
-                  >
-                    {project.status === "presale" ? "Invest Now" : "View Project"}
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+                    </div>
+                    
+                    <Button 
+                      className="w-full"
+                      onClick={() => handleInvestClick(project)}
+                    >
+                      Invest Now - ${project.presale_price?.toLocaleString()}
+                    </Button>
+                  </CardContent>
+                </Card>
+              );
+            }) : (
+              <div className="col-span-full text-center py-8">
+                <p className="text-muted-foreground">No active projects seeking funding.</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -673,10 +607,10 @@ const Developers = () => {
         <ProjectInvestmentModal
           open={investmentModalOpen}
           onOpenChange={setInvestmentModalOpen}
-        project={{
-          ...selectedProject,
-          id: String(selectedProject.id)
-        }}
+          project={{
+            ...selectedProject,
+            id: String(selectedProject.id)
+          }}
         />
       )}
     </div>
