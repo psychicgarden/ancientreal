@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Slider } from "@/components/ui/slider";
 import { DollarSign, Shield, Clock, TrendingUp, AlertCircle, CheckCircle } from "lucide-react";
+import { useWallet } from "@/contexts/WalletContext";
+import { useToast } from "@/hooks/use-toast";
 
 interface CollateralPosition {
   id: string;
