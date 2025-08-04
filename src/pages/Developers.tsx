@@ -673,7 +673,10 @@ const Developers = () => {
         <ProjectInvestmentModal
           open={investmentModalOpen}
           onOpenChange={setInvestmentModalOpen}
-          project={selectedProject}
+        project={{
+          ...selectedProject,
+          id: String(selectedProject.id)
+        }}
         />
       )}
     </div>

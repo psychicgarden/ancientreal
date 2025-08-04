@@ -57,6 +57,7 @@ const Portfolio = () => {
   const [activeTab, setActiveTab] = useState("properties");
   const [userProperties, setUserProperties] = useState<any[]>([]);
   const [userTransactions, setUserTransactions] = useState<any[]>([]);
+  const [developerInvestments, setDeveloperInvestments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Fetch user's properties and transactions from database
@@ -94,6 +95,32 @@ const Portfolio = () => {
         } else {
           setUserTransactions(transactions || []);
         }
+
+        // Fetch developer investments
+        const { data: investments, error: investmentsError } = await supabase
+          .from('developer_investments')
+          .select(`
+            *,
+            developer_projects (
+              title,
+              description,
+              creator_name,
+              target_funding,
+              current_funding,
+              project_status,
+              timeline,
+              category,
+              image_url
+            )
+          `)
+          .eq('user_wallet_address', account.toLowerCase())
+          .order('created_at', { ascending: false });
+
+        if (investmentsError) {
+          console.error('Error fetching developer investments:', investmentsError);
+        } else {
+          setDeveloperInvestments(investments || []);
+        }
       } catch (error) {
         console.error('Error fetching user data:', error);
         toast.error('Failed to load portfolio data');
@@ -126,6 +153,18 @@ const Portfolio = () => {
             event: '*',
             schema: 'public',
             table: 'user_transactions',
+            filter: `user_wallet_address=eq.${account.toLowerCase()}`
+          },
+          () => {
+            fetchUserData(); // Refetch data when changes occur
+          }
+        )
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'developer_investments',
             filter: `user_wallet_address=eq.${account.toLowerCase()}`
           },
           () => {
@@ -293,8 +332,19 @@ const Portfolio = () => {
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-muted-foreground">Total Equity</p>
-                      <p className="text-xl font-bold">${totalEquity.toLocaleString()}</p>
+                      <p className="text-sm text-muted-foreground">Real Estate Properties</p>
+                      <p className="text-xl font-bold">{displayProperties.length}</p>
+                    </div>
+                    <Home className="h-8 w-8 text-primary" />
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Developer Investments</p>
+                      <p className="text-xl font-bold">{developerInvestments.length}</p>
                     </div>
                     <TrendingUp className="h-8 w-8 text-green-500" />
                   </div>

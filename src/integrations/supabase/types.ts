@@ -14,6 +14,163 @@ export type Database = {
   }
   public: {
     Tables: {
+      developer_investments: {
+        Row: {
+          created_at: string
+          id: string
+          investment_amount: number
+          investment_status: string
+          net_investment: number
+          ownership_percentage: number
+          platform_fee: number
+          project_id: string
+          projected_profit: number
+          projected_value: number
+          transaction_hash: string | null
+          updated_at: string
+          user_wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          investment_amount: number
+          investment_status?: string
+          net_investment: number
+          ownership_percentage: number
+          platform_fee?: number
+          project_id: string
+          projected_profit: number
+          projected_value: number
+          transaction_hash?: string | null
+          updated_at?: string
+          user_wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          investment_amount?: number
+          investment_status?: string
+          net_investment?: number
+          ownership_percentage?: number
+          platform_fee?: number
+          project_id?: string
+          projected_profit?: number
+          projected_value?: number
+          transaction_hash?: string | null
+          updated_at?: string
+          user_wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "developer_investments_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "developer_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      developer_project_updates: {
+        Row: {
+          created_at: string
+          id: string
+          milestone_percentage: number | null
+          project_id: string
+          update_content: string
+          update_title: string
+          update_type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          milestone_percentage?: number | null
+          project_id: string
+          update_content: string
+          update_title: string
+          update_type?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          milestone_percentage?: number | null
+          project_id?: string
+          update_content?: string
+          update_title?: string
+          update_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "developer_project_updates_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "developer_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      developer_projects: {
+        Row: {
+          category: string | null
+          created_at: string
+          creator_name: string
+          creator_wallet_address: string
+          current_funding: number
+          description: string | null
+          estimated_yield: number
+          funding_deadline: string | null
+          id: string
+          image_url: string | null
+          max_investment: number | null
+          min_investment: number
+          presale_price: number
+          project_status: string
+          target_funding: number
+          timeline: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          creator_name: string
+          creator_wallet_address: string
+          current_funding?: number
+          description?: string | null
+          estimated_yield?: number
+          funding_deadline?: string | null
+          id?: string
+          image_url?: string | null
+          max_investment?: number | null
+          min_investment?: number
+          presale_price: number
+          project_status?: string
+          target_funding: number
+          timeline?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          creator_name?: string
+          creator_wallet_address?: string
+          current_funding?: number
+          description?: string | null
+          estimated_yield?: number
+          funding_deadline?: string | null
+          id?: string
+          image_url?: string | null
+          max_investment?: number | null
+          min_investment?: number
+          presale_price?: number
+          project_status?: string
+          target_funding?: number
+          timeline?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       payment_history: {
         Row: {
           created_at: string

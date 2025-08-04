@@ -9,12 +9,13 @@ import { Slider } from "@/components/ui/slider";
 import { useWallet } from "@/contexts/WalletContext";
 import { useToast } from "@/hooks/use-toast";
 import { DollarSign, TrendingUp, Home, Calculator } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ProjectInvestmentModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   project: {
-    id: number;
+    id: string;
     title: string;
     presalePrice: number;
     publicPrice: number;
@@ -34,7 +35,7 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
 }) => {
   const [investment, setInvestment] = useState(project.minInvestment);
   const [isProcessing, setIsProcessing] = useState(false);
-  const { isConnected, connectWallet } = useWallet();
+  const { isConnected, connectWallet, account } = useWallet();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -51,30 +52,82 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
   const remainingFunding = project.targetFunding - project.currentFunding;
 
   const handleInvestment = async () => {
-    if (!isConnected) {
+    if (!isConnected || !account) {
       await connectWallet();
       return;
     }
 
     setIsProcessing(true);
     try {
-      // TODO: Integrate with smart contracts for actual investment
-      console.log(`Investing $${investment} in project ${project.id}`);
-      
-      // Simulate investment processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // First, create the investment record
+      const { data: investmentData, error: investmentError } = await supabase
+        .from('developer_investments')
+        .insert({
+          user_wallet_address: account.toLowerCase(),
+          project_id: project.id,
+          investment_amount: investment,
+          ownership_percentage: ownershipPercentage,
+          platform_fee: platformFee,
+          net_investment: netInvestment,
+          projected_value: projectedValue,
+          projected_profit: projectedProfit,
+          investment_status: 'active',
+          transaction_hash: `0x${Math.random().toString(16).substr(2, 64)}` // Mock hash for now
+        })
+        .select()
+        .single();
+
+      if (investmentError) {
+        throw new Error('Failed to create investment record');
+      }
+
+      // Update project funding
+      const { error: projectError } = await supabase
+        .from('developer_projects')
+        .update({
+          current_funding: project.currentFunding + investment
+        })
+        .eq('id', project.id);
+
+      if (projectError) {
+        throw new Error('Failed to update project funding');
+      }
+
+      // Create transaction record for tracking
+      const { error: transactionError } = await supabase
+        .from('user_transactions')
+        .insert({
+          user_wallet_address: account.toLowerCase(),
+          transaction_type: 'developer_investment',
+          amount: investment,
+          currency: 'USDT',
+          status: 'completed',
+          transaction_hash: investmentData.transaction_hash,
+          metadata: {
+            project_id: project.id,
+            project_title: project.title,
+            ownership_percentage: ownershipPercentage,
+            investment_id: investmentData.id
+          }
+        });
+
+      if (transactionError) {
+        console.warn('Failed to create transaction record:', transactionError);
+      }
+
+      console.log(`Investment completed: $${investment} in ${project.title}`);
       
       toast({
         title: "Investment Successful!",
-        description: `You've invested $${investment.toLocaleString()} in ${project.title}`,
+        description: `You have invested $${investment.toLocaleString()} in ${project.title}. Ownership: ${ownershipPercentage.toFixed(3)}%`,
       });
       
       onOpenChange(false);
     } catch (error) {
-      console.error('Investment failed:', error);
+      console.error('Investment error:', error);
       toast({
         title: "Investment Failed",
-        description: "There was an error processing your investment. Please try again.",
+        description: error instanceof Error ? error.message : "Something went wrong. Please try again.",
         variant: "destructive",
       });
     } finally {
