@@ -65,8 +65,56 @@ const Developers = () => {
     fetchProjects();
   }, [toast]);
 
-  // Filter projects by status
-  const soldOutStories = projects.filter(p => p.project_status === 'completed');
+  // Mock success stories with compelling metrics
+  const soldOutStories = [
+    {
+      id: 'success-1',
+      title: 'DeFi Liquidity Protocol',
+      creator_name: 'Sarah Chen',
+      description: 'Revolutionary automated market maker with advanced yield farming capabilities.',
+      target_funding: 850000,
+      current_funding: 850000,
+      min_investment: 70000,
+      estimated_yield: 240,
+      image_url: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=800&q=80',
+      timeline: 'Sold out in 4 days',
+      development_time: '6 weeks',
+      profit_percentage: 240,
+      category: 'DeFi'
+    },
+    {
+      id: 'success-2', 
+      title: 'NFT Gaming Marketplace',
+      creator_name: 'Marcus Rodriguez',
+      description: 'Cross-chain gaming marketplace enabling true ownership of in-game assets.',
+      target_funding: 1200000,
+      current_funding: 1200000,
+      min_investment: 70000,
+      estimated_yield: 185,
+      image_url: 'https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?auto=format&fit=crop&w=800&q=80',
+      timeline: 'Sold out in 2.5 weeks',
+      development_time: '8 weeks',
+      profit_percentage: 185,
+      category: 'Gaming'
+    },
+    {
+      id: 'success-3',
+      title: 'Green Energy Oracle',
+      creator_name: 'Elena Vasquez',
+      description: 'Real-time renewable energy data oracle for smart contract verification.',
+      target_funding: 650000,
+      current_funding: 650000,
+      min_investment: 70000,
+      estimated_yield: 156,
+      image_url: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=80',
+      timeline: 'Sold out in 11 days',
+      development_time: '4 weeks',
+      profit_percentage: 156,
+      category: 'Infrastructure'
+    }
+  ];
+
+  // Filter active projects from database
   const currentProjects = projects.filter(p => p.project_status === 'active');
 
   const benefits = [
@@ -216,41 +264,41 @@ const Developers = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {soldOutStories.length > 0 ? soldOutStories.map((project) => (
-              <Card key={project.id} className="group hover:shadow-xl transition-all duration-300 border-border/50 hover:border-primary/20 relative overflow-hidden">
-                {/* Sold out badge */}
-                <div className="absolute top-4 right-4 z-10 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                  COMPLETED
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {soldOutStories.map((project) => (
+              <Card key={project.id} className="group hover:shadow-xl transition-all duration-300 border-border/50 hover:border-green-600/20 relative overflow-hidden bg-gradient-to-br from-green-50/50 to-emerald-50/50">
+                {/* Success badges */}
+                <div className="absolute top-4 right-4 z-10 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
+                  ✅ SOLD OUT
                 </div>
                 
                 <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 rounded-t-lg flex items-center justify-center relative overflow-hidden">
-                  {project.image_url ? (
-                    <img 
-                      src={project.image_url} 
-                      alt={project.title}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="text-muted-foreground">No Image</div>
-                  )}
-                  {/* ROI overlay */}
-                  <div className="absolute bottom-3 left-3 bg-green-600/90 text-white px-2 py-1 rounded text-sm font-bold">
-                    {project.estimated_yield}% Yield
+                  <img 
+                    src={project.image_url} 
+                    alt={project.title}
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Profit overlay */}
+                  <div className="absolute bottom-3 left-3 bg-green-600/95 text-white px-2 py-1 rounded text-sm font-bold shadow-lg">
+                    +{project.profit_percentage}% PROFIT
+                  </div>
+                  {/* Speed overlay */}
+                  <div className="absolute top-3 left-3 bg-blue-600/95 text-white px-2 py-1 rounded text-xs font-bold shadow-lg">
+                    ⚡ {project.timeline}
                   </div>
                 </div>
                 
                 <CardHeader className="pb-3">
                   <div className="flex justify-between items-start mb-2">
-                    <Badge className="bg-green-600/10 text-green-600">
-                      Completed
+                    <Badge className="bg-green-600/20 text-green-700 border border-green-600/30">
+                      🚀 Completed
                     </Badge>
-                    <div className="flex items-center text-sm text-muted-foreground">
+                    <div className="flex items-center text-sm text-green-600 font-semibold">
                       <Clock className="h-4 w-4 mr-1" />
-                      {project.timeline || 'TBD'}
+                      Built in {project.development_time}
                     </div>
                   </div>
-                  <CardTitle className="text-xl group-hover:text-primary transition-colors">
+                  <CardTitle className="text-xl group-hover:text-green-600 transition-colors">
                     {project.title}
                   </CardTitle>
                   <p className="text-sm text-muted-foreground">by {project.creator_name}</p>
@@ -261,38 +309,41 @@ const Developers = () => {
                     {project.description}
                   </p>
                   
-                  {/* Financial highlights */}
-                  <div className="bg-muted/30 rounded-lg p-4 mb-4 space-y-2">
+                  {/* Success metrics */}
+                  <div className="bg-green-50/80 border border-green-200/50 rounded-lg p-4 mb-4 space-y-2">
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Target Funding</span>
+                      <span className="text-sm text-green-700">Total Funding</span>
                       <span className="font-bold text-green-600">${project.target_funding?.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Current Funding</span>
-                      <span className="font-bold">${project.current_funding?.toLocaleString()}</span>
+                      <span className="text-sm text-green-700">Investor Profit</span>
+                      <span className="font-bold text-green-600">+{project.profit_percentage}%</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Min Investment</span>
-                      <span className="font-bold text-green-600">${project.min_investment?.toLocaleString()}</span>
+                      <span className="text-sm text-green-700">Development Time</span>
+                      <span className="font-bold text-green-600">{project.development_time}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-green-700">Sellout Speed</span>
+                      <span className="font-bold text-green-600">{project.timeline}</span>
                     </div>
                   </div>
 
                   <div className="flex flex-wrap gap-1 mb-4">
-                    <Badge variant="secondary" className="text-xs">
-                      {project.category || 'Development'}
+                    <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
+                      {project.category}
+                    </Badge>
+                    <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700">
+                      Fast Delivery
                     </Badge>
                   </div>
 
-                  <Button className="w-full" variant="outline">
-                    View Case Study
+                  <Button className="w-full bg-green-600 hover:bg-green-700 text-white border-none">
+                    📊 View Success Story
                   </Button>
                 </CardContent>
               </Card>
-            )) : (
-              <div className="col-span-full text-center py-8">
-                <p className="text-muted-foreground">No completed projects yet.</p>
-              </div>
-            )}
+            ))}
           </div>
         </div>
       </section>
