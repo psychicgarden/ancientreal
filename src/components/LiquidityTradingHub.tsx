@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { SecondaryMarketplace } from "@/components/SecondaryMarketplace";
-import { CollateralLending } from "@/components/CollateralLending";
+import { EnhancedSecondaryMarketplace } from "@/components/EnhancedSecondaryMarketplace";
+import { EnhancedCollateralLending } from "@/components/EnhancedCollateralLending";
 import { YieldFarmingDashboard } from "@/components/YieldFarmingDashboard";
 import { PeerToPeerTrading } from "@/components/PeerToPeerTrading";
 import { TrendingUp, Handshake, DollarSign, Zap } from "lucide-react";
@@ -44,11 +44,11 @@ export const LiquidityTradingHub = () => {
         </TabsList>
 
         <TabsContent value="marketplace">
-          <SecondaryMarketplace />
+          <EnhancedSecondaryMarketplace />
         </TabsContent>
 
         <TabsContent value="lending">
-          <CollateralLending />
+          <EnhancedCollateralLending />
         </TabsContent>
 
         <TabsContent value="yield-farming">
