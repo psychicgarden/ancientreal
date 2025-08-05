@@ -128,7 +128,7 @@ const Developers = () => {
       estimated_yield: 22,
       project_status: 'funded',
       timeline: '12 months',
-      image_url: '/lovable-uploads/015a9138-e480-455a-85e1-42b34dcc742f.png',
+      image_url: '/src/assets/coworking-mallorca.jpg',
       presale_percentage: 85,
       status_badge: 'Funded - Development Starting',
       units_sold: '8/10',
@@ -148,7 +148,7 @@ const Developers = () => {
       estimated_yield: 28,
       project_status: 'presale_active',
       timeline: '18 months',
-      image_url: '/lovable-uploads/015a9138-e480-455a-85e1-42b34dcc742f.png',
+      image_url: '/src/assets/desert-oasis-morocco.jpg',
       presale_percentage: 70,
       status_badge: 'Presale Active',
       units_sold: '7/10',
@@ -168,7 +168,7 @@ const Developers = () => {
       estimated_yield: 31,
       project_status: 'funded',
       timeline: '15 months',
-      image_url: '/lovable-uploads/015a9138-e480-455a-85e1-42b34dcc742f.png',
+      image_url: '/src/assets/eco-smart-city.jpg',
       presale_percentage: 80,
       status_badge: 'Funded - Development Starting',
       units_sold: '8/10',
@@ -512,7 +512,7 @@ const Developers = () => {
                       className="w-full"
                       onClick={() => handleInvestClick(project)}
                     >
-                      Invest Now - ${project.presale_price?.toLocaleString()}
+                      Invest Now
                     </Button>
                   </CardContent>
                 </Card>
