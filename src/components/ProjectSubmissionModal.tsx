@@ -76,6 +76,7 @@ export const ProjectSubmissionModal: React.FC<ProjectSubmissionModalProps> = ({
   const updateSubmissionStatus = async (status: string) => {
     setIsUpdating(true);
     try {
+      // Update the submission status in the database
       const { error } = await supabase
         .from('project_submissions')
         .update({ 
@@ -87,7 +88,30 @@ export const ProjectSubmissionModal: React.FC<ProjectSubmissionModalProps> = ({
 
       if (error) throw error;
 
-      toast.success(`Project ${status} successfully`);
+      // Send email notification
+      try {
+        console.log('Sending email notification...');
+        const { error: emailError } = await supabase.functions.invoke('send-project-notification', {
+          body: {
+            type: 'status_update',
+            submission: submission,
+            status: status,
+            notes: reviewNotes
+          }
+        });
+
+        if (emailError) {
+          console.error('Email notification error:', emailError);
+          toast.warning(`Project ${status} successfully, but email notification failed`);
+        } else {
+          console.log('Email notification sent successfully');
+          toast.success(`Project ${status} successfully and email sent to creator`);
+        }
+      } catch (emailError) {
+        console.error('Failed to send email notification:', emailError);
+        toast.warning(`Project ${status} successfully, but email notification failed`);
+      }
+
       onSubmissionUpdate();
       onClose();
     } catch (error) {
@@ -108,8 +132,8 @@ export const ProjectSubmissionModal: React.FC<ProjectSubmissionModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden">
-        <DialogHeader className="pb-4">
+      <DialogContent className="max-w-6xl max-h-[95vh] overflow-hidden flex flex-col">
+        <DialogHeader className="pb-4 flex-shrink-0">
           <div className="flex items-start justify-between">
             <div>
               <DialogTitle className="text-2xl font-bold text-foreground">
@@ -131,7 +155,7 @@ export const ProjectSubmissionModal: React.FC<ProjectSubmissionModalProps> = ({
           </div>
         </DialogHeader>
 
-        <div className="overflow-y-auto max-h-[70vh] space-y-6">
+        <div className="overflow-y-auto flex-1 space-y-6 px-1">
           {/* Creator Information */}
           <Card>
             <CardHeader>
