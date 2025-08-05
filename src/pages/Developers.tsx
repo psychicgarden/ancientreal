@@ -80,7 +80,7 @@ const Developers = () => {
       development_time: '18 months',
       roi_percentage: 41,
       quote: "Zero upfront cost. We provided full funding after community validation.",
-      image_url: '/lovable-uploads/a08cf09a-256b-4a80-92cd-1a39e1feb9c9.png'
+      image_url: '/src/assets/bali-jungle-resort.jpg'
     },
     {
       id: 'success-2', 
@@ -95,7 +95,7 @@ const Developers = () => {
       development_time: '24 months',
       roi_percentage: 63,
       quote: "Community funded, DAO approved. Developer kept 60% equity with zero risk.",
-      image_url: '/lovable-uploads/94bc0b5e-1262-40f2-9114-b8e2cdd347c6.png'
+      image_url: '/src/assets/eco-smart-city.jpg'
     },
     {
       id: 'success-3',
@@ -110,7 +110,7 @@ const Developers = () => {
       development_time: '15 months',
       roi_percentage: 42,
       quote: "From idea to fully funded in 45 days. No personal investment required.",
-      image_url: '/lovable-uploads/185a4333-b8ff-4db8-996c-e4c8f07192de.png'
+      image_url: '/src/assets/villa-bali.jpg'
     }
   ];
 

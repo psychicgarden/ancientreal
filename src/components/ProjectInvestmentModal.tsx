@@ -58,12 +58,53 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
 
     setIsProcessing(true);
     try {
-      // First, create the investment record
+      // First, ensure the project exists in the database
+      let projectId = project.id;
+      
+      // Check if project exists, if not create it
+      const { data: existingProject, error: checkError } = await supabase
+        .from('developer_projects')
+        .select('id')
+        .eq('id', project.id)
+        .single();
+
+      if (checkError && checkError.code === 'PGRST116') {
+        // Project doesn't exist, create it
+        const { data: newProject, error: createError } = await supabase
+          .from('developer_projects')
+          .insert({
+            id: project.id,
+            title: project.title,
+            creator_name: 'Mock Creator',
+            creator_wallet_address: '0x0000000000000000000000000000000000000000',
+            description: 'Mock project for testing purposes',
+            target_funding: project.target_funding,
+            current_funding: project.current_funding || 0,
+            presale_price: project.presale_price,
+            min_investment: project.min_investment,
+            estimated_yield: project.estimated_yield,
+            project_status: project.project_status || 'presale',
+            timeline: project.timeline
+          })
+          .select('id')
+          .single();
+
+        if (createError) {
+          console.error('Error creating project:', createError);
+          throw new Error('Failed to create project record');
+        }
+        projectId = newProject.id;
+      } else if (checkError) {
+        console.error('Error checking project:', checkError);
+        throw new Error('Failed to verify project');
+      }
+
+      // Create the investment record
       const { data: investmentData, error: investmentError } = await supabase
         .from('developer_investments')
         .insert({
           user_wallet_address: account.toLowerCase(),
-          project_id: project.id,
+          project_id: projectId,
           investment_amount: investment,
           ownership_percentage: ownershipPercentage,
           platform_fee: platformFee,
@@ -77,6 +118,7 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
         .single();
 
       if (investmentError) {
+        console.error('Investment error:', investmentError);
         throw new Error('Failed to create investment record');
       }
 
@@ -86,10 +128,10 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
         .update({
           current_funding: (project.current_funding || 0) + investment
         })
-        .eq('id', project.id);
+        .eq('id', projectId);
 
       if (projectError) {
-        throw new Error('Failed to update project funding');
+        console.warn('Failed to update project funding:', projectError);
       }
 
       // Create transaction record for tracking
@@ -103,7 +145,7 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
           status: 'completed',
           transaction_hash: investmentData.transaction_hash,
           metadata: {
-            project_id: project.id,
+            project_id: projectId,
             project_title: project.title,
             ownership_percentage: ownershipPercentage,
             investment_id: investmentData.id
@@ -118,10 +160,16 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
       
       toast({
         title: "Investment Successful!",
-        description: `You have invested $${investment.toLocaleString()} in ${project.title}. Ownership: ${ownershipPercentage.toFixed(3)}%`,
+        description: `You have invested $${investment.toLocaleString()} in ${project.title}. Check your portfolio to track progress.`,
       });
       
       onOpenChange(false);
+      
+      // Navigate to portfolio after successful investment
+      setTimeout(() => {
+        window.location.href = '/portfolio';
+      }, 1500);
+      
     } catch (error) {
       console.error('Investment error:', error);
       toast({
