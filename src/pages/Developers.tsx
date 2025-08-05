@@ -137,7 +137,7 @@ const Developers = () => {
       category: 'Real Estate'
     },
     {
-      id: 'riad-retreat',
+      id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
       title: 'Berber Eco Luxury Riad Retreat',
       creator_name: 'Atlas Desert Developments',
       description: 'Authentic Moroccan riad converted into an eco-luxury retreat with traditional architecture and modern sustainability features.',
