@@ -98,7 +98,7 @@ export const ProjectSubmissionForm: React.FC<ProjectSubmissionFormProps> = ({ on
       const documentPaths = await uploadFilesToStorage(walletAddress);
       
       // Submit project data
-      const { error } = await supabase
+      const { data: submissionData, error } = await supabase
         .from('project_submissions')
         .insert({
           creator_wallet_address: walletAddress,
@@ -118,9 +118,20 @@ export const ProjectSubmissionForm: React.FC<ProjectSubmissionFormProps> = ({ on
           market_analysis: data.market_analysis,
           revenue_model: data.revenue_model,
           uploaded_documents: documentPaths,
-        });
+        })
+        .select()
+        .single();
 
       if (error) throw error;
+
+      // Send notification to admin
+      await supabase.functions.invoke('send-project-notification', {
+        body: {
+          type: 'new_submission',
+          submission: submissionData,
+          adminEmail: 'admin@mazunte.io' // Configure this as needed
+        }
+      });
 
       toast.success('Project submitted successfully! We\'ll review it within 5 business days.');
       onClose?.();
