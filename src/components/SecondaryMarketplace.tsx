@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
-import { TrendingUp, DollarSign, ArrowUpDown, Users, Clock, Zap } from "lucide-react";
+import { TrendingUp, DollarSign, ArrowUpDown, Users, Clock, Zap, MapPin, Filter, AlertTriangle } from "lucide-react";
 import { useWallet } from "@/contexts/WalletContext";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import PropertyMap from "./PropertyMap";
+import FractionalInvestmentModal from "./FractionalInvestmentModal";
 
 interface TokenListing {
   id: string;
@@ -29,6 +32,28 @@ export const SecondaryMarketplace = () => {
   const [tradeAmount, setTradeAmount] = useState('');
   const [tradeType, setTradeType] = useState<'buy' | 'sell'>('buy');
   const [isTrading, setIsTrading] = useState(false);
+  const [fractionalProperties, setFractionalProperties] = useState<any[]>([]);
+  const [selectedFractionalProperty, setSelectedFractionalProperty] = useState<any>(null);
+  const [isFractionalModalOpen, setIsFractionalModalOpen] = useState(false);
+
+  // Fetch fractional properties from database
+  useEffect(() => {
+    fetchFractionalProperties();
+  }, []);
+
+  const fetchFractionalProperties = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('property_fractionalization')
+        .select('*')
+        .eq('is_active', true);
+
+      if (error) throw error;
+      setFractionalProperties(data || []);
+    } catch (error) {
+      console.error('Error fetching fractional properties:', error);
+    }
+  };
 
   const tokenListings: TokenListing[] = [
     {
@@ -128,10 +153,60 @@ export const SecondaryMarketplace = () => {
 
       <Tabs defaultValue="market" className="space-y-6">
         <TabsList>
-          <TabsTrigger value="market">Market Overview</TabsTrigger>
-          <TabsTrigger value="trade">Trade Tokens</TabsTrigger>
+          <TabsTrigger value="discovery">Property Discovery</TabsTrigger>
+          <TabsTrigger value="fractional">Fractional Investments</TabsTrigger>
+          <TabsTrigger value="market">Token Trading</TabsTrigger>
           <TabsTrigger value="orderbook">Order Book</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="discovery" className="space-y-4">
+          <PropertyMap onPropertySelect={(property) => {
+            if (property.type === 'fractional') {
+              setSelectedFractionalProperty(property);
+              setIsFractionalModalOpen(true);
+            }
+          }} />
+        </TabsContent>
+
+        <TabsContent value="fractional" className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {fractionalProperties.map((property) => (
+              <Card key={property.id} className="cursor-pointer hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <CardTitle className="flex justify-between items-start">
+                    <span className="text-lg">{property.property_name || 'Property'}</span>
+                    <Badge variant="secondary">Fractional</Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">Original Price:</span>
+                      <span className="font-semibold">${property.original_purchase_price?.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">Speculation:</span>
+                      <span className="font-semibold text-primary">${property.current_speculation_price?.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">Min Investment:</span>
+                      <span className="font-semibold">${property.min_investment}</span>
+                    </div>
+                    <Button 
+                      className="w-full" 
+                      onClick={() => {
+                        setSelectedFractionalProperty(property);
+                        setIsFractionalModalOpen(true);
+                      }}
+                    >
+                      Invest from ${property.min_investment}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
 
         <TabsContent value="market" className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -362,6 +437,12 @@ export const SecondaryMarketplace = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <FractionalInvestmentModal
+        isOpen={isFractionalModalOpen}
+        onOpenChange={setIsFractionalModalOpen}
+        property={selectedFractionalProperty}
+      />
     </div>
   );
 };
