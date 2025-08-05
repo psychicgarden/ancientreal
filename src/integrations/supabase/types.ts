@@ -221,6 +221,96 @@ export type Database = {
           },
         ]
       }
+      project_submissions: {
+        Row: {
+          business_plan: Json | null
+          compliance_status: string | null
+          created_at: string
+          creator_email: string
+          creator_name: string
+          creator_wallet_address: string
+          demo_url: string | null
+          estimated_yield: number
+          funding_deadline: string | null
+          github_repo_url: string | null
+          id: string
+          legal_docs: Json | null
+          market_analysis: string | null
+          max_investment: number | null
+          min_investment: number
+          project_category: string
+          project_description: string
+          project_title: string
+          revenue_model: string | null
+          review_notes: string | null
+          submission_status: string
+          target_funding: number
+          team_info: Json | null
+          technical_docs: Json | null
+          timeline: string | null
+          updated_at: string
+          uploaded_documents: Json | null
+        }
+        Insert: {
+          business_plan?: Json | null
+          compliance_status?: string | null
+          created_at?: string
+          creator_email: string
+          creator_name: string
+          creator_wallet_address: string
+          demo_url?: string | null
+          estimated_yield?: number
+          funding_deadline?: string | null
+          github_repo_url?: string | null
+          id?: string
+          legal_docs?: Json | null
+          market_analysis?: string | null
+          max_investment?: number | null
+          min_investment?: number
+          project_category?: string
+          project_description: string
+          project_title: string
+          revenue_model?: string | null
+          review_notes?: string | null
+          submission_status?: string
+          target_funding: number
+          team_info?: Json | null
+          technical_docs?: Json | null
+          timeline?: string | null
+          updated_at?: string
+          uploaded_documents?: Json | null
+        }
+        Update: {
+          business_plan?: Json | null
+          compliance_status?: string | null
+          created_at?: string
+          creator_email?: string
+          creator_name?: string
+          creator_wallet_address?: string
+          demo_url?: string | null
+          estimated_yield?: number
+          funding_deadline?: string | null
+          github_repo_url?: string | null
+          id?: string
+          legal_docs?: Json | null
+          market_analysis?: string | null
+          max_investment?: number | null
+          min_investment?: number
+          project_category?: string
+          project_description?: string
+          project_title?: string
+          revenue_model?: string | null
+          review_notes?: string | null
+          submission_status?: string
+          target_funding?: number
+          team_info?: Json | null
+          technical_docs?: Json | null
+          timeline?: string | null
+          updated_at?: string
+          uploaded_documents?: Json | null
+        }
+        Relationships: []
+      }
       properties: {
         Row: {
           address: string

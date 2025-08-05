@@ -4,7 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ProjectInvestmentModal } from "@/components/ProjectInvestmentModal";
+import { ProjectSubmissionForm } from "@/components/ProjectSubmissionForm";
 import Header from "@/components/Header";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -29,6 +31,7 @@ const Developers = () => {
   const [loading, setLoading] = useState(true);
   const [selectedProject, setSelectedProject] = useState<any>(null);
   const [investmentModalOpen, setInvestmentModalOpen] = useState(false);
+  const [submissionFormOpen, setSubmissionFormOpen] = useState(false);
 
   // Fetch real projects from database
   useEffect(() => {
@@ -281,7 +284,11 @@ const Developers = () => {
               Skip traditional VCs. Present your blockchain project to our DAO and get funded by the community that will actually use it.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-gradient-to-r from-primary to-accent hover:opacity-90">
+              <Button 
+                size="lg" 
+                className="bg-gradient-to-r from-primary to-accent hover:opacity-90"
+                onClick={() => setSubmissionFormOpen(true)}
+              >
                 Submit Your Project
               </Button>
               <Button size="lg" variant="outline">
@@ -744,6 +751,13 @@ const Developers = () => {
           }}
         />
       )}
+
+      {/* Project Submission Modal */}
+      <Dialog open={submissionFormOpen} onOpenChange={setSubmissionFormOpen}>
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto p-0">
+          <ProjectSubmissionForm onClose={() => setSubmissionFormOpen(false)} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
