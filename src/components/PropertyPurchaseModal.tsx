@@ -61,9 +61,15 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
     try {
       await purchaseProperty(property?.downPayment || 30000);
       toast({
-        title: "Purchase Initiated",
-        description: "Your property purchase transaction has been submitted to the blockchain.",
+        title: "Purchase Successful!",
+        description: "Your property purchase has been completed. Check your portfolio to view your new investment.",
       });
+      
+      // Navigate to portfolio after successful purchase
+      setTimeout(() => {
+        window.location.href = '/portfolio';
+      }, 1500);
+      
       onClose();
     } catch (error) {
       toast({

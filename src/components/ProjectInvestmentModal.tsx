@@ -48,7 +48,7 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
   const projectedValue = netInvestment * 1.15; // 15% markup from presale to public (on net investment)
   const projectedProfit = projectedValue - investment; // Total profit after fee
   const roi = ((projectedValue - investment) / investment) * 100; // ROI on total investment including fee
-  const remainingFunding = (project.target_funding || 0) - (project.current_funding || 0);
+  const remainingFunding = Math.max((project.target_funding || 0) - (project.current_funding || 0), project.min_investment || 100);
 
   const handleInvestment = async () => {
     if (!isConnected || !account) {
