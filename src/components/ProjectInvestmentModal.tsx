@@ -83,7 +83,7 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
             presale_price: project.presale_price,
             min_investment: project.min_investment,
             estimated_yield: project.estimated_yield,
-            project_status: project.project_status || 'presale',
+            project_status: project.project_status === 'presale_active' ? 'presale' : project.project_status || 'active',
             timeline: project.timeline
           })
           .select('id')
