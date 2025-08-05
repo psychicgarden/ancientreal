@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      appreciation_events: {
+        Row: {
+          ancient_share: number
+          appraised_value: number
+          buyer_share: number
+          capped_appreciation_value: number
+          created_at: string
+          event_date: string
+          id: string
+          lender_share: number
+          original_price: number
+          property_id: string
+          status: string
+        }
+        Insert: {
+          ancient_share: number
+          appraised_value: number
+          buyer_share: number
+          capped_appreciation_value: number
+          created_at?: string
+          event_date?: string
+          id?: string
+          lender_share: number
+          original_price: number
+          property_id: string
+          status?: string
+        }
+        Update: {
+          ancient_share?: number
+          appraised_value?: number
+          buyer_share?: number
+          capped_appreciation_value?: number
+          created_at?: string
+          event_date?: string
+          id?: string
+          lender_share?: number
+          original_price?: number
+          property_id?: string
+          status?: string
+        }
+        Relationships: []
+      }
       developer_investments: {
         Row: {
           created_at: string
@@ -167,6 +209,51 @@ export type Database = {
           target_funding?: number
           timeline?: string | null
           title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      fractional_investments: {
+        Row: {
+          created_at: string
+          id: string
+          investment_amount: number
+          investment_date: string
+          investor_wallet_address: string
+          original_property_price: number
+          ownership_percentage: number
+          property_id: string
+          speculation_price: number | null
+          status: string
+          token_amount: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          investment_amount: number
+          investment_date?: string
+          investor_wallet_address: string
+          original_property_price: number
+          ownership_percentage: number
+          property_id: string
+          speculation_price?: number | null
+          status?: string
+          token_amount: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          investment_amount?: number
+          investment_date?: string
+          investor_wallet_address?: string
+          original_property_price?: number
+          ownership_percentage?: number
+          property_id?: string
+          speculation_price?: number | null
+          status?: string
+          token_amount?: number
           updated_at?: string
         }
         Relationships: []
@@ -332,6 +419,51 @@ export type Database = {
           id?: number
           name?: string
           price?: number
+        }
+        Relationships: []
+      }
+      property_fractionalization: {
+        Row: {
+          created_at: string
+          current_speculation_price: number
+          id: string
+          is_active: boolean
+          min_investment: number
+          original_purchase_price: number
+          owner_wallet_address: string
+          property_id: string
+          tokens_sold: number
+          total_tokens_available: number
+          updated_at: string
+          year_10_trigger_date: string
+        }
+        Insert: {
+          created_at?: string
+          current_speculation_price: number
+          id?: string
+          is_active?: boolean
+          min_investment?: number
+          original_purchase_price: number
+          owner_wallet_address: string
+          property_id: string
+          tokens_sold?: number
+          total_tokens_available?: number
+          updated_at?: string
+          year_10_trigger_date: string
+        }
+        Update: {
+          created_at?: string
+          current_speculation_price?: number
+          id?: string
+          is_active?: boolean
+          min_investment?: number
+          original_purchase_price?: number
+          owner_wallet_address?: string
+          property_id?: string
+          tokens_sold?: number
+          total_tokens_available?: number
+          updated_at?: string
+          year_10_trigger_date?: string
         }
         Relationships: []
       }
@@ -526,6 +658,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_appreciation_distribution: {
+        Args: { original_price: number; appraised_value: number }
+        Returns: {
+          capped_appreciation: number
+          ancient_share: number
+          lender_share: number
+          buyer_share: number
+        }[]
+      }
       calculate_daily_yield: {
         Args: Record<PropertyKey, never>
         Returns: undefined
