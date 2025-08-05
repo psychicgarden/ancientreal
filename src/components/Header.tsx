@@ -90,6 +90,9 @@ function Header() {
                 <Link to="/developers" className="px-3 py-2 text-sm text-foreground/60 hover:text-foreground transition-colors">
                   Developers
                 </Link>
+                <Link to="/admin/projects" className="px-3 py-2 text-sm text-foreground/60 hover:text-foreground transition-colors">
+                  Admin
+                </Link>
               </div>
             </nav>
 
@@ -243,9 +246,12 @@ function Header() {
                   <Link to="/community" className="block px-3 py-2 text-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-lg transition-colors">
                     Community
                   </Link>
-                  <Link to="/developers" className="block px-3 py-2 text-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-lg transition-colors">
-                    Developers
-                  </Link>
+                   <Link to="/developers" className="block px-3 py-2 text-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-lg transition-colors">
+                     Developers
+                   </Link>
+                   <Link to="/admin/projects" className="block px-3 py-2 text-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-lg transition-colors">
+                     Admin
+                   </Link>
                 </div>
               </nav>
             </div>

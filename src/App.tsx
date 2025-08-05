@@ -15,6 +15,7 @@ import Developers from "./pages/Developers";
 import SmartContractTest from "./pages/SmartContractTest";
 import LegalPortal from "./pages/LegalPortal";
 import AdminProjects from "./pages/AdminProjects";
+import TestRoute from "./pages/TestRoute";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -37,6 +38,7 @@ const App = () => (
             <Route path="/developers" element={<Developers />} />
             <Route path="/legal" element={<LegalPortal />} />
             <Route path="/admin/projects" element={<AdminProjects />} />
+            <Route path="/test-route" element={<TestRoute />} />
             <Route path="/test" element={<SmartContractTest />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
