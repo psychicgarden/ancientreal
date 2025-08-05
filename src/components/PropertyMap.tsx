@@ -103,11 +103,11 @@ const PropertyMap: React.FC<PropertyMapProps> = ({ onPropertySelect }) => {
   useEffect(() => {
     if (!mapContainer.current) return;
 
-    // For demo purposes, using a placeholder token
+    // For demo purposes, using a working demo token
     // In production, this should come from environment variables
     const MAPBOX_TOKEN = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
     
-    if (!MAPBOX_TOKEN || MAPBOX_TOKEN.includes('placeholder')) {
+    if (!MAPBOX_TOKEN) {
       // Fallback UI when no Mapbox token
       return;
     }
