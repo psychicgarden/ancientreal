@@ -5,9 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Zap, DollarSign, TrendingUp, BarChart3, Clock, Coins } from "lucide-react";
+import { Zap, DollarSign, TrendingUp, BarChart3, Clock, Coins, Building2, Calendar } from "lucide-react";
 import { useWallet } from "@/contexts/WalletContext";
 import { useToast } from "@/hooks/use-toast";
+import { PropertyAppreciationMarketplace } from "@/components/PropertyAppreciationMarketplace";
 
 interface YieldPool {
   id: string;
@@ -44,47 +45,33 @@ export const YieldFarmingDashboard = () => {
   const [isWithdrawing, setIsWithdrawing] = useState(false);
   const [isClaimingRewards, setIsClaimingRewards] = useState(false);
 
-  const yieldPools: YieldPool[] = [
+  const realEstateYieldPools: YieldPool[] = [
     {
-      id: 'pool-bahia',
-      name: 'Bahia Loft Staking',
-      stakingToken: 'BAHIA',
-      rewardToken: 'BOHO',
-      apy: 18.5,
-      totalStaked: 2500000,
-      totalRewards: 185000,
-      lockPeriod: 30,
-      earlyWithdrawalFee: 5,
-      userStaked: 1250,
-      userRewards: 45.2,
-      autoCompounding: true
-    },
-    {
-      id: 'pool-tulum',
-      name: 'Tulum Penthouse Staking',
-      stakingToken: 'TULUM',
-      rewardToken: 'BOHO',
-      apy: 22.3,
-      totalStaked: 1800000,
-      totalRewards: 156000,
-      lockPeriod: 45,
-      earlyWithdrawalFee: 7,
-      userStaked: 890,
-      userRewards: 32.1,
+      id: 'pool-developer',
+      name: 'Developer Investment Pool',
+      stakingToken: 'USDT',
+      rewardToken: 'DEV-TOKENS',
+      apy: 13.5,
+      totalStaked: 5200000,
+      totalRewards: 702000,
+      lockPeriod: 730, // 24 months
+      earlyWithdrawalFee: 0, // Can sell on secondary market instead
+      userStaked: 2500,
+      userRewards: 125.3,
       autoCompounding: false
     },
     {
-      id: 'pool-lp',
-      name: 'BOHO-USDT LP Staking',
-      stakingToken: 'BOHO-USDT-LP',
-      rewardToken: 'BOHO',
-      apy: 45.8,
-      totalStaked: 850000,
-      totalRewards: 245000,
-      lockPeriod: 90,
-      earlyWithdrawalFee: 10,
-      userStaked: 2340,
-      userRewards: 125.7,
+      id: 'pool-rental',
+      name: 'Rental Income Pool',
+      stakingToken: 'PROP-TOKENS',
+      rewardToken: 'RENTAL-YIELD',
+      apy: 7.2,
+      totalStaked: 3100000,
+      totalRewards: 223200,
+      lockPeriod: 365, // 12 months
+      earlyWithdrawalFee: 2,
+      userStaked: 1800,
+      userRewards: 68.5,
       autoCompounding: true
     }
   ];
@@ -209,7 +196,7 @@ export const YieldFarmingDashboard = () => {
       // Simulate smart contract claim rewards transaction
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      const pool = yieldPools.find(p => p.id === poolId);
+      const pool = realEstateYieldPools.find(p => p.id === poolId);
       
       toast({
         title: "Rewards Claimed",
@@ -300,16 +287,25 @@ export const YieldFarmingDashboard = () => {
 
       <Tabs defaultValue="pools" className="space-y-6">
         <TabsList>
-          <TabsTrigger value="pools">Available Pools</TabsTrigger>
+          <TabsTrigger value="pools">Investment Pools</TabsTrigger>
+          <TabsTrigger value="appreciation">Property Appreciation</TabsTrigger>
           <TabsTrigger value="positions">My Positions</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
 
         <TabsContent value="pools" className="space-y-4">
+          <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+            <h3 className="font-semibold text-blue-800 mb-2">Real Estate Investment Pools</h3>
+            <p className="text-sm text-blue-700">
+              Developer investments are locked for 24 months but can be traded on the secondary market. 
+              Rental income pools provide steady monthly distributions from completed properties.
+            </p>
+          </div>
+          
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Pool Selection */}
             <div className="space-y-4">
-              {yieldPools.map((pool) => (
+              {realEstateYieldPools.map((pool) => (
                 <Card 
                   key={pool.id}
                   className={`cursor-pointer transition-all ${
@@ -337,7 +333,10 @@ export const YieldFarmingDashboard = () => {
                       </div>
                       <div>
                         <div className="text-muted-foreground">Lock Period</div>
-                        <div className="font-semibold">{pool.lockPeriod} days</div>
+                        <div className="font-semibold flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          {pool.lockPeriod >= 365 ? `${Math.round(pool.lockPeriod / 365)} years` : `${pool.lockPeriod} days`}
+                        </div>
                       </div>
                       <div>
                         <div className="text-muted-foreground">Your Stake</div>
@@ -372,19 +371,34 @@ export const YieldFarmingDashboard = () => {
                       </div>
                       <div>
                         <div className="text-muted-foreground">Lock Period</div>
-                        <div className="font-semibold">{selectedPool.lockPeriod} days</div>
-                      </div>
-                      <div>
-                        <div className="text-muted-foreground">Early Exit Fee</div>
-                        <div className="font-semibold">{selectedPool.earlyWithdrawalFee}%</div>
-                      </div>
-                      <div>
-                        <div className="text-muted-foreground">Auto-Compound</div>
                         <div className="font-semibold">
-                          {selectedPool.autoCompounding ? 'Enabled' : 'Manual'}
+                          {selectedPool.lockPeriod >= 365 ? `${Math.round(selectedPool.lockPeriod / 365)} years` : `${selectedPool.lockPeriod} days`}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-muted-foreground">
+                          {selectedPool.id === 'pool-developer' ? 'Secondary Market' : 'Early Exit Fee'}
+                        </div>
+                        <div className="font-semibold">
+                          {selectedPool.id === 'pool-developer' ? 'Available' : `${selectedPool.earlyWithdrawalFee}%`}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-muted-foreground">Distribution</div>
+                        <div className="font-semibold">
+                          {selectedPool.id === 'pool-developer' ? 'Project Completion' : 'Monthly'}
                         </div>
                       </div>
                     </div>
+                    
+                    {selectedPool.id === 'pool-developer' && (
+                      <div className="bg-yellow-50 p-3 rounded-lg">
+                        <div className="text-sm text-yellow-800">
+                          <strong>Developer Pool:</strong> 24-month lock ensures project funding stability. 
+                          You can trade your tokens on the secondary marketplace for liquidity.
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <div>
@@ -447,6 +461,10 @@ export const YieldFarmingDashboard = () => {
               </Card>
             )}
           </div>
+        </TabsContent>
+
+        <TabsContent value="appreciation" className="space-y-4">
+          <PropertyAppreciationMarketplace />
         </TabsContent>
 
         <TabsContent value="positions" className="space-y-4">
@@ -514,7 +532,7 @@ export const YieldFarmingDashboard = () => {
                     variant="outline" 
                     size="sm"
                     onClick={() => {
-                      setSelectedPool(yieldPools.find(p => p.id === position.poolId) || null);
+                      setSelectedPool(realEstateYieldPools.find(p => p.id === position.poolId) || null);
                       setStakeAmount('');
                     }}
                   >
