@@ -30,8 +30,8 @@ const handler = async (req: Request): Promise<Response> => {
       // Send notification to admin about new submission
       const adminEmailAddress = adminEmail || "admin@mazunte.io"; // Default admin email
       
-      await resend.emails.send({
-        from: "Mazunte Platform <submissions@mazunte.io>",
+      const emailResponse = await resend.emails.send({
+        from: "Mazunte Platform <onboarding@resend.dev>",
         to: [adminEmailAddress],
         subject: `New Project Submission: ${submission.project_title}`,
         html: `
@@ -90,15 +90,15 @@ const handler = async (req: Request): Promise<Response> => {
         `,
       });
 
-      console.log("Admin notification sent successfully");
+      console.log("Admin notification sent successfully:", emailResponse);
 
     } else if (type === 'status_update') {
       // Send status update to project creator
       const statusMessage = getStatusMessage(status);
       const statusColor = getStatusColor(status);
       
-      await resend.emails.send({
-        from: "Mazunte Platform <notifications@mazunte.io>",
+      const statusEmailResponse = await resend.emails.send({
+        from: "Mazunte Platform <onboarding@resend.dev>",
         to: [submission.creator_email],
         subject: `Project Submission Update: ${submission.project_title}`,
         html: `
@@ -143,7 +143,7 @@ const handler = async (req: Request): Promise<Response> => {
         `,
       });
 
-      console.log("Status update notification sent successfully");
+      console.log("Status update notification sent successfully:", statusEmailResponse);
     }
 
     return new Response(

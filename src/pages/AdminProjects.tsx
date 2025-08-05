@@ -20,7 +20,8 @@ import {
   XCircle, 
   AlertCircle,
   RefreshCw,
-  FileText
+  FileText,
+  Home
 } from 'lucide-react';
 
 interface ProjectSubmission {
@@ -207,10 +208,16 @@ const AdminProjects = () => {
             </h1>
             <p className="text-muted-foreground mt-1">Review and manage project submissions</p>
           </div>
-          <Button onClick={fetchSubmissions} variant="outline" className="self-start md:self-auto">
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Refresh
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={() => window.location.href = '/'} variant="outline" className="self-start md:self-auto">
+              <Home className="w-4 h-4 mr-2" />
+              Return to Home
+            </Button>
+            <Button onClick={fetchSubmissions} variant="outline" className="self-start md:self-auto">
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Refresh
+            </Button>
+          </div>
         </div>
 
         {/* Stats Cards */}

@@ -273,21 +273,111 @@ export const ProjectSubmissionModal: React.FC<ProjectSubmissionModalProps> = ({
                 {submission.market_analysis && (
                   <div>
                     <div className="text-sm font-medium text-muted-foreground mb-1">Market Analysis</div>
-                    <p className="text-sm leading-relaxed">{submission.market_analysis}</p>
+                    <div className="text-sm leading-relaxed bg-muted/50 p-3 rounded border">{submission.market_analysis}</div>
                   </div>
                 )}
                 {submission.revenue_model && (
                   <div>
                     <div className="text-sm font-medium text-muted-foreground mb-1">Revenue Model</div>
-                    <p className="text-sm leading-relaxed">{submission.revenue_model}</p>
+                    <div className="text-sm leading-relaxed bg-muted/50 p-3 rounded border">{submission.revenue_model}</div>
                   </div>
                 )}
                 {submission.timeline && (
                   <div>
-                    <div className="text-sm font-medium text-muted-foreground mb-1">Timeline</div>
-                    <p className="text-sm leading-relaxed">{submission.timeline}</p>
+                    <div className="text-sm font-medium text-muted-foreground mb-1">Development Timeline</div>
+                    <div className="text-sm leading-relaxed bg-muted/50 p-3 rounded border">{submission.timeline}</div>
                   </div>
                 )}
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Team Information */}
+          {submission.team_info && Object.keys(submission.team_info).length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="w-5 h-5" />
+                  Team Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="bg-muted/50 p-4 rounded border">
+                  <pre className="text-sm whitespace-pre-wrap">{JSON.stringify(submission.team_info, null, 2)}</pre>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Business Plan */}
+          {submission.business_plan && Object.keys(submission.business_plan).length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Building className="w-5 h-5" />
+                  Business Plan
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="bg-muted/50 p-4 rounded border">
+                  <pre className="text-sm whitespace-pre-wrap">{JSON.stringify(submission.business_plan, null, 2)}</pre>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Technical Documentation */}
+          {submission.technical_docs && Object.keys(submission.technical_docs).length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Github className="w-5 h-5" />
+                  Technical Documentation
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="bg-muted/50 p-4 rounded border">
+                  <pre className="text-sm whitespace-pre-wrap">{JSON.stringify(submission.technical_docs, null, 2)}</pre>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Legal Documents */}
+          {submission.legal_docs && Object.keys(submission.legal_docs).length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Shield className="w-5 h-5" />
+                  Legal Documentation
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="bg-muted/50 p-4 rounded border">
+                  <pre className="text-sm whitespace-pre-wrap">{JSON.stringify(submission.legal_docs, null, 2)}</pre>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Uploaded Documents */}
+          {submission.uploaded_documents && submission.uploaded_documents.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="w-5 h-5" />
+                  Uploaded Documents
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {submission.uploaded_documents.map((docPath: string, index: number) => (
+                    <div key={index} className="flex items-center gap-2 p-2 bg-muted/50 rounded border">
+                      <FileText className="w-4 h-4 text-primary" />
+                      <span className="text-sm font-mono">{docPath}</span>
+                    </div>
+                  ))}
+                </div>
               </CardContent>
             </Card>
           )}
