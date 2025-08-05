@@ -43,25 +43,41 @@ const AdminProjects = () => {
   const [selectedSubmission, setSelectedSubmission] = useState<ProjectSubmission | null>(null);
   const [reviewNotes, setReviewNotes] = useState('');
   const [newStatus, setNewStatus] = useState('');
+  const [error, setError] = useState<string | null>(null);
+
+  console.log('AdminProjects component rendered', { submissions: submissions.length, loading, error });
 
   useEffect(() => {
+    console.log('AdminProjects useEffect triggered');
     fetchSubmissions();
   }, []);
 
   const fetchSubmissions = async () => {
+    console.log('fetchSubmissions called');
+    setError(null);
     try {
+      console.log('Attempting to fetch from Supabase...');
       const { data, error } = await supabase
         .from('project_submissions')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      console.log('Supabase response:', { data, error, dataLength: data?.length });
+
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
+      
       setSubmissions(data || []);
+      console.log('Submissions set successfully:', data?.length || 0);
     } catch (error) {
       console.error('Error fetching submissions:', error);
+      setError(error instanceof Error ? error.message : 'Unknown error');
       toast.error('Failed to load project submissions');
     } finally {
       setLoading(false);
+      console.log('Loading set to false');
     }
   };
 
@@ -140,6 +156,22 @@ const AdminProjects = () => {
     }
   };
 
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background p-8">
+        <div className="max-w-7xl mx-auto">
+          <Card>
+            <CardContent className="text-center py-12">
+              <h3 className="text-lg font-medium mb-2 text-red-500">Error Loading Submissions</h3>
+              <p className="text-muted-foreground mb-4">{error}</p>
+              <Button onClick={fetchSubmissions}>Try Again</Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background p-8">
@@ -156,6 +188,8 @@ const AdminProjects = () => {
       </div>
     );
   }
+
+  console.log('Rendering main component with submissions:', submissions.length);
 
   return (
     <div className="min-h-screen bg-background p-8">
@@ -178,21 +212,29 @@ const AdminProjects = () => {
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-lg border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Project</TableHead>
-                <TableHead>Creator</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Funding Target</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Submitted</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {submissions.map((submission) => (
+        {submissions.length === 0 ? (
+          <Card>
+            <CardContent className="text-center py-12">
+              <h3 className="text-lg font-medium mb-2">No Project Submissions Yet</h3>
+              <p className="text-muted-foreground">When developers submit projects, they will appear here for review.</p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="overflow-hidden rounded-lg border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Project</TableHead>
+                  <TableHead>Creator</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead>Funding Target</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Submitted</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {submissions.map((submission) => (
                 <TableRow key={submission.id}>
                   <TableCell>
                     <div>
@@ -428,16 +470,7 @@ const AdminProjects = () => {
               ))}
             </TableBody>
           </Table>
-        </div>
-
-        {submissions.length === 0 && (
-          <Card>
-            <CardContent className="text-center py-12">
-              <Users className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium mb-2">No project submissions yet</h3>
-              <p className="text-muted-foreground">Project submissions will appear here for review.</p>
-            </CardContent>
-          </Card>
+          </div>
         )}
       </div>
     </div>
