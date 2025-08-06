@@ -1,3 +1,4 @@
+
 import { ethers } from 'ethers';
 import { CONTRACTS, NETWORK_CONFIG } from '@/lib/contracts';
 
@@ -56,18 +57,11 @@ export class Web3Integration {
       this.signer
     );
 
-    // Secondary Marketplace (AMM + Orderbook)
-    // NOTE: Make sure to set CONTRACTS.SECONDARY_MARKETPLACE.address to your deployed address
-    const marketplaceCfg = (CONTRACTS as any).SECONDARY_MARKETPLACE;
-    if (marketplaceCfg && marketplaceCfg.address) {
-      // @ts-ignore - dynamic assignment
-      this.contracts.secondaryMarketplace = new ethers.Contract(
-        marketplaceCfg.address,
-        marketplaceCfg.abi,
-        this.signer
-      );
-    }
-  }
+    this.contracts.secondaryMarketplace = new ethers.Contract(
+      CONTRACTS.SECONDARY_MARKETPLACE.address,
+      CONTRACTS.SECONDARY_MARKETPLACE.abi,
+      this.signer
+    );
   }
 
   async getAccount(): Promise<string> {
@@ -155,6 +149,8 @@ export class Web3Integration {
     nextPaymentDue: bigint;
     missedPayments: bigint;
     totalPaid: bigint;
+    totalLateFees: bigint;
+    mortgageId: bigint;
     isActive: boolean;
     isForeclosed: boolean;
     isCompleted: boolean;
@@ -168,6 +164,7 @@ export class Web3Integration {
     currentValue: bigint;
     totalDownPayments: bigint;
     appreciationValue: bigint;
+    totalRentalIncomeGenerated: bigint;
     fullyOwned: boolean;
   }> {
     return await this.contracts.mazunteMortgage.getPropertyStatus();
@@ -202,7 +199,60 @@ export class Web3Integration {
   }
 
   async activateMortgage(): Promise<ethers.ContractTransactionResponse> {
-    return await this.contracts.mazunteMortgage.activateMortgage();
+    return await this.contracts.mazunteMortgage.confirmMortgageActivation();
+  }
+
+  // Secondary Marketplace functions
+  async createPool(
+    propertyToken: string,
+    tokenId: number,
+    baseToken: string,
+    feeRate: number,
+    priceImpactThreshold: number
+  ): Promise<ethers.ContractTransactionResponse> {
+    return await this.contracts.secondaryMarketplace.createPool(
+      propertyToken,
+      tokenId,
+      baseToken,
+      feeRate,
+      priceImpactThreshold
+    );
+  }
+
+  async addLiquidity(
+    poolId: number,
+    propertyAmount: string,
+    baseAmount: string
+  ): Promise<ethers.ContractTransactionResponse> {
+    return await this.contracts.secondaryMarketplace.addLiquidity(
+      poolId,
+      ethers.parseUnits(propertyAmount, 18),
+      ethers.parseUnits(baseAmount, 6)
+    );
+  }
+
+  async swapTokens(
+    poolId: number,
+    propertyToBase: boolean,
+    amountIn: string,
+    minAmountOut: string
+  ): Promise<ethers.ContractTransactionResponse> {
+    return await this.contracts.secondaryMarketplace.swapTokens(
+      poolId,
+      propertyToBase,
+      ethers.parseUnits(amountIn, propertyToBase ? 18 : 6),
+      ethers.parseUnits(minAmountOut, propertyToBase ? 6 : 18)
+    );
+  }
+
+  async getCurrentPrice(poolId: number): Promise<string> {
+    const price = await this.contracts.secondaryMarketplace.getCurrentPrice(poolId);
+    return ethers.formatUnits(price, 18);
+  }
+
+  async getUserLPTokens(poolId: number, user: string): Promise<string> {
+    const tokens = await this.contracts.secondaryMarketplace.getUserLPTokens(poolId, user);
+    return ethers.formatUnits(tokens, 18);
   }
 
   // Event listeners
