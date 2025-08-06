@@ -467,6 +467,93 @@ export type Database = {
         }
         Relationships: []
       }
+      secondary_orders: {
+        Row: {
+          created_at: string
+          expiry: string | null
+          id: string
+          order_type: string
+          owner_wallet_address: string
+          price_per_token: number
+          property_fractionalization_id: string
+          status: string
+          token_amount: number
+          tokens_filled: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          expiry?: string | null
+          id?: string
+          order_type: string
+          owner_wallet_address: string
+          price_per_token: number
+          property_fractionalization_id: string
+          status?: string
+          token_amount: number
+          tokens_filled?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          expiry?: string | null
+          id?: string
+          order_type?: string
+          owner_wallet_address?: string
+          price_per_token?: number
+          property_fractionalization_id?: string
+          status?: string
+          token_amount?: number
+          tokens_filled?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      secondary_trades: {
+        Row: {
+          buyer_wallet_address: string
+          created_at: string
+          id: string
+          order_id: string
+          price_per_token: number
+          property_fractionalization_id: string
+          seller_wallet_address: string
+          status: string
+          token_amount: number
+          total_cost: number
+          transaction_hash: string | null
+          updated_at: string
+        }
+        Insert: {
+          buyer_wallet_address: string
+          created_at?: string
+          id?: string
+          order_id: string
+          price_per_token: number
+          property_fractionalization_id: string
+          seller_wallet_address: string
+          status?: string
+          token_amount: number
+          total_cost: number
+          transaction_hash?: string | null
+          updated_at?: string
+        }
+        Update: {
+          buyer_wallet_address?: string
+          created_at?: string
+          id?: string
+          order_id?: string
+          price_per_token?: number
+          property_fractionalization_id?: string
+          seller_wallet_address?: string
+          status?: string
+          token_amount?: number
+          total_cost?: number
+          transaction_hash?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       staking_transactions: {
         Row: {
           amount: number

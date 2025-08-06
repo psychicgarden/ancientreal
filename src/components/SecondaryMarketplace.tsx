@@ -13,7 +13,7 @@ import PropertyMap from "./PropertyMap";
 import FractionalInvestmentModal from "./FractionalInvestmentModal";
 
 interface TokenListing {
-  id: string;
+  id: string; // display id
   propertyName: string;
   tokenSymbol: string;
   price: number;
@@ -23,10 +23,15 @@ interface TokenListing {
   totalSupply: number;
   marketCap: number;
   apy: number;
+  // Added fields for real secondary orders
+  propertyFractionalizationId: string;
+  orderId: string;
+  availableAmount: number;
+  ownerWalletAddress?: string;
 }
 
 export const SecondaryMarketplace = () => {
-  const { isConnected, connectWallet } = useWallet();
+  const { isConnected, connectWallet, account } = useWallet();
   const { toast } = useToast();
   const [selectedToken, setSelectedToken] = useState<TokenListing | null>(null);
   const [tradeAmount, setTradeAmount] = useState('');
@@ -35,114 +40,156 @@ export const SecondaryMarketplace = () => {
   const [fractionalProperties, setFractionalProperties] = useState<any[]>([]);
   const [selectedFractionalProperty, setSelectedFractionalProperty] = useState<any>(null);
   const [isFractionalModalOpen, setIsFractionalModalOpen] = useState(false);
+  const [tokenListings, setTokenListings] = useState<TokenListing[]>([]);
 
-  // Fetch fractional properties from database
-  useEffect(() => {
-    fetchFractionalProperties();
-  }, []);
+// Fetch fractional properties and open secondary orders
+useEffect(() => {
+  fetchFractionalProperties();
+  fetchOpenOrders();
+}, []);
 
-  const fetchFractionalProperties = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('property_fractionalization')
-        .select('*')
-        .eq('is_active', true);
+const fetchFractionalProperties = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('property_fractionalization')
+      .select('*')
+      .eq('is_active', true);
 
-      if (error) throw error;
-      setFractionalProperties(data || []);
-    } catch (error) {
-      console.error('Error fetching fractional properties:', error);
-    }
-  };
+    if (error) throw error;
+    setFractionalProperties(data || []);
+  } catch (error) {
+    console.error('Error fetching fractional properties:', error);
+  }
+};
 
-  const tokenListings: TokenListing[] = [
-    {
-      id: 'BAHIA-001',
-      propertyName: 'Bahia Artist Loft',
-      tokenSymbol: 'BAHIA',
-      price: 1650,
-      priceChange24h: 2.3,
-      volume24h: 45000,
-      liquidity: 1200000,
-      totalSupply: 100,
-      marketCap: 165000,
-      apy: 14.2
-    },
-    {
-      id: 'TULUM-001', 
-      propertyName: 'Tulum Beach Penthouse',
-      tokenSymbol: 'TULUM',
-      price: 1900,
-      priceChange24h: -1.2,
-      volume24h: 32000,
-      liquidity: 950000,
-      totalSupply: 100,
-      marketCap: 190000,
-      apy: 16.8
-    },
-    {
-      id: 'SANTORINI-001',
-      propertyName: 'Santorini Caldera View',
-      tokenSymbol: 'SANTORINI',
-      price: 1780,
-      priceChange24h: 4.1,
-      volume24h: 28000,
-      liquidity: 890000,
-      totalSupply: 100,
-      marketCap: 178000,
-      apy: 15.5
-    }
-  ];
+const fetchOpenOrders = async () => {
+  try {
+    const { data: orders, error } = await supabase
+      .from('secondary_orders')
+      .select('*')
+      .eq('status', 'open')
+      .order('created_at', { ascending: false });
 
-  const handleTrade = async () => {
-    if (!selectedToken || !tradeAmount || !isConnected) {
-      toast({
-        title: "Connection Required",
-        description: "Please connect your wallet to trade",
-        variant: "destructive"
+    if (error) throw error;
+
+    const listings: TokenListing[] = (orders || []).map((o: any) => {
+      const propertyName = `Property ${String(o.property_fractionalization_id).slice(0, 6)}`;
+      return {
+        id: o.id,
+        propertyName,
+        tokenSymbol: 'PROP',
+        price: Number(o.price_per_token) || 0,
+        priceChange24h: 0,
+        volume24h: 0,
+        liquidity: 0,
+        totalSupply: 0,
+        marketCap: 0,
+        apy: 0,
+        propertyFractionalizationId: o.property_fractionalization_id,
+        orderId: o.id,
+        availableAmount: Math.max(0, Number(o.token_amount) - Number(o.tokens_filled || 0)),
+        ownerWalletAddress: o.owner_wallet_address
+      } as TokenListing;
+    });
+
+    setTokenListings(listings);
+  } catch (error) {
+    console.error('Error fetching secondary orders:', error);
+  }
+};
+
+// token listings are loaded from Supabase secondary_orders into state
+
+const handleTrade = async () => {
+  if (!selectedToken || !tradeAmount || !isConnected) {
+    toast({
+      title: "Connection Required",
+      description: "Please connect your wallet to trade",
+      variant: "destructive"
+    });
+    return;
+  }
+
+  const amount = parseFloat(tradeAmount);
+  if (isNaN(amount) || amount <= 0) {
+    toast({ title: "Invalid amount", description: "Enter a valid number of tokens", variant: "destructive" });
+    return;
+  }
+  
+  setIsTrading(true);
+  try {
+    if (tradeType === 'buy') {
+      if (amount > (selectedToken.availableAmount || 0)) {
+        toast({ title: "Not enough available", description: "Order doesn't have that many tokens available", variant: "destructive" });
+        setIsTrading(false);
+        return;
+      }
+
+      const totalCost = amount * selectedToken.price;
+
+      const { error: tradeErr } = await supabase.from('secondary_trades').insert({
+        order_id: selectedToken.orderId,
+        property_fractionalization_id: selectedToken.propertyFractionalizationId,
+        buyer_wallet_address: account || 'unknown',
+        seller_wallet_address: selectedToken.ownerWalletAddress || 'unknown',
+        token_amount: amount,
+        price_per_token: selectedToken.price,
+        total_cost: totalCost,
+        status: 'completed'
       });
-      return;
-    }
-    
-    setIsTrading(true);
-    
-    try {
-      // Simulate smart contract trade execution
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      const totalCost = parseFloat(tradeAmount) * selectedToken.price;
-      const fee = totalCost * 0.003;
-      
-      toast({
-        title: "Trade Executed",
-        description: `Successfully ${tradeType === 'buy' ? 'purchased' : 'sold'} ${tradeAmount} ${selectedToken.tokenSymbol} for $${totalCost.toFixed(2)}`,
-      });
-      
-      // Store trade in localStorage for portfolio tracking
-      const trades = JSON.parse(localStorage.getItem('userTrades') || '[]');
-      const newTrade = {
-        id: Date.now(),
-        type: tradeType,
-        token: selectedToken.tokenSymbol,
-        amount: parseFloat(tradeAmount),
-        price: selectedToken.price,
-        value: totalCost,
-        created: new Date().toISOString()
-      };
-      trades.push(newTrade);
-      localStorage.setItem('userTrades', JSON.stringify(trades));
-      
+      if (tradeErr) throw tradeErr;
+
+      const { data: orderRow, error: orderErr } = await supabase
+        .from('secondary_orders')
+        .select('token_amount, tokens_filled')
+        .eq('id', selectedToken.orderId)
+        .maybeSingle();
+      if (orderErr) throw orderErr;
+
+      const currentFilled = Number(orderRow?.tokens_filled || 0);
+      const tokenAmountTotal = Number(orderRow?.token_amount || 0);
+      const newFilled = currentFilled + amount;
+      const newStatus = newFilled >= tokenAmountTotal ? 'filled' : 'open';
+
+      const { error: updateErr } = await supabase
+        .from('secondary_orders')
+        .update({ tokens_filled: newFilled, status: newStatus })
+        .eq('id', selectedToken.orderId);
+      if (updateErr) throw updateErr;
+
+      // Refresh listings
+      await fetchOpenOrders();
+
+      toast({ title: "Trade Executed", description: `Purchased ${amount} tokens for $${totalCost.toFixed(2)}` });
       setTradeAmount('');
-    } catch (error) {
-      toast({
-        title: "Trade Failed",
-        description: "Unable to execute trade. Please try again.",
-        variant: "destructive"
+    } else {
+      // SELL: create a new sell order for the selected property's token
+      if (!selectedToken) {
+        toast({ title: "Select a property", description: "Pick a listing or property before placing a sell order", variant: "destructive" });
+        return;
+      }
+
+      const { error: orderInsertErr } = await supabase.from('secondary_orders').insert({
+        property_fractionalization_id: selectedToken.propertyFractionalizationId,
+        order_type: 'sell',
+        price_per_token: selectedToken.price,
+        token_amount: amount,
+        owner_wallet_address: account || 'unknown',
+        status: 'open'
       });
-    } finally {
-      setIsTrading(false);
+      if (orderInsertErr) throw orderInsertErr;
+
+      await fetchOpenOrders();
+      toast({ title: "Sell order placed", description: `Listed ${amount} tokens at $${selectedToken.price.toLocaleString()} each.` });
+      setTradeAmount('');
     }
-  };
+  } catch (error) {
+    console.error(error);
+    toast({ title: "Trade Failed", description: "Unable to execute trade. Please try again.", variant: "destructive" });
+  } finally {
+    setIsTrading(false);
+  }
+};
 
   return (
     <div className="space-y-6">
@@ -152,12 +199,13 @@ export const SecondaryMarketplace = () => {
       </div>
 
       <Tabs defaultValue="market" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="discovery">Property Discovery</TabsTrigger>
-          <TabsTrigger value="fractional">Fractional Investments</TabsTrigger>
-          <TabsTrigger value="market">Token Trading</TabsTrigger>
-          <TabsTrigger value="orderbook">Order Book</TabsTrigger>
-        </TabsList>
+<TabsList>
+  <TabsTrigger value="discovery">Property Discovery</TabsTrigger>
+  <TabsTrigger value="fractional">Fractional Investments</TabsTrigger>
+  <TabsTrigger value="market">Token Trading</TabsTrigger>
+  <TabsTrigger value="trade">Trade</TabsTrigger>
+  <TabsTrigger value="orderbook">Order Book</TabsTrigger>
+</TabsList>
 
         <TabsContent value="discovery" className="space-y-4">
           <PropertyMap onPropertySelect={(property) => {

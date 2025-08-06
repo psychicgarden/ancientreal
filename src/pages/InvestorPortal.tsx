@@ -12,7 +12,8 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import villaBahia from "@/assets/loft-bahia.jpg";
 import villaMexico from "@/assets/penthouse-mexico.jpg";
 import villaGreece from "@/assets/apartment-greece.jpg";
-
+import { SecondaryMarketplace } from "@/components/SecondaryMarketplace";
+import { SimpleTokenPurchase } from "@/components/SimpleTokenPurchase";
 const InvestorPortal = () => {
   const { isConnected, isPurchasing } = useWallet();
   const [calculatorOpen, setCalculatorOpen] = useState(false);
@@ -99,16 +100,20 @@ const InvestorPortal = () => {
                 Smart contract mortgages, DeFi trading, and yield farming for global nomads.
               </p>
 
-              <TabsList className="grid grid-cols-2 w-fit mx-auto">
-                <TabsTrigger value="properties" className="flex items-center gap-2">
-                  <DollarSign className="h-4 w-4" />
-                  Property Investment
-                </TabsTrigger>
-                <TabsTrigger value="defi" className="flex items-center gap-2">
-                  <Zap className="h-4 w-4" />
-                  DeFi Trading Hub
-                </TabsTrigger>
-              </TabsList>
+<TabsList className="grid grid-cols-3 w-fit mx-auto">
+  <TabsTrigger value="properties" className="flex items-center gap-2">
+    <DollarSign className="h-4 w-4" />
+    Property Investment
+  </TabsTrigger>
+  <TabsTrigger value="markets" className="flex items-center gap-2">
+    <BarChart3 className="h-4 w-4" />
+    Markets
+  </TabsTrigger>
+  <TabsTrigger value="defi" className="flex items-center gap-2">
+    <Zap className="h-4 w-4" />
+    DeFi Trading Hub
+  </TabsTrigger>
+</TabsList>
             </div>
 
             <TabsContent value="properties" className="space-y-16">
@@ -228,6 +233,27 @@ const InvestorPortal = () => {
                   ))}
                 </div>
               </section>
+</TabsContent>
+
+            <TabsContent value="markets" className="space-y-8">
+              <div className="max-w-6xl mx-auto">
+                <Tabs defaultValue="primary" className="space-y-6">
+                  <TabsList>
+                    <TabsTrigger value="primary">Primary Market</TabsTrigger>
+                    <TabsTrigger value="secondary">Secondary Market</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="primary">
+                    <ErrorBoundary>
+                      <SimpleTokenPurchase />
+                    </ErrorBoundary>
+                  </TabsContent>
+                  <TabsContent value="secondary">
+                    <ErrorBoundary>
+                      <SecondaryMarketplace />
+                    </ErrorBoundary>
+                  </TabsContent>
+                </Tabs>
+              </div>
             </TabsContent>
 
             <TabsContent value="defi">
