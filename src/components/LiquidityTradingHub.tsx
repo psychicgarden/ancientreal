@@ -8,11 +8,12 @@ import { EnhancedSecondaryMarketplace } from "@/components/EnhancedSecondaryMark
 import { EnhancedCollateralLending } from "@/components/EnhancedCollateralLending";
 import { YieldFarmingDashboard } from "@/components/YieldFarmingDashboard";
 import { PeerToPeerTrading } from "@/components/PeerToPeerTrading";
-import { SimpleTokenPurchase } from "@/components/SimpleTokenPurchase";
+import { SecondaryMarketplace } from "@/components/SecondaryMarketplace";
 import { SimpleStaking } from "@/components/SimpleStaking";
 import { SimpleBorrowing } from "@/components/SimpleBorrowing";
 import { BeginnerPortfolioSummary } from "@/components/BeginnerPortfolioSummary";
 import { TrendingUp, Handshake, DollarSign, Zap, GraduationCap, Settings } from "lucide-react";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 export const LiquidityTradingHub = () => {
   const [isBeginnerMode, setIsBeginnerMode] = useState(true);
@@ -110,7 +111,22 @@ export const LiquidityTradingHub = () => {
             </TabsContent>
 
             <TabsContent value="buy">
-              <SimpleTokenPurchase />
+              <div className="space-y-4">
+                <div className="rounded-xl overflow-hidden shadow-sm">
+                  <img
+                    src="/lovable-uploads/38aa4546-27b8-4fd1-8977-b15beec529d9.png"
+                    alt="Featured fractional offering"
+                    className="w-full h-auto"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <h2 className="text-2xl font-semibold">Buy Tokens</h2>
+                  <p className="text-muted-foreground">Peer-to-peer fractional offerings from real property owners. Buy at their listed speculation price and trade exposure to appreciation.</p>
+                </div>
+                <ErrorBoundary>
+                  <SecondaryMarketplace />
+                </ErrorBoundary>
+              </div>
             </TabsContent>
 
             <TabsContent value="stake">
