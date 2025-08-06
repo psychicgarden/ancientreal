@@ -13,7 +13,7 @@ import villaBahia from "@/assets/loft-bahia.jpg";
 import villaMexico from "@/assets/penthouse-mexico.jpg";
 import villaGreece from "@/assets/apartment-greece.jpg";
 import { SecondaryMarketplace } from "@/components/SecondaryMarketplace";
-import { SimpleTokenPurchase } from "@/components/SimpleTokenPurchase";
+
 const InvestorPortal = () => {
   const { isConnected, isPurchasing } = useWallet();
   const [calculatorOpen, setCalculatorOpen] = useState(false);
@@ -236,26 +236,14 @@ const InvestorPortal = () => {
 </TabsContent>
 
             <TabsContent value="markets" className="space-y-8">
-              <div className="max-w-6xl mx-auto">
-                <Tabs defaultValue="primary" className="space-y-6">
-                  <div className="text-sm text-muted-foreground mb-2">
-                    Primary = newly issued tokens from property issuers. Secondary = peer-to-peer trades of existing tokens between investors.
-                  </div>
-                  <TabsList>
-                    <TabsTrigger value="primary">Primary Market</TabsTrigger>
-                    <TabsTrigger value="secondary">Secondary Market</TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="primary">
-                    <ErrorBoundary>
-                      <SimpleTokenPurchase />
-                    </ErrorBoundary>
-                  </TabsContent>
-                  <TabsContent value="secondary">
-                    <ErrorBoundary>
-                      <SecondaryMarketplace />
-                    </ErrorBoundary>
-                  </TabsContent>
-                </Tabs>
+              <div className="max-w-6xl mx-auto space-y-4">
+                <div>
+                  <h2 className="text-2xl font-bold">Secondary Marketplace</h2>
+                  <p className="text-muted-foreground">Peer-to-peer market where property owners list fractional shares of their homes for sale.</p>
+                </div>
+                <ErrorBoundary>
+                  <SecondaryMarketplace />
+                </ErrorBoundary>
               </div>
             </TabsContent>
 
