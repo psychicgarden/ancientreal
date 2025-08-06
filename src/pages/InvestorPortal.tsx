@@ -238,6 +238,9 @@ const InvestorPortal = () => {
             <TabsContent value="markets" className="space-y-8">
               <div className="max-w-6xl mx-auto">
                 <Tabs defaultValue="primary" className="space-y-6">
+                  <div className="text-sm text-muted-foreground mb-2">
+                    Primary = newly issued tokens from property issuers. Secondary = peer-to-peer trades of existing tokens between investors.
+                  </div>
                   <TabsList>
                     <TabsTrigger value="primary">Primary Market</TabsTrigger>
                     <TabsTrigger value="secondary">Secondary Market</TabsTrigger>

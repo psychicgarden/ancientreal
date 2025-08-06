@@ -197,6 +197,7 @@ const handleTrade = async () => {
         <h2 className="text-2xl font-bold">Secondary Marketplace</h2>
         <Badge className="bg-green-100 text-green-700">Live Trading</Badge>
       </div>
+      <p className="text-muted-foreground">Peer-to-peer market to buy and sell fractional shares from other investors. Buy fills open orders; Sell posts your own order.</p>
 
       <Tabs defaultValue="market" className="space-y-6">
 <TabsList>

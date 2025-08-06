@@ -138,8 +138,8 @@ export const SimpleTokenPurchase = () => {
   return (
     <div className="space-y-6">
       <div className="text-center space-y-2">
-        <h2 className="text-2xl font-bold">Buy Property Tokens</h2>
-        <p className="text-muted-foreground">Own a piece of premium real estate worldwide</p>
+        <h2 className="text-2xl font-bold">Primary Market: Buy Property Tokens</h2>
+        <p className="text-muted-foreground">Buy newly issued fractional tokens directly from the property issuer. This is the primary sale (not peer-to-peer resales).</p>
       </div>
 
       {/* Property Selection */}
@@ -195,7 +195,7 @@ export const SimpleTokenPurchase = () => {
             Purchase {selectedProperty?.name || 'Property'} Tokens
           </CardTitle>
           <CardDescription>
-            Each token represents fractional ownership in this property
+            Primary sale: each token represents newly issued fractional ownership, priced by the issuer.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
