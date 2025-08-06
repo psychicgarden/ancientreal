@@ -9,7 +9,7 @@ import { MAZUNTE_PROPERTY } from "@/lib/contracts";
 import PropertyInvestmentCalculator from "@/components/PropertyInvestmentCalculator";
 import { PropertyPurchaseModal } from "@/components/PropertyPurchaseModal";
 import { Link } from "react-router-dom";
-import { toast } from "sonner";
+
 import villaTulum from "@/assets/villa-tulum.jpg";
 import beachChalet from "@/assets/beach-chalet.jpg";
 import villaCorfu from "@/assets/villa-corfu-greece.jpg";

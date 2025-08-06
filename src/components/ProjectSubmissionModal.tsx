@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { toast } from '@/hooks/use-toast';
 
 interface ProjectSubmission {
   id: string;
@@ -100,23 +100,23 @@ export const ProjectSubmissionModal: React.FC<ProjectSubmissionModalProps> = ({
           }
         });
 
-        if (emailError) {
-          console.error('Email notification error:', emailError);
-          toast.warning(`Project ${status} successfully, but email notification failed`);
-        } else {
-          console.log('Email notification sent successfully');
-          toast.success(`Project ${status} successfully and email sent to creator`);
-        }
+          if (emailError) {
+            console.error('Email notification error:', emailError);
+            toast({ title: `Project ${status}`, description: 'Email notification failed' });
+          } else {
+            console.log('Email notification sent successfully');
+            toast({ title: `Project ${status}`, description: 'Email sent to creator' });
+          }
       } catch (emailError) {
         console.error('Failed to send email notification:', emailError);
-        toast.warning(`Project ${status} successfully, but email notification failed`);
+        toast({ title: `Project ${status}`, description: 'Email notification failed' });
       }
 
       onSubmissionUpdate();
       onClose();
     } catch (error) {
       console.error('Error updating submission:', error);
-      toast.error('Failed to update submission');
+      toast({ title: 'Failed to update submission', variant: 'destructive' });
     } finally {
       setIsUpdating(false);
     }

@@ -14,7 +14,7 @@ import { DeveloperInvestmentsAnalytics } from "@/components/DeveloperInvestments
 import { TrustSignals } from "@/components/TrustSignals";
 import { CompetitorComparison } from "@/components/CompetitorComparison";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 
 // Sample property data - in real app this would come from API
 const sampleProperties = [
@@ -124,7 +124,7 @@ const Portfolio = () => {
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
-        toast.error('Failed to load portfolio data');
+        toast({ title: 'Failed to load portfolio data', variant: 'destructive' });
       } finally {
         setLoading(false);
       }
@@ -253,7 +253,7 @@ const Portfolio = () => {
   };
 
   const handlePropertyAction = (action: string, propertyId: string) => {
-    toast.success(`${action} action for property ${propertyId}`);
+    toast({ title: action, description: `Action for property ${propertyId}` });
   };
 
   return (

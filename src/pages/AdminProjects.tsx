@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ProjectSubmissionModal } from '@/components/ProjectSubmissionModal';
-import { toast } from 'sonner';
+import { toast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { 
   Search, 
@@ -119,7 +119,7 @@ const AdminProjects = () => {
     } catch (error) {
       console.error('Error fetching submissions:', error);
       setError(error instanceof Error ? error.message : 'Unknown error');
-      toast.error('Failed to load project submissions');
+      toast({ title: 'Failed to load project submissions', variant: 'destructive' });
     } finally {
       setLoading(false);
       console.log('Loading set to false');

@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 import { DollarSign, Shield, Clock, AlertTriangle } from "lucide-react";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 
 export const SimpleBorrowing = () => {
   const [collateralValue] = useState(50000); // User's total property token value
@@ -20,7 +20,8 @@ export const SimpleBorrowing = () => {
   const totalRepayment = monthlyPayment * loanTerm;
 
   const handleBorrow = () => {
-    toast.success(`Loan approved! $${loanAmount[0].toLocaleString()} will be transferred to your account.`);
+    console.log('Borrow clicked', { amount: loanAmount[0], term: loanTerm });
+    toast({ title: "Loan approved", description: `$${loanAmount[0].toLocaleString()} will be transferred to your account.` });
   };
 
   const getLTVColor = () => {

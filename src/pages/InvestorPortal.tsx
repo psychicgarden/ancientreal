@@ -8,6 +8,7 @@ import { useWallet } from "@/contexts/WalletContext";
 import PropertyInvestmentCalculator from "@/components/PropertyInvestmentCalculator";
 import { PropertyPurchaseModal } from "@/components/PropertyPurchaseModal";
 import { LiquidityTradingHub } from "@/components/LiquidityTradingHub";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import villaBahia from "@/assets/loft-bahia.jpg";
 import villaMexico from "@/assets/penthouse-mexico.jpg";
 import villaGreece from "@/assets/apartment-greece.jpg";
@@ -196,6 +197,7 @@ const InvestorPortal = () => {
                             className="w-full" 
                             size="lg"
                             onClick={() => {
+                              console.log('Get Mortgage clicked', { property: property.name });
                               setSelectedProperty(property);
                               setPurchaseModalOpen(true);
                             }}
@@ -212,6 +214,7 @@ const InvestorPortal = () => {
                             className="w-full" 
                             variant="outline"
                             onClick={() => {
+                              console.log('Calculate Returns clicked', { property: property.name });
                               setSelectedProperty(property);
                               setCalculatorOpen(true);
                             }}
@@ -228,7 +231,9 @@ const InvestorPortal = () => {
             </TabsContent>
 
             <TabsContent value="defi">
-              <LiquidityTradingHub />
+              <ErrorBoundary>
+                <LiquidityTradingHub />
+              </ErrorBoundary>
             </TabsContent>
           </Tabs>
         </div>

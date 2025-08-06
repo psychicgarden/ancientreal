@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, TrendingUp, MapPin } from "lucide-react";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 
 const featuredProperties = [
   {
@@ -46,7 +46,8 @@ export const SimpleTokenPurchase = () => {
 
   const handlePurchase = () => {
     const totalCost = selectedProperty.pricePerToken * tokenAmount;
-    toast.success(`Successfully purchased ${tokenAmount} tokens of ${selectedProperty.name} for $${totalCost.toLocaleString()}`);
+    console.log('Purchase clicked', { property: selectedProperty.name, tokens: tokenAmount, totalCost });
+    toast({ title: 'Purchase successful', description: `Purchased ${tokenAmount} tokens of ${selectedProperty.name} for $${totalCost.toLocaleString()}` });
   };
 
   const totalCost = selectedProperty.pricePerToken * tokenAmount;

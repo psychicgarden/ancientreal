@@ -12,7 +12,7 @@ import { Separator } from '@/components/ui/separator';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { toast } from '@/hooks/use-toast';
 import { Upload, FileText, Check, Clock, AlertCircle, Github, Globe, FileCheck, Building, Scale } from 'lucide-react';
 
 interface ProjectSubmissionFormProps {
@@ -133,11 +133,11 @@ export const ProjectSubmissionForm: React.FC<ProjectSubmissionFormProps> = ({ on
         }
       });
 
-      toast.success('Project submitted successfully! We\'ll review it within 5 business days.');
+      toast({ title: "Project submitted", description: "We'll review it within 5 business days." });
       onClose?.();
     } catch (error) {
       console.error('Submission error:', error);
-      toast.error('Failed to submit project. Please try again.');
+      toast({ title: "Failed to submit project", description: "Please try again.", variant: "destructive" });
     } finally {
       setIsSubmitting(false);
     }

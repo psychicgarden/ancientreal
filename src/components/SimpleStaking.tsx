@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Coins, TrendingUp, Clock, DollarSign } from "lucide-react";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 
 const stakingPools = [
   {
@@ -47,7 +47,8 @@ export const SimpleStaking = () => {
   const [stakeAmount, setStakeAmount] = useState(selectedPool.minStake);
 
   const handleStake = () => {
-    toast.success(`Successfully staked $${stakeAmount.toLocaleString()} in ${selectedPool.name}!`);
+    console.log('Stake clicked', { amount: stakeAmount, pool: selectedPool.name });
+    toast({ title: 'Stake successful', description: `Successfully staked $${stakeAmount.toLocaleString()} in ${selectedPool.name}!` });
   };
 
   const getRiskColor = (risk: string) => {
