@@ -55,6 +55,19 @@ export class Web3Integration {
       CONTRACTS.VILLAGE_CITIZENSHIP.abi,
       this.signer
     );
+
+    // Secondary Marketplace (AMM + Orderbook)
+    // NOTE: Make sure to set CONTRACTS.SECONDARY_MARKETPLACE.address to your deployed address
+    const marketplaceCfg = (CONTRACTS as any).SECONDARY_MARKETPLACE;
+    if (marketplaceCfg && marketplaceCfg.address) {
+      // @ts-ignore - dynamic assignment
+      this.contracts.secondaryMarketplace = new ethers.Contract(
+        marketplaceCfg.address,
+        marketplaceCfg.abi,
+        this.signer
+      );
+    }
+  }
   }
 
   async getAccount(): Promise<string> {

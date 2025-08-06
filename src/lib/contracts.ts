@@ -1,39 +1,30 @@
 // Smart Contract Configuration for Avalanche Fuji Testnet
 
 export const CONTRACTS = {
-  // Enhanced Mazunte Property Mortgage Contract with USDT
   MAZUNTE_MORTGAGE: {
-    address: "0x1234567890123456789012345678901234567890", // Placeholder - deploy real contract
+    address: "0x1234567890123456789012345678901234567890", // TODO: set deployed address
     abi: [
-      // Core mortgage functions
+      // Core functions
       "function purchaseProperty(uint256 downPayment) external",
       "function makePayment() external",
-      "function checkPaymentStatus(address buyer) external",
-      
-      // Owner/Admin functions
-      "function setPropertyAppreciation(uint256 newValue) external",
-      "function distributeAppreciation() external",
-      
-      // View functions
-      "function getMortgageDetails(address buyer) external view returns (uint256, uint256, uint256, uint256, uint256, uint256, bool, bool, bool)",
-      "function getPropertyStatus() external view returns (uint256, uint256, uint256, uint256, bool)",
-      "function getMortgageHolders() external view returns (address[])",
+      "function cancelDuringCoolingOff() external",
+      "function confirmMortgageActivation() external",
+      // Views matching contract
+      "function getMortgageDetails(address buyer) external view returns (uint256 downPayment, uint256 principalAmount, uint256 monthlyPayment, uint256 remainingBalance, uint256 nextPaymentDue, uint256 missedPayments, uint256 totalPaid, uint256 totalLateFees, uint256 mortgageId, bool isActive, bool isForeclosed, bool isCompleted, bool coolingOffActive)",
+      "function getPropertyStatus() external view returns (uint256 totalValue, uint256 currentValue, uint256 totalDownPayments, uint256 appreciationValue, uint256 totalRentalIncomeGenerated, bool fullyOwned)",
+      "function getPaymentSchedule(address buyer) external view returns (tuple(uint256 paymentNumber, uint256 principalAmount, uint256 interestAmount, uint256 remainingBalance, uint256 dueDate, bool isPaid)[])",
       "function isPaymentOverdue(address buyer) external view returns (bool)",
-      "function calculateMonthlyPayment(uint256 principal) external pure returns (uint256)",
-      
+      // ERC1155 minimal (for balance queries if needed)
+      "function balanceOf(address account, uint256 id) external view returns (uint256)",
       // Events
-      "event MortgageCreated(address indexed buyer, uint256 downPayment, uint256 monthlyPayment)",
-      "event MortgagePaymentMade(address indexed buyer, uint256 amount, uint256 remainingBalance)",
-      "event MortgageCompleted(address indexed buyer, uint256 totalPaid)",
-      "event MortgageForeclosed(address indexed buyer, uint256 missedPayments)",
-      "event PropertyDeedMinted(address indexed owner, uint256 tokenId)",
-      "event AppreciationDistributed(uint256 totalAppreciation, uint256 buyerShare, uint256 ancientShare, uint256 lenderShare)"
+      "event MortgageCreated(address indexed buyer, uint256 indexed mortgageId, uint256 downPayment, uint256 monthlyPayment)",
+      "event PaymentMade(address indexed buyer, uint256 amount, uint256 principalPaid, uint256 interestPaid, uint256 remainingBalance)",
+      "event MortgageCompleted(address indexed buyer, uint256 totalPaid)"
     ]
   },
 
-  // USDT Token Contract (Fuji Testnet)
   USDT: {
-    address: "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7", // Fuji USDT
+    address: "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7", // Testnet USDT (replace if using TestUSDT)
     abi: [
       "function balanceOf(address account) external view returns (uint256)",
       "function transfer(address to, uint256 amount) external returns (bool)",
@@ -44,54 +35,31 @@ export const CONTRACTS = {
     ]
   },
 
-  // Village Citizenship Contract
   VILLAGE_CITIZENSHIP: {
-    address: "0x2345678901234567890123456789012345678901", // Placeholder - deploy real contract
+    address: "0x2345678901234567890123456789012345678901", // TODO: set deployed address
     abi: [
       "function becomeCitizen() external payable",
       "function hasCitizenship(address user) external view returns (bool)",
-      "function getCitizenDetails(address citizen) external view returns (bool, uint256, uint256)",
-      "function vote(uint256 proposalId, bool support) external",
       "event CitizenshipGranted(address indexed citizen, uint256 tokenId, uint256 level)"
     ]
   },
-  
-  // Rental Income Distribution Contract
-  RENTAL_DISTRIBUTION: {
-    address: "0x3456789012345678901234567890123456789012", // Placeholder - deploy real contract
-    abi: [
-      "function collectRental(string memory propertyId) external",
-      "function claimIncome(string memory propertyId) external",
-      "function calculateClaimableIncome(string memory propertyId, address investor) external view returns (uint256)",
-      "function getPropertySummary(string memory propertyId) external view returns (uint256, uint256, uint256, bool)",
-      "function getInvestorSummary(address investor) external view returns (uint256, uint256)",
-      "event RentalCollected(string indexed propertyId, uint256 amount, uint256 timestamp)",
-      "event IncomeDistributed(string indexed propertyId, address indexed investor, uint256 amount)"
-    ]
-  },
 
-  // Developer Presale Contract
-  DEVELOPER_PRESALE: {
-    address: "0x4567890123456789012345678901234567890123", // Placeholder - deploy real contract
+  SECONDARY_MARKETPLACE: {
+    address: "0x3456789012345678901234567890123456789012", // TODO: set deployed address
     abi: [
-      // Presale functions
-      "function createPresale(string memory projectId, uint256 targetFunding, uint256 presalePrice, uint256 publicPrice, uint256 thresholdPercentage) external",
-      "function participateInPresale(string memory projectId, uint256 amount) external",
-      "function checkPresaleStatus(string memory projectId) external view returns (bool, uint256, uint256, uint256)",
-      "function activatePublicSale(string memory projectId) external",
-      "function claimTokens(string memory projectId) external",
-      
-      // View functions
-      "function getPresaleDetails(string memory projectId) external view returns (uint256, uint256, uint256, uint256, uint256, bool, bool)",
-      "function getUserPresaleAmount(string memory projectId, address user) external view returns (uint256)",
-      "function getPresaleParticipants(string memory projectId) external view returns (address[])",
-      
-      // Events
-      "event PresaleCreated(string indexed projectId, uint256 targetFunding, uint256 presalePrice, uint256 publicPrice)",
-      "event PresaleParticipation(string indexed projectId, address indexed participant, uint256 amount)",
-      "event PresaleThresholdReached(string indexed projectId, uint256 totalRaised)",
-      "event PublicSaleActivated(string indexed projectId, uint256 publicPrice)",
-      "event TokensClaimed(string indexed projectId, address indexed participant, uint256 amount)"
+      // Pools
+      "function createPool(address propertyToken, uint256 tokenId, address baseToken, uint256 feeRate, uint256 priceImpactThreshold) external",
+      "function addLiquidity(uint256 poolId, uint256 propertyAmount, uint256 baseAmount) external",
+      "function removeLiquidity(uint256 poolId, uint256 lpTokens) external",
+      // AMM Swaps
+      "function swapTokens(uint256 poolId, bool propertyToBase, uint256 amountIn, uint256 minAmountOut) external",
+      // Orders
+      "function createLimitOrder(uint256 poolId, bool isBuyOrder, uint256 amount, uint256 price, uint256 expiry) external",
+      "function fillLimitOrder(uint256 orderId, uint256 fillAmount) external",
+      "function cancelLimitOrder(uint256 orderId) external",
+      // Views
+      "function getCurrentPrice(uint256 poolId) external view returns (uint256)",
+      "function getUserLPTokens(uint256 poolId, address user) external view returns (uint256)"
     ]
   }
 };
