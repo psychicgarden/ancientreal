@@ -12,7 +12,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import villaBahia from "@/assets/loft-bahia.jpg";
 import villaMexico from "@/assets/penthouse-mexico.jpg";
 import villaGreece from "@/assets/apartment-greece.jpg";
-import { SecondaryMarketplace } from "@/components/SecondaryMarketplace";
+
 
 const InvestorPortal = () => {
   const { isConnected, isPurchasing } = useWallet();
@@ -100,14 +100,10 @@ const InvestorPortal = () => {
                 Smart contract mortgages, DeFi trading, and yield farming for global nomads.
               </p>
 
-<TabsList className="grid grid-cols-3 w-fit mx-auto">
+<TabsList className="grid grid-cols-2 w-fit mx-auto">
   <TabsTrigger value="properties" className="flex items-center gap-2">
     <DollarSign className="h-4 w-4" />
     Property Investment
-  </TabsTrigger>
-  <TabsTrigger value="markets" className="flex items-center gap-2">
-    <BarChart3 className="h-4 w-4" />
-    Markets
   </TabsTrigger>
   <TabsTrigger value="defi" className="flex items-center gap-2">
     <Zap className="h-4 w-4" />
@@ -235,17 +231,6 @@ const InvestorPortal = () => {
               </section>
 </TabsContent>
 
-            <TabsContent value="markets" className="space-y-8">
-              <div className="max-w-6xl mx-auto space-y-4">
-                <div>
-                  <h2 className="text-2xl font-bold">Secondary Marketplace</h2>
-                  <p className="text-muted-foreground">Peer-to-peer market where property owners list fractional shares of their homes for sale.</p>
-                </div>
-                <ErrorBoundary>
-                  <SecondaryMarketplace />
-                </ErrorBoundary>
-              </div>
-            </TabsContent>
 
             <TabsContent value="defi">
               <ErrorBoundary>

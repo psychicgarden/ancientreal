@@ -11,6 +11,8 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import PropertyMap from "./PropertyMap";
 import FractionalInvestmentModal from "./FractionalInvestmentModal";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 
 interface TokenListing {
   id: string; // display id
@@ -40,7 +42,13 @@ export const SecondaryMarketplace = () => {
   const [fractionalProperties, setFractionalProperties] = useState<any[]>([]);
   const [selectedFractionalProperty, setSelectedFractionalProperty] = useState<any>(null);
   const [isFractionalModalOpen, setIsFractionalModalOpen] = useState(false);
-  const [tokenListings, setTokenListings] = useState<TokenListing[]>([]);
+const [tokenListings, setTokenListings] = useState<TokenListing[]>([]);
+const [ownedProperties, setOwnedProperties] = useState<any[]>([]);
+const [isListDialogOpen, setIsListDialogOpen] = useState(false);
+const [propertyToList, setPropertyToList] = useState<any>(null);
+const [speculationPrice, setSpeculationPrice] = useState<string>("");
+const [tokensAvailable, setTokensAvailable] = useState<string>("1000000");
+const [minInvestment, setMinInvestment] = useState<string>("50");
 
 // Fetch fractional properties and open secondary orders
 useEffect(() => {
@@ -95,6 +103,61 @@ const fetchOpenOrders = async () => {
     setTokenListings(listings);
   } catch (error) {
     console.error('Error fetching secondary orders:', error);
+  }
+};
+
+const fetchOwnedProperties = async () => {
+  if (!account) return;
+  try {
+    const { data, error } = await supabase
+      .from('user_properties')
+      .select('*')
+      .eq('user_wallet_address', account.toLowerCase());
+    if (error) throw error;
+    setOwnedProperties(data || []);
+  } catch (error) {
+    console.error('Error fetching owned properties:', error);
+  }
+};
+
+useEffect(() => {
+  if (account) fetchOwnedProperties();
+}, [account]);
+
+const handleCreateListing = async () => {
+  if (!propertyToList || !account) return;
+  const originalPrice = Number(propertyToList.purchase_price || 0);
+  const specPrice = Number(speculationPrice || 0);
+  if (!specPrice || specPrice <= 0) {
+    toast({ title: 'Invalid price', description: 'Enter a valid speculation price', variant: 'destructive' });
+    return;
+  }
+  const tokens = Number(tokensAvailable || 0);
+  const minInv = Number(minInvestment || 50);
+  const tenYears = new Date();
+  tenYears.setFullYear(tenYears.getFullYear() + 10);
+  try {
+    const { error } = await supabase.from('property_fractionalization').insert({
+      property_id: propertyToList.id,
+      owner_wallet_address: account.toLowerCase(),
+      original_purchase_price: originalPrice,
+      current_speculation_price: specPrice,
+      total_tokens_available: tokens,
+      tokens_sold: 0,
+      min_investment: minInv,
+      is_active: true,
+      year_10_trigger_date: tenYears.toISOString()
+    });
+    if (error) throw error;
+    toast({ title: 'Listing Created', description: `${propertyToList.property_name || 'Property'} listed at $${specPrice.toLocaleString()}` });
+    setIsListDialogOpen(false);
+    setPropertyToList(null);
+    setSpeculationPrice("");
+    await fetchFractionalProperties();
+    await fetchOpenOrders();
+  } catch (error) {
+    console.error('Failed to create listing:', error);
+    toast({ title: 'Failed to create listing', description: 'Please try again.', variant: 'destructive' });
   }
 };
 
@@ -217,43 +280,75 @@ const handleTrade = async () => {
           }} />
         </TabsContent>
 
-        <TabsContent value="fractional" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {fractionalProperties.map((property) => (
-              <Card key={property.id} className="cursor-pointer hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <CardTitle className="flex justify-between items-start">
-                    <span className="text-lg">{property.property_name || 'Property'}</span>
-                    <Badge variant="secondary">Fractional</Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-sm text-muted-foreground">Original Price:</span>
-                      <span className="font-semibold">${property.original_purchase_price?.toLocaleString()}</span>
+        <TabsContent value="fractional" className="space-y-6">
+          {isConnected && ownedProperties.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Your Owned Properties</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {ownedProperties.map((p) => (
+                    <div key={p.id} className="p-4 border rounded-lg bg-card">
+                      <div className="font-semibold">{p.property_name}</div>
+                      <div className="text-sm text-muted-foreground">{p.property_location}</div>
+                      <div className="mt-2 text-sm">
+                        Purchase Price: <span className="font-semibold">${Number(p.purchase_price).toLocaleString()}</span>
+                      </div>
+                      <div className="mt-3">
+                        <Button onClick={() => { setPropertyToList(p); setSpeculationPrice(""); setTokensAvailable("1000000"); setMinInvestment("50"); setIsListDialogOpen(true); }}>
+                          List Fractional Offering
+                        </Button>
+                      </div>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-muted-foreground">Speculation:</span>
-                      <span className="font-semibold text-primary">${property.current_speculation_price?.toLocaleString()}</span>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xl font-semibold">Active Fractional Investments</h3>
+              <Badge variant="secondary">{fractionalProperties.length} listings</Badge>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {fractionalProperties.map((property) => (
+                <Card key={property.id} className="cursor-pointer hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <CardTitle className="flex justify-between items-start">
+                      <span className="text-lg">{property.property_name || 'Property'}</span>
+                      <Badge variant="secondary">Fractional</Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">Original Price:</span>
+                        <span className="font-semibold">${property.original_purchase_price?.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">Speculation:</span>
+                        <span className="font-semibold text-primary">${property.current_speculation_price?.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">Min Investment:</span>
+                        <span className="font-semibold">${property.min_investment}</span>
+                      </div>
+                      <Button 
+                        className="w-full" 
+                        onClick={() => {
+                          setSelectedFractionalProperty(property);
+                          setIsFractionalModalOpen(true);
+                        }}
+                      >
+                        Invest from ${property.min_investment}
+                      </Button>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-muted-foreground">Min Investment:</span>
-                      <span className="font-semibold">${property.min_investment}</span>
-                    </div>
-                    <Button 
-                      className="w-full" 
-                      onClick={() => {
-                        setSelectedFractionalProperty(property);
-                        setIsFractionalModalOpen(true);
-                      }}
-                    >
-                      Invest from ${property.min_investment}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </TabsContent>
 
@@ -486,6 +581,34 @@ const handleTrade = async () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <Dialog open={isListDialogOpen} onOpenChange={setIsListDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>List Fractional Offering</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="specPrice">Speculation Price (USD)</Label>
+              <Input id="specPrice" type="number" value={speculationPrice} onChange={(e) => setSpeculationPrice(e.target.value)} placeholder={propertyToList ? String(propertyToList.current_value || propertyToList.purchase_price) : "180000"} />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="tokensAvail">Total Tokens Available</Label>
+                <Input id="tokensAvail" type="number" value={tokensAvailable} onChange={(e) => setTokensAvailable(e.target.value)} />
+              </div>
+              <div>
+                <Label htmlFor="minInv">Min Investment (USD)</Label>
+                <Input id="minInv" type="number" value={minInvestment} onChange={(e) => setMinInvestment(e.target.value)} />
+              </div>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsListDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleCreateListing}>Create Listing</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <FractionalInvestmentModal
         isOpen={isFractionalModalOpen}

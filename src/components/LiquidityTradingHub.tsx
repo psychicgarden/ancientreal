@@ -112,13 +112,6 @@ export const LiquidityTradingHub = () => {
 
             <TabsContent value="buy">
               <div className="space-y-4">
-                <div className="rounded-xl overflow-hidden shadow-sm">
-                  <img
-                    src="/lovable-uploads/38aa4546-27b8-4fd1-8977-b15beec529d9.png"
-                    alt="Featured fractional offering"
-                    className="w-full h-auto"
-                  />
-                </div>
                 <div className="space-y-2">
                   <h2 className="text-2xl font-semibold">Buy Tokens</h2>
                   <p className="text-muted-foreground">Peer-to-peer fractional offerings from real property owners. Buy at their listed speculation price and trade exposure to appreciation.</p>
