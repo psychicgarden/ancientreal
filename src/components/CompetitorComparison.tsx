@@ -19,7 +19,7 @@ export const CompetitorComparison = () => {
 
   const platforms = [
     {
-      name: "Boho Shares",
+      name: "Ancient",
       logo: "🏡",
       aum: "$4.2M+",
       users: "22.5k+",
@@ -118,7 +118,7 @@ export const CompetitorComparison = () => {
               <thead>
                 <tr className="border-b">
                   <th className="text-left p-3 font-semibold">Feature</th>
-                  <th className="text-center p-3 font-semibold text-primary">Boho Shares</th>
+                  <th className="text-center p-3 font-semibold text-primary">Ancient</th>
                   <th className="text-center p-3 font-semibold">Reental</th>
                   <th className="text-center p-3 font-semibold">RealT</th>
                   <th className="text-center p-3 font-semibold">BinaryX</th>
