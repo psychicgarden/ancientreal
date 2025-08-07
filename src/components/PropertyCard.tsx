@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Heart, MapPin, TrendingUp, Users, Calendar, DollarSign } from "lucide-react";
 import { useState } from "react";
 import { MortgagePaymentModal } from "@/components/MortgagePaymentModal";
+import { PropertyAnalyticsModal } from "@/components/PropertyAnalyticsModal";
 
 interface PropertyCardProps {
   id: string;
@@ -42,6 +43,7 @@ export const PropertyCard = ({
 }: PropertyCardProps) => {
   const [isLiked, setIsLiked] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isAnalyticsModalOpen, setIsAnalyticsModalOpen] = useState(false);
 
   const getStatusBadge = () => {
     switch (status) {
@@ -68,7 +70,7 @@ export const PropertyCard = ({
             <Button size="sm" onClick={() => setIsPaymentModalOpen(true)} className="flex-1">
               Make Payment
             </Button>
-            <Button size="sm" variant="outline" onClick={onViewAnalytics}>
+            <Button size="sm" variant="outline" onClick={() => setIsAnalyticsModalOpen(true)}>
               Analytics
             </Button>
           </div>
@@ -79,7 +81,7 @@ export const PropertyCard = ({
             <Button size="sm" onClick={onListForTravel} className="flex-1">
               List for Travel
             </Button>
-            <Button size="sm" variant="outline" onClick={onViewAnalytics}>
+            <Button size="sm" variant="outline" onClick={() => setIsAnalyticsModalOpen(true)}>
               Analytics
             </Button>
           </div>
@@ -90,7 +92,7 @@ export const PropertyCard = ({
             <Button size="sm" onClick={onManage} className="flex-1">
               Manage Bookings
             </Button>
-            <Button size="sm" variant="outline" onClick={onViewAnalytics}>
+            <Button size="sm" variant="outline" onClick={() => setIsAnalyticsModalOpen(true)}>
               Analytics
             </Button>
           </div>
@@ -198,6 +200,20 @@ export const PropertyCard = ({
           value,
           monthlyPayment: 2500, // Default value for PropertyCard usage
           remainingBalance: 150000 // Default value for PropertyCard usage
+        }}
+      />
+
+      <PropertyAnalyticsModal
+        isOpen={isAnalyticsModalOpen}
+        onClose={() => setIsAnalyticsModalOpen(false)}
+        property={{
+          id,
+          title,
+          location,
+          value,
+          equity,
+          monthlyIncome,
+          occupancyRate
         }}
       />
     </Card>

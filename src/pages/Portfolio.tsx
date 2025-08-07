@@ -298,7 +298,7 @@ const Portfolio = () => {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-7 lg:w-fit">
+          <TabsList className="grid w-full grid-cols-6 lg:w-fit">
             <TabsTrigger value="properties" className="flex items-center gap-2">
               <Home className="h-4 w-4" />
               My Properties
@@ -318,10 +318,6 @@ const Portfolio = () => {
             <TabsTrigger value="revenue" className="flex items-center gap-2">
               <DollarSign className="h-4 w-4" />
               Bookings & Revenue
-            </TabsTrigger>
-            <TabsTrigger value="documents" className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              Legal & Documents
             </TabsTrigger>
             <TabsTrigger value="comparison" className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
@@ -517,46 +513,6 @@ const Portfolio = () => {
             </div>
           </TabsContent>
 
-          {/* Documents Tab */}
-          <TabsContent value="documents" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Legal & Investment Documents</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Button variant="outline" className="justify-start h-auto p-4">
-                    <FileText className="h-4 w-4 mr-2" />
-                    <div className="text-left">
-                      <div className="font-medium">Investment Agreement</div>
-                      <div className="text-sm text-muted-foreground">Legal contract details</div>
-                    </div>
-                  </Button>
-                  <Button variant="outline" className="justify-start h-auto p-4">
-                    <FileText className="h-4 w-4 mr-2" />
-                    <div className="text-left">
-                      <div className="font-medium">Property Deeds</div>
-                      <div className="text-sm text-muted-foreground">Ownership documentation</div>
-                    </div>
-                  </Button>
-                  <Button variant="outline" className="justify-start h-auto p-4">
-                    <FileText className="h-4 w-4 mr-2" />
-                    <div className="text-left">
-                      <div className="font-medium">Insurance Policies</div>
-                      <div className="text-sm text-muted-foreground">Coverage details</div>
-                    </div>
-                  </Button>
-                  <Button variant="outline" className="justify-start h-auto p-4">
-                    <FileText className="h-4 w-4 mr-2" />
-                    <div className="text-left">
-                      <div className="font-medium">Tax Documents</div>
-                      <div className="text-sm text-muted-foreground">Annual statements</div>
-                    </div>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
 
           {/* Platform Comparison Tab */}
           <TabsContent value="comparison" className="space-y-6">
