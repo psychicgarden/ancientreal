@@ -35,6 +35,9 @@ import {
   Unlock
 } from "lucide-react";
 import { useState } from "react";
+import liveMusicImage from "@/assets/live-music-community.jpg";
+import ecstaticDanceImage from "@/assets/ecstatic-dance-community.jpg";
+import sacredCeremoniesImage from "@/assets/sacred-ceremonies-community.jpg";
 
 const Community = () => {
   const [propertyValue, setPropertyValue] = useState([150000]);
@@ -157,7 +160,7 @@ const Community = () => {
       icon: Music,
       frequency: "Every Friday",
       vibe: "🌊 Flow State",
-      image: "https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=300&h=200&fit=crop"
+      image: ecstaticDanceImage
     },
     {
       title: "Wellness Workshops", 
@@ -189,7 +192,7 @@ const Community = () => {
       icon: Music,
       frequency: "Weekends",
       vibe: "🎵 Creative Flow",
-      image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=200&fit=crop"
+      image: liveMusicImage
     },
     {
       title: "Sacred Ceremonies",
@@ -197,7 +200,7 @@ const Community = () => {
       icon: Moon,
       frequency: "Monthly",
       vibe: "🌙 Mystical",
-      image: "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=300&h=200&fit=crop"
+      image: sacredCeremoniesImage
     }
   ];
 
