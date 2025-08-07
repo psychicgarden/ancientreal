@@ -17,7 +17,8 @@ export const BeginnerPortfolioSummary = () => {
       { name: "Desert Oasis", value: 22500, tokens: 45, monthlyReturn: 100 }
     ],
     stakingPools: [
-      { name: "Ancient Savings", staked: 10000, apy: 8, monthlyReturn: 66.67, linkToBanking: true }
+      { name: "High-Yield Pool", staked: 15000, apy: 15, monthlyReturn: 187.50 },
+      { name: "Stable Pool", staked: 10000, apy: 8, monthlyReturn: 66.67 }
     ],
     activeLoans: [
       { amount: 15000, monthlyPayment: 1285, remainingMonths: 11 }
