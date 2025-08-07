@@ -35,9 +35,9 @@ import {
   Unlock
 } from "lucide-react";
 import { useState } from "react";
-import liveMusicImage from "@/assets/live-music-guitar.jpg";
-import ecstaticDanceImage from "@/assets/ecstatic-dance-drums.jpg";
-import sacredCeremoniesImage from "@/assets/sacred-ceremonies-incense.jpg";
+import liveMusicImage from "@/assets/woman-guitar-stage.jpg";
+import ecstaticDanceImage from "@/assets/three-women-drums.jpg";
+import sacredCeremoniesImage from "@/assets/incense-brown-vases.jpg";
 
 const Community = () => {
   const [propertyValue, setPropertyValue] = useState([150000]);
