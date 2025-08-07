@@ -154,6 +154,17 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
 
   const availablePercentage = ((property.totalTokensAvailable - property.tokensSold) / property.totalTokensAvailable) * 100;
 
+  // Calculate tier progression
+  const { calculateInvestorTier, getNextTierThreshold } = require("@/lib/utils");
+  const currentTotalInvestment = 0; // This would come from user's portfolio data
+  const newTotalInvestment = currentTotalInvestment + investmentAmount;
+  const currentTier = calculateInvestorTier(currentTotalInvestment);
+  const newTier = calculateInvestorTier(newTotalInvestment);
+  const nextThreshold = getNextTierThreshold(newTier.name);
+  
+  const tierUpgrade = currentTier.name !== newTier.name;
+  const tierBenefitValue = newTier.annualValue;
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
@@ -380,11 +391,27 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
                     <span className="text-sm">Appreciation Share:</span>
                     <span className="font-medium text-green-600">+${userAppreciationShare.toFixed(2)}</span>
                   </div>
+                  {tierUpgrade && (
+                    <div className="flex justify-between items-center p-2 bg-amber-50 dark:bg-amber-900/20 rounded">
+                      <span className="text-sm font-medium text-amber-800 dark:text-amber-200">Tier Upgrade:</span>
+                      <span className="font-semibold text-amber-800 dark:text-amber-200">{newTier.displayName}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between">
+                    <span className="text-sm">Annual Tier Benefits:</span>
+                    <span className="font-medium text-purple-600">+${tierBenefitValue.toLocaleString()}</span>
+                  </div>
                   <Separator />
                   <div className="flex justify-between">
                     <span className="text-sm font-medium">Total 10-Year Value:</span>
                     <span className="font-bold text-green-600">
                       ${totalTenYearReturn.toFixed(0)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm font-medium">Plus Tier Benefits (10yr):</span>
+                    <span className="font-bold text-purple-600">
+                      +${(tierBenefitValue * 10).toLocaleString()}
                     </span>
                   </div>
                   <div className="flex justify-between">

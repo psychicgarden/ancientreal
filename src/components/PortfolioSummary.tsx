@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CashOutModal } from "./CashOutModal";
+import { InvestorTierStatus } from "./InvestorTierStatus";
 import { TrendingUp, DollarSign, Home, Repeat } from "lucide-react";
 
 interface PortfolioSummaryProps {
@@ -32,6 +33,12 @@ export const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({
   return (
     <>
       <div className="space-y-6">
+        {/* Investor Tier Status */}
+        <InvestorTierStatus 
+          totalInvestmentAmount={portfolioData.totalInvestment} 
+          className="col-span-full"
+        />
+        
         {/* Portfolio Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card>
