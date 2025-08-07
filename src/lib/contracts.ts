@@ -2,7 +2,7 @@
 
 export const CONTRACTS = {
   MAZUNTE_MORTGAGE: {
-    address: "0x1234567890123456789012345678901234567890", // TODO: set deployed address
+    address: "0x0000000000000000000000000000000000000000", // Will be updated after deployment
     abi: [
       // Core functions
       "function purchaseProperty(uint256 downPayment) external",
@@ -24,7 +24,7 @@ export const CONTRACTS = {
   },
 
   USDT: {
-    address: "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7", // Testnet USDT (replace if using TestUSDT)
+    address: "0x0000000000000000000000000000000000000000", // Will be updated after deployment
     abi: [
       "function balanceOf(address account) external view returns (uint256)",
       "function transfer(address to, uint256 amount) external returns (bool)",
@@ -36,7 +36,7 @@ export const CONTRACTS = {
   },
 
   VILLAGE_CITIZENSHIP: {
-    address: "0x2345678901234567890123456789012345678901", // TODO: set deployed address
+    address: "0x0000000000000000000000000000000000000000", // Will be updated after deployment
     abi: [
       "function becomeCitizen() external payable",
       "function hasCitizenship(address user) external view returns (bool)",
@@ -45,7 +45,7 @@ export const CONTRACTS = {
   },
 
   SECONDARY_MARKETPLACE: {
-    address: "0x3456789012345678901234567890123456789012", // TODO: set deployed address
+    address: "0x0000000000000000000000000000000000000000", // Will be updated after deployment
     abi: [
       // Pools
       "function createPool(address propertyToken, uint256 tokenId, address baseToken, uint256 feeRate, uint256 priceImpactThreshold) external",
