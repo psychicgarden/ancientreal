@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Crown, Star, Trophy } from "lucide-react";
+import { Crown, Star, Trophy, User } from "lucide-react";
 import { calculateInvestorTier, getNextTierThreshold, getTierProgress } from "@/lib/utils";
 
 interface InvestorTierStatusProps {
@@ -11,12 +11,14 @@ interface InvestorTierStatusProps {
 }
 
 const tierIcons = {
+  none: User,
   bronze: Star,
   silver: Trophy,
   gold: Crown
 };
 
 const tierColors = {
+  none: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200",
   bronze: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200",
   silver: "bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-200", 
   gold: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
@@ -29,7 +31,7 @@ export const InvestorTierStatus: React.FC<InvestorTierStatusProps> = ({
   const currentTier = calculateInvestorTier(totalInvestmentAmount);
   const nextThreshold = getNextTierThreshold(currentTier.name);
   const progress = getTierProgress(totalInvestmentAmount, currentTier.name);
-  const TierIcon = tierIcons[currentTier.name as keyof typeof tierIcons];
+  const TierIcon = tierIcons[currentTier.name as keyof typeof tierIcons] || User;
 
   const formatCurrency = (amount: number) => 
     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
@@ -39,7 +41,7 @@ export const InvestorTierStatus: React.FC<InvestorTierStatusProps> = ({
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-semibold">Ancient Investor Status</CardTitle>
-          <Badge className={tierColors[currentTier.name as keyof typeof tierColors]}>
+          <Badge className={tierColors[currentTier.name as keyof typeof tierColors] || tierColors.none}>
             <TierIcon className="w-4 h-4 mr-1" />
             {currentTier.displayName}
           </Badge>
