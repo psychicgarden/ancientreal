@@ -274,7 +274,22 @@ const handleTrade = async () => {
         <TabsContent value="discovery" className="space-y-4">
           <PropertyMap onPropertySelect={(property) => {
             if (property.type === 'fractional') {
-              setSelectedFractionalProperty(property);
+              // Transform property data to match FractionalProperty interface
+              const transformedProperty = {
+                id: property.id,
+                name: property.name || `Property ${property.id.slice(0, 6)}`,
+                location: property.location || 'Unknown Location',
+                originalPrice: (property as any).originalPrice || 0,
+                currentSpeculationPrice: (property as any).speculationPrice || 0,
+                minInvestment: (property as any).minInvestment || 50,
+                totalTokensAvailable: (property as any).totalTokensAvailable || 1000000,
+                tokensSold: (property as any).tokensSold || 0,
+                ownerWalletAddress: (property as any).ownerWalletAddress || '',
+                year10TriggerDate: (property as any).year10TriggerDate || new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000).toISOString(),
+                roi: (property as any).roi || 8.5,
+                imageUrl: (property as any).imageUrl
+              };
+              setSelectedFractionalProperty(transformedProperty);
               setIsFractionalModalOpen(true);
             }
           }} />
@@ -338,7 +353,22 @@ const handleTrade = async () => {
                       <Button 
                         className="w-full" 
                         onClick={() => {
-                          setSelectedFractionalProperty(property);
+                          // Transform database property to FractionalProperty interface
+                          const transformedProperty = {
+                            id: property.id,
+                            name: property.property_name || `Property ${property.id.slice(0, 6)}`,
+                            location: property.property_location || 'Mazunte, Oaxaca',
+                            originalPrice: Number(property.original_purchase_price) || 0,
+                            currentSpeculationPrice: Number(property.current_speculation_price) || 0,
+                            minInvestment: Number(property.min_investment) || 50,
+                            totalTokensAvailable: Number(property.total_tokens_available) || 1000000,
+                            tokensSold: Number(property.tokens_sold) || 0,
+                            ownerWalletAddress: property.owner_wallet_address || '',
+                            year10TriggerDate: property.year_10_trigger_date || new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000).toISOString(),
+                            roi: 8.5, // Default ROI based on property value range
+                            imageUrl: property.image_url
+                          };
+                          setSelectedFractionalProperty(transformedProperty);
                           setIsFractionalModalOpen(true);
                         }}
                       >

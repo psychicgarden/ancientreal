@@ -53,12 +53,12 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
 
   if (!property) return null;
 
-  const ownershipPercentage = (investmentAmount / property.currentSpeculationPrice) * 100;
-  const tokenAmount = (investmentAmount / property.currentSpeculationPrice) * property.totalTokensAvailable;
-  const projectedYear10Value = property.originalPrice * 2.1; // 110% appreciation cap
-  const appreciationBurden = (property.originalPrice * 1.1 - property.originalPrice) * 0.5; // 50% of capped appreciation
+  const ownershipPercentage = property.currentSpeculationPrice > 0 ? (investmentAmount / property.currentSpeculationPrice) * 100 : 0;
+  const tokenAmount = property.currentSpeculationPrice > 0 ? (investmentAmount / property.currentSpeculationPrice) * property.totalTokensAvailable : 0;
+  const projectedYear10Value = (property.originalPrice || 0) * 2.1; // 110% appreciation cap
+  const appreciationBurden = ((property.originalPrice || 0) * 1.1 - (property.originalPrice || 0)) * 0.5; // 50% of capped appreciation
   const userAppreciationBurden = appreciationBurden * (ownershipPercentage / 100);
-  const projectedAnnualIncome = investmentAmount * (property.roi / 100);
+  const projectedAnnualIncome = investmentAmount * ((property.roi || 8.5) / 100);
 
   // Quick investment amounts
   const quickAmounts = [50, 100, 500, 1000, 5000];
@@ -73,10 +73,10 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
       return;
     }
 
-    if (investmentAmount < property.minInvestment) {
+    if (investmentAmount < (property.minInvestment || 50)) {
       toast({
         title: "Minimum Investment Required",
-        description: `Minimum investment is $${property.minInvestment}`,
+        description: `Minimum investment is $${(property.minInvestment || 50)}`,
         variant: "destructive"
       });
       return;
@@ -159,11 +159,11 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm text-muted-foreground">Original Purchase</p>
-                    <p className="font-semibold">${property.originalPrice.toLocaleString()}</p>
+                    <p className="font-semibold">${(property.originalPrice || 0).toLocaleString()}</p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Market Speculation</p>
-                    <p className="font-semibold text-primary">${property.currentSpeculationPrice.toLocaleString()}</p>
+                    <p className="font-semibold text-primary">${(property.currentSpeculationPrice || 0).toLocaleString()}</p>
                   </div>
                 </div>
 
@@ -186,11 +186,11 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-sm">Projected Annual Return:</span>
-                  <Badge variant="outline">{property.roi}% APY</Badge>
+                  <Badge variant="outline">{(property.roi || 8.5)}% APY</Badge>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm">Minimum Investment:</span>
-                  <span className="font-medium">${property.minInvestment}</span>
+                  <span className="font-medium">${(property.minInvestment || 50)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm">Year 10 Appreciation Event:</span>
@@ -213,7 +213,7 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
                   <p className="text-sm text-orange-700 dark:text-orange-300">
                     At year 10, all fractional owners must pay their share of the appreciation 
                     (50% of capped appreciation). This is calculated from the original purchase 
-                    price of ${property.originalPrice.toLocaleString()}, not current speculation prices.
+                    price of ${(property.originalPrice || 0).toLocaleString()}, not current speculation prices.
                   </p>
                 </div>
               </div>
@@ -250,7 +250,7 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
                   type="number"
                   value={investmentAmount}
                   onChange={(e) => setInvestmentAmount(Number(e.target.value))}
-                  min={property.minInvestment}
+                  min={property.minInvestment || 50}
                   placeholder="Enter amount"
                 />
               </div>
@@ -258,12 +258,12 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
               {/* Investment Slider */}
               <div className="space-y-2">
                 <label className="text-sm font-medium">
-                  Investment Range: ${property.minInvestment} - $50,000
+                  Investment Range: ${(property.minInvestment || 50)} - $50,000
                 </label>
                 <Slider
                   value={[investmentAmount]}
                   onValueChange={(value) => setInvestmentAmount(value[0])}
-                  min={property.minInvestment}
+                  min={property.minInvestment || 50}
                   max={50000}
                   step={10}
                   className="w-full"
@@ -320,7 +320,7 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
                   <div className="w-3 h-3 bg-secondary rounded-full flex-shrink-0"></div>
                   <div>
                     <p className="font-medium">Years 1-10: Rental Income</p>
-                    <p className="text-muted-foreground">Earn {property.roi}% APY on your investment</p>
+                    <p className="text-muted-foreground">Earn {(property.roi || 8.5)}% APY on your investment</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -338,7 +338,7 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
             {/* Investment Button */}
             <Button 
               onClick={handleInvestment}
-              disabled={!isConnected || isInvesting || investmentAmount < property.minInvestment}
+              disabled={!isConnected || isInvesting || investmentAmount < (property.minInvestment || 50)}
               className="w-full"
               size="lg"
             >
@@ -346,8 +346,8 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
                 "Processing Investment..."
               ) : !isConnected ? (
                 "Connect Wallet to Invest"
-              ) : investmentAmount < property.minInvestment ? (
-                `Minimum $${property.minInvestment} Required`
+              ) : investmentAmount < (property.minInvestment || 50) ? (
+                `Minimum $${(property.minInvestment || 50)} Required`
               ) : (
                 `Invest $${investmentAmount.toLocaleString()}`
               )}
