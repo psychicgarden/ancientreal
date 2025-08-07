@@ -12,89 +12,19 @@ import { SecondaryMarketplace } from "@/components/SecondaryMarketplace";
 import { SimpleStaking } from "@/components/SimpleStaking";
 import { SimpleBorrowing } from "@/components/SimpleBorrowing";
 import { BeginnerPortfolioSummary } from "@/components/BeginnerPortfolioSummary";
-import { InvestorTierStatus } from "@/components/InvestorTierStatus";
 import { FractionalInvestingExplanation } from "@/components/FractionalInvestingExplanation";
 import { TrendingUp, Handshake, DollarSign, Zap, GraduationCap, Settings } from "lucide-react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { supabase } from "@/integrations/supabase/client";
-import { calculateTotalUserInvestments } from "@/lib/utils";
-import { useWallet } from "@/contexts/WalletContext";
 
 export const LiquidityTradingHub = () => {
   const [isBeginnerMode, setIsBeginnerMode] = useState(true);
   const [activeTab, setActiveTab] = useState(isBeginnerMode ? "overview" : "marketplace");
-  const [totalInvestmentAmount, setTotalInvestmentAmount] = useState(0);
-  const [isLoadingInvestments, setIsLoadingInvestments] = useState(true);
-  const { isConnected, account } = useWallet();
 
   // Update active tab when mode changes
   React.useEffect(() => {
     setActiveTab(isBeginnerMode ? "overview" : "marketplace");
   }, [isBeginnerMode]);
 
-  // Load user's total investments
-  useEffect(() => {
-    const loadUserInvestments = async () => {
-      if (!isConnected || !account) {
-        setTotalInvestmentAmount(0);
-        setIsLoadingInvestments(false);
-        return;
-      }
-
-      setIsLoadingInvestments(true);
-      try {
-        const total = await calculateTotalUserInvestments(account, supabase);
-        setTotalInvestmentAmount(total);
-      } catch (error) {
-        console.error('Error loading user investments:', error);
-        setTotalInvestmentAmount(0);
-      } finally {
-        setIsLoadingInvestments(false);
-      }
-    };
-
-    loadUserInvestments();
-  }, [isConnected, account]);
-
-  // Set up real-time subscriptions for investment updates
-  useEffect(() => {
-    if (!isConnected || !account) return;
-
-    const channel = supabase
-      .channel('investment-updates')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'user_properties',
-        filter: `user_wallet_address=eq.${account}`
-      }, () => loadUserInvestments())
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public', 
-        table: 'fractional_investments',
-        filter: `investor_wallet_address=eq.${account}`
-      }, () => loadUserInvestments())
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'developer_investments', 
-        filter: `user_wallet_address=eq.${account}`
-      }, () => loadUserInvestments())
-      .subscribe();
-
-    const loadUserInvestments = async () => {
-      try {
-        const total = await calculateTotalUserInvestments(account, supabase);
-        setTotalInvestmentAmount(total);
-      } catch (error) {
-        console.error('Error loading user investments:', error);
-      }
-    };
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [isConnected, account]);
 
   return (
     <div className="space-y-6">
@@ -186,12 +116,6 @@ export const LiquidityTradingHub = () => {
               <div className="space-y-6">
                 {/* Fractional Investing Explanation */}
                 <FractionalInvestingExplanation />
-                
-                {/* Your Current Status */}
-                <InvestorTierStatus 
-                  totalInvestmentAmount={totalInvestmentAmount} 
-                  className="mb-6" 
-                />
                 
                 {/* Available Investments */}
                 <ErrorBoundary>
