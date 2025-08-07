@@ -12,6 +12,7 @@ import { SecondaryMarketplace } from "@/components/SecondaryMarketplace";
 import { SimpleStaking } from "@/components/SimpleStaking";
 import { SimpleBorrowing } from "@/components/SimpleBorrowing";
 import { BeginnerPortfolioSummary } from "@/components/BeginnerPortfolioSummary";
+import { InvestorTierStatus } from "@/components/InvestorTierStatus";
 import { TrendingUp, Handshake, DollarSign, Zap, GraduationCap, Settings } from "lucide-react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
@@ -111,11 +112,15 @@ export const LiquidityTradingHub = () => {
             </TabsContent>
 
             <TabsContent value="buy">
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div className="space-y-2">
                   <h2 className="text-2xl font-semibold">Buy Tokens</h2>
                   <p className="text-muted-foreground">Peer-to-peer fractional offerings from real property owners. Buy at their listed speculation price and trade exposure to appreciation.</p>
                 </div>
+                
+                {/* Ancient Investor Tier Status in Buy Tokens */}
+                <InvestorTierStatus totalInvestmentAmount={75000} className="mb-6" />
+                
                 <ErrorBoundary>
                   <SecondaryMarketplace />
                 </ErrorBoundary>

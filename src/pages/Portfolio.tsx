@@ -327,6 +327,9 @@ const Portfolio = () => {
 
           {/* Properties Tab */}
           <TabsContent value="properties" className="space-y-6">
+            {/* Enhanced Portfolio Summary with Tier Status */}
+            <PortfolioSummary portfolioData={portfolioData} />
+            
             {/* Portfolio Overview Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Card>
