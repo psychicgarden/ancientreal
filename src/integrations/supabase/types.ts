@@ -258,6 +258,45 @@ export type Database = {
         }
         Relationships: []
       }
+      investor_rental_claims: {
+        Row: {
+          claimable_amount: number
+          claimed_amount: number
+          claimed_at: string | null
+          created_at: string
+          distribution_id: string
+          id: string
+          investor_wallet_address: string
+          ownership_percentage: number
+          property_fractionalization_id: string
+          updated_at: string
+        }
+        Insert: {
+          claimable_amount?: number
+          claimed_amount?: number
+          claimed_at?: string | null
+          created_at?: string
+          distribution_id: string
+          id?: string
+          investor_wallet_address: string
+          ownership_percentage?: number
+          property_fractionalization_id: string
+          updated_at?: string
+        }
+        Update: {
+          claimable_amount?: number
+          claimed_amount?: number
+          claimed_at?: string | null
+          created_at?: string
+          distribution_id?: string
+          id?: string
+          investor_wallet_address?: string
+          ownership_percentage?: number
+          property_fractionalization_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       payment_history: {
         Row: {
           created_at: string
@@ -424,46 +463,115 @@ export type Database = {
       }
       property_fractionalization: {
         Row: {
+          appreciation_cap_percent: number | null
           created_at: string
           current_speculation_price: number
           id: string
+          investor_appreciation_burden_percent: number | null
           is_active: boolean
+          last_rental_distribution: string | null
           min_investment: number
+          monthly_base_rent: number | null
+          original_property_value: number | null
           original_purchase_price: number
           owner_wallet_address: string
+          projected_appreciation_percent: number | null
+          property_expenses_ytd: number | null
           property_id: string
           tokens_sold: number
+          total_rental_collected: number | null
           total_tokens_available: number
           updated_at: string
           year_10_trigger_date: string
         }
         Insert: {
+          appreciation_cap_percent?: number | null
           created_at?: string
           current_speculation_price: number
           id?: string
+          investor_appreciation_burden_percent?: number | null
           is_active?: boolean
+          last_rental_distribution?: string | null
           min_investment?: number
+          monthly_base_rent?: number | null
+          original_property_value?: number | null
           original_purchase_price: number
           owner_wallet_address: string
+          projected_appreciation_percent?: number | null
+          property_expenses_ytd?: number | null
           property_id: string
           tokens_sold?: number
+          total_rental_collected?: number | null
           total_tokens_available?: number
           updated_at?: string
           year_10_trigger_date: string
         }
         Update: {
+          appreciation_cap_percent?: number | null
           created_at?: string
           current_speculation_price?: number
           id?: string
+          investor_appreciation_burden_percent?: number | null
           is_active?: boolean
+          last_rental_distribution?: string | null
           min_investment?: number
+          monthly_base_rent?: number | null
+          original_property_value?: number | null
           original_purchase_price?: number
           owner_wallet_address?: string
+          projected_appreciation_percent?: number | null
+          property_expenses_ytd?: number | null
           property_id?: string
           tokens_sold?: number
+          total_rental_collected?: number | null
           total_tokens_available?: number
           updated_at?: string
           year_10_trigger_date?: string
+        }
+        Relationships: []
+      }
+      rental_income_distributions: {
+        Row: {
+          created_at: string
+          distributable_amount: number
+          distribution_date: string
+          expense_breakdown: Json | null
+          id: string
+          management_fee_amount: number
+          management_fee_percent: number
+          net_rental_income: number
+          property_expenses: number
+          property_fractionalization_id: string
+          total_rental_income: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          distributable_amount?: number
+          distribution_date: string
+          expense_breakdown?: Json | null
+          id?: string
+          management_fee_amount?: number
+          management_fee_percent?: number
+          net_rental_income?: number
+          property_expenses?: number
+          property_fractionalization_id: string
+          total_rental_income?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          distributable_amount?: number
+          distribution_date?: string
+          expense_breakdown?: Json | null
+          id?: string
+          management_fee_amount?: number
+          management_fee_percent?: number
+          net_rental_income?: number
+          property_expenses?: number
+          property_fractionalization_id?: string
+          total_rental_income?: number
+          updated_at?: string
         }
         Relationships: []
       }
@@ -756,6 +864,10 @@ export type Database = {
       }
       calculate_daily_yield: {
         Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      distribute_monthly_rental_income: {
+        Args: { property_frac_id: string; rental_month?: string }
         Returns: undefined
       }
     }

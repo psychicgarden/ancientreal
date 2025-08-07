@@ -17,7 +17,10 @@ import {
   DollarSign, 
   Users, 
   Shield,
-  AlertTriangle 
+  AlertTriangle,
+  Home,
+  Receipt,
+  PieChart
 } from "lucide-react";
 
 interface FractionalProperty {
@@ -55,10 +58,27 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
 
   const ownershipPercentage = property.currentSpeculationPrice > 0 ? (investmentAmount / property.currentSpeculationPrice) * 100 : 0;
   const tokenAmount = property.currentSpeculationPrice > 0 ? (investmentAmount / property.currentSpeculationPrice) * property.totalTokensAvailable : 0;
-  const projectedYear10Value = (property.originalPrice || 0) * 2.1; // 110% appreciation cap
-  const appreciationBurden = ((property.originalPrice || 0) * 1.1 - (property.originalPrice || 0)) * 0.5; // 50% of capped appreciation
+  
+  // Correct appreciation calculation using 181% total appreciation with 10% cap
+  const originalPrice = property.originalPrice || 150000;
+  const projected181Value = originalPrice * 2.81; // 181% appreciation = 2.81x
+  const cappedAppreciationValue = originalPrice * 1.10; // 10% cap = 1.10x
+  const appreciationBurden = (cappedAppreciationValue - originalPrice) * 0.5; // 50% of capped appreciation
   const userAppreciationBurden = appreciationBurden * (ownershipPercentage / 100);
-  const projectedAnnualIncome = investmentAmount * ((property.roi || 8.5) / 100);
+  
+  // Real rental income calculation: $2050 base rent - 20% expenses - 8% management fee
+  const monthlyBaseRent = 2050;
+  const monthlyExpenses = monthlyBaseRent * 0.20; // 20% for maintenance, taxes, insurance
+  const managementFee = monthlyBaseRent * 0.08; // 8% management fee
+  const netMonthlyRental = monthlyBaseRent - monthlyExpenses - managementFee;
+  const userMonthlyRentalIncome = netMonthlyRental * (ownershipPercentage / 100);
+  const projectedAnnualIncome = userMonthlyRentalIncome * 12;
+
+  // Investment performance metrics
+  const totalTenYearRental = projectedAnnualIncome * 10;
+  const netTenYearReturn = totalTenYearRental - userAppreciationBurden;
+  const totalReturn = (netTenYearReturn / investmentAmount) * 100;
+  const annualizedReturn = Math.pow(1 + (netTenYearReturn / investmentAmount), 1/10) - 1;
 
   // Quick investment amounts
   const quickAmounts = [50, 100, 500, 1000, 5000];
@@ -135,15 +155,15 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <TrendingUp className="h-5 w-5" />
-            Fractional Investment - {property.name}
+            Fractional Real Estate Investment - {property.name}
           </DialogTitle>
         </DialogHeader>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - Property Details */}
           <div className="space-y-4">
             <Card className="p-4">
@@ -159,7 +179,7 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm text-muted-foreground">Original Purchase</p>
-                    <p className="font-semibold">${(property.originalPrice || 0).toLocaleString()}</p>
+                    <p className="font-semibold">${originalPrice.toLocaleString()}</p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Market Speculation</p>
@@ -177,23 +197,36 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
               </div>
             </Card>
 
-            {/* Key Investment Details */}
+            {/* Rental Income Details */}
             <Card className="p-4">
               <h4 className="font-semibold mb-3 flex items-center gap-2">
-                <Calculator className="h-4 w-4" />
-                Investment Details
+                <Home className="h-4 w-4" />
+                Monthly Rental Breakdown
               </h4>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-sm">Projected Annual Return:</span>
-                  <Badge variant="outline">{(property.roi || 8.5)}% APY</Badge>
+                  <span className="text-sm text-muted-foreground">Monthly Base Rent:</span>
+                  <span className="font-medium">${monthlyBaseRent.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-sm">Minimum Investment:</span>
+                  <span className="text-sm text-muted-foreground">Property Expenses:</span>
+                  <span className="font-medium text-red-600">-${monthlyExpenses.toFixed(0)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-muted-foreground">Management Fee:</span>
+                  <span className="font-medium text-red-600">-${managementFee.toFixed(0)}</span>
+                </div>
+                <Separator />
+                <div className="flex justify-between">
+                  <span className="text-sm text-muted-foreground">Net Monthly Rental:</span>
+                  <span className="font-medium text-green-600">${netMonthlyRental.toFixed(0)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-muted-foreground">Minimum Investment:</span>
                   <span className="font-medium">${(property.minInvestment || 50)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">Year 10 Appreciation Event:</span>
+                  <span className="text-sm">Year 10 Trigger:</span>
                   <span className="text-sm text-muted-foreground">
                     <Clock className="h-3 w-3 inline mr-1" />
                     {new Date(property.year10TriggerDate).getFullYear()}
@@ -211,16 +244,17 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
                     Year 10 Appreciation Payment
                   </h4>
                   <p className="text-sm text-orange-700 dark:text-orange-300">
-                    At year 10, all fractional owners must pay their share of the appreciation 
-                    (50% of capped appreciation). This is calculated from the original purchase 
-                    price of ${(property.originalPrice || 0).toLocaleString()}, not current speculation prices.
+                    Property is projected to appreciate 181% (${originalPrice.toLocaleString()} → ${projected181Value.toLocaleString()}) 
+                    over 10 years. However, appreciation burden is capped at 10% (${cappedAppreciationValue.toLocaleString()}). 
+                    You pay 50% of capped appreciation: ${appreciationBurden.toLocaleString()} total, 
+                    or ${userAppreciationBurden.toFixed(2)} for your ownership share.
                   </p>
                 </div>
               </div>
             </Card>
           </div>
 
-          {/* Right Column - Investment Interface */}
+          {/* Middle Column - Investment Interface */}
           <div className="space-y-4">
             <Card className="p-4">
               <h4 className="font-semibold mb-4 flex items-center gap-2">
@@ -292,12 +326,72 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
                 </div>
                 <Separator />
                 <div className="flex justify-between">
-                  <span className="text-sm">Projected Annual Income:</span>
+                  <span className="text-sm">Monthly Rental Income:</span>
+                  <span className="font-semibold text-green-600">${userMonthlyRentalIncome.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm">Annual Rental Income:</span>
                   <span className="font-semibold text-green-600">${projectedAnnualIncome.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
+                  <span className="text-sm">Rental Yield (Annual):</span>
+                  <span className="font-semibold text-blue-600">{((projectedAnnualIncome / investmentAmount) * 100).toFixed(2)}%</span>
+                </div>
+                <Separator />
+                <div className="flex justify-between">
                   <span className="text-sm">Year 10 Appreciation Burden:</span>
                   <span className="font-semibold text-orange-600">${userAppreciationBurden.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-muted-foreground">Total 10-Year Rental Income:</span>
+                  <span className="font-semibold text-green-600">${totalTenYearRental.toFixed(0)}</span>
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          {/* Right Column - Performance & Timeline */}
+          <div className="space-y-4">
+            {/* Performance Metrics */}
+            <Card className="p-4">
+              <h4 className="font-semibold mb-4 flex items-center gap-2">
+                <PieChart className="h-4 w-4" />
+                Investment Performance
+              </h4>
+              <div className="space-y-4">
+                <div className="text-center p-4 bg-muted/20 rounded-lg">
+                  <div className="text-2xl font-bold text-primary">
+                    {annualizedReturn > 0 ? '+' : ''}{(annualizedReturn * 100).toFixed(2)}%
+                  </div>
+                  <p className="text-sm text-muted-foreground">Annualized Return</p>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-sm">Total Investment:</span>
+                    <span className="font-medium">${investmentAmount.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm">Total Rental (10 years):</span>
+                    <span className="font-medium text-green-600">+${totalTenYearRental.toFixed(0)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm">Appreciation Burden:</span>
+                    <span className="font-medium text-orange-600">-${userAppreciationBurden.toFixed(2)}</span>
+                  </div>
+                  <Separator />
+                  <div className="flex justify-between">
+                    <span className="text-sm font-medium">Net 10-Year Return:</span>
+                    <span className={`font-bold ${netTenYearReturn > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {netTenYearReturn > 0 ? '+' : ''}${netTenYearReturn.toFixed(0)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm font-medium">Total Return:</span>
+                    <span className={`font-bold ${totalReturn > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {totalReturn > 0 ? '+' : ''}{totalReturn.toFixed(1)}%
+                    </span>
+                  </div>
                 </div>
               </div>
             </Card>
@@ -319,8 +413,8 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
                 <div className="flex items-center gap-3">
                   <div className="w-3 h-3 bg-secondary rounded-full flex-shrink-0"></div>
                   <div>
-                    <p className="font-medium">Years 1-10: Rental Income</p>
-                    <p className="text-muted-foreground">Earn {(property.roi || 8.5)}% APY on your investment</p>
+                    <p className="font-medium">Years 1-10: Monthly Rental Income</p>
+                    <p className="text-muted-foreground">Earn ${userMonthlyRentalIncome.toFixed(2)}/month (${projectedAnnualIncome.toFixed(0)}/year)</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -329,6 +423,15 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
                     <p className="font-medium">Year 10: Appreciation Event</p>
                     <p className="text-muted-foreground">
                       Pay ${userAppreciationBurden.toFixed(2)} appreciation or choose refinancing
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 bg-green-500 rounded-full flex-shrink-0"></div>
+                  <div>
+                    <p className="font-medium">Beyond Year 10: Continued Ownership</p>
+                    <p className="text-muted-foreground">
+                      Continue earning rental income with full ownership benefits
                     </p>
                   </div>
                 </div>

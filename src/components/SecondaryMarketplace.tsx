@@ -13,6 +13,7 @@ import PropertyMap from "./PropertyMap";
 import FractionalInvestmentModal from "./FractionalInvestmentModal";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import RentalIncomeTracker from "./RentalIncomeTracker";
 
 interface TokenListing {
   id: string; // display id
@@ -266,6 +267,7 @@ const handleTrade = async () => {
 <TabsList>
   <TabsTrigger value="discovery">Property Discovery</TabsTrigger>
   <TabsTrigger value="fractional">Fractional Investments</TabsTrigger>
+  <TabsTrigger value="income">Rental Income</TabsTrigger>
   <TabsTrigger value="market">Token Trading</TabsTrigger>
   <TabsTrigger value="trade">Trade</TabsTrigger>
   <TabsTrigger value="orderbook">Order Book</TabsTrigger>
@@ -380,6 +382,10 @@ const handleTrade = async () => {
               ))}
             </div>
           </div>
+        </TabsContent>
+
+        <TabsContent value="income" className="space-y-4">
+          <RentalIncomeTracker />
         </TabsContent>
 
         <TabsContent value="market" className="space-y-4">
