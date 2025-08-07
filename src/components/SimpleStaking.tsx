@@ -9,36 +9,14 @@ import { toast } from "@/hooks/use-toast";
 const stakingPools = [
   {
     id: 1,
-    name: "High-Yield Pool",
-    apy: "15%",
-    risk: "Medium",
-    description: "Diversified portfolio of premium properties",
-    minStake: 1000,
-    totalStaked: 2500000,
-    poolLimit: 5000000,
-    lockPeriod: "90 days"
-  },
-  {
-    id: 2,
     name: "Stable Income Pool",
-    apy: "8%",
+    apy: "6%",
     risk: "Low",
-    description: "Conservative mix of established properties",
+    description: "Earn from verified property rental income distributions",
     minStake: 500,
     totalStaked: 1800000,
     poolLimit: 3000000,
     lockPeriod: "30 days"
-  },
-  {
-    id: 3,
-    name: "Growth Pool",
-    apy: "20%",
-    risk: "High",
-    description: "New developments with high growth potential",
-    minStake: 2000,
-    totalStaked: 800000,
-    poolLimit: 2000000,
-    lockPeriod: "180 days"
   }
 ];
 
