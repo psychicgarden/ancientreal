@@ -391,21 +391,91 @@ const handleTrade = async () => {
         </TabsContent>
 
         <TabsContent value="market" className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="space-y-6">
+            {/* AMM-style Trading Interface */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <ArrowUpDown className="h-5 w-5" />
+                  Token Swap
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">From</label>
+                    <div className="flex gap-2">
+                      <Input 
+                        type="number"
+                        value={tradeAmount}
+                        onChange={(e) => setTradeAmount(e.target.value)}
+                        placeholder="0.00"
+                        className="flex-1"
+                      />
+                      <Badge variant="secondary" className="px-3 py-2">USDT</Badge>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">To (estimated)</label>
+                    <div className="flex gap-2">
+                      <Input 
+                        type="number"
+                        value={selectedToken && tradeAmount ? (parseFloat(tradeAmount) / selectedToken.price).toFixed(4) : ''}
+                        readOnly
+                        className="flex-1 bg-muted"
+                      />
+                      <Badge variant="secondary" className="px-3 py-2">
+                        {selectedToken ? selectedToken.tokenSymbol : 'PROP'}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+
+                {selectedToken && tradeAmount && (
+                  <div className="bg-muted p-3 rounded-lg space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>Exchange Rate:</span>
+                      <span>1 {selectedToken.tokenSymbol} = ${selectedToken.price}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Total Cost:</span>
+                      <span>${(parseFloat(tradeAmount) || 0).toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Trading Fee (0.3%):</span>
+                      <span>${((parseFloat(tradeAmount) || 0) * 0.003).toFixed(2)}</span>
+                    </div>
+                  </div>
+                )}
+
+                <Button 
+                  className="w-full" 
+                  onClick={handleTrade}
+                  disabled={!selectedToken || !tradeAmount || isTrading}
+                >
+                  {isTrading ? 'Processing...' : `Swap for ${selectedToken?.tokenSymbol || 'Tokens'}`}
+                </Button>
+              </CardContent>
+            </Card>
+
             {/* Token Listings */}
-            <div className="lg:col-span-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Property Token Listings</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {tokenListings.map((token) => (
-                      <div 
-                        key={token.id}
-                        className="flex items-center justify-between p-4 border rounded-lg cursor-pointer hover:bg-muted/50"
-                        onClick={() => setSelectedToken(token)}
-                      >
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Available Property Tokens</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {tokenListings.map((token) => (
+                        <div 
+                          key={token.id}
+                          className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer hover:bg-muted/50 transition-all ${
+                            selectedToken?.id === token.id ? 'ring-2 ring-primary shadow-lg' : ''
+                          }`}
+                          onClick={() => setSelectedToken(token)}
+                        >
                         <div className="flex-1">
                           <div className="flex items-center gap-3">
                             <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white font-bold text-sm">
@@ -433,64 +503,65 @@ const handleTrade = async () => {
                         <div className="text-right ml-6">
                           <div className="text-sm text-muted-foreground">APY</div>
                           <div className="font-semibold text-green-600">{token.apy}%</div>
+                         </div>
                         </div>
+                       ))}
+                     </div>
+                   </CardContent>
+                 </Card>
+               </div>
+
+              {/* Market Stats */}
+              <div className="space-y-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <TrendingUp className="h-5 w-5" />
+                      Market Stats
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <div className="text-sm text-muted-foreground">Total Market Cap</div>
+                      <div className="text-2xl font-bold">$533k</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-muted-foreground">24h Volume</div>
+                      <div className="text-xl font-semibold">$105k</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-muted-foreground">Active Traders</div>
+                      <div className="text-xl font-semibold">247</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-muted-foreground">Avg APY</div>
+                      <div className="text-xl font-semibold text-green-600">15.5%</div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Liquidity Pools</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span className="text-sm">BAHIA/USDT</span>
+                        <span className="text-sm font-semibold">$1.2M</span>
                       </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Market Stats */}
-            <div className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <TrendingUp className="h-5 w-5" />
-                    Market Stats
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <div className="text-sm text-muted-foreground">Total Market Cap</div>
-                    <div className="text-2xl font-bold">$533k</div>
-                  </div>
-                  <div>
-                    <div className="text-sm text-muted-foreground">24h Volume</div>
-                    <div className="text-xl font-semibold">$105k</div>
-                  </div>
-                  <div>
-                    <div className="text-sm text-muted-foreground">Active Traders</div>
-                    <div className="text-xl font-semibold">247</div>
-                  </div>
-                  <div>
-                    <div className="text-sm text-muted-foreground">Avg APY</div>
-                    <div className="text-xl font-semibold text-green-600">15.5%</div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Liquidity Pools</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-sm">BAHIA/USDT</span>
-                      <span className="text-sm font-semibold">$1.2M</span>
+                      <div className="flex justify-between">
+                        <span className="text-sm">TULUM/USDT</span>
+                        <span className="text-sm font-semibold">$950k</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">SANTORINI/USDT</span>
+                        <span className="text-sm font-semibold">$890k</span>
+                      </div>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">TULUM/USDT</span>
-                      <span className="text-sm font-semibold">$950k</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">SANTORINI/USDT</span>
-                      <span className="text-sm font-semibold">$890k</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </div>
         </TabsContent>
@@ -602,21 +673,137 @@ const handleTrade = async () => {
           )}
         </TabsContent>
 
-        <TabsContent value="orderbook">
-          <Card>
-            <CardHeader>
-              <CardTitle>Order Book</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-12">
-                <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">Order book functionality coming soon</p>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Advanced order matching and limit orders
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+        <TabsContent value="orderbook" className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Order Placement */}
+            <div className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Place Advanced Order</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Order Type</label>
+                    <select 
+                      className="w-full p-2 border rounded-md bg-background"
+                      value={tradeType}
+                      onChange={(e) => setTradeType(e.target.value as 'buy' | 'sell')}
+                    >
+                      <option value="buy">Market Buy</option>
+                      <option value="sell">Market Sell</option>
+                    </select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Token Amount</label>
+                    <Input
+                      type="number"
+                      value={tradeAmount}
+                      onChange={(e) => setTradeAmount(e.target.value)}
+                      placeholder="0.00"
+                    />
+                  </div>
+
+                  {selectedToken && (
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Price per Token</label>
+                      <Input
+                        type="number"
+                        value={selectedToken.price}
+                        readOnly
+                        className="bg-muted"
+                      />
+                    </div>
+                  )}
+
+                  <div className="bg-muted p-3 rounded-lg space-y-1">
+                    <div className="flex justify-between text-sm">
+                      <span>Estimated Total:</span>
+                      <span>
+                        ${selectedToken && tradeAmount ? 
+                          (parseFloat(tradeAmount) * selectedToken.price).toFixed(2) : 
+                          '0.00'
+                        }
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Trading Fee:</span>
+                      <span>
+                        ${selectedToken && tradeAmount ? 
+                          (parseFloat(tradeAmount) * selectedToken.price * 0.003).toFixed(2) : 
+                          '0.00'
+                        }
+                      </span>
+                    </div>
+                  </div>
+
+                  <Button 
+                    className="w-full" 
+                    onClick={handleTrade}
+                    disabled={!selectedToken || !tradeAmount || isTrading}
+                  >
+                    {isTrading ? 'Processing...' : `${tradeType === 'buy' ? 'Buy' : 'Sell'} ${selectedToken?.tokenSymbol || 'Tokens'}`}
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Market Depth & Order Book */}
+            <div className="lg:col-span-2 space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Market Depth</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="font-medium text-green-600 mb-3">Buy Orders</h4>
+                      <div className="space-y-2">
+                        {tokenListings.slice(0, 5).map((token, idx) => (
+                          <div key={`buy-${idx}`} className="flex justify-between text-sm p-2 bg-green-50 rounded">
+                            <span className="text-green-700">${token.price.toFixed(2)}</span>
+                            <span>{token.availableAmount.toFixed(2)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-medium text-red-600 mb-3">Sell Orders</h4>
+                      <div className="space-y-2">
+                        {tokenListings.slice(0, 5).map((token, idx) => (
+                          <div key={`sell-${idx}`} className="flex justify-between text-sm p-2 bg-red-50 rounded">
+                            <span className="text-red-700">${(token.price * 1.02).toFixed(2)}</span>
+                            <span>{(token.availableAmount * 0.8).toFixed(2)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Recent Trades</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {tokenListings.slice(0, 8).map((token, idx) => (
+                      <div key={`trade-${idx}`} className="flex justify-between text-sm p-2 border-b">
+                        <span>{token.tokenSymbol}</span>
+                        <span>${token.price.toFixed(2)}</span>
+                        <span>{(Math.random() * 10).toFixed(2)}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {Math.floor(Math.random() * 60)}m ago
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
 
