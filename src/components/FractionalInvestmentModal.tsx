@@ -59,12 +59,12 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
   const ownershipPercentage = property.currentSpeculationPrice > 0 ? (investmentAmount / property.currentSpeculationPrice) * 100 : 0;
   const tokenAmount = property.currentSpeculationPrice > 0 ? (investmentAmount / property.currentSpeculationPrice) * property.totalTokensAvailable : 0;
   
-  // Correct appreciation calculation using 181% total appreciation with 10% cap
+  // Fixed appreciation calculation using 181% total appreciation with investor 50% share
   const originalPrice = property.originalPrice || 150000;
-  const projected181Value = originalPrice * 2.81; // 181% appreciation = 2.81x
-  const cappedAppreciationValue = originalPrice * 1.10; // 10% cap = 1.10x
-  const appreciationBurden = (cappedAppreciationValue - originalPrice) * 0.5; // 50% of capped appreciation
-  const userAppreciationBurden = appreciationBurden * (ownershipPercentage / 100);
+  const projected181Value = originalPrice * 2.81; // 181% appreciation = 2.81x multiplier
+  const totalAppreciation = projected181Value - originalPrice; // $271,500 total appreciation
+  const investorAppreciationShare = totalAppreciation * 0.5; // Investors get 50% = $135,750
+  const userAppreciationShare = investorAppreciationShare * (ownershipPercentage / 100);
   
   // Real rental income calculation: $2050 base rent - 20% expenses - 8% management fee
   const monthlyBaseRent = 2050;
@@ -74,11 +74,12 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
   const userMonthlyRentalIncome = netMonthlyRental * (ownershipPercentage / 100);
   const projectedAnnualIncome = userMonthlyRentalIncome * 12;
 
-  // Investment performance metrics
+  // Investment performance metrics (now includes appreciation gains instead of burden)
   const totalTenYearRental = projectedAnnualIncome * 10;
-  const netTenYearReturn = totalTenYearRental - userAppreciationBurden;
-  const totalReturn = (netTenYearReturn / investmentAmount) * 100;
-  const annualizedReturn = Math.pow(1 + (netTenYearReturn / investmentAmount), 1/10) - 1;
+  const totalTenYearReturn = totalTenYearRental + userAppreciationShare; // Add appreciation gains
+  const netTenYearProfit = totalTenYearReturn - investmentAmount; // Subtract initial investment
+  const totalReturnPercentage = (totalTenYearReturn / investmentAmount - 1) * 100;
+  const annualizedReturn = Math.pow(totalTenYearReturn / investmentAmount, 1/10) - 1;
 
   // Quick investment amounts
   const quickAmounts = [50, 100, 500, 1000, 5000];
@@ -240,14 +241,14 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
               <div className="flex items-start gap-3">
                 <AlertTriangle className="h-5 w-5 text-orange-500 mt-0.5" />
                 <div className="space-y-2">
-                  <h4 className="font-semibold text-orange-800 dark:text-orange-200">
-                    Year 10 Appreciation Payment
+                  <h4 className="font-semibold text-green-800 dark:text-green-200">
+                    Year 10 Appreciation Gains
                   </h4>
                   <p className="text-sm text-orange-700 dark:text-orange-300">
                     Property is projected to appreciate 181% (${originalPrice.toLocaleString()} → ${projected181Value.toLocaleString()}) 
-                    over 10 years. However, appreciation burden is capped at 10% (${cappedAppreciationValue.toLocaleString()}). 
-                    You pay 50% of capped appreciation: ${appreciationBurden.toLocaleString()} total, 
-                    or ${userAppreciationBurden.toFixed(2)} for your ownership share.
+                    over 10 years. Total appreciation: ${totalAppreciation.toLocaleString()}. 
+                    As an investor, you receive 50% of appreciation gains: ${investorAppreciationShare.toLocaleString()} total, 
+                    or ${userAppreciationShare.toFixed(2)} for your ownership share.
                   </p>
                 </div>
               </div>
@@ -339,8 +340,8 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
                 </div>
                 <Separator />
                 <div className="flex justify-between">
-                  <span className="text-sm">Year 10 Appreciation Burden:</span>
-                  <span className="font-semibold text-orange-600">${userAppreciationBurden.toFixed(2)}</span>
+                  <span className="text-sm">Year 10 Appreciation Share:</span>
+                  <span className="font-semibold text-green-600">+${userAppreciationShare.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm text-muted-foreground">Total 10-Year Rental Income:</span>
@@ -376,20 +377,26 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
                     <span className="font-medium text-green-600">+${totalTenYearRental.toFixed(0)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm">Appreciation Burden:</span>
-                    <span className="font-medium text-orange-600">-${userAppreciationBurden.toFixed(2)}</span>
+                    <span className="text-sm">Appreciation Share:</span>
+                    <span className="font-medium text-green-600">+${userAppreciationShare.toFixed(2)}</span>
                   </div>
                   <Separator />
                   <div className="flex justify-between">
-                    <span className="text-sm font-medium">Net 10-Year Return:</span>
-                    <span className={`font-bold ${netTenYearReturn > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      {netTenYearReturn > 0 ? '+' : ''}${netTenYearReturn.toFixed(0)}
+                    <span className="text-sm font-medium">Total 10-Year Value:</span>
+                    <span className="font-bold text-green-600">
+                      ${totalTenYearReturn.toFixed(0)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm font-medium">Net Profit:</span>
+                    <span className={`font-bold ${netTenYearProfit > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {netTenYearProfit > 0 ? '+' : ''}${netTenYearProfit.toFixed(0)}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-sm font-medium">Total Return:</span>
-                    <span className={`font-bold ${totalReturn > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      {totalReturn > 0 ? '+' : ''}{totalReturn.toFixed(1)}%
+                    <span className={`font-bold ${totalReturnPercentage > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {totalReturnPercentage > 0 ? '+' : ''}{totalReturnPercentage.toFixed(1)}%
                     </span>
                   </div>
                 </div>
@@ -421,9 +428,9 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
                   <div className="w-3 h-3 bg-orange-500 rounded-full flex-shrink-0"></div>
                   <div>
                     <p className="font-medium">Year 10: Appreciation Event</p>
-                    <p className="text-muted-foreground">
-                      Pay ${userAppreciationBurden.toFixed(2)} appreciation or choose refinancing
-                    </p>
+                     <p className="text-muted-foreground">
+                       Receive +${userAppreciationShare.toFixed(2)} appreciation share
+                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
