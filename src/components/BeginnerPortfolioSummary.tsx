@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { TrendingUp, DollarSign, Home, Coins, Target, Clock } from "lucide-react";
+import { InvestorTierStatus } from "./InvestorTierStatus";
 
 export const BeginnerPortfolioSummary = () => {
   // Mock data - in real app this would come from props or API
@@ -89,6 +90,9 @@ export const BeginnerPortfolioSummary = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Ancient Investor Tier Status */}
+      <InvestorTierStatus totalInvestmentAmount={portfolioData.totalInvested} />
 
       {/* Properties */}
       <Card>

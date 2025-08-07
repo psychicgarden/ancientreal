@@ -22,6 +22,7 @@ import {
   Receipt,
   PieChart
 } from "lucide-react";
+import { calculateInvestorTier, getNextTierThreshold } from "@/lib/utils";
 
 interface FractionalProperty {
   id: string;
@@ -155,7 +156,6 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
   const availablePercentage = ((property.totalTokensAvailable - property.tokensSold) / property.totalTokensAvailable) * 100;
 
   // Calculate tier progression
-  const { calculateInvestorTier, getNextTierThreshold } = require("@/lib/utils");
   const currentTotalInvestment = 0; // This would come from user's portfolio data
   const newTotalInvestment = currentTotalInvestment + investmentAmount;
   const currentTier = calculateInvestorTier(currentTotalInvestment);
