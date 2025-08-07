@@ -73,3 +73,44 @@ export function getTierProgress(totalInvestment: number, currentTierName: string
   const progress = ((totalInvestment - currentThreshold) / (nextThreshold - currentThreshold)) * 100;
   return Math.min(Math.max(progress, 0), 100);
 }
+
+// Calculate total user investments across all tables
+export async function calculateTotalUserInvestments(
+  userWalletAddress: string,
+  supabase: any
+): Promise<number> {
+  if (!userWalletAddress) return 0;
+
+  try {
+    // Get user properties (down payments)
+    const { data: userProperties } = await supabase
+      .from('user_properties')
+      .select('down_payment')
+      .eq('user_wallet_address', userWalletAddress)
+      .eq('is_active', true);
+
+    // Get fractional investments
+    const { data: fractionalInvestments } = await supabase
+      .from('fractional_investments')
+      .select('investment_amount')
+      .eq('investor_wallet_address', userWalletAddress)
+      .eq('status', 'active');
+
+    // Get developer investments
+    const { data: developerInvestments } = await supabase
+      .from('developer_investments')
+      .select('investment_amount')
+      .eq('user_wallet_address', userWalletAddress)
+      .eq('investment_status', 'active');
+
+    // Sum all investments
+    const propertyInvestments = userProperties?.reduce((sum, property) => sum + Number(property.down_payment || 0), 0) || 0;
+    const fractionalTotal = fractionalInvestments?.reduce((sum, investment) => sum + Number(investment.investment_amount || 0), 0) || 0;
+    const developerTotal = developerInvestments?.reduce((sum, investment) => sum + Number(investment.investment_amount || 0), 0) || 0;
+
+    return propertyInvestments + fractionalTotal + developerTotal;
+  } catch (error) {
+    console.error('Error calculating total investments:', error);
+    return 0;
+  }
+}
