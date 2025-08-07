@@ -7,23 +7,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { 
-  Home, 
-  TrendingUp, 
-  Shield, 
-  ArrowRight,
-  Zap,
-  Wallet,
-  Lock,
-  Unlock,
-  Clock,
-  Users
-} from "lucide-react";
+import { Home, TrendingUp, Shield, ArrowRight, Zap, Wallet, Lock, Unlock, Clock, Users } from "lucide-react";
 import { Link } from "react-router-dom";
-
 const Index = () => {
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Header />
       <Hero />
       <FeaturedInvestments />
@@ -31,7 +18,7 @@ const Index = () => {
       <TwoWaysToInvest />
       
       {/* Three-Tier Banking Portal */}
-      <section className="py-20 bg-gradient-to-br from-background to-muted/10">
+      <section className="bg-gradient-to-br from-background to-muted/10 py-[50px]">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Choose Your Investment Strategy</h2>
@@ -82,10 +69,7 @@ const Index = () => {
                   <div className="text-xs text-muted-foreground">$2.4M available for mortgages</div>
                 </div>
 
-                <Button 
-                  className="w-full mt-6 group-hover:scale-105 transition-transform" 
-                  asChild
-                >
+                <Button className="w-full mt-6 group-hover:scale-105 transition-transform" asChild>
                   <Link to="/banking">
                     Start Earning <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
@@ -141,11 +125,7 @@ const Index = () => {
                   </div>
                 </div>
 
-                <Button 
-                  className="w-full mt-6 group-hover:scale-105 transition-transform" 
-                  variant="outline"
-                  asChild
-                >
+                <Button className="w-full mt-6 group-hover:scale-105 transition-transform" variant="outline" asChild>
                   <Link to="/investor">
                     Browse Projects <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
@@ -201,11 +181,7 @@ const Index = () => {
                   </div>
                 </div>
 
-                <Button 
-                  className="w-full mt-6 group-hover:scale-105 transition-transform" 
-                  variant="outline"
-                  asChild
-                >
+                <Button className="w-full mt-6 group-hover:scale-105 transition-transform" variant="outline" asChild>
                   <Link to="/developers">
                     Explore Properties <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
@@ -215,8 +191,6 @@ const Index = () => {
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
