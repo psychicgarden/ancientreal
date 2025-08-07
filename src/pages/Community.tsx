@@ -35,10 +35,13 @@ import {
   Unlock
 } from "lucide-react";
 import { useState } from "react";
-import liveMusicImage from "/lovable-uploads/a8df32de-2a78-4122-9f5f-11591722c5be.png";
-import ecstaticDanceImage from "/lovable-uploads/5de91136-cc8d-473c-ab04-32ba0d4be9d7.png";
-import sacredCeremoniesImage from "/lovable-uploads/3be5764b-68ec-45a1-9b56-739918085f33.png";
-import wellnessWorkshopsImage from "/lovable-uploads/38aa4546-27b8-4fd1-8977-b15beec529d9.png";
+// Boho luxury Soho House aesthetic images
+import ecstaticDanceImage from "@/assets/ecstatic-dance-boho.jpg";
+import wellnessWorkshopsImage from "@/assets/wellness-workshops-boho.jpg";
+import coworkingImage from "@/assets/coworking-boho.jpg";
+import investmentMasteryImage from "@/assets/investment-mastery-boho.jpg";
+import liveMusicImage from "@/assets/live-music-boho.jpg";
+import sacredCeremoniesImage from "@/assets/sacred-ceremonies-boho.jpg";
 
 const Community = () => {
   const [propertyValue, setPropertyValue] = useState([150000]);
@@ -177,7 +180,7 @@ const Community = () => {
       icon: Users,
       frequency: "Daily",
       vibe: "💻 Flow Productivity",
-      image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=300&h=200&fit=crop"
+      image: coworkingImage
     },
     {
       title: "Investment Mastery",
@@ -185,7 +188,7 @@ const Community = () => {
       icon: TrendingUp,
       frequency: "Monthly",
       vibe: "📈 Abundance Mindset",
-      image: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=300&h=200&fit=crop"
+      image: investmentMasteryImage
     },
     {
       title: "Live Music & Arts",
