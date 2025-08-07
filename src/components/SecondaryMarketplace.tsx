@@ -14,7 +14,7 @@ import FractionalInvestmentModal from "./FractionalInvestmentModal";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import RentalIncomeTracker from "./RentalIncomeTracker";
-import { InvestorTierStatus } from "./InvestorTierStatus";
+
 
 interface TokenListing {
   id: string; // display id
@@ -264,8 +264,6 @@ const handleTrade = async () => {
       </div>
       <p className="text-muted-foreground">Peer-to-peer market to buy and sell fractional shares from other investors. Buy fills open orders; Sell posts your own order.</p>
 
-      {/* Ancient Investor Tier Status */}
-      {isConnected && <InvestorTierStatus totalInvestmentAmount={50000} className="mb-6" />}
 
       <Tabs defaultValue="market" className="space-y-6">
 <TabsList>
