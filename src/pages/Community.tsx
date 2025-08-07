@@ -38,6 +38,7 @@ import { useState } from "react";
 import liveMusicImage from "/lovable-uploads/a8df32de-2a78-4122-9f5f-11591722c5be.png";
 import ecstaticDanceImage from "/lovable-uploads/5de91136-cc8d-473c-ab04-32ba0d4be9d7.png";
 import sacredCeremoniesImage from "/lovable-uploads/3be5764b-68ec-45a1-9b56-739918085f33.png";
+import wellnessWorkshopsImage from "/lovable-uploads/38aa4546-27b8-4fd1-8977-b15beec529d9.png";
 
 const Community = () => {
   const [propertyValue, setPropertyValue] = useState([150000]);
@@ -168,7 +169,7 @@ const Community = () => {
       icon: Flower,
       frequency: "3x per week",
       vibe: "🧘‍♀️ Inner Peace",
-      image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=300&h=200&fit=crop"
+      image: wellnessWorkshopsImage
     },
     {
       title: "Nomad Coworking Hubs",
