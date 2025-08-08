@@ -33,9 +33,7 @@ const MissedOpportunitySection = () => {
           
           {/* Interactive Header */}
           <div className="text-center mb-16">
-            <Badge className="mb-6 px-4 py-2 bg-primary/10 text-primary">
-              ⚡ Interactive Comparison
-            </Badge>
+            
             <h2 className="text-4xl md:text-5xl font-light mb-6 tracking-tight leading-tight">
               Your Money, Your Choice
               <br />
