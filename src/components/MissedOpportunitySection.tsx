@@ -27,7 +27,7 @@ const MissedOpportunitySection = () => {
       bgColor: "from-green-500/10 to-green-500/5"
     }
   };
-  return <section className="py-8 px-6">
+  return <section className="px-6 py-[25px]">
       <div className="container mx-auto">
         <div className="max-w-6xl mx-auto">
           
