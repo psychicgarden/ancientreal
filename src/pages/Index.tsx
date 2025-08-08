@@ -9,6 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Home, TrendingUp, Shield, ArrowRight, Zap, Wallet, Lock, Unlock, Clock, Users } from "lucide-react";
 import { Link } from "react-router-dom";
+import SectionHeader from "@/components/SectionHeader";
+import Footer from "@/components/Footer";
 const Index = () => {
   return <div className="min-h-screen">
       <Header />
@@ -20,12 +22,10 @@ const Index = () => {
       {/* Three-Tier Banking Portal */}
       <section className="bg-gradient-to-br from-background to-muted/10 py-[40px]">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Choose Your Investment Strategy</h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Three complementary approaches to wealth building designed for different risk tolerances and goals.
-            </p>
-          </div>
+          <SectionHeader
+            title="Choose Your Investment Strategy"
+            subtitle="Three complementary approaches to wealth building designed for different risk tolerances and goals."
+          />
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
             
@@ -191,6 +191,7 @@ const Index = () => {
           </div>
         </div>
       </section>
+      <Footer />
     </div>;
 };
 export default Index;

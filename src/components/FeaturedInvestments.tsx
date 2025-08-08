@@ -9,6 +9,7 @@ import { MAZUNTE_PROPERTY } from "@/lib/contracts";
 import PropertyInvestmentCalculator from "@/components/PropertyInvestmentCalculator";
 import { PropertyPurchaseModal } from "@/components/PropertyPurchaseModal";
 import { Link } from "react-router-dom";
+import SectionHeader from "@/components/SectionHeader";
 
 import villaTulum from "@/assets/villa-tulum.jpg";
 import beachChalet from "@/assets/beach-chalet.jpg";
@@ -95,17 +96,11 @@ const FeaturedInvestments = () => {
   }];
   return <section className="px-6 bg-gradient-to-br from-background via-background to-muted/5 py-[20px]">
       <div className="container mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-light mb-6 tracking-tight leading-tight">
-            Sustainable Living
-            <br />
-            <span className="text-2xl md:text-3xl text-muted-foreground font-extralight">20% Down Financing</span>
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-light">
-            Thoughtfully curated eco-luxury residences.<br />
-            Modern financing for conscious living.
-          </p>
-        </div>
+        <SectionHeader
+          eyebrow="Featured"
+          title="Sustainable Living"
+          subtitle="20% Down Financing — Thoughtfully curated eco‑luxury residences. Modern financing for conscious living."
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
           {properties.map((property, index) => <Card key={index} className="bg-card/40 backdrop-blur-sm border border-border/30 hover:border-border/60 transition-all duration-500 hover:shadow-2xl group overflow-hidden">

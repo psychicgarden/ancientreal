@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, Calculator, Clock, Home, Zap } from "lucide-react";
 import { useState } from "react";
+import SectionHeader from "@/components/SectionHeader";
 const MissedOpportunitySection = () => {
   const [activeScenario, setActiveScenario] = useState("rent");
   const scenarios = {
@@ -31,20 +32,10 @@ const MissedOpportunitySection = () => {
       <div className="container mx-auto">
         <div className="max-w-6xl mx-auto">
           
-          {/* Interactive Header */}
-          <div className="text-center mb-16">
-            
-            <h2 className="text-4xl md:text-5xl font-light mb-6 tracking-tight leading-tight">
-              Your Money, Your Choice
-              <br />
-              <span className="text-2xl md:text-3xl text-muted-foreground font-extralight">What if you stopped renting?</span>
-            </h2>
-            <p className="text-xl text-muted-foreground font-light max-w-3xl mx-auto leading-relaxed">
-              Every month you choose: build someone else's wealth, or build your own.
-              <br />
-              See the difference over time.
-            </p>
-          </div>
+          <SectionHeader
+            title="Your Money, Your Choice"
+            subtitle="What if you stopped renting? Every month you choose: build someone else's wealth, or build your own."
+          />
 
           {/* Interactive Toggle */}
           <div className="flex justify-center mb-12">

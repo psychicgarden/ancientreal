@@ -2,17 +2,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, DollarSign, Home } from "lucide-react";
 import { Link } from "react-router-dom";
-
+import SectionHeader from "@/components/SectionHeader";
 const TwoWaysToInvest = () => {
   return (
-    <section aria-labelledby="two-ways-heading" className="bg-gradient-to-br from-background to-muted/10 py-12">
+    <section className="bg-gradient-to-br from-background to-muted/10 py-12">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-8">
-          <h2 id="two-ways-heading" className="text-3xl md:text-4xl font-bold">Two Ways to Invest</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Choose between ultra-liquid yield or hands-on property projects—both within our boho luxury ecosystem.
-          </p>
-        </div>
+        <SectionHeader
+          title="Two Ways to Invest"
+          subtitle="Choose between ultra-liquid yield or hands-on property projects—both within our boho luxury ecosystem."
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
           {/* Yield Pool */}
