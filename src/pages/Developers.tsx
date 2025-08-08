@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { ProjectInvestmentModal } from "@/components/ProjectInvestmentModal";
 import { ProjectSubmissionForm } from "@/components/ProjectSubmissionForm";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { 
@@ -67,6 +68,27 @@ const Developers = () => {
 
     fetchProjects();
   }, [toast]);
+
+  // SEO: set title, description, and canonical
+  useEffect(() => {
+    document.title = "Developers — DAO Funding Platform";
+    const desc = "Get your project funded by our community DAO with milestone-based releases.";
+    let meta = document.querySelector('meta[name="description"]') as HTMLMetaElement | null;
+    if (!meta) {
+      meta = document.createElement('meta');
+      meta.setAttribute('name', 'description');
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute('content', desc);
+
+    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonical);
+    }
+    canonical.setAttribute('href', window.location.href);
+  }, []);
 
   // Mock success stories matching the exact format from screenshots
   const soldOutStories = [
@@ -269,7 +291,7 @@ const Developers = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      
+      <main role="main">
       {/* Hero Section */}
       <section className="relative py-20 bg-gradient-to-br from-primary/5 via-background to-accent/5">
         <div className="container mx-auto px-4">
@@ -299,7 +321,7 @@ const Developers = () => {
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mt-16">
               <div className="text-center">
-                <div className="text-3xl font-bold text-green-600">$4.2M+</div>
+                <div className="text-3xl font-bold text-accent">$4.2M+</div>
                 <div className="text-muted-foreground">Developer Profits</div>
               </div>
               <div className="text-center">
@@ -311,7 +333,7 @@ const Developers = () => {
                 <div className="text-muted-foreground">Average Sellout Time</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-green-600">47%</div>
+                <div className="text-3xl font-bold text-accent">47%</div>
                 <div className="text-muted-foreground">Average ROI</div>
               </div>
             </div>
@@ -323,7 +345,7 @@ const Developers = () => {
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <Badge className="mb-4 bg-green-600/10 text-green-600 border-green-600/20">
+            <Badge className="mb-4 bg-accent/10 text-accent border-accent/20">
               🚀 Best Sold-Out Success Stories
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Developers Sold Out in 4 Days to 2.5 Weeks</h2>
@@ -334,9 +356,9 @@ const Developers = () => {
 
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {soldOutStories.map((project) => (
-              <Card key={project.id} className="group hover:shadow-xl transition-all duration-300 border-border/50 hover:border-green-600/20 relative overflow-hidden">
+              <Card key={project.id} className="group hover:shadow-xl transition-all duration-300 border-border/50 hover:border-accent/20 relative overflow-hidden">
                 {/* Success badge overlay */}
-                <div className="absolute top-4 left-4 z-10 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
+                <div className="absolute top-4 left-4 z-10 bg-accent text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
                   {project.timeline}
                 </div>
                 
@@ -344,17 +366,18 @@ const Developers = () => {
                   <img 
                     src={project.image_url} 
                     alt={project.title}
+                    loading="lazy"
                     className="w-full h-full object-cover"
                   />
                   {/* ROI overlay */}
-                  <div className="absolute bottom-4 left-4 bg-green-600/95 text-white px-3 py-2 rounded text-lg font-bold shadow-lg">
+                  <div className="absolute bottom-4 left-4 bg-accent/90 text-primary-foreground px-3 py-2 rounded text-lg font-bold shadow-lg">
                     +{project.roi_percentage}% ROI
                   </div>
                 </div>
                 
                 <CardHeader className="pb-3">
                   <div className="flex justify-between items-start mb-2">
-                    <Badge className="bg-green-600/20 text-green-700 border border-green-600/30">
+                    <Badge className="bg-accent/15 text-accent-foreground border border-accent/30">
                       Completed
                     </Badge>
                     <div className="flex items-center text-sm text-muted-foreground">
@@ -362,7 +385,7 @@ const Developers = () => {
                       {project.development_time}
                     </div>
                   </div>
-                  <CardTitle className="text-xl group-hover:text-green-600 transition-colors">
+                  <CardTitle className="text-xl group-hover:text-accent transition-colors">
                     {project.title}
                   </CardTitle>
                   <p className="text-sm text-muted-foreground">by {project.creator_name}</p>
@@ -377,7 +400,7 @@ const Developers = () => {
                   <div className="space-y-3 mb-4">
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-muted-foreground">Initial DAO Funding</span>
-                      <span className="font-bold text-green-600">${project.initial_funding?.toLocaleString()}</span>
+                      <span className="font-bold text-accent">${project.initial_funding?.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-muted-foreground">Current Value</span>
@@ -385,7 +408,7 @@ const Developers = () => {
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-muted-foreground">Developer Profit</span>
-                      <span className="font-bold text-green-600">${project.developer_profit?.toLocaleString()}</span>
+                      <span className="font-bold text-accent">${project.developer_profit?.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-muted-foreground">Community Backers</span>
@@ -397,7 +420,7 @@ const Developers = () => {
                     "{project.quote}"
                   </div>
 
-                  <Button className="w-full bg-green-600 hover:bg-green-700 text-white border-none">
+                  <Button className="w-full">
                     View Full Case Study
                   </Button>
                 </CardContent>
@@ -411,7 +434,7 @@ const Developers = () => {
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <Badge className="mb-4 bg-blue-600/10 text-blue-600 border-blue-600/20">
+            <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">
               🎯 Active Project Campaigns
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Projects Seeking 80% Presale for Greenlight</h2>
@@ -432,6 +455,7 @@ const Developers = () => {
                         <img 
                           src={project.image_url} 
                           alt={project.title}
+                          loading="lazy"
                           className="w-full h-full object-cover"
                         />
                       ) : (
@@ -440,20 +464,20 @@ const Developers = () => {
                         </div>
                       )}
                       {/* Presale percentage overlay */}
-                      <div className="absolute top-3 right-3 bg-blue-600/90 text-white px-2 py-1 rounded text-sm font-bold">
+                      <div className="absolute top-3 right-3 bg-primary/90 text-primary-foreground px-2 py-1 rounded text-sm font-bold">
                         {project.presale_percentage}% PRESOLD
                       </div>
                       
                       {/* Development Approved notification */}
                       {project.development_approved && (
-                        <div className="absolute top-3 left-3 bg-green-600/95 text-white px-2 py-1 rounded text-xs font-semibold">
+                        <div className="absolute top-3 left-3 bg-accent/90 text-primary-foreground px-2 py-1 rounded text-xs font-semibold">
                           🎉 Development Approved!
                         </div>
                       )}
                       
                       {/* Threshold needed notification */}
                       {project.threshold_needed && (
-                        <div className="absolute bottom-3 left-3 bg-orange-600/95 text-white px-2 py-1 rounded text-xs font-semibold">
+                        <div className="absolute bottom-3 left-3 bg-gold/90 text-gold-foreground px-2 py-1 rounded text-xs font-semibold">
                           ${project.threshold_needed?.toLocaleString()} needed to reach threshold
                         </div>
                       )}
@@ -467,8 +491,8 @@ const Developers = () => {
                       <Badge 
                         className={`${
                           project.project_status === 'funded' 
-                            ? 'bg-green-600/20 text-green-700 border-green-600/30' 
-                            : 'bg-orange-600/20 text-orange-700 border-orange-600/30'
+                            ? 'bg-accent/15 text-accent-foreground border-accent/30' 
+                            : 'bg-gold/15 text-gold-foreground border-gold/30'
                         }`}
                       >
                         {project.status_badge}
@@ -740,6 +764,8 @@ const Developers = () => {
         </div>
       </section>
 
+      </main>
+      <Footer />
       {/* Investment Modal */}
       {selectedProject && (
         <ProjectInvestmentModal
