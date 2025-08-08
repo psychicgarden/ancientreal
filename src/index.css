@@ -146,7 +146,7 @@ All colors MUST be HSL.
   /* Typography hierarchy for luxury feel */
   h1, h2, h3, h4, h5, h6 {
     @apply font-normal tracking-tight;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Playfair Display', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', serif;
   }
   
   h1 {

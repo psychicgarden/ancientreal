@@ -32,14 +32,14 @@ We Solve That.</p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Button variant="hero" size="lg" className="text-lg px-8 py-4">
+            <Button variant="hero" size="lg" className="text-lg px-8 py-4" onClick={() => navigate('/banking')}>
               Start Investing
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
             <Button 
-              variant="default" 
-              size="lg" 
-              className="text-lg px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white border-0"
+              variant="pill"
+              size="lg"
+              className="text-lg px-8 py-4"
               onClick={() => navigate('/investor')}
             >
               View Properties

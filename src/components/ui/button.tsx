@@ -13,6 +13,7 @@ const buttonVariants = cva(
         luxury: "bg-gradient-accent text-accent-foreground hover:shadow-luxury hover:scale-105 shadow-lg",
         gold: "bg-gradient-to-r from-gold/90 to-gold text-gold-foreground hover:shadow-button hover:scale-105 shadow-md",
         hero: "bg-transparent border-2 border-accent-foreground/20 text-accent-foreground hover:bg-accent-foreground/10 hover:border-accent-foreground/40 backdrop-blur-sm",
+        pill: "rounded-full border border-border/60 bg-background/60 text-foreground hover:bg-primary/10 hover:border-primary/30 backdrop-blur-sm",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-md",
         outline:
