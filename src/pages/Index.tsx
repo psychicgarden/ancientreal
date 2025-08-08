@@ -18,7 +18,7 @@ const Index = () => {
       <TwoWaysToInvest />
       
       {/* Three-Tier Banking Portal */}
-      <section className="bg-gradient-to-br from-background to-muted/10 py-[50px]">
+      <section className="bg-gradient-to-br from-background to-muted/10 py-[40px]">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Choose Your Investment Strategy</h2>
