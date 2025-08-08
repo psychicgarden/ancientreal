@@ -6,34 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Slider } from "@/components/ui/slider";
-import { 
-  Home, 
-  TrendingUp, 
-  Shield, 
-  Globe, 
-  Heart, 
-  Users, 
-  Music, 
-  Flower,
-  Calendar,
-  MapPin,
-  Star,
-  DollarSign,
-  Clock,
-  CheckCircle,
-  ArrowRight,
-  Zap,
-  Play,
-  PiggyBank,
-  Building,
-  TreePine,
-  Waves,
-  Sun,
-  Moon,
-  Wallet,
-  Lock,
-  Unlock
-} from "lucide-react";
+import { Home, TrendingUp, Shield, Globe, Heart, Users, Music, Flower, Calendar, MapPin, Star, DollarSign, Clock, CheckCircle, ArrowRight, Zap, Play, PiggyBank, Building, TreePine, Waves, Sun, Moon, Wallet, Lock, Unlock } from "lucide-react";
 import { useState } from "react";
 // Boho luxury Soho House aesthetic images
 import ecstaticDanceImage from "@/assets/ecstatic-dance-boho.jpg";
@@ -42,16 +15,15 @@ import coworkingImage from "@/assets/coworking-boho.jpg";
 import investmentMasteryImage from "@/assets/investment-mastery-boho.jpg";
 import liveMusicImage from "@/assets/live-music-boho.jpg";
 import sacredCeremoniesImage from "@/assets/sacred-ceremonies-boho.jpg";
-
 const Community = () => {
   const [propertyValue, setPropertyValue] = useState([150000]);
   const [downPayment, setDownPayment] = useState([30000]);
   const [selectedLocation, setSelectedLocation] = useState("bali");
-  
+
   // Location-based property data with realistic rental yields
   const locationData = {
     bahia: {
-      name: "Bahia, Brazil", 
+      name: "Bahia, Brazil",
       avgPrice: 120000,
       monthlyRent: 1400,
       context: "Growing surf tourism, lower property costs",
@@ -79,198 +51,168 @@ const Community = () => {
       yield: 12.4
     }
   };
-  
   const currentLocation = locationData[selectedLocation];
-  
+
   // Calculate ROI metrics based on selected location
-  const monthlyPayment = ((propertyValue[0] - downPayment[0]) * 0.08) / 12;
+  const monthlyPayment = (propertyValue[0] - downPayment[0]) * 0.08 / 12;
   const monthlyRentalIncome = currentLocation.monthlyRent;
   const monthlyProfit = monthlyRentalIncome - monthlyPayment;
-  const yearlyROI = ((monthlyProfit * 12) / downPayment[0]) * 100;
+  const yearlyROI = monthlyProfit * 12 / downPayment[0] * 100;
 
   // Property comparison data
-  const rentingVsOwning = [
-    {
-      category: "Monthly Payment",
-      renting: "Pay rent forever",
-      ancient: "Build equity with each payment",
-      rentingIcon: "💸",
-      ancientIcon: "🏡"
-    },
-    {
-      category: "Financial Future", 
-      renting: "Zero ownership, zero returns",
-      ancient: "Earn rental income + appreciation",
-      rentingIcon: "📉",
-      ancientIcon: "📈"
-    },
-    {
-      category: "Legal Complexity",
-      renting: "Lease restrictions & rent hikes", 
-      ancient: "We handle everything legally",
-      rentingIcon: "📋",
-      ancientIcon: "✨"
-    },
-    {
-      category: "Investment Control",
-      renting: "Subject to landlord decisions",
-      ancient: "You own, you decide",
-      rentingIcon: "🚫", 
-      ancientIcon: "👑"
-    }
-  ];
+  const rentingVsOwning = [{
+    category: "Monthly Payment",
+    renting: "Pay rent forever",
+    ancient: "Build equity with each payment",
+    rentingIcon: "💸",
+    ancientIcon: "🏡"
+  }, {
+    category: "Financial Future",
+    renting: "Zero ownership, zero returns",
+    ancient: "Earn rental income + appreciation",
+    rentingIcon: "📉",
+    ancientIcon: "📈"
+  }, {
+    category: "Legal Complexity",
+    renting: "Lease restrictions & rent hikes",
+    ancient: "We handle everything legally",
+    rentingIcon: "📋",
+    ancientIcon: "✨"
+  }, {
+    category: "Investment Control",
+    renting: "Subject to landlord decisions",
+    ancient: "You own, you decide",
+    rentingIcon: "🚫",
+    ancientIcon: "👑"
+  }];
 
   // Journey steps
-  const ownershipJourney = [
-    {
-      step: 1,
-      title: "Discover Your Sacred Space",
-      description: "Browse curated properties in conscious communities worldwide",
-      icon: Globe,
-      action: "Explore vetted homes in Tulum, Bali, Portugal & beyond",
-      color: "from-blue-500 to-purple-600"
-    },
-    {
-      step: 2, 
-      title: "One-Click Ownership",
-      description: "Pay 20% down with USDT - no banks, no paperwork nightmares",
-      icon: Zap,
-      action: "Smart contract handles everything instantly",
-      color: "from-purple-500 to-pink-600"
-    },
-    {
-      step: 3,
-      title: "We Handle Everything", 
-      description: "Legal, taxes, maintenance, tenants - completely hands-off",
-      icon: Shield,
-      action: "Relax while we manage your investment",
-      color: "from-pink-500 to-orange-600"
-    },
-    {
-      step: 4,
-      title: "Earn & Build Wealth",
-      description: "Receive rental yields, track appreciation, exit with profit",
-      icon: TrendingUp, 
-      action: "Watch your wealth grow passively",
-      color: "from-orange-500 to-green-600"
-    }
-  ];
+  const ownershipJourney = [{
+    step: 1,
+    title: "Discover Your Sacred Space",
+    description: "Browse curated properties in conscious communities worldwide",
+    icon: Globe,
+    action: "Explore vetted homes in Tulum, Bali, Portugal & beyond",
+    color: "from-blue-500 to-purple-600"
+  }, {
+    step: 2,
+    title: "One-Click Ownership",
+    description: "Pay 20% down with USDT - no banks, no paperwork nightmares",
+    icon: Zap,
+    action: "Smart contract handles everything instantly",
+    color: "from-purple-500 to-pink-600"
+  }, {
+    step: 3,
+    title: "We Handle Everything",
+    description: "Legal, taxes, maintenance, tenants - completely hands-off",
+    icon: Shield,
+    action: "Relax while we manage your investment",
+    color: "from-pink-500 to-orange-600"
+  }, {
+    step: 4,
+    title: "Earn & Build Wealth",
+    description: "Receive rental yields, track appreciation, exit with profit",
+    icon: TrendingUp,
+    action: "Watch your wealth grow passively",
+    color: "from-orange-500 to-green-600"
+  }];
 
   // Community features
-  const communityFeatures = [
-    {
-      title: "Ecstatic Dance Sessions",
-      description: "Weekly movement medicine gatherings that connect body, spirit, and community",
-      icon: Music,
-      frequency: "Every Friday",
-      vibe: "🌊 Flow State",
-      image: ecstaticDanceImage
-    },
-    {
-      title: "Wellness Workshops", 
-      description: "Breathwork, meditation, sound healing, and transformative practices",
-      icon: Flower,
-      frequency: "3x per week",
-      vibe: "🧘‍♀️ Inner Peace",
-      image: wellnessWorkshopsImage
-    },
-    {
-      title: "Nomad Coworking Hubs",
-      description: "Collaborative spaces with starlink internet and inspiring views", 
-      icon: Users,
-      frequency: "Daily",
-      vibe: "💻 Flow Productivity",
-      image: coworkingImage
-    },
-    {
-      title: "Investment Mastery",
-      description: "Learn advanced DeFi, real estate, and wealth-building strategies",
-      icon: TrendingUp,
-      frequency: "Monthly",
-      vibe: "📈 Abundance Mindset",
-      image: investmentMasteryImage
-    },
-    {
-      title: "Live Music & Arts",
-      description: "Local musicians, artists, and creative expression in paradise",
-      icon: Music,
-      frequency: "Weekends",
-      vibe: "🎵 Creative Flow",
-      image: liveMusicImage
-    },
-    {
-      title: "Sacred Ceremonies",
-      description: "New moon circles, cacao ceremonies, and consciousness expansion",
-      icon: Moon,
-      frequency: "Monthly",
-      vibe: "🌙 Mystical",
-      image: sacredCeremoniesImage
-    }
-  ];
+  const communityFeatures = [{
+    title: "Ecstatic Dance Sessions",
+    description: "Weekly movement medicine gatherings that connect body, spirit, and community",
+    icon: Music,
+    frequency: "Every Friday",
+    vibe: "🌊 Flow State",
+    image: ecstaticDanceImage
+  }, {
+    title: "Wellness Workshops",
+    description: "Breathwork, meditation, sound healing, and transformative practices",
+    icon: Flower,
+    frequency: "3x per week",
+    vibe: "🧘‍♀️ Inner Peace",
+    image: wellnessWorkshopsImage
+  }, {
+    title: "Nomad Coworking Hubs",
+    description: "Collaborative spaces with starlink internet and inspiring views",
+    icon: Users,
+    frequency: "Daily",
+    vibe: "💻 Flow Productivity",
+    image: coworkingImage
+  }, {
+    title: "Investment Mastery",
+    description: "Learn advanced DeFi, real estate, and wealth-building strategies",
+    icon: TrendingUp,
+    frequency: "Monthly",
+    vibe: "📈 Abundance Mindset",
+    image: investmentMasteryImage
+  }, {
+    title: "Live Music & Arts",
+    description: "Local musicians, artists, and creative expression in paradise",
+    icon: Music,
+    frequency: "Weekends",
+    vibe: "🎵 Creative Flow",
+    image: liveMusicImage
+  }, {
+    title: "Sacred Ceremonies",
+    description: "New moon circles, cacao ceremonies, and consciousness expansion",
+    icon: Moon,
+    frequency: "Monthly",
+    vibe: "🌙 Mystical",
+    image: sacredCeremoniesImage
+  }];
 
   // Investor testimonials
-  const investorStories = [
-    {
-      name: "Luna Martinez",
-      location: "Traveling between properties",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b9412b03?w=150&h=150&fit=crop&crop=face",
-      story: "Ancient isn't just an investment - it's a lifestyle. I own three homes in sacred communities and my life has never been more abundant.",
-      roi: "147%",
-      timeframe: "18 months",
-      community: "Tulum Village",
-      monthlyEarnings: "$4,200"
-    },
-    {
-      name: "River Thompson",
-      location: "Bali, Indonesia", 
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-      story: "The magic happens in the intersection of conscious living and smart investing. Ancient made both possible.",
-      roi: "189%",
-      timeframe: "24 months", 
-      community: "Bali Collective",
-      monthlyEarnings: "$3,800"
-    },
-    {
-      name: "Sage Williams",
-      location: "Costa Rica",
-      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
-      story: "From broke digital nomad to owning jungle retreats. Ancient transformed my relationship with money and home.",
-      roi: "156%", 
-      timeframe: "20 months",
-      community: "Jungle Lodge Collective",
-      monthlyEarnings: "$2,900"
-    }
-  ];
-
-  const vibeReasons = [
-    {
-      title: "Consciousness First",
-      description: "We're not just building wealth - we're cultivating conscious communities that elevate human potential",
-      icon: Heart,
-      gradient: "from-pink-400 to-rose-600"
-    },
-    {
-      title: "Global Sacred Spaces",
-      description: "Each property is chosen for its energy, beauty, and connection to local wisdom traditions",
-      icon: TreePine,
-      gradient: "from-green-400 to-emerald-600"
-    },
-    {
-      title: "No Traditional Bullshit",
-      description: "Skip banks, brokers, and bureaucracy. Pure blockchain magic meets ancient wisdom",
-      icon: Zap,
-      gradient: "from-yellow-400 to-orange-600"
-    },
-    {
-      title: "Community Over Competition",
-      description: "We're building a tribe of conscious investors who lift each other up",
-      icon: Users,
-      gradient: "from-blue-400 to-purple-600"
-    }
-  ];
-
-  return (
-    <div className="min-h-screen bg-background">
+  const investorStories = [{
+    name: "Luna Martinez",
+    location: "Traveling between properties",
+    avatar: "https://images.unsplash.com/photo-1494790108755-2616b9412b03?w=150&h=150&fit=crop&crop=face",
+    story: "Ancient isn't just an investment - it's a lifestyle. I own three homes in sacred communities and my life has never been more abundant.",
+    roi: "147%",
+    timeframe: "18 months",
+    community: "Tulum Village",
+    monthlyEarnings: "$4,200"
+  }, {
+    name: "River Thompson",
+    location: "Bali, Indonesia",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+    story: "The magic happens in the intersection of conscious living and smart investing. Ancient made both possible.",
+    roi: "189%",
+    timeframe: "24 months",
+    community: "Bali Collective",
+    monthlyEarnings: "$3,800"
+  }, {
+    name: "Sage Williams",
+    location: "Costa Rica",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+    story: "From broke digital nomad to owning jungle retreats. Ancient transformed my relationship with money and home.",
+    roi: "156%",
+    timeframe: "20 months",
+    community: "Jungle Lodge Collective",
+    monthlyEarnings: "$2,900"
+  }];
+  const vibeReasons = [{
+    title: "Consciousness First",
+    description: "We're not just building wealth - we're cultivating conscious communities that elevate human potential",
+    icon: Heart,
+    gradient: "from-pink-400 to-rose-600"
+  }, {
+    title: "Global Sacred Spaces",
+    description: "Each property is chosen for its energy, beauty, and connection to local wisdom traditions",
+    icon: TreePine,
+    gradient: "from-green-400 to-emerald-600"
+  }, {
+    title: "No Traditional Bullshit",
+    description: "Skip banks, brokers, and bureaucracy. Pure blockchain magic meets ancient wisdom",
+    icon: Zap,
+    gradient: "from-yellow-400 to-orange-600"
+  }, {
+    title: "Community Over Competition",
+    description: "We're building a tribe of conscious investors who lift each other up",
+    icon: Users,
+    gradient: "from-blue-400 to-purple-600"
+  }];
+  return <div className="min-h-screen bg-background">
       <Header />
       
       {/* Hero Section with Video Background Feel */}
@@ -278,10 +220,8 @@ const Community = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-purple-500/20 to-pink-500/20" />
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop')] bg-cover bg-center opacity-10" />
         
-        <div className="relative container mx-auto px-4 text-center">
-          <Badge className="mb-6 text-sm px-4 py-2 bg-white/10 text-white border-white/20">
-            ✨ Conscious Ownership Revolution
-          </Badge>
+        <div className="relative container mx-auto text-center my-[40px] px-[10px] py-[60px]">
+          
           
           <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
             A New Era of Ownership.
@@ -328,41 +268,32 @@ const Community = () => {
           </div>
           
           <div className="grid md:grid-cols-4 gap-8">
-            {[
-              {
-                step: 1,
-                title: "Discover Your Perfect Space",
-                description: "Browse curated properties worldwide"
-              },
-              {
-                step: 2,
-                title: "One-Click Ownership", 
-                description: "Pay 20% down with USDT - no banks, no paperwork nightmares"
-              },
-              {
-                step: 3,
-                title: "We Handle Everything",
-                description: "Legal, taxes, maintenance, tenants - completely hands-off"
-              },
-              {
-                step: 4,
-                title: "Earn & Build Wealth",
-                description: "Receive rental yields, track appreciation, exit with profit"
-              }
-            ].map((step, index) => (
-              <div key={index} className="group">
+            {[{
+            step: 1,
+            title: "Discover Your Perfect Space",
+            description: "Browse curated properties worldwide"
+          }, {
+            step: 2,
+            title: "One-Click Ownership",
+            description: "Pay 20% down with USDT - no banks, no paperwork nightmares"
+          }, {
+            step: 3,
+            title: "We Handle Everything",
+            description: "Legal, taxes, maintenance, tenants - completely hands-off"
+          }, {
+            step: 4,
+            title: "Earn & Build Wealth",
+            description: "Receive rental yields, track appreciation, exit with profit"
+          }].map((step, index) => <div key={index} className="group">
                 <div className="relative mb-6">
                   <div className="w-16 h-16 mx-auto bg-gradient-to-r from-purple-500 to-orange-500 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
                     {step.step}
                   </div>
-                  {index < 3 && (
-                    <div className="hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-gradient-to-r from-purple-300 to-orange-300/30 transform translate-x-8"></div>
-                  )}
+                  {index < 3 && <div className="hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-gradient-to-r from-purple-300 to-orange-300/30 transform translate-x-8"></div>}
                 </div>
                 <h3 className="text-xl font-semibold mb-3 text-foreground group-hover:text-primary transition-colors duration-300">{step.title}</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">{step.description}</p>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
@@ -464,19 +395,10 @@ const Community = () => {
                   <div>
                     <label className="block text-sm font-medium mb-4">Choose Location</label>
                     <div className="grid grid-cols-1 gap-3">
-                      {Object.entries(locationData).map(([key, location]) => (
-                        <button
-                          key={key}
-                          onClick={() => {
-                            setSelectedLocation(key);
-                            setPropertyValue([location.avgPrice]);
-                          }}
-                          className={`p-4 rounded-lg border text-left transition-all ${
-                            selectedLocation === key 
-                              ? 'border-primary bg-primary/5 shadow-md' 
-                              : 'border-border hover:border-primary/50'
-                          }`}
-                        >
+                      {Object.entries(locationData).map(([key, location]) => <button key={key} onClick={() => {
+                      setSelectedLocation(key);
+                      setPropertyValue([location.avgPrice]);
+                    }} className={`p-4 rounded-lg border text-left transition-all ${selectedLocation === key ? 'border-primary bg-primary/5 shadow-md' : 'border-border hover:border-primary/50'}`}>
                           <div className="flex justify-between items-start mb-2">
                             <h3 className="font-semibold">{location.name}</h3>
                             <Badge variant={selectedLocation === key ? "default" : "secondary"} className="text-xs">
@@ -488,8 +410,7 @@ const Community = () => {
                             <span>Avg Price: ${location.avgPrice.toLocaleString()}</span>
                             <span className="text-green-600 font-medium">${location.monthlyRent}/mo rent</span>
                           </div>
-                        </button>
-                      ))}
+                        </button>)}
                     </div>
                   </div>
 
@@ -551,14 +472,9 @@ const Community = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            {communityFeatures.map((feature, index) => (
-              <Card key={index} className="group overflow-hidden hover:shadow-xl transition-all duration-300">
+            {communityFeatures.map((feature, index) => <Card key={index} className="group overflow-hidden hover:shadow-xl transition-all duration-300">
                 <div className="aspect-video overflow-hidden">
-                  <img 
-                    src={feature.image} 
-                    alt={feature.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  />
+                  <img src={feature.image} alt={feature.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
                 </div>
                 
                 <CardHeader>
@@ -575,8 +491,7 @@ const Community = () => {
                 <CardContent>
                   <p className="text-muted-foreground">{feature.description}</p>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </div>
       </section>
@@ -595,8 +510,7 @@ const Community = () => {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-16">
-            {vibeReasons.map((reason, index) => (
-              <Card key={index} className="p-8 hover:shadow-xl transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm">
+            {vibeReasons.map((reason, index) => <Card key={index} className="p-8 hover:shadow-xl transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm">
                 <div className="flex items-start gap-4">
                   <div className={`p-3 rounded-full bg-gradient-to-br ${reason.gradient} flex-shrink-0`}>
                     <reason.icon className="h-6 w-6 text-white" />
@@ -606,8 +520,7 @@ const Community = () => {
                     <p className="text-muted-foreground leading-relaxed">{reason.description}</p>
                   </div>
                 </div>
-              </Card>
-            ))}
+              </Card>)}
           </div>
 
           <div className="text-center">
@@ -636,8 +549,7 @@ const Community = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {investorStories.map((story, index) => (
-              <Card key={index} className="h-full hover:shadow-xl transition-all duration-300">
+            {investorStories.map((story, index) => <Card key={index} className="h-full hover:shadow-xl transition-all duration-300">
                 <CardHeader>
                   <div className="flex items-center gap-4 mb-4">
                     <Avatar className="w-16 h-16">
@@ -672,8 +584,7 @@ const Community = () => {
                     <span className="text-sm text-muted-foreground">{story.timeframe} of ownership</span>
                   </div>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </div>
       </section>
@@ -704,8 +615,6 @@ const Community = () => {
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 };
-
 export default Community;
