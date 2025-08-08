@@ -113,7 +113,7 @@ const FeaturedInvestments = () => {
                 
                 {/* Image Header */}
                 <div className="aspect-[4/3] relative overflow-hidden">
-                  <img src={property.image} alt={`${property.name} — ${property.location}`} loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                  <img src={property.image} alt={property.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
                   
                   {/* Availability Badge */}
