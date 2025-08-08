@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Home, TrendingUp, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import heroImage from "@/assets/bali-jungle-resort.jpg";
+import heroImage from "@/assets/hero-image.jpg";
 const Hero = () => {
   const navigate = useNavigate();
   return <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -18,23 +18,22 @@ const Hero = () => {
 
           {/* Main Headline */}
           <h1 className="text-accent-foreground mb-6">
-            Eco‑Futurist
+            The World's First
             <br />
             <span className="bg-gradient-to-r from-gold to-gold/80 bg-clip-text text-transparent">
-              Tropical Village
+              Decentralized Nation
             </span>
           </h1>
 
           {/* Subheading */}
-          <p className="text-xl text-accent-foreground/80 mb-12 max-w-3xl mx-auto leading-relaxed md:text-xl">Elegant co‑living, regenerative design, instant‑liquidity investing.
-            <br />
-            Habitas × Soho House energy—built for global nomads.
-          </p>
+          <p className="text-xl text-accent-foreground/80 mb-12 max-w-3xl mx-auto leading-relaxed md:text-xl">50 Million digital nomads seeking homeownership abroad and can't get a mortgage. 
+<br />
+We Solve That.</p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Button variant="hero" size="lg" className="text-lg px-8 py-4" onClick={() => navigate('/banking')}>
-              Start Earning
+              Start Investing
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
             <Button 
@@ -43,7 +42,7 @@ const Hero = () => {
               className="text-lg px-8 py-4"
               onClick={() => navigate('/investor')}
             >
-              Browse Projects
+              View Properties
             </Button>
           </div>
 
