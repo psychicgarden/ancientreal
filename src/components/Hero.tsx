@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Home, TrendingUp, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import heroImage from "@/assets/hero-image.jpg";
+import heroImage from "@/assets/hero-aman-soho.jpg";
 const Hero = () => {
   const navigate = useNavigate();
   return <section className="relative min-h-screen flex items-center justify-center overflow-hidden">

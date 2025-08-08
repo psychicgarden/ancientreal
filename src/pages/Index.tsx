@@ -9,8 +9,15 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Home, TrendingUp, Shield, ArrowRight, Zap, Wallet, Lock, Unlock, Clock, Users } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import SectionHeader from "@/components/SectionHeader";
 const Index = () => {
   return <div className="min-h-screen">
+      <Helmet>
+        <title>Ancient — Boho Luxury Real Estate Investing</title>
+        <meta name="description" content="A Habitas and Soho House-inspired investing platform: curated properties, 20% down mortgages, and luxury community living." />
+        <link rel="canonical" href={typeof window !== 'undefined' ? window.location.origin + '/' : 'https://ancient.app/'} />
+      </Helmet>
       <Header />
       <Hero />
       <FeaturedInvestments />
@@ -20,11 +27,13 @@ const Index = () => {
       {/* Three-Tier Banking Portal */}
       <section className="bg-gradient-to-br from-background to-muted/10 py-[40px]">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Choose Your Investment Strategy</h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Three complementary approaches to wealth building designed for different risk tolerances and goals.
-            </p>
+          <div className="mb-12">
+            <SectionHeader
+              eyebrow="Investment Paths"
+              title="Choose Your Investment Strategy"
+              subtitle="Three complementary approaches to wealth building designed for different risk tolerances and goals."
+              align="center"
+            />
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
