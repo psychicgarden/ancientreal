@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { MapPin, Users, TrendingUp, Heart } from "lucide-react";
 import { useState } from "react";
-
+import { Link } from "react-router-dom";
 interface OriginalPropertyCardProps {
   id: string;
   image: string;
@@ -36,6 +36,7 @@ const OriginalPropertyCard = ({
         <img
           src={image}
           alt={title}
+          loading="lazy"
           className="w-full h-60 object-cover group-hover:scale-105 transition-transform duration-700"
         />
         
@@ -123,11 +124,11 @@ const OriginalPropertyCard = ({
 
         {/* Action Buttons */}
         <div className="grid grid-cols-2 gap-3 pt-2">
-          <Button className="w-full" size="lg">
-            Invest Now
+          <Button className="w-full" size="lg" asChild>
+            <Link to="/investor">Invest Now</Link>
           </Button>
-          <Button variant="outline" size="lg">
-            20% Down Purchase
+          <Button variant="outline" size="lg" asChild>
+            <Link to="/banking">20% Down Purchase</Link>
           </Button>
         </div>
       </div>

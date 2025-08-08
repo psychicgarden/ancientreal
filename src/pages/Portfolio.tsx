@@ -15,43 +15,19 @@ import { TrustSignals } from "@/components/TrustSignals";
 import { CompetitorComparison } from "@/components/CompetitorComparison";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { PROPERTIES_CATALOG } from "@/lib/propertiesCatalog";
 
-// Sample property data - in real app this would come from API
-const sampleProperties = [
-  {
-    id: "1",
-    image: "/src/assets/villa-tulum.jpg",
-    title: "Luxury Villa Tulum",
-    location: "Tulum, Mexico",
-    status: "mortgaged" as const,
-    value: 450000,
-    equity: 90000,
-    monthlyIncome: 3200,
-    occupancyRate: 85,
-  },
-  {
-    id: "2", 
-    image: "/src/assets/beach-house-mykonos.jpg",
-    title: "Mykonos Beach House",
-    location: "Mykonos, Greece",
-    status: "hosted" as const,
-    value: 680000,
-    equity: 680000,
-    monthlyIncome: 4800,
-    occupancyRate: 78,
-  },
-  {
-    id: "3",
-    image: "/src/assets/apartment-nyc.jpg", 
-    title: "Manhattan Penthouse",
-    location: "New York, USA",
-    status: "owned" as const,
-    value: 1200000,
-    equity: 1200000,
-    monthlyIncome: 0,
-    occupancyRate: 0,
-  },
-];
+const sampleProperties = PROPERTIES_CATALOG.slice(0, 3).map((p) => ({
+  id: p.id,
+  image: p.image,
+  title: p.name,
+  location: p.location,
+  status: "available" as const,
+  value: p.totalValue,
+  equity: Math.round(p.totalValue * 0.2),
+  monthlyIncome: Math.round((p.totalValue * 0.2) / 12),
+  occupancyRate: 85,
+}));
 
 const Portfolio = () => {
   const { isConnected, account, connectWallet } = useWallet();

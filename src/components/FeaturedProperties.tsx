@@ -1,47 +1,19 @@
 import OriginalPropertyCard from "./OriginalPropertyCard";
-import property1 from "@/assets/property-1.jpg";
-import property2 from "@/assets/property-2.jpg";
-import property3 from "@/assets/property-3.jpg";
+import { PROPERTIES_CATALOG } from "@/lib/propertiesCatalog";
 import { Button } from "@/components/ui/button";
 
-const properties = [
-  {
-    id: "1",
-    image: property1,
-    title: "Boho Luxury Villa",
-    location: "Tulum, Mexico",
-    price: 150000,
-    sharePrice: 150,
-    totalShares: 1000,
-    availableShares: 234,
-    expectedReturn: 14.2,
-    type: "Villa",
-  },
-  {
-    id: "2", 
-    image: property2,
-    title: "Modern Desert Oasis",
-    location: "Bahia, Brazil",
-    price: 140000,
-    sharePrice: 140,
-    totalShares: 1000,
-    availableShares: 456,
-    expectedReturn: 11.8,
-    type: "House",
-  },
-  {
-    id: "3",
-    image: property3,
-    title: "Creative Coworking Space",
-    location: "Mallorca, Spain",
-    price: 160000,
-    sharePrice: 160,
-    totalShares: 1000,
-    availableShares: 123,
-    expectedReturn: 16.5,
-    type: "Commercial",
-  },
-];
+const properties = PROPERTIES_CATALOG.slice(0, 3).map((p) => ({
+  id: p.id,
+  image: p.image,
+  title: p.name,
+  location: p.location,
+  price: p.totalValue,
+  sharePrice: p.sharePrice ?? Math.round(p.totalValue / 1000),
+  totalShares: p.totalShares ?? 1000,
+  availableShares: p.availableShares ?? 0,
+  expectedReturn: p.expectedReturn ?? 15,
+  type: "Villa",
+}));
 
 const FeaturedProperties = () => {
   return (
