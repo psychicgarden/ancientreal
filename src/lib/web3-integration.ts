@@ -1,11 +1,18 @@
 
 import { ethers } from 'ethers';
-import { CONTRACTS, NETWORK_CONFIG } from '@/lib/contracts';
+import { CONTRACTS, NETWORK_CONFIG, VILLAGE_CITIZENSHIP_FEE } from '@/lib/contracts';
 
 export class Web3Integration {
   private provider: ethers.BrowserProvider | null = null;
   private signer: ethers.Signer | null = null;
   private contracts: { [key: string]: ethers.Contract } = {};
+  private readonly ZERO = '0x0000000000000000000000000000000000000000';
+
+  private ensureAddressConfigured(address: string, name: string) {
+    if (!address || address.toLowerCase() === this.ZERO) {
+      throw new Error(`${name} contract not configured. Please set a deployed address.`);
+    }
+  }
 
   async initialize(): Promise<void> {
     if (!window.ethereum) {
@@ -70,16 +77,19 @@ export class Web3Integration {
   }
 
   async getUSDTBalance(account: string): Promise<string> {
+    this.ensureAddressConfigured(CONTRACTS.USDT.address, 'USDT');
     const balance = await this.contracts.usdt.balanceOf(account);
     return ethers.formatUnits(balance, 6); // USDT has 6 decimals
   }
 
   async approveUSDT(spender: string, amount: string): Promise<ethers.ContractTransactionResponse> {
+    this.ensureAddressConfigured(CONTRACTS.USDT.address, 'USDT');
     const amountWei = ethers.parseUnits(amount, 6);
     return await this.contracts.usdt.approve(spender, amountWei);
   }
 
   async checkUSDTAllowance(owner: string, spender: string): Promise<string> {
+    this.ensureAddressConfigured(CONTRACTS.USDT.address, 'USDT');
     const allowance = await this.contracts.usdt.allowance(owner, spender);
     return ethers.formatUnits(allowance, 6);
   }
@@ -90,7 +100,10 @@ export class Web3Integration {
   }> {
     const account = await this.getAccount();
     const downPaymentUSDT = (downPayment * 1e6).toString(); // Convert to USDT units
-    
+    // Ensure contracts are configured
+    this.ensureAddressConfigured(CONTRACTS.MAZUNTE_MORTGAGE.address, 'MazunteMortgage');
+    this.ensureAddressConfigured(CONTRACTS.USDT.address, 'USDT');
+
     // Check USDT balance
     const balance = await this.getUSDTBalance(account);
     if (parseFloat(balance) < downPayment) {
@@ -156,6 +169,7 @@ export class Web3Integration {
     isCompleted: boolean;
     coolingOffActive: boolean;
   }> {
+    this.ensureAddressConfigured(CONTRACTS.MAZUNTE_MORTGAGE.address, 'MazunteMortgage');
     return await this.contracts.mazunteMortgage.getMortgageDetails(account);
   }
 
@@ -167,6 +181,7 @@ export class Web3Integration {
     totalRentalIncomeGenerated: bigint;
     fullyOwned: boolean;
   }> {
+    this.ensureAddressConfigured(CONTRACTS.MAZUNTE_MORTGAGE.address, 'MazunteMortgage');
     return await this.contracts.mazunteMortgage.getPropertyStatus();
   }
 
@@ -178,27 +193,33 @@ export class Web3Integration {
     dueDate: bigint;
     isPaid: boolean;
   }>> {
+    this.ensureAddressConfigured(CONTRACTS.MAZUNTE_MORTGAGE.address, 'MazunteMortgage');
     return await this.contracts.mazunteMortgage.getPaymentSchedule(account);
   }
 
   async isPaymentOverdue(account: string): Promise<boolean> {
+    this.ensureAddressConfigured(CONTRACTS.MAZUNTE_MORTGAGE.address, 'MazunteMortgage');
     return await this.contracts.mazunteMortgage.isPaymentOverdue(account);
   }
 
   async joinVillage(): Promise<ethers.ContractTransactionResponse> {
-    const feeInWei = ethers.parseEther("0.1"); // 0.1 AVAX
+    this.ensureAddressConfigured(CONTRACTS.VILLAGE_CITIZENSHIP.address, 'VillageCitizenship');
+    const feeInWei = ethers.parseEther(VILLAGE_CITIZENSHIP_FEE);
     return await this.contracts.villageCitizenship.becomeCitizen({ value: feeInWei });
   }
 
   async checkVillageMembership(account: string): Promise<boolean> {
+    this.ensureAddressConfigured(CONTRACTS.VILLAGE_CITIZENSHIP.address, 'VillageCitizenship');
     return await this.contracts.villageCitizenship.hasCitizenship(account);
   }
 
   async cancelDuringCoolingOff(): Promise<ethers.ContractTransactionResponse> {
+    this.ensureAddressConfigured(CONTRACTS.MAZUNTE_MORTGAGE.address, 'MazunteMortgage');
     return await this.contracts.mazunteMortgage.cancelDuringCoolingOff();
   }
 
   async activateMortgage(): Promise<ethers.ContractTransactionResponse> {
+    this.ensureAddressConfigured(CONTRACTS.MAZUNTE_MORTGAGE.address, 'MazunteMortgage');
     return await this.contracts.mazunteMortgage.confirmMortgageActivation();
   }
 
@@ -210,6 +231,7 @@ export class Web3Integration {
     feeRate: number,
     priceImpactThreshold: number
   ): Promise<ethers.ContractTransactionResponse> {
+    this.ensureAddressConfigured(CONTRACTS.SECONDARY_MARKETPLACE.address, 'SecondaryMarketplace');
     return await this.contracts.secondaryMarketplace.createPool(
       propertyToken,
       tokenId,
@@ -224,6 +246,7 @@ export class Web3Integration {
     propertyAmount: string,
     baseAmount: string
   ): Promise<ethers.ContractTransactionResponse> {
+    this.ensureAddressConfigured(CONTRACTS.SECONDARY_MARKETPLACE.address, 'SecondaryMarketplace');
     return await this.contracts.secondaryMarketplace.addLiquidity(
       poolId,
       ethers.parseUnits(propertyAmount, 18),
@@ -237,6 +260,7 @@ export class Web3Integration {
     amountIn: string,
     minAmountOut: string
   ): Promise<ethers.ContractTransactionResponse> {
+    this.ensureAddressConfigured(CONTRACTS.SECONDARY_MARKETPLACE.address, 'SecondaryMarketplace');
     return await this.contracts.secondaryMarketplace.swapTokens(
       poolId,
       propertyToBase,
