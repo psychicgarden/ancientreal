@@ -3,10 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, Calculator, Clock, Home, Zap } from "lucide-react";
 import { useState } from "react";
-
 const MissedOpportunitySection = () => {
   const [activeScenario, setActiveScenario] = useState("rent");
-
   const scenarios = {
     rent: {
       title: "Keep Renting",
@@ -19,7 +17,7 @@ const MissedOpportunitySection = () => {
       bgColor: "from-red-500/10 to-red-500/5"
     },
     ancient: {
-      title: "Ancient Path", 
+      title: "Ancient Path",
       subtitle: "Property ownership",
       monthly: 1456,
       yearlyTotal: 17472,
@@ -29,9 +27,7 @@ const MissedOpportunitySection = () => {
       bgColor: "from-green-500/10 to-green-500/5"
     }
   };
-
-  return (
-    <section className="py-8 px-6">
+  return <section className="py-8 px-6">
       <div className="container mx-auto">
         <div className="max-w-6xl mx-auto">
           
@@ -55,25 +51,11 @@ const MissedOpportunitySection = () => {
           {/* Interactive Toggle */}
           <div className="flex justify-center mb-12">
             <div className="bg-muted/30 backdrop-blur-sm rounded-2xl p-2 inline-flex gap-2">
-              <button
-                onClick={() => setActiveScenario("rent")}
-                className={`px-6 py-3 rounded-xl font-medium transition-all ${
-                  activeScenario === "rent" 
-                    ? "bg-red-500 text-white shadow-lg" 
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
+              <button onClick={() => setActiveScenario("rent")} className={`px-6 py-3 rounded-xl font-medium transition-all ${activeScenario === "rent" ? "bg-red-500 text-white shadow-lg" : "text-muted-foreground hover:text-foreground"}`}>
                 <Home className="w-4 h-4 mr-2 inline" />
                 Keep Renting
               </button>
-              <button
-                onClick={() => setActiveScenario("ancient")}
-                className={`px-6 py-3 rounded-xl font-medium transition-all ${
-                  activeScenario === "ancient" 
-                    ? "bg-green-500 text-white shadow-lg" 
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
+              <button onClick={() => setActiveScenario("ancient")} className={`px-6 py-3 rounded-xl font-medium transition-all ${activeScenario === "ancient" ? "bg-green-500 text-white shadow-lg" : "text-muted-foreground hover:text-foreground"}`}>
                 <TrendingUp className="w-4 h-4 mr-2 inline" />
                 Start Building Equity
               </button>
@@ -116,8 +98,7 @@ const MissedOpportunitySection = () => {
                   </div>
                 </div>
 
-                {activeScenario === "ancient" && (
-                  <div className="bg-background/40 backdrop-blur-sm rounded-xl p-6 mb-6">
+                {activeScenario === "ancient" && <div className="bg-background/40 backdrop-blur-sm rounded-xl p-6 mb-6">
                     <div className="flex items-center justify-center gap-4 text-lg">
                       <div className="text-center">
                         <div className="text-2xl font-bold text-green-600">+$292K</div>
@@ -134,14 +115,10 @@ const MissedOpportunitySection = () => {
                         <div className="text-xs text-muted-foreground">Down Only</div>
                       </div>
                     </div>
-                  </div>
-                )}
+                  </div>}
 
                 <div className="text-lg text-muted-foreground font-light">
-                  {activeScenario === "rent" 
-                    ? "After 10 years: You've paid $216,000 and own nothing. Time to find a new rental." 
-                    : "After 10 years: You own a $467,000 property. Plus you earned rental income along the way."
-                  }
+                  {activeScenario === "rent" ? "After 10 years: You've paid $216,000 and own nothing. Time to find a new rental." : "After 10 years: You own a $467,000 property. Plus you earned rental income along the way."}
                 </div>
               </CardContent>
             </Card>
@@ -191,23 +168,10 @@ const MissedOpportunitySection = () => {
           </div>
 
           {/* Call to Action */}
-          <div className="text-center">
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <Button variant="outline" size="lg" className="font-light text-base px-8 py-4 hover:scale-105 transition-transform">
-                <Calculator className="w-4 h-4 mr-3" />
-                Calculate My Returns
-              </Button>
-              <Button size="lg" className="font-light text-base px-8 py-4 hover:scale-105 transition-transform">
-                <TrendingUp className="w-4 h-4 mr-3" />
-                Start Building Equity
-              </Button>
-            </div>
-          </div>
+          
 
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default MissedOpportunitySection;
