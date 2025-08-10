@@ -93,6 +93,9 @@ function Header() {
                 <Link to="/admin/projects" className="px-3 py-2 text-sm text-foreground/60 hover:text-foreground transition-colors">
                   Admin
                 </Link>
+                <Link to="/investor-report" className="px-3 py-2 text-sm text-foreground/60 hover:text-foreground transition-colors">
+                  Investor Report
+                </Link>
               </div>
             </nav>
 
@@ -251,6 +254,9 @@ function Header() {
                    </Link>
                    <Link to="/admin/projects" className="block px-3 py-2 text-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-lg transition-colors">
                      Admin
+                   </Link>
+                   <Link to="/investor-report" className="block px-3 py-2 text-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-lg transition-colors">
+                     Investor Report
                    </Link>
                 </div>
               </nav>
