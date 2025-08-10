@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,8 @@ import {
   AlertTriangle
 } from "lucide-react";
 import { SmartContractViewer } from "./SmartContractViewer";
+import { supabase } from "@/integrations/supabase/client";
+import { PROPERTIES_CATALOG } from "@/lib/propertiesCatalog";
 
 interface PropertyPurchaseModalProps {
   isOpen: boolean;
@@ -28,11 +31,109 @@ interface PropertyPurchaseModalProps {
 }
 
 export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPurchaseModalProps) => {
-  const { isConnected, connectWallet, purchaseProperty, isPurchasingProperty } = useWallet();
+  const { isConnected, connectWallet, purchaseProperty, isPurchasingProperty, account } = useWallet();
   const { toast } = useToast();
   const [kycComplete, setKycComplete] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [showSmartContract, setShowSmartContract] = useState(false);
+
+  // Use the provided property or fall back to the Art Deco Loft catalog entry
+  const catalogLoft = PROPERTIES_CATALOG.find(p => p.id === "mazunte-art-deco-loft");
+  const effectiveProperty = {
+    name: property?.name || "Art Deco Loft",
+    totalValue: property?.totalValue ?? 150000,
+    downPayment: property?.downPayment ?? Math.round((property?.totalValue ?? 150000) * 0.2),
+    monthlyPayment: property?.monthlyPayment ?? 1456,
+    monthlyProfit: property?.monthlyProfit ?? 594,
+    location: property?.location || catalogLoft?.location || "Mazunte, Mexico",
+    image: property?.image || catalogLoft?.image || "/src/assets/villa-tulum.jpg",
+  };
+
+  const fallbackTxHash = () => `pending-${Date.now()}-${Math.floor(Math.random() * 1e6)}`;
+
+  const savePurchaseToSupabase = async (opts: {
+    status: "completed" | "pending";
+    txHash?: string;
+    mortgageId?: string;
+  }) => {
+    if (!account) {
+      console.warn("No wallet account available; skipping portfolio insert.");
+      return;
+    }
+    const wallet = account.toLowerCase();
+
+    // Check if property already exists for this wallet to avoid duplicates
+    const { data: existingProps, error: existingErr } = await supabase
+      .from("user_properties")
+      .select("id")
+      .eq("user_wallet_address", wallet)
+      .eq("property_name", effectiveProperty.name)
+      .limit(1);
+
+    if (existingErr) {
+      console.error("Error checking existing properties:", existingErr);
+    }
+
+    const alreadyExists = (existingProps?.length ?? 0) > 0;
+
+    const purchasePrice = Number(effectiveProperty.totalValue || 150000);
+    const downPayment = Number(effectiveProperty.downPayment || Math.round(purchasePrice * 0.2));
+    const monthlyPayment = Number(effectiveProperty.monthlyPayment || 1456);
+    const remainingBalance = Math.max(purchasePrice - downPayment, 0);
+    const equityPercentage = Math.round((downPayment / purchasePrice) * 100);
+
+    // Only insert property if not existing
+    if (!alreadyExists) {
+      const { error: propInsertErr } = await supabase.from("user_properties").insert([
+        {
+          user_wallet_address: wallet,
+          property_name: effectiveProperty.name,
+          property_location: effectiveProperty.location,
+          image_url: effectiveProperty.image,
+          purchase_price: purchasePrice,
+          down_payment: downPayment,
+          current_value: purchasePrice, // start at purchase price
+          monthly_payment: monthlyPayment,
+          remaining_balance: remainingBalance,
+          equity_percentage: equityPercentage,
+          is_active: opts.status === "completed",
+          mortgage_id: opts.mortgageId || null,
+        },
+      ]);
+
+      if (propInsertErr) {
+        console.error("Failed to insert user_properties:", propInsertErr);
+      } else {
+        console.log("Inserted property for wallet:", wallet, effectiveProperty.name);
+      }
+    } else {
+      console.log("Property already exists in portfolio; skipping insert.");
+    }
+
+    // Always create a transaction record for traceability
+    const txHashValue = opts.txHash || fallbackTxHash();
+    const { error: txInsertErr } = await supabase.from("user_transactions").insert([
+      {
+        user_wallet_address: wallet,
+        transaction_type: "purchase",
+        transaction_hash: txHashValue,
+        amount: downPayment,
+        status: opts.status,
+        metadata: {
+          property_name: effectiveProperty.name,
+          location: effectiveProperty.location,
+          image_url: effectiveProperty.image,
+          mortgage_id: opts.mortgageId || null,
+        },
+      },
+    ]);
+
+    if (txInsertErr) {
+      console.error("Failed to insert user_transactions:", txInsertErr);
+    } else {
+      console.log("Inserted transaction:", txHashValue);
+    }
+  };
 
   const handlePurchase = async () => {
     if (!isConnected) {
@@ -59,22 +160,37 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
     }
 
     try {
-      await purchaseProperty(property?.downPayment || 30000);
+      console.log("Starting purchase for:", effectiveProperty.name);
+      const result = await purchaseProperty(effectiveProperty.downPayment || 30000);
+      // Best-effort extraction of tx/mortgage details from the returned result (if any)
+      const txHash = result?.transaction?.hash || undefined;
+      const mortgageId = result?.mortgageId || undefined;
+
+      await savePurchaseToSupabase({
+        status: "completed",
+        txHash,
+        mortgageId,
+      });
+
       toast({
         title: "Purchase Successful!",
         description: "Your property purchase has been completed. Check your portfolio to view your new investment.",
       });
       
-      // Navigate to portfolio after successful purchase
       setTimeout(() => {
         window.location.href = '/portfolio';
-      }, 1500);
+      }, 1200);
       
       onClose();
     } catch (error) {
+      console.error("Purchase failed, saving pending record:", error);
+      await savePurchaseToSupabase({
+        status: "pending",
+      });
+
       toast({
         title: "Purchase Failed",
-        description: "There was an error processing your purchase. Please try again.",
+        description: "We saved a pending record to your portfolio. You can retry from your portfolio.",
         variant: "destructive",
       });
     }
