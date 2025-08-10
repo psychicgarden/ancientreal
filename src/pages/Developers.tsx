@@ -11,23 +11,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  Rocket, 
-  Users, 
-  DollarSign, 
-  Code, 
-  Shield, 
-  Star,
-  Clock,
-  TrendingUp,
-  Award,
-  Upload,
-  Vote,
-  Zap
-} from "lucide-react";
-
+import { Rocket, Users, DollarSign, Code, Shield, Star, Clock, TrendingUp, Award, Upload, Vote, Zap } from "lucide-react";
 const Developers = () => {
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedProject, setSelectedProject] = useState<any>(null);
@@ -38,11 +26,12 @@ const Developers = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const { data, error } = await supabase
-          .from('developer_projects')
-          .select('*')
-          .order('created_at', { ascending: false });
-
+        const {
+          data,
+          error
+        } = await supabase.from('developer_projects').select('*').order('created_at', {
+          ascending: false
+        });
         if (error) {
           console.error('Error fetching projects:', error);
           toast({
@@ -52,12 +41,11 @@ const Developers = () => {
           });
           return;
         }
-
         setProjects(data || []);
       } catch (error) {
         console.error('Error:', error);
         toast({
-          title: "Error", 
+          title: "Error",
           description: "Failed to load projects",
           variant: "destructive"
         });
@@ -65,7 +53,6 @@ const Developers = () => {
         setLoading(false);
       }
     };
-
     fetchProjects();
   }, [toast]);
 
@@ -80,7 +67,6 @@ const Developers = () => {
       document.head.appendChild(meta);
     }
     meta.setAttribute('content', desc);
-
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     if (!canonical) {
       canonical = document.createElement('link');
@@ -91,192 +77,166 @@ const Developers = () => {
   }, []);
 
   // Mock success stories matching the exact format from screenshots
-  const soldOutStories = [
-    {
-      id: 'success-1',
-      title: 'Bali Eco Resort Complex',
-      creator_name: 'Tropical Builders Co.',
-      description: 'Luxury eco-resort with 45 units in Canggu. Sold out in 4 days DAO funding.',
-      initial_funding: 850000,
-      current_value: 1200000,
-      developer_profit: 350000,
-      community_backers: 234,
-      timeline: 'SOLD OUT IN 4 DAYS',
-      development_time: '18 months',
-      roi_percentage: 41,
-      quote: "Zero upfront cost. We provided full funding after community validation.",
-      image_url: '/src/assets/bali-jungle-resort.jpg'
-    },
-    {
-      id: 'success-2', 
-      title: 'Smart City Infrastructure',
-      creator_name: 'NextGen Urban',
-      description: 'IoT-enabled smart city project with blockchain integration for 200+ residential units',
-      initial_funding: 1200000,
-      current_value: 1950000,
-      developer_profit: 750000,
-      community_backers: 456,
-      timeline: 'SOLD OUT IN 6 DAYS',
-      development_time: '24 months',
-      roi_percentage: 63,
-      quote: "Community funded, DAO approved. Developer kept 60% equity with zero risk.",
-      image_url: '/src/assets/eco-smart-city.jpg'
-    },
-    {
-      id: 'success-3',
-      title: 'Renewable Energy Villas',
-      creator_name: 'GreenTech Developments',
-      description: 'Self-sustaining villa complex with solar integration. Sold out in 2.5 weeks.',
-      initial_funding: 650000,
-      current_value: 920000,
-      developer_profit: 270000,
-      community_backers: 189,
-      timeline: 'SOLD OUT IN 2.5 WEEKS',
-      development_time: '15 months',
-      roi_percentage: 42,
-      quote: "From idea to fully funded in 45 days. No personal investment required.",
-      image_url: '/src/assets/villa-bali.jpg'
-    }
-  ];
+  const soldOutStories = [{
+    id: 'success-1',
+    title: 'Bali Eco Resort Complex',
+    creator_name: 'Tropical Builders Co.',
+    description: 'Luxury eco-resort with 45 units in Canggu. Sold out in 4 days DAO funding.',
+    initial_funding: 850000,
+    current_value: 1200000,
+    developer_profit: 350000,
+    community_backers: 234,
+    timeline: 'SOLD OUT IN 4 DAYS',
+    development_time: '18 months',
+    roi_percentage: 41,
+    quote: "Zero upfront cost. We provided full funding after community validation.",
+    image_url: '/src/assets/bali-jungle-resort.jpg'
+  }, {
+    id: 'success-2',
+    title: 'Smart City Infrastructure',
+    creator_name: 'NextGen Urban',
+    description: 'IoT-enabled smart city project with blockchain integration for 200+ residential units',
+    initial_funding: 1200000,
+    current_value: 1950000,
+    developer_profit: 750000,
+    community_backers: 456,
+    timeline: 'SOLD OUT IN 6 DAYS',
+    development_time: '24 months',
+    roi_percentage: 63,
+    quote: "Community funded, DAO approved. Developer kept 60% equity with zero risk.",
+    image_url: '/src/assets/eco-smart-city.jpg'
+  }, {
+    id: 'success-3',
+    title: 'Renewable Energy Villas',
+    creator_name: 'GreenTech Developments',
+    description: 'Self-sustaining villa complex with solar integration. Sold out in 2.5 weeks.',
+    initial_funding: 650000,
+    current_value: 920000,
+    developer_profit: 270000,
+    community_backers: 189,
+    timeline: 'SOLD OUT IN 2.5 WEEKS',
+    development_time: '15 months',
+    roi_percentage: 42,
+    quote: "From idea to fully funded in 45 days. No personal investment required.",
+    image_url: '/src/assets/villa-bali.jpg'
+  }];
 
   // Current projects seeking 80% - hardcoded to match screenshot
-  const currentProjects = [
-    {
-      id: 'coliving-hub',
-      title: 'Digital Nomad Coliving Hub',
-      creator_name: 'Remote Work Studios',
-      description: 'Modern coliving spaces designed for digital nomads with high-speed internet, coworking areas, and community events.',
-      target_funding: 450000,
-      current_funding: 382500,
-      presale_price: 382500,
-      min_investment: 75000,
-      estimated_yield: 22,
-      project_status: 'funded',
-      timeline: '12 months',
-      image_url: '/src/assets/coworking-mallorca.jpg',
-      presale_percentage: 85,
-      status_badge: 'Funded - Development Starting',
-      units_sold: '8/10',
-      public_markup: '+17.6%',
-      development_approved: true,
-      category: 'Real Estate'
-    },
-    {
-      id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-      title: 'Berber Eco Luxury Riad Retreat',
-      creator_name: 'Atlas Desert Developments',
-      description: 'Authentic Moroccan riad converted into an eco-luxury retreat with traditional architecture and modern sustainability features.',
-      target_funding: 750000,
-      current_funding: 525000,
-      presale_price: 525000,
-      min_investment: 75000,
-      estimated_yield: 28,
-      project_status: 'presale_active',
-      timeline: '18 months',
-      image_url: '/src/assets/desert-oasis-morocco.jpg',
-      presale_percentage: 70,
-      status_badge: 'Presale Active',
-      units_sold: '7/10',
-      public_markup: '+17.6%',
-      threshold_needed: 75000,
-      category: 'Hospitality'
-    },
-    {
-      id: 'vertical-farm',
-      title: 'Urban Vertical Farm Complex',
-      creator_name: 'AgriTech Builders',
-      description: 'Innovative vertical farming facility using hydroponic technology to produce organic vegetables in urban environments.',
-      target_funding: 920000,
-      current_funding: 734000,
-      presale_price: 734000,
-      min_investment: 75000,
-      estimated_yield: 31,
-      project_status: 'funded',
-      timeline: '15 months',
-      image_url: '/src/assets/eco-smart-city.jpg',
-      presale_percentage: 80,
-      status_badge: 'Funded - Development Starting',
-      units_sold: '8/10',
-      public_markup: '+17.6%',
-      development_approved: true,
-      category: 'Agriculture'
-    }
-  ];
-
-  const benefits = [
-    {
-      icon: <DollarSign className="h-8 w-8" />,
-      title: "Instant Funding Access",
-      description: "Get funded within 24-48 hours of DAO approval. No lengthy bank processes or VC meetings."
-    },
-    {
-      icon: <Users className="h-8 w-8" />,
-      title: "Community-Driven",
-      description: "Real users vote and fund projects they want to see. Build with your future users from day one."
-    },
-    {
-      icon: <Shield className="h-8 w-8" />,
-      title: "Smart Contract Protection",
-      description: "Funds held in escrow smart contracts. Milestone-based releases ensure accountability."
-    },
-    {
-      icon: <Code className="h-8 w-8" />,
-      title: "Technical Validation",
-      description: "Our expert DAO members review code quality, technical feasibility, and innovation potential."
-    },
-    {
-      icon: <TrendingUp className="h-8 w-8" />,
-      title: "Growth Support",
-      description: "Get access to our network of advisors, marketing support, and partnership opportunities."
-    },
-    {
-      icon: <Award className="h-8 w-8" />,
-      title: "Revenue Sharing",
-      description: "Keep majority ownership while sharing success with your early supporters and the DAO."
-    }
-  ];
-
-  const howItWorks = [
-    {
-      step: 1,
-      icon: <Upload className="h-6 w-6" />,
-      title: "Upload Project Blueprint",
-      description: "Share renderings, 3D models, videos, and design story to showcase your vision"
-    },
-    {
-      step: 2,
-      icon: <Shield className="h-6 w-6" />,
-      title: "Prove Ownership & Show Past Work",
-      description: "Upload deeds, contracts, permits, and portfolio of past builds with testimonials"
-    },
-    {
-      step: 3,
-      icon: <Users className="h-6 w-6" />,
-      title: "Create Presale Tiers & Set Goals",
-      description: "Token-gated or public presales for early backers with funding goals and milestones"
-    },
-    {
-      step: 4,
-      icon: <Vote className="h-6 w-6" />,
-      title: "DAO Vetting & Community Voting",
-      description: "Gain DAO approval, feedback, and ranking before funding unlocks"
-    },
-    {
-      step: 5,
-      icon: <Zap className="h-6 w-6" />,
-      title: "Get Funded & Build",
-      description: "Receive milestone-based funding and sell out in 4 days to 2 months"
-    }
-  ];
-
+  const currentProjects = [{
+    id: 'coliving-hub',
+    title: 'Digital Nomad Coliving Hub',
+    creator_name: 'Remote Work Studios',
+    description: 'Modern coliving spaces designed for digital nomads with high-speed internet, coworking areas, and community events.',
+    target_funding: 450000,
+    current_funding: 382500,
+    presale_price: 382500,
+    min_investment: 75000,
+    estimated_yield: 22,
+    project_status: 'funded',
+    timeline: '12 months',
+    image_url: '/src/assets/coworking-mallorca.jpg',
+    presale_percentage: 85,
+    status_badge: 'Funded - Development Starting',
+    units_sold: '8/10',
+    public_markup: '+17.6%',
+    development_approved: true,
+    category: 'Real Estate'
+  }, {
+    id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+    title: 'Berber Eco Luxury Riad Retreat',
+    creator_name: 'Atlas Desert Developments',
+    description: 'Authentic Moroccan riad converted into an eco-luxury retreat with traditional architecture and modern sustainability features.',
+    target_funding: 750000,
+    current_funding: 525000,
+    presale_price: 525000,
+    min_investment: 75000,
+    estimated_yield: 28,
+    project_status: 'presale_active',
+    timeline: '18 months',
+    image_url: '/src/assets/desert-oasis-morocco.jpg',
+    presale_percentage: 70,
+    status_badge: 'Presale Active',
+    units_sold: '7/10',
+    public_markup: '+17.6%',
+    threshold_needed: 75000,
+    category: 'Hospitality'
+  }, {
+    id: 'vertical-farm',
+    title: 'Urban Vertical Farm Complex',
+    creator_name: 'AgriTech Builders',
+    description: 'Innovative vertical farming facility using hydroponic technology to produce organic vegetables in urban environments.',
+    target_funding: 920000,
+    current_funding: 734000,
+    presale_price: 734000,
+    min_investment: 75000,
+    estimated_yield: 31,
+    project_status: 'funded',
+    timeline: '15 months',
+    image_url: '/src/assets/eco-smart-city.jpg',
+    presale_percentage: 80,
+    status_badge: 'Funded - Development Starting',
+    units_sold: '8/10',
+    public_markup: '+17.6%',
+    development_approved: true,
+    category: 'Agriculture'
+  }];
+  const benefits = [{
+    icon: <DollarSign className="h-8 w-8" />,
+    title: "Instant Funding Access",
+    description: "Get funded within 24-48 hours of DAO approval. No lengthy bank processes or VC meetings."
+  }, {
+    icon: <Users className="h-8 w-8" />,
+    title: "Community-Driven",
+    description: "Real users vote and fund projects they want to see. Build with your future users from day one."
+  }, {
+    icon: <Shield className="h-8 w-8" />,
+    title: "Smart Contract Protection",
+    description: "Funds held in escrow smart contracts. Milestone-based releases ensure accountability."
+  }, {
+    icon: <Code className="h-8 w-8" />,
+    title: "Technical Validation",
+    description: "Our expert DAO members review code quality, technical feasibility, and innovation potential."
+  }, {
+    icon: <TrendingUp className="h-8 w-8" />,
+    title: "Growth Support",
+    description: "Get access to our network of advisors, marketing support, and partnership opportunities."
+  }, {
+    icon: <Award className="h-8 w-8" />,
+    title: "Revenue Sharing",
+    description: "Keep majority ownership while sharing success with your early supporters and the DAO."
+  }];
+  const howItWorks = [{
+    step: 1,
+    icon: <Upload className="h-6 w-6" />,
+    title: "Upload Project Blueprint",
+    description: "Share renderings, 3D models, videos, and design story to showcase your vision"
+  }, {
+    step: 2,
+    icon: <Shield className="h-6 w-6" />,
+    title: "Prove Ownership & Show Past Work",
+    description: "Upload deeds, contracts, permits, and portfolio of past builds with testimonials"
+  }, {
+    step: 3,
+    icon: <Users className="h-6 w-6" />,
+    title: "Create Presale Tiers & Set Goals",
+    description: "Token-gated or public presales for early backers with funding goals and milestones"
+  }, {
+    step: 4,
+    icon: <Vote className="h-6 w-6" />,
+    title: "DAO Vetting & Community Voting",
+    description: "Gain DAO approval, feedback, and ranking before funding unlocks"
+  }, {
+    step: 5,
+    icon: <Zap className="h-6 w-6" />,
+    title: "Get Funded & Build",
+    description: "Receive milestone-based funding and sell out in 4 days to 2 months"
+  }];
   const handleInvestClick = (project: any) => {
     setSelectedProject(project);
     setInvestmentModalOpen(true);
   };
-
   if (loading) {
-    return (
-      <div className="min-h-screen bg-background">
+    return <div className="min-h-screen bg-background">
         <Header />
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
@@ -284,17 +244,14 @@ const Developers = () => {
             <p className="text-muted-foreground">Loading projects...</p>
           </div>
         </div>
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="min-h-screen bg-background">
+  return <div className="min-h-screen bg-background">
       <Header />
       <main role="main">
       {/* Hero Section */}
       <section className="relative py-20 bg-gradient-to-br from-primary/5 via-background to-accent/5">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 my-[30px]">
           <div className="text-center max-w-4xl mx-auto">
             <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">
               🚀 DAO-Powered Funding Platform
@@ -306,11 +263,7 @@ const Developers = () => {
               Skip traditional VCs. Present your blockchain project to our DAO and get funded by the community that will actually use it.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
-                className="bg-gradient-to-r from-primary to-accent hover:opacity-90"
-                onClick={() => setSubmissionFormOpen(true)}
-              >
+              <Button size="lg" className="bg-gradient-to-r from-primary to-accent hover:opacity-90" onClick={() => setSubmissionFormOpen(true)}>
                 Submit Your Project
               </Button>
               <Button size="lg" variant="outline">
@@ -355,20 +308,14 @@ const Developers = () => {
           </div>
 
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {soldOutStories.map((project) => (
-              <Card key={project.id} className="group hover:shadow-xl transition-all duration-300 border-border/50 hover:border-accent/20 relative overflow-hidden">
+            {soldOutStories.map(project => <Card key={project.id} className="group hover:shadow-xl transition-all duration-300 border-border/50 hover:border-accent/20 relative overflow-hidden">
                 {/* Success badge overlay */}
                 <div className="absolute top-4 left-4 z-10 bg-accent text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
                   {project.timeline}
                 </div>
                 
                 <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 rounded-t-lg flex items-center justify-center relative overflow-hidden">
-                  <img 
-                    src={project.image_url} 
-                    alt={project.title}
-                    loading="lazy"
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={project.image_url} alt={project.title} loading="lazy" className="w-full h-full object-cover" />
                   {/* ROI overlay */}
                   <div className="absolute bottom-4 left-4 bg-accent/90 text-primary-foreground px-3 py-2 rounded text-lg font-bold shadow-lg">
                     +{project.roi_percentage}% ROI
@@ -424,8 +371,7 @@ const Developers = () => {
                     View Full Case Study
                   </Button>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </div>
       </section>
@@ -444,43 +390,28 @@ const Developers = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {currentProjects.length > 0 ? currentProjects.map((project) => {
-              const fundingPercentage = project.target_funding > 0 ? (project.current_funding / project.target_funding) * 100 : 0;
-              
-              return (
-                <Card key={project.id} className="bg-gradient-card border-accent/20 hover:shadow-xl transition-all duration-300">
+            {currentProjects.length > 0 ? currentProjects.map(project => {
+              const fundingPercentage = project.target_funding > 0 ? project.current_funding / project.target_funding * 100 : 0;
+              return <Card key={project.id} className="bg-gradient-card border-accent/20 hover:shadow-xl transition-all duration-300">
                   <CardContent className="p-6">
                     <div className="aspect-video bg-cover bg-center rounded-lg mb-4 relative overflow-hidden">
-                      {project.image_url ? (
-                        <img 
-                          src={project.image_url} 
-                          alt={project.title}
-                          loading="lazy"
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center text-muted-foreground">
+                      {project.image_url ? <img src={project.image_url} alt={project.title} loading="lazy" className="w-full h-full object-cover" /> : <div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center text-muted-foreground">
                           No Image
-                        </div>
-                      )}
+                        </div>}
                       {/* Presale percentage overlay */}
                       <div className="absolute top-3 right-3 bg-primary/90 text-primary-foreground px-2 py-1 rounded text-sm font-bold">
                         {project.presale_percentage}% PRESOLD
                       </div>
                       
                       {/* Development Approved notification */}
-                      {project.development_approved && (
-                        <div className="absolute top-3 left-3 bg-accent/90 text-primary-foreground px-2 py-1 rounded text-xs font-semibold">
+                      {project.development_approved && <div className="absolute top-3 left-3 bg-accent/90 text-primary-foreground px-2 py-1 rounded text-xs font-semibold">
                           🎉 Development Approved!
-                        </div>
-                      )}
+                        </div>}
                       
                       {/* Threshold needed notification */}
-                      {project.threshold_needed && (
-                        <div className="absolute bottom-3 left-3 bg-gold/90 text-gold-foreground px-2 py-1 rounded text-xs font-semibold">
+                      {project.threshold_needed && <div className="absolute bottom-3 left-3 bg-gold/90 text-gold-foreground px-2 py-1 rounded text-xs font-semibold">
                           ${project.threshold_needed?.toLocaleString()} needed to reach threshold
-                        </div>
-                      )}
+                        </div>}
                     </div>
                     
                     <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
@@ -488,13 +419,7 @@ const Developers = () => {
                     
                     {/* Status badge */}
                     <div className="mb-3">
-                      <Badge 
-                        className={`${
-                          project.project_status === 'funded' 
-                            ? 'bg-accent/15 text-accent-foreground border-accent/30' 
-                            : 'bg-gold/15 text-gold-foreground border-gold/30'
-                        }`}
-                      >
+                      <Badge className={`${project.project_status === 'funded' ? 'bg-accent/15 text-accent-foreground border-accent/30' : 'bg-gold/15 text-gold-foreground border-gold/30'}`}>
                         {project.status_badge}
                       </Badge>
                     </div>
@@ -539,20 +464,14 @@ const Developers = () => {
                       </Badge>
                     </div>
                     
-                    <Button 
-                      className="w-full"
-                      onClick={() => handleInvestClick(project)}
-                    >
+                    <Button className="w-full" onClick={() => handleInvestClick(project)}>
                       Invest Now
                     </Button>
                   </CardContent>
-                </Card>
-              );
-            }) : (
-              <div className="col-span-full text-center py-8">
+                </Card>;
+            }) : <div className="col-span-full text-center py-8">
                 <p className="text-muted-foreground">No active projects seeking funding.</p>
-              </div>
-            )}
+              </div>}
           </div>
         </div>
       </section>
@@ -568,8 +487,7 @@ const Developers = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-            {howItWorks.map((step, index) => (
-              <div key={step.step} className="text-center">
+            {howItWorks.map((step, index) => <div key={step.step} className="text-center">
                 <div className="relative mb-6">
                   <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 text-primary-foreground">
                     {step.icon}
@@ -577,15 +495,13 @@ const Developers = () => {
                   <div className="absolute -top-2 -right-2 w-8 h-8 bg-accent rounded-full flex items-center justify-center text-sm font-bold text-accent-foreground">
                     {step.step}
                   </div>
-                  {index < howItWorks.length - 1 && (
-                    <div className="hidden lg:block absolute top-8 left-full w-full h-0.5 bg-border -translate-y-0.5" 
-                         style={{ width: 'calc(100% - 2rem)' }} />
-                  )}
+                  {index < howItWorks.length - 1 && <div className="hidden lg:block absolute top-8 left-full w-full h-0.5 bg-border -translate-y-0.5" style={{
+                  width: 'calc(100% - 2rem)'
+                }} />}
                 </div>
                 <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
                 <p className="text-muted-foreground">{step.description}</p>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </section>
@@ -601,8 +517,7 @@ const Developers = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {benefits.map((benefit, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-all duration-300 border-border/50 hover:border-primary/20">
+            {benefits.map((benefit, index) => <Card key={index} className="text-center hover:shadow-lg transition-all duration-300 border-border/50 hover:border-primary/20">
                 <CardHeader>
                   <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 text-primary">
                     {benefit.icon}
@@ -612,8 +527,7 @@ const Developers = () => {
                 <CardContent>
                   <p className="text-muted-foreground">{benefit.description}</p>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </div>
       </section>
@@ -767,16 +681,10 @@ const Developers = () => {
       </main>
       <Footer />
       {/* Investment Modal */}
-      {selectedProject && (
-        <ProjectInvestmentModal
-          open={investmentModalOpen}
-          onOpenChange={setInvestmentModalOpen}
-          project={{
-            ...selectedProject,
-            id: String(selectedProject.id)
-          }}
-        />
-      )}
+      {selectedProject && <ProjectInvestmentModal open={investmentModalOpen} onOpenChange={setInvestmentModalOpen} project={{
+      ...selectedProject,
+      id: String(selectedProject.id)
+    }} />}
 
       {/* Project Submission Modal */}
       <Dialog open={submissionFormOpen} onOpenChange={setSubmissionFormOpen}>
@@ -784,8 +692,6 @@ const Developers = () => {
           <ProjectSubmissionForm onClose={() => setSubmissionFormOpen(false)} />
         </DialogContent>
       </Dialog>
-    </div>
-  );
+    </div>;
 };
-
 export default Developers;
