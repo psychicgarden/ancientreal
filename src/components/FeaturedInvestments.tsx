@@ -218,16 +218,26 @@ const FeaturedInvestments = () => {
                   {/* Action Buttons */}
                   <div className="space-y-3">
                     {property.isVillage ? <>
-                        <Button className="w-full h-12 text-base font-medium hover:scale-[1.02] transition-transform" size="lg" onClick={() => {
-                    setSelectedProperty(property);
-                    setPurchaseModalOpen(true);
-                  }} disabled={isPurchasing}>
+                        <Button
+                          className="w-full h-12 text-base font-medium hover:scale-[1.02] transition-transform"
+                          size="lg"
+                          variant="gold"
+                          onClick={() => {
+                            setSelectedProperty(property);
+                            setPurchaseModalOpen(true);
+                          }}
+                          disabled={isPurchasing}
+                        >
                           {isPurchasing ? "Processing..." : "Become a Founding Citizen"}
                         </Button>
-                        <Button className="w-full h-11 font-medium" variant="outline" onClick={() => {
-                    setSelectedProperty(property);
-                    setCalculatorOpen(true);
-                  }}>
+                        <Button
+                          className="w-full h-11 font-medium"
+                          variant="pill"
+                          onClick={() => {
+                            setSelectedProperty(property);
+                            setCalculatorOpen(true);
+                          }}
+                        >
                           <Calculator className="w-4 h-4 mr-2" />
                           Calculate Network Returns
                         </Button>
