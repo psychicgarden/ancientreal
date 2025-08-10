@@ -59,23 +59,17 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
     }
 
     try {
-      const result = await purchaseProperty(property?.downPayment || 30000);
-
-      if (result?.success) {
-        toast({
-          title: "Purchase Successful!",
-          description: "Your property purchase has been completed. Check your portfolio to view your new investment.",
-        });
-      } else {
-        toast({
-          title: "Purchase Recorded",
-          description: "We saved this as a pending purchase in your portfolio (awaiting on-chain confirmation).",
-        });
-      }
-      // Navigate to portfolio after completion/pending
+      await purchaseProperty(property?.downPayment || 30000);
+      toast({
+        title: "Purchase Successful!",
+        description: "Your property purchase has been completed. Check your portfolio to view your new investment.",
+      });
+      
+      // Navigate to portfolio after successful purchase
       setTimeout(() => {
         window.location.href = '/portfolio';
-      }, 1000);
+      }, 1500);
+      
       onClose();
     } catch (error) {
       toast({

@@ -174,31 +174,21 @@ const FeaturedInvestments = () => {
                       </div>
 
                       {/* Immediate Cash Flow Section */}
-                      <div className="rounded-2xl border border-border/30 bg-gradient-card p-6 shadow-card">
-                        <h4 className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase mb-3">Immediate Cash Flow</h4>
-                        {/* Elegant equation row */}
-                        <div className="grid grid-cols-[auto_auto_auto_auto_auto] items-baseline justify-center gap-2 md:gap-3 mb-2 tabular-nums">
-                          <span className="text-base md:text-xl font-semibold leading-none text-foreground flex items-baseline">
-                            <span className="text-xs md:text-sm mr-0.5">$</span>
-                            {property.monthlyRent.toLocaleString()}
-                          </span>
-                          <span className="text-lg md:text-xl font-bold leading-none text-destructive">−</span>
-                          <span className="text-base md:text-xl font-semibold leading-none text-destructive flex items-baseline">
-                            <span className="text-xs md:text-sm mr-0.5">$</span>
-                            {property.monthlyPayment.toLocaleString()}
-                          </span>
-                          <span className="text-lg md:text-xl font-bold leading-none text-accent">+</span>
-                          <span className="text-base md:text-xl font-bold leading-none text-accent flex items-baseline">
-                            <span className="text-xs md:text-sm mr-0.5">$</span>
-                            {property.monthlyProfit.toLocaleString()}
-                          </span>
-                        </div>
-                        <div className="h-px bg-gradient-to-r from-transparent via-border/60 to-transparent my-2" />
-                        {/* Sub labels */}
-                        <div className="grid grid-cols-3 gap-2 text-center text-[10px] md:text-[11px] text-muted-foreground uppercase tracking-wide">
-                          <div>Monthly Rent</div>
-                          <div>Mortgage Payment</div>
-                          <div>Cash Flow</div>
+                      <div className="bg-gradient-to-br from-muted/20 to-muted/5 rounded-xl p-5 border border-border/20">
+                        <h4 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase mb-4">Immediate Cash Flow</h4>
+                        <div className="flex justify-between items-center text-center">
+                          <div className="flex-1">
+                            <div className="text-2xl font-bold text-green-600 mb-1">${property.monthlyRent}</div>
+                            <div className="text-xs text-muted-foreground uppercase tracking-wide leading-tight">Monthly<br />Rent</div>
+                          </div>
+                          <div className="flex-1">
+                            <div className="text-2xl font-bold text-red-500 mb-1">-${property.monthlyPayment}</div>
+                            <div className="text-xs text-muted-foreground uppercase tracking-wide leading-tight">Mortgage<br />Payment</div>
+                          </div>
+                          <div className="flex-1">
+                            <div className="text-2xl font-bold text-primary mb-1">+${property.monthlyProfit}</div>
+                            <div className="text-xs text-muted-foreground uppercase tracking-wide leading-tight">Profit<br />Per Month</div>
+                          </div>
                         </div>
                       </div>
                     </div> : <div className="space-y-4 mb-8">
@@ -228,26 +218,16 @@ const FeaturedInvestments = () => {
                   {/* Action Buttons */}
                   <div className="space-y-3">
                     {property.isVillage ? <>
-                        <Button
-                          className="w-full h-12 text-base font-medium hover:scale-[1.02] transition-transform"
-                          size="lg"
-                          variant="gold"
-                          onClick={() => {
-                            setSelectedProperty(property);
-                            setPurchaseModalOpen(true);
-                          }}
-                          disabled={isPurchasing}
-                        >
+                        <Button className="w-full h-12 text-base font-medium hover:scale-[1.02] transition-transform" size="lg" onClick={() => {
+                    setSelectedProperty(property);
+                    setPurchaseModalOpen(true);
+                  }} disabled={isPurchasing}>
                           {isPurchasing ? "Processing..." : "Become a Founding Citizen"}
                         </Button>
-                        <Button
-                          className="w-full h-11 font-medium"
-                          variant="pill"
-                          onClick={() => {
-                            setSelectedProperty(property);
-                            setCalculatorOpen(true);
-                          }}
-                        >
+                        <Button className="w-full h-11 font-medium" variant="outline" onClick={() => {
+                    setSelectedProperty(property);
+                    setCalculatorOpen(true);
+                  }}>
                           <Calculator className="w-4 h-4 mr-2" />
                           Calculate Network Returns
                         </Button>
