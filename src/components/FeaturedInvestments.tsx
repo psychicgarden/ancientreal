@@ -177,17 +177,17 @@ const FeaturedInvestments = () => {
                       <div className="rounded-2xl border border-border/30 bg-gradient-card p-6 shadow-card">
                         <h4 className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase mb-3">Immediate Cash Flow</h4>
                         {/* Elegant equation row */}
-                        <div className="flex items-baseline justify-center gap-3 md:gap-4 mb-2">
-                          <span className="text-2xl md:text-3xl font-semibold text-accent">{`$${property.monthlyRent.toLocaleString()}`}</span>
-                          <span className="text-2xl md:text-3xl font-semibold text-destructive">{`- $${property.monthlyPayment.toLocaleString()}`}</span>
-                          <span className="text-2xl md:text-3xl font-semibold text-primary">{`+ $${property.monthlyProfit.toLocaleString()}`}</span>
+                        <div className="flex items-baseline justify-center gap-2 md:gap-3 mb-1">
+                          <span className="text-xl md:text-2xl font-semibold text-foreground">{`$${property.monthlyRent.toLocaleString()}`}</span>
+                          <span className="text-xl md:text-2xl font-semibold text-destructive">{`- $${property.monthlyPayment.toLocaleString()}`}</span>
+                          <span className="text-xl md:text-2xl font-semibold text-accent">{`+ $${property.monthlyProfit.toLocaleString()}`}</span>
                         </div>
-                        <div className="h-px bg-gradient-to-r from-transparent via-border/60 to-transparent my-3" />
+                        <div className="h-px bg-gradient-to-r from-transparent via-border/60 to-transparent my-2" />
                         {/* Sub labels */}
-                        <div className="grid grid-cols-3 gap-2 text-center text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide">
+                        <div className="grid grid-cols-3 gap-2 text-center text-[10px] md:text-[11px] text-muted-foreground uppercase tracking-wide">
                           <div>Monthly Rent</div>
                           <div>Mortgage Payment</div>
-                          <div>Profit Per Month</div>
+                          <div>Cash Flow</div>
                         </div>
                       </div>
                     </div> : <div className="space-y-4 mb-8">
