@@ -15,19 +15,8 @@ import { TrustSignals } from "@/components/TrustSignals";
 import { CompetitorComparison } from "@/components/CompetitorComparison";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { PROPERTIES_CATALOG } from "@/lib/propertiesCatalog";
 
-const sampleProperties = PROPERTIES_CATALOG.slice(0, 3).map((p) => ({
-  id: p.id,
-  image: p.image,
-  title: p.name,
-  location: p.location,
-  status: "available" as const,
-  value: p.totalValue,
-  equity: Math.round(p.totalValue * 0.2),
-  monthlyIncome: Math.round((p.totalValue * 0.2) / 12),
-  occupancyRate: 85,
-}));
+
 
 const Portfolio = () => {
   const { isConnected, account, connectWallet } = useWallet();
@@ -172,7 +161,7 @@ const Portfolio = () => {
     remainingBalance: prop.remaining_balance,
     isPending: !prop.is_active, // Show if purchase failed/pending
     failureReason: prop.is_active ? null : "Smart contract deployment required"
-  })) : sampleProperties; // Fallback to sample data if no real properties
+  })) : [];
 
   if (!isConnected) {
     return (
@@ -219,7 +208,7 @@ const Portfolio = () => {
   const avgOccupancy = displayProperties.length > 0 ? displayProperties.reduce((sum, prop) => sum + prop.occupancyRate, 0) / displayProperties.length : 0;
 
   // Portfolio data for enhanced analytics
-  const totalInvestment = userProperties.reduce((sum, prop) => sum + prop.down_payment, 0) || 1500000;
+  const totalInvestment = userProperties.reduce((sum, prop) => sum + prop.down_payment, 0) || 0;
   const portfolioData = {
     totalInvestment,
     currentValue: totalValue,

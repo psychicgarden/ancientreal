@@ -2,8 +2,6 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { useToast } from '@/hooks/use-toast';
 import { CONTRACTS, NETWORK_CONFIG, VILLAGE_MEMBERSHIP_FEE, MAZUNTE_PROPERTY } from '@/lib/contracts';
 import { web3Integration, Web3Integration } from '@/lib/web3-integration';
-import { ethers } from 'ethers';
-import { supabase } from '@/integrations/supabase/client';
 
 interface WalletContextType {
   isConnected: boolean;
@@ -332,7 +330,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     
     try {
       if (isDemoMode) {
-        // Demo mode - simulate purchase and save to database
         toast({
           title: "Processing Property Purchase (Demo)",
           description: `Processing down payment of $${downPayment.toLocaleString()}...`,
@@ -341,52 +338,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         await new Promise(resolve => setTimeout(resolve, 2000));
         
         const mockMortgageId = `demo_${Date.now()}`;
-        
-        // Save demo purchase to database
-        const propertyData = {
-          user_wallet_address: account.toLowerCase(),
-          property_name: 'Mazunte Beach Property (Demo)',
-          property_location: 'Mazunte, Oaxaca, Mexico',
-          purchase_price: 150000,
-          down_payment: downPayment,
-          mortgage_id: mockMortgageId,
-          current_value: 150000,
-          monthly_payment: 1456,
-          remaining_balance: 150000 - downPayment,
-          equity_percentage: (downPayment / 150000) * 100,
-        };
-
-        const { error: dbError } = await supabase
-          .from('user_properties')
-          .insert([propertyData]);
-
-        if (dbError) {
-          console.error('Failed to save demo property to database:', dbError);
-        }
-
-        // Log demo transaction
-        const transactionData = {
-          user_wallet_address: account.toLowerCase(),
-          transaction_hash: `demo_tx_${Date.now()}`,
-          transaction_type: 'property_purchase',
-          amount: downPayment,
-          currency: 'USDT',
-          status: 'confirmed',
-          metadata: {
-            mortgageId: mockMortgageId,
-            propertyName: 'Mazunte Beach Property (Demo)',
-            propertyValue: 150000,
-            demoMode: true
-          }
-        };
-
-        const { error: txError } = await supabase
-          .from('user_transactions')
-          .insert([transactionData]);
-
-        if (txError) {
-          console.error('Failed to save demo transaction to database:', txError);
-        }
 
         toast({
           title: "Property Purchase Successful! 🏡 (Demo)",
@@ -402,54 +353,11 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       });
 
       // Real smart contract interaction
-      const result = await web3Integration.purchaseProperty(downPayment);
+      const result: any = await web3Integration.purchaseProperty(downPayment);
       
-      // Wait for transaction confirmation
-      await result.transaction.wait();
-
-      // Save successful purchase to database
-      const propertyData = {
-        user_wallet_address: account.toLowerCase(),
-        property_name: 'Mazunte Beach Property',
-        property_location: 'Mazunte, Oaxaca, Mexico',
-        purchase_price: 150000,
-        down_payment: downPayment,
-        mortgage_id: result.mortgageId,
-        current_value: 150000,
-        monthly_payment: 1456,
-        remaining_balance: 150000 - downPayment,
-        equity_percentage: (downPayment / 150000) * 100,
-      };
-
-      const { error: dbError } = await supabase
-        .from('user_properties')
-        .insert([propertyData]);
-
-      if (dbError) {
-        console.error('Failed to save property to database:', dbError);
-      }
-
-      // Log transaction to database
-      const transactionData = {
-        user_wallet_address: account.toLowerCase(),
-        transaction_hash: result.transaction.hash,
-        transaction_type: 'property_purchase',
-        amount: downPayment,
-        currency: 'USDT',
-        status: 'confirmed',
-        metadata: {
-          mortgageId: result.mortgageId,
-          propertyName: 'Mazunte Beach Property',
-          propertyValue: 150000
-        }
-      };
-
-      const { error: txError } = await supabase
-        .from('user_transactions')
-        .insert([transactionData]);
-
-      if (txError) {
-        console.error('Failed to save transaction to database:', txError);
+      // Wait for transaction confirmation if available
+      if (result?.transaction?.wait) {
+        await result.transaction.wait();
       }
       
       // Update USDT balance
@@ -458,78 +366,19 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
       toast({
         title: "Property Purchase Successful! 🏡",
-        description: `Mortgage created with ID: ${result.mortgageId}. You have a 72-hour cooling-off period.`,
+        description: `Mortgage created with ID: ${result?.mortgageId}. You have a 72-hour cooling-off period.`,
       });
 
-      return { success: true, mortgageId: result.mortgageId };
+      return { success: true, mortgageId: result?.mortgageId };
     } catch (error: any) {
       console.error('Property purchase failed:', error);
       const errorMessage = error.message || "There was an error processing your property purchase.";
       
-      // CRITICAL FIX: Save to database even if blockchain fails (Live Mode fallback)
-      if (!isDemoMode && account) {
-        console.log('Blockchain failed, saving failed purchase to database for user visibility...');
-        
-        const fallbackMortgageId = `pending_${Date.now()}`;
-        
-        // Save property to database with "pending" status
-        const propertyData = {
-          user_wallet_address: account.toLowerCase(),
-          property_name: 'Mazunte Beach Property',
-          property_location: 'Mazunte, Oaxaca, Mexico',
-          purchase_price: 150000,
-          down_payment: downPayment,
-          mortgage_id: fallbackMortgageId,
-          current_value: 150000,
-          monthly_payment: 1456,
-          remaining_balance: 150000 - downPayment,
-          equity_percentage: (downPayment / 150000) * 100,
-          is_active: false // Mark as inactive since blockchain failed
-        };
-
-        try {
-          const { error: dbError } = await supabase
-            .from('user_properties')
-            .insert([propertyData]);
-
-          if (!dbError) {
-            // Also log the failed transaction
-            const transactionData = {
-              user_wallet_address: account.toLowerCase(),
-              transaction_hash: `failed_tx_${Date.now()}`,
-              transaction_type: 'property_purchase',
-              amount: downPayment,
-              currency: 'USDT',
-              status: 'failed',
-              metadata: {
-                mortgageId: fallbackMortgageId,
-                propertyName: 'Mazunte Beach Property',
-                propertyValue: 150000,
-                errorMessage,
-                smartContractError: true
-              }
-            };
-
-            await supabase
-              .from('user_transactions')
-              .insert([transactionData]);
-
-            toast({
-              title: "Purchase Saved (Blockchain Failed)",
-              description: "Your purchase attempt was saved. Enable Demo Mode to complete purchases successfully.",
-              variant: "destructive",
-            });
-          }
-        } catch (dbError) {
-          console.error('Failed to save failed purchase to database:', dbError);
-        }
-      } else {
-        toast({
-          title: "Purchase Failed",
-          description: errorMessage,
-          variant: "destructive",
-        });
-      }
+      toast({
+        title: "Purchase Failed",
+        description: errorMessage,
+        variant: "destructive",
+      });
       
       return { success: false, error: errorMessage };
     } finally {
