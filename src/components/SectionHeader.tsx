@@ -23,7 +23,7 @@ export function SectionHeader({ eyebrow, title, subtitle, align = "center", clas
       )}
       <h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight">{title}</h2>
       {subtitle && (
-        <p className="text-lg text-muted-foreground leading-relaxed">{subtitle}</p>
+        <p className="text-lg text-muted-foreground leading-relaxed mb-6 md:mb-8">{subtitle}</p>
       )}
     </header>
   )
