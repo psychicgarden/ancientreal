@@ -8,6 +8,7 @@ import { ShoppingCart, TrendingUp, MapPin } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useWallet } from "@/contexts/WalletContext";
 import { supabase } from "@/integrations/supabase/client";
+import NetworkGuard from "@/components/NetworkGuard";
 
 const images = [
   "/src/assets/villa-tulum.jpg",
@@ -72,6 +73,36 @@ export const SimpleTokenPurchase = () => {
     };
     fetchProperties();
   }, []);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel('schema-db-changes')
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'property_fractionalization' },
+        (payload: any) => {
+          const updated = payload.new;
+          setProperties((prev) => prev.map((p) => p.id === updated.id ? {
+            ...p,
+            soldTokens: Number(updated.tokens_sold ?? p.soldTokens),
+            pricePerToken: Number(updated.current_speculation_price ?? p.pricePerToken),
+            totalTokens: Number(updated.total_tokens_available ?? p.totalTokens),
+          } : p));
+          setSelectedProperty((prev) => prev && prev.id === updated.id ? {
+            ...prev,
+            soldTokens: Number(updated.tokens_sold ?? prev.soldTokens),
+            pricePerToken: Number(updated.current_speculation_price ?? prev.pricePerToken),
+            totalTokens: Number(updated.total_tokens_available ?? prev.totalTokens),
+          } : prev);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
   const handlePurchase = async () => {
     if (!selectedProperty) return;
     if (!isConnected || !account) {
@@ -93,6 +124,10 @@ export const SimpleTokenPurchase = () => {
       return;
     }
 
+    if (totalCost < selectedProperty.minInvestment) {
+      toast({ title: 'Below minimum investment', description: `Minimum investment is $${selectedProperty.minInvestment.toLocaleString()}.`, variant: 'destructive' });
+      return;
+    }
     console.log('Purchase clicked', { property: selectedProperty.name, tokens: tokenAmount, totalCost });
 
     try {
@@ -141,7 +176,7 @@ export const SimpleTokenPurchase = () => {
         <h2 className="text-2xl font-bold">Primary Market: Buy Property Tokens</h2>
         <p className="text-muted-foreground">Buy newly issued fractional tokens directly from the property issuer. This is the primary sale (not peer-to-peer resales).</p>
       </div>
-
+      <NetworkGuard />
       {/* Property Selection */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {loading ? (
@@ -207,9 +242,14 @@ export const SimpleTokenPurchase = () => {
                 type="number"
                 min={1}
                 value={tokenAmount}
-                onChange={(e) => setTokenAmount(Math.max(0, Number(e.target.value)))}
+                onChange={(e) => setTokenAmount(Math.floor(Math.max(0, Number(e.target.value))))}
                 className="text-lg"
               />
+              {selectedProperty && (
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Min investment: ${selectedProperty.minInvestment.toLocaleString()} • Available: {selectedProperty.totalTokens - selectedProperty.soldTokens} tokens
+                </p>
+              )}
             </div>
             <div>
               <Label>Price per Token</Label>
@@ -237,7 +277,15 @@ export const SimpleTokenPurchase = () => {
             onClick={handlePurchase} 
             className="w-full" 
             size="lg"
-            disabled={loading || !selectedProperty || tokenAmount < 1}
+            disabled={
+              loading ||
+              !selectedProperty ||
+              tokenAmount < 1 ||
+              (selectedProperty && (
+                tokenAmount > (selectedProperty.totalTokens - selectedProperty.soldTokens) ||
+                (selectedProperty.pricePerToken * tokenAmount) < selectedProperty.minInvestment
+              ))
+            }
           >
             {selectedProperty
               ? `Buy ${tokenAmount} Token${tokenAmount !== 1 ? 's' : ''} for $${totalCost.toLocaleString()}`

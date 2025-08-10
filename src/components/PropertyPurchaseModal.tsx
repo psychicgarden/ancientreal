@@ -22,6 +22,7 @@ import {
 import { SmartContractViewer } from "./SmartContractViewer";
 import { supabase } from "@/integrations/supabase/client";
 import { PROPERTIES_CATALOG } from "@/lib/propertiesCatalog";
+import NetworkGuard from "@/components/NetworkGuard";
 
 interface PropertyPurchaseModalProps {
   isOpen: boolean;

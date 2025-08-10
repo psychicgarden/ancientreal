@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { useToast } from '@/hooks/use-toast';
 import { CONTRACTS, NETWORK_CONFIG, VILLAGE_MEMBERSHIP_FEE, MAZUNTE_PROPERTY } from '@/lib/contracts';
 import { web3Integration, Web3Integration } from '@/lib/web3-integration';
+import { getExplorerTxUrl } from '@/lib/utils';
 
 interface WalletContextType {
   isConnected: boolean;
@@ -364,9 +365,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const newBalance = await web3Integration.getUSDTBalance(account);
       setUsdtBalance(newBalance);
 
+      const explorerUrl = getExplorerTxUrl(result?.transaction?.hash);
       toast({
         title: "Property Purchase Successful! 🏡",
-        description: `Mortgage created with ID: ${result?.mortgageId}. You have a 72-hour cooling-off period.`,
+        description: `Mortgage created with ID: ${result?.mortgageId}. You have a 72-hour cooling-off period. Tx: ${explorerUrl}`,
       });
 
       return { success: true, mortgageId: result?.mortgageId };

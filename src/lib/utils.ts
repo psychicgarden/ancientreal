@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { NETWORK_CONFIG } from "@/lib/contracts"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -114,3 +115,10 @@ export async function calculateTotalUserInvestments(
     return 0;
   }
 }
+
+export function getExplorerTxUrl(txHash: string): string {
+  if (!txHash || txHash.startsWith('pending-')) return '#';
+  const base = (NETWORK_CONFIG.blockExplorerUrls?.[0] || 'https://testnet.snowtrace.io/').replace(/\/?$/, '/');
+  return `${base}tx/${txHash}`;
+}
+
