@@ -207,6 +207,8 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
           </DialogTitle>
         </DialogHeader>
 
+        <NetworkGuard />
+
         <div className="space-y-6">
           {/* Property Overview */}
           <Card>

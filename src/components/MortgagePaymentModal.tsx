@@ -9,6 +9,7 @@ import { Shield, AlertTriangle, CreditCard, Home, Clock, DollarSign } from "luci
 import { useWallet } from "@/contexts/WalletContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import NetworkGuard from "@/components/NetworkGuard";
 
 interface MortgagePaymentModalProps {
   isOpen: boolean;
@@ -125,6 +126,8 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property }: MortgagePaym
             Mortgage Payment Confirmation
           </DialogTitle>
         </DialogHeader>
+
+        <NetworkGuard />
 
         <div className="space-y-6">
           {/* Property Information */}

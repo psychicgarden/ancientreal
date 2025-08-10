@@ -414,9 +414,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const newBalance = await web3Integration.getUSDTBalance(account);
       setUsdtBalance(newBalance);
 
+      const explorerUrl = getExplorerTxUrl(tx.hash);
       toast({
         title: "Payment Successful! 💰",
-        description: "Your monthly mortgage payment has been processed.",
+        description: `Your monthly mortgage payment has been processed. View on explorer: ${explorerUrl}`,
       });
       
       return { success: true };
