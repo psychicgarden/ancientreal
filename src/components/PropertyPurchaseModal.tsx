@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -162,13 +161,12 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
     try {
       console.log("Starting purchase for:", effectiveProperty.name);
       const result = await purchaseProperty(effectiveProperty.downPayment || 30000);
-      // Best-effort extraction of tx/mortgage details from the returned result (if any)
-      const txHash = result?.transaction?.hash || undefined;
-      const mortgageId = result?.mortgageId || undefined;
+
+      // Use only mortgageId from the result; let savePurchaseToSupabase generate a fallback tx hash.
+      const mortgageId = result?.mortgageId;
 
       await savePurchaseToSupabase({
         status: "completed",
-        txHash,
         mortgageId,
       });
 
