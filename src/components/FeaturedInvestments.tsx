@@ -174,20 +174,20 @@ const FeaturedInvestments = () => {
                       </div>
 
                       {/* Immediate Cash Flow Section */}
-                      <div className="bg-gradient-to-br from-muted/20 to-muted/5 rounded-xl p-5 border border-border/20">
-                        <h4 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase mb-4">Immediate Cash Flow</h4>
-                        <div className="flex justify-between items-center text-center">
-                          <div className="flex-1">
-                            <div className="text-2xl font-bold text-green-600 mb-1">${property.monthlyRent}</div>
-                            <div className="text-xs text-muted-foreground uppercase tracking-wide leading-tight">Monthly<br />Rent</div>
+                      <div className="relative overflow-hidden rounded-2xl border border-border/30 bg-gradient-card p-6 shadow-card">
+                        <h4 className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase mb-4">Immediate Cash Flow</h4>
+                        <div className="flex justify-between items-center text-center divide-x divide-border/40">
+                          <div className="flex-1 px-3">
+                            <div className="text-3xl md:text-4xl font-semibold text-accent mb-1">{`$${property.monthlyRent.toLocaleString()}`}</div>
+                            <div className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide">Monthly Rent</div>
                           </div>
-                          <div className="flex-1">
-                            <div className="text-2xl font-bold text-red-500 mb-1">-${property.monthlyPayment}</div>
-                            <div className="text-xs text-muted-foreground uppercase tracking-wide leading-tight">Mortgage<br />Payment</div>
+                          <div className="flex-1 px-3">
+                            <div className="text-3xl md:text-4xl font-semibold text-destructive mb-1">{`- $${property.monthlyPayment.toLocaleString()}`}</div>
+                            <div className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide">Mortgage Payment</div>
                           </div>
-                          <div className="flex-1">
-                            <div className="text-2xl font-bold text-primary mb-1">+${property.monthlyProfit}</div>
-                            <div className="text-xs text-muted-foreground uppercase tracking-wide leading-tight">Profit<br />Per Month</div>
+                          <div className="flex-1 px-3">
+                            <div className="text-3xl md:text-4xl font-semibold text-primary mb-1">{`+ $${property.monthlyProfit.toLocaleString()}`}</div>
+                            <div className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide">Profit Per Month</div>
                           </div>
                         </div>
                       </div>
