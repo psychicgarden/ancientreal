@@ -177,10 +177,21 @@ const FeaturedInvestments = () => {
                       <div className="rounded-2xl border border-border/30 bg-gradient-card p-6 shadow-card">
                         <h4 className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase mb-3">Immediate Cash Flow</h4>
                         {/* Elegant equation row */}
-                        <div className="flex items-baseline justify-center gap-2 md:gap-3 mb-1">
-                          <span className="text-xl md:text-2xl font-semibold text-foreground">{`$${property.monthlyRent.toLocaleString()}`}</span>
-                          <span className="text-xl md:text-2xl font-semibold text-destructive">{`- $${property.monthlyPayment.toLocaleString()}`}</span>
-                          <span className="text-xl md:text-2xl font-semibold text-accent">{`+ $${property.monthlyProfit.toLocaleString()}`}</span>
+                        <div className="grid grid-cols-[auto_auto_auto_auto_auto] items-baseline justify-center gap-2 md:gap-3 mb-2 tabular-nums">
+                          <span className="text-base md:text-xl font-semibold leading-none text-foreground flex items-baseline">
+                            <span className="text-xs md:text-sm mr-0.5">$</span>
+                            {property.monthlyRent.toLocaleString()}
+                          </span>
+                          <span className="text-lg md:text-xl font-bold leading-none text-destructive">−</span>
+                          <span className="text-base md:text-xl font-semibold leading-none text-destructive flex items-baseline">
+                            <span className="text-xs md:text-sm mr-0.5">$</span>
+                            {property.monthlyPayment.toLocaleString()}
+                          </span>
+                          <span className="text-lg md:text-xl font-bold leading-none text-accent">+</span>
+                          <span className="text-base md:text-xl font-bold leading-none text-accent flex items-baseline">
+                            <span className="text-xs md:text-sm mr-0.5">$</span>
+                            {property.monthlyProfit.toLocaleString()}
+                          </span>
                         </div>
                         <div className="h-px bg-gradient-to-r from-transparent via-border/60 to-transparent my-2" />
                         {/* Sub labels */}
