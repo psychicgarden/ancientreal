@@ -174,21 +174,20 @@ const FeaturedInvestments = () => {
                       </div>
 
                       {/* Immediate Cash Flow Section */}
-                      <div className="relative overflow-hidden rounded-2xl border border-border/30 bg-gradient-card p-6 shadow-card">
-                        <h4 className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase mb-4">Immediate Cash Flow</h4>
-                        <div className="flex justify-between items-center text-center divide-x divide-border/40">
-                          <div className="flex-1 px-3">
-                            <div className="text-3xl md:text-4xl font-semibold text-accent mb-1">{`$${property.monthlyRent.toLocaleString()}`}</div>
-                            <div className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide">Monthly Rent</div>
-                          </div>
-                          <div className="flex-1 px-3">
-                            <div className="text-3xl md:text-4xl font-semibold text-destructive mb-1">{`- $${property.monthlyPayment.toLocaleString()}`}</div>
-                            <div className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide">Mortgage Payment</div>
-                          </div>
-                          <div className="flex-1 px-3">
-                            <div className="text-3xl md:text-4xl font-semibold text-primary mb-1">{`+ $${property.monthlyProfit.toLocaleString()}`}</div>
-                            <div className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide">Profit Per Month</div>
-                          </div>
+                      <div className="rounded-2xl border border-border/30 bg-gradient-card p-6 shadow-card">
+                        <h4 className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase mb-3">Immediate Cash Flow</h4>
+                        {/* Elegant equation row */}
+                        <div className="flex items-baseline justify-center gap-3 md:gap-4 mb-2">
+                          <span className="text-2xl md:text-3xl font-semibold text-accent">{`$${property.monthlyRent.toLocaleString()}`}</span>
+                          <span className="text-2xl md:text-3xl font-semibold text-destructive">{`- $${property.monthlyPayment.toLocaleString()}`}</span>
+                          <span className="text-2xl md:text-3xl font-semibold text-primary">{`+ $${property.monthlyProfit.toLocaleString()}`}</span>
+                        </div>
+                        <div className="h-px bg-gradient-to-r from-transparent via-border/60 to-transparent my-3" />
+                        {/* Sub labels */}
+                        <div className="grid grid-cols-3 gap-2 text-center text-[10px] md:text-xs text-muted-foreground uppercase tracking-wide">
+                          <div>Monthly Rent</div>
+                          <div>Mortgage Payment</div>
+                          <div>Profit Per Month</div>
                         </div>
                       </div>
                     </div> : <div className="space-y-4 mb-8">
