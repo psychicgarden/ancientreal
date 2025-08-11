@@ -354,62 +354,75 @@ export const InvestorMortgageDashboard = ({ onNavigateToProperties }: { onNaviga
       </Card>
 
       {/* Property Appreciation */}
-      {userProperty && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              Property Appreciation (10-Year Projection)
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="text-center p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
-                <div className="text-xl font-bold text-blue-600">
-                  ${userProperty.purchase_price?.toLocaleString() || '0'}
-                </div>
-                <div className="text-sm text-muted-foreground">Original Value</div>
-              </div>
-              <div className="text-center p-4 bg-green-50 dark:bg-green-950/20 rounded-lg">
-                <div className="text-xl font-bold text-green-600">
-                  ${(userProperty.purchase_price * 2.8)?.toLocaleString() || '0'}
-                </div>
-                <div className="text-sm text-muted-foreground">Projected Value (180% growth)</div>
-              </div>
-              <div className="text-center p-4 bg-purple-50 dark:bg-purple-950/20 rounded-lg">
-                <div className="text-xl font-bold text-purple-600">
-                  ${(userProperty.purchase_price * 1.8)?.toLocaleString() || '0'}
-                </div>
-                <div className="text-sm text-muted-foreground">Total Appreciation</div>
-              </div>
-            </div>
-            
-            <div className="text-sm text-muted-foreground">
-              <strong>Your Appreciation Split (50% of gains):</strong>
-              <div className="mt-2 grid grid-cols-3 gap-2 text-center">
-                <div className="p-2 bg-muted/50 rounded">
-                  <div className="font-semibold">
-                    ${(userProperty.purchase_price * 1.8 * 0.5)?.toLocaleString() || '0'}
+      {userProperty && (() => {
+        const originalValue = userProperty.purchase_price || 0;
+        const appreciationRate = 0.08; // 8% annual appreciation
+        const years = 10;
+        const projectedValue = originalValue * Math.pow(1 + appreciationRate, years);
+        const totalAppreciation = projectedValue - originalValue;
+        
+        // Your appreciation split percentages
+        const yourShare = totalAppreciation * 0.5;
+        const ancientShare = totalAppreciation * 0.4;
+        const lenderShare = totalAppreciation * 0.1;
+        
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5" />
+                Property Appreciation (10-Year Projection @ 8% APY)
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="text-center p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
+                  <div className="text-xl font-bold text-blue-600">
+                    ${originalValue.toLocaleString()}
                   </div>
-                  <div className="text-xs">Your Share (50%)</div>
+                  <div className="text-sm text-muted-foreground">Original Value</div>
                 </div>
-                <div className="p-2 bg-muted/50 rounded">
-                  <div className="font-semibold">
-                    ${(userProperty.purchase_price * 1.8 * 0.4)?.toLocaleString() || '0'}
+                <div className="text-center p-4 bg-green-50 dark:bg-green-950/20 rounded-lg">
+                  <div className="text-xl font-bold text-green-600">
+                    ${Math.round(projectedValue).toLocaleString()}
                   </div>
-                  <div className="text-xs">Ancient (40%)</div>
+                  <div className="text-sm text-muted-foreground">Projected Value ({Math.round((projectedValue / originalValue - 1) * 100)}% growth)</div>
                 </div>
-                <div className="p-2 bg-muted/50 rounded">
-                  <div className="font-semibold">
-                    ${(userProperty.purchase_price * 1.8 * 0.1)?.toLocaleString() || '0'}
+                <div className="text-center p-4 bg-purple-50 dark:bg-purple-950/20 rounded-lg">
+                  <div className="text-xl font-bold text-purple-600">
+                    ${Math.round(totalAppreciation).toLocaleString()}
                   </div>
-                  <div className="text-xs">Lenders (10%)</div>
+                  <div className="text-sm text-muted-foreground">Total Appreciation</div>
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+              
+              <div className="text-sm text-muted-foreground">
+                <strong>Your Appreciation Split (50% of gains):</strong>
+                <div className="mt-2 grid grid-cols-3 gap-2 text-center">
+                  <div className="p-2 bg-muted/50 rounded">
+                    <div className="font-semibold">
+                      ${Math.round(yourShare).toLocaleString()}
+                    </div>
+                    <div className="text-xs">Your Share (50%)</div>
+                  </div>
+                  <div className="p-2 bg-muted/50 rounded">
+                    <div className="font-semibold">
+                      ${Math.round(ancientShare).toLocaleString()}
+                    </div>
+                    <div className="text-xs">Ancient (40%)</div>
+                  </div>
+                  <div className="p-2 bg-muted/50 rounded">
+                    <div className="font-semibold">
+                      ${Math.round(lenderShare).toLocaleString()}
+                    </div>
+                    <div className="text-xs">Lenders (10%)</div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })()}
 
       {/* Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
