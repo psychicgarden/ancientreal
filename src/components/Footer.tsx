@@ -4,9 +4,9 @@ import { cn } from "@/lib/utils"
 
 function Footer({ className }: { className?: string }) {
   return (
-    <footer className={cn("mt-16 border-t border-border/30 bg-card/30 backdrop-blur-sm", className)}>
-      <div className="container mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <footer className={cn("mt-8 border-t border-border/30 bg-card/30 backdrop-blur-sm", className)}>
+      <div className="container mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
             <Link to="/" className="text-2xl font-semibold bg-gradient-primary bg-clip-text text-transparent">
               Ancient
@@ -50,7 +50,7 @@ function Footer({ className }: { className?: string }) {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
+        <div className="mt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
           <p>© {new Date().getFullYear()} Ancient. All rights reserved.</p>
           <div className="flex items-center gap-4">
             <Link to="/legal" className="hover:text-foreground">Legal</Link>
