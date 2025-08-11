@@ -193,36 +193,18 @@ const Portfolio = () => {
   const displayProperties = userProperties.length > 0 ? userProperties.map(prop => {
     console.log('Processing property:', prop.property_name, 'is_active:', prop.is_active);
     
-    // Check if this property has been fractionalized by looking at property_fractionalization table
-    const checkFractionalized = async () => {
-      if (!prop.is_active) {
-        const { data: fractionalized } = await supabase
-          .from('property_fractionalization')
-          .select('*')
-          .eq('property_name', prop.property_name)
-          .eq('property_location', prop.property_location)
-          .single();
-        
-        console.log('Fractionalization check for', prop.property_name, ':', fractionalized);
-        return !!fractionalized;
-      }
-      return false;
-    };
+    // Now that the Art Deco Loft is reactivated, all active properties are "mortgaged"
+    const status: "mortgaged" | "pending" | "success" = prop.is_active ? "mortgaged" : "pending";
     
-    // For now, assume Art Deco Loft was fractionalized if is_active is false
-    const hasBeenFractionalized = !prop.is_active && prop.property_name?.toLowerCase().includes('art deco');
+    // Check if this property also has fractional investments to show additional ownership
+    const hasAdditionalFractionalOwnership = fractionalInvestments.some(fi => 
+      fi.property_fractionalization?.property_name === prop.property_name
+    );
     
-    // Determine the correct status
-    let status: "mortgaged" | "pending" | "success" = "mortgaged";
-    if (!prop.is_active && hasBeenFractionalized) {
-      status = "success"; // Property was successfully fractionalized
-      console.log('Setting status to success for:', prop.property_name);
-    } else if (!prop.is_active) {
-      status = "pending"; // Property purchase is still pending/failed
-      console.log('Setting status to pending for:', prop.property_name);
-    } else {
-      console.log('Setting status to mortgaged for:', prop.property_name);
-    }
+    // Calculate additional ownership from fractional investments
+    const additionalOwnership = fractionalInvestments
+      .filter(fi => fi.property_fractionalization?.property_name === prop.property_name)
+      .reduce((sum, fi) => sum + (fi.ownership_percentage || 0), 0);
     
     return {
       id: prop.id,
@@ -238,7 +220,9 @@ const Portfolio = () => {
       mortgageId: prop.mortgage_id,
       remainingBalance: prop.remaining_balance,
       isPending: status === "pending",
-      failureReason: status === "pending" ? "Smart contract deployment required" : null
+      failureReason: status === "pending" ? "Smart contract deployment required" : null,
+      hasAdditionalFractionalOwnership,
+      additionalOwnership: additionalOwnership
     };
   }) : [];
 
