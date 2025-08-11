@@ -2,7 +2,7 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import FeaturedInvestments from "@/components/FeaturedInvestments";
 import MissedOpportunitySection from "@/components/MissedOpportunitySection";
-import TwoWaysToInvest from "@/components/TwoWaysToInvest";
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,7 +17,7 @@ const Index = () => {
       <Hero />
       <FeaturedInvestments />
       <MissedOpportunitySection />
-      <TwoWaysToInvest />
+      
       
       {/* Three-Tier Banking Portal */}
       <section className="bg-gradient-to-br from-background to-muted/10 py-[40px]">
