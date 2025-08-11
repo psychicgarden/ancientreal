@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import artDecoLoft from '@/assets/art-deco-loft-mexico.jpg';
-import bahaiBungalow from '@/assets/bahia-beach-bungalow.jpg';
-import eireiraApartment from '@/assets/ericeira-coastal-apartment.jpg';
+import bohoArtDecoLoft from '@/assets/boho-art-deco-loft-mexico.jpg';
+import luxuryBohoBungalow from '@/assets/luxury-boho-beach-bungalow-bahia.jpg';
+import artDecoCoastal from '@/assets/art-deco-coastal-ericeira.jpg';
 
 export interface FractionalProperty {
   id: string;
@@ -42,9 +42,9 @@ export interface PropertyInvestmentData {
 }
 
 const imageOverrides: Record<string, string> = {
-  'Art Deco Loft': artDecoLoft,
-  'Bahia Ocean Villa': bahaiBungalow,
-  'Oceanview Loft': eireiraApartment,
+  'Art Deco Loft': bohoArtDecoLoft,
+  'Bahia Ocean Villa': luxuryBohoBungalow,
+  'Oceanview Loft': artDecoCoastal,
 };
 
 export const useFractionalProperties = () => {
