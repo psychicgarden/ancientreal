@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useWallet } from "@/contexts/WalletContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,14 @@ const Portfolio = () => {
   const [developerInvestments, setDeveloperInvestments] = useState<any[]>([]);
   const [fractionalInvestments, setFractionalInvestments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const propertiesSectionRef = useRef<HTMLDivElement | null>(null);
+  const handleNavigateToProperties = (args?: { propertyId?: string; name?: string; location?: string }) => {
+    setActiveTab('properties');
+    setTimeout(() => {
+      propertiesSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+  };
 
   // Fetch user's properties and transactions from database
   useEffect(() => {
@@ -526,7 +534,7 @@ const Portfolio = () => {
             </div>
 
             {/* Whole Properties Section */}
-            <div>
+            <div ref={propertiesSectionRef}>
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-semibold">Whole Properties</h2>
                 <Button>Add Property</Button>
@@ -683,7 +691,7 @@ const Portfolio = () => {
 
           {/* Mortgage & Financing Tab */}
           <TabsContent value="mortgage" className="space-y-6">
-            <InvestorMortgageDashboard />
+            <InvestorMortgageDashboard onNavigateToProperties={handleNavigateToProperties} />
           </TabsContent>
 
           {/* Bookings & Revenue Tab */}

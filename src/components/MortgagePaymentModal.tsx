@@ -14,6 +14,7 @@ import NetworkGuard from "@/components/NetworkGuard";
 interface MortgagePaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
   property: {
     id: string;
     title: string;
@@ -25,7 +26,7 @@ interface MortgagePaymentModalProps {
   };
 }
 
-export const MortgagePaymentModal = ({ isOpen, onClose, property }: MortgagePaymentModalProps) => {
+export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: MortgagePaymentModalProps) => {
   const [step, setStep] = useState<'review' | 'confirm'>('review');
   const [isProcessing, setIsProcessing] = useState(false);
   const [hasAcceptedTerms, setHasAcceptedTerms] = useState(false);
@@ -95,10 +96,14 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property }: MortgagePaym
       setStep('review');
       setHasAcceptedTerms(false);
       
-      // Refresh the page after a short delay
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        // Refresh the page after a short delay
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      }
     } catch (error) {
       toast({
         title: "Payment Failed",

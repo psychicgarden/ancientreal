@@ -21,7 +21,7 @@ import {
   Banknote
 } from "lucide-react";
 
-export const InvestorMortgageDashboard = () => {
+export const InvestorMortgageDashboard = ({ onNavigateToProperties }: { onNavigateToProperties?: (args?: { propertyId?: string; name?: string; location?: string }) => void }) => {
   const { 
     isConnected, 
     account, 
@@ -52,7 +52,9 @@ export const InvestorMortgageDashboard = () => {
           .from('user_properties')
           .select('*')
           .eq('user_wallet_address', account.toLowerCase())
-          .eq('is_active', true);
+          .eq('is_active', true)
+          .order('updated_at', { ascending: false })
+          .limit(1);
 
         if (propertiesError) {
           throw propertiesError;
@@ -168,7 +170,7 @@ export const InvestorMortgageDashboard = () => {
           <CardTitle className="flex items-center justify-between">
             <span className="flex items-center gap-2">
               <Building2 className="h-5 w-5" />
-              Mazunte Art Deco Loft Mortgage
+              {userProperty?.property_name || 'Active Mortgage'}
             </span>
             <div className="flex gap-2">
               {mortgageData.isForeclosed && (
@@ -396,7 +398,7 @@ export const InvestorMortgageDashboard = () => {
       </Card>
 
       {/* Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Button 
           onClick={handleMakePayment}
           disabled={isPurchasingProperty || mortgageData.isCompleted || mortgageData.isForeclosed}
@@ -419,8 +421,26 @@ export const InvestorMortgageDashboard = () => {
               monthlyPayment: userProperty.monthly_payment,
               remainingBalance: userProperty.remaining_balance
             }}
+            onSuccess={() => onNavigateToProperties?.({
+              propertyId: userProperty.id,
+              name: userProperty.property_name,
+              location: userProperty.property_location,
+            })}
           />
         )}
+        
+        <Button 
+          variant="secondary" 
+          size="lg" 
+          className="w-full"
+          onClick={() => onNavigateToProperties?.({
+            propertyId: userProperty?.id,
+            name: userProperty?.property_name,
+            location: userProperty?.property_location,
+          })}
+        >
+          View in My Properties
+        </Button>
         
         <Button 
           variant="outline" 
