@@ -126,6 +126,35 @@ useEffect(() => {
   if (account) fetchOwnedProperties();
 }, [account]);
 
+useEffect(() => {
+  const channel = supabase
+    .channel('secondary-marketplace')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'secondary_trades' }, (payload) => {
+      const newTrade: any = (payload as any).new || (payload as any).record || (payload as any);
+      const me = (account || '').toLowerCase();
+      if (!newTrade) return;
+      // Always refresh order book
+      fetchOpenOrders();
+      if (!me) return;
+      const buyer = String(newTrade.buyer_wallet_address || '').toLowerCase();
+      const seller = String(newTrade.seller_wallet_address || '').toLowerCase();
+      if (buyer === me || seller === me) {
+        toast({
+          title: 'Trade matched',
+          description: `Filled ${Number(newTrade.token_amount).toLocaleString()} tokens at $${Number(newTrade.price_per_token).toLocaleString()}`
+        });
+      }
+    })
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'secondary_orders' }, () => {
+      fetchOpenOrders();
+    })
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
+}, [account]);
+
 const handleCreateListing = async () => {
   if (!propertyToList || !account) return;
   const originalPrice = Number(propertyToList.purchase_price || 0);
@@ -192,35 +221,14 @@ const handleTrade = async () => {
 
       const totalCost = amount * selectedToken.price;
 
-      const { error: tradeErr } = await supabase.from('secondary_trades').insert({
-        order_id: selectedToken.orderId,
-        property_fractionalization_id: selectedToken.propertyFractionalizationId,
-        buyer_wallet_address: account || 'unknown',
-        seller_wallet_address: selectedToken.ownerWalletAddress || 'unknown',
-        token_amount: amount,
-        price_per_token: selectedToken.price,
-        total_cost: totalCost,
-        status: 'completed'
+      const { data: tradeId, error: rpcErr } = await supabase.rpc('process_secondary_order_fill', {
+        _order_id: selectedToken.orderId,
+        _buyer_wallet_address: (account || '').toLowerCase(),
+        _fill_amount: amount,
+        _price_per_token: selectedToken.price,
+        _tx_hash: null
       });
-      if (tradeErr) throw tradeErr;
-
-      const { data: orderRow, error: orderErr } = await supabase
-        .from('secondary_orders')
-        .select('token_amount, tokens_filled')
-        .eq('id', selectedToken.orderId)
-        .maybeSingle();
-      if (orderErr) throw orderErr;
-
-      const currentFilled = Number(orderRow?.tokens_filled || 0);
-      const tokenAmountTotal = Number(orderRow?.token_amount || 0);
-      const newFilled = currentFilled + amount;
-      const newStatus = newFilled >= tokenAmountTotal ? 'filled' : 'open';
-
-      const { error: updateErr } = await supabase
-        .from('secondary_orders')
-        .update({ tokens_filled: newFilled, status: newStatus })
-        .eq('id', selectedToken.orderId);
-      if (updateErr) throw updateErr;
+      if (rpcErr) throw rpcErr;
 
       // Refresh listings
       await fetchOpenOrders();
@@ -239,7 +247,7 @@ const handleTrade = async () => {
         order_type: 'sell',
         price_per_token: selectedToken.price,
         token_amount: amount,
-        owner_wallet_address: account || 'unknown',
+        owner_wallet_address: (account || 'unknown').toLowerCase(),
         status: 'open'
       });
       if (orderInsertErr) throw orderInsertErr;
