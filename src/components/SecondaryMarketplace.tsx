@@ -14,6 +14,10 @@ import FractionalInvestmentModal from "./FractionalInvestmentModal";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import RentalIncomeTracker from "./RentalIncomeTracker";
+import { YieldCalculator } from "@/lib/yieldCalculator";
+import { useRealTimeYield } from "@/hooks/useRealTimeYield";
+import { SlippageProtection } from "./SlippageProtection";
+import { ErrorBoundary } from "./ErrorBoundary";
 
 
 interface TokenListing {
@@ -82,29 +86,53 @@ const fetchOpenOrders = async () => {
 
     if (error) throw error;
 
-    const listings: TokenListing[] = (orders || []).map((o: any) => {
-      const propertyName = `Property ${String(o.property_fractionalization_id).slice(0, 6)}`;
-      return {
+    const listings: TokenListing[] = [];
+    
+    for (const o of orders || []) {
+      // Get property data separately
+      const { data: property } = await supabase
+        .from('property_fractionalization')
+        .select('property_name, current_speculation_price, monthly_base_rent, total_tokens_available')
+        .eq('id', o.property_fractionalization_id)
+        .single();
+      
+      const propertyName = property?.property_name || `Property ${String(o.property_fractionalization_id).slice(0, 6)}`;
+      
+      // Get real-time pricing data
+      const pricingData = await YieldCalculator.getRealTimePricing(o.property_fractionalization_id);
+      
+      // Calculate APY based on rental income
+      const monthlyRent = property?.monthly_base_rent || 0;
+      const tokenPrice = Number(o.price_per_token) || 0;
+      const annualRentalPerToken = monthlyRent * 12 / (property?.total_tokens_available || 1000000);
+      const apy = tokenPrice > 0 ? (annualRentalPerToken / tokenPrice) * 100 : 0;
+      
+      listings.push({
         id: o.id,
         propertyName,
         tokenSymbol: 'PROP',
-        price: Number(o.price_per_token) || 0,
-        priceChange24h: 0,
-        volume24h: 0,
-        liquidity: 0,
-        totalSupply: 0,
-        marketCap: 0,
-        apy: 0,
+        price: tokenPrice,
+        priceChange24h: pricingData.priceChange24h,
+        volume24h: pricingData.volume24h,
+        liquidity: pricingData.liquidity,
+        totalSupply: property?.total_tokens_available || 0,
+        marketCap: tokenPrice * (property?.total_tokens_available || 0),
+        apy: Math.round(apy * 10) / 10, // Round to 1 decimal
         propertyFractionalizationId: o.property_fractionalization_id,
         orderId: o.id,
         availableAmount: Math.max(0, Number(o.token_amount) - Number(o.tokens_filled || 0)),
         ownerWalletAddress: o.owner_wallet_address
-      } as TokenListing;
-    });
+      });
+    }
 
     setTokenListings(listings);
   } catch (error) {
     console.error('Error fetching secondary orders:', error);
+    toast({
+      title: "Error Loading Orders", 
+      description: "Failed to fetch market data. Please try again.",
+      variant: "destructive"
+    });
   }
 };
 
