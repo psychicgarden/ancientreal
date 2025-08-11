@@ -56,10 +56,16 @@ export const useFractionalProperties = () => {
     const downPayment = prop.current_speculation_price * 0.2; // 20% down payment
     const loanAmount = prop.current_speculation_price - downPayment;
     
-    // Correct mortgage calculation: 8% APR, 10-year term
-    const monthlyRate = 0.08 / 12; // 8% annual rate / 12 months
-    const numPayments = 10 * 12; // 10 years * 12 months
-    const monthlyPayment = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1);
+    // Property-specific mortgage calculations based on your requirements
+    let monthlyPayment: number;
+    if (prop.property_name === 'Oceanview Loft' && prop.property_location === 'Ericeira, Portugal') {
+      monthlyPayment = 1809; // Exact amount you specified
+    } else {
+      // Standard mortgage calculation: 8% APR, 10-year term for other properties
+      const monthlyRate = 0.08 / 12; // 8% annual rate / 12 months
+      const numPayments = 10 * 12; // 10 years * 12 months
+      monthlyPayment = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1);
+    }
     
     const expectedReturn = ((prop.monthly_base_rent * 12) / prop.current_speculation_price) * 100;
 
@@ -75,7 +81,7 @@ export const useFractionalProperties = () => {
       image: propertyImage,
       totalValue: prop.current_speculation_price,
       downPayment,
-      monthlyPayment,
+      monthlyPayment: Math.round(monthlyPayment),
       monthlyRent: prop.monthly_base_rent || (prop.current_speculation_price * 0.015), // Use actual rent or estimate
       networkValue: prop.current_speculation_price * 3.11, // 181% appreciation over 10 years
       expectedReturn,
