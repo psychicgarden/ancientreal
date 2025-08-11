@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import villaTulum from '@/assets/villa-tulum.jpg';
-import beachChalet from '@/assets/beach-chalet.jpg';
-import villaEriceira from '@/assets/villa-ericeira-portugal.jpg';
+import artDecoLoft from '@/assets/art-deco-loft-mexico.jpg';
+import bahaiBungalow from '@/assets/bahia-beach-bungalow.jpg';
+import eireiraApartment from '@/assets/ericeira-coastal-apartment.jpg';
 
 export interface FractionalProperty {
   id: string;
@@ -42,7 +42,9 @@ export interface PropertyInvestmentData {
 }
 
 const imageOverrides: Record<string, string> = {
-  // No longer needed - using database URLs
+  'Art Deco Loft': artDecoLoft,
+  'Bahia Ocean Villa': bahaiBungalow,
+  'Oceanview Loft': eireiraApartment,
 };
 
 export const useFractionalProperties = () => {
