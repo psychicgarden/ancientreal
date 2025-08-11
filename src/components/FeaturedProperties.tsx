@@ -2,6 +2,7 @@ import OriginalPropertyCard from "./OriginalPropertyCard";
 import { PROPERTIES_CATALOG } from "@/lib/propertiesCatalog";
 import { Button } from "@/components/ui/button";
 
+// Only show original properties that haven't been purchased and fractionalized
 const properties = PROPERTIES_CATALOG.slice(0, 3).map((p) => ({
   id: p.id,
   image: p.image,
@@ -10,7 +11,7 @@ const properties = PROPERTIES_CATALOG.slice(0, 3).map((p) => ({
   price: p.totalValue,
   sharePrice: p.sharePrice ?? Math.round(p.totalValue / 1000),
   totalShares: p.totalShares ?? 1000,
-  availableShares: p.availableShares ?? 0,
+  availableShares: p.availableShares ?? 1000, // All shares available for new properties
   expectedReturn: p.expectedReturn ?? 15,
   type: "Villa",
 }));

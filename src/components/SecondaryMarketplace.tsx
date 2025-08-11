@@ -167,20 +167,68 @@ const handleCreateListing = async () => {
   const minInv = Number(minInvestment || 50);
   const tenYears = new Date();
   tenYears.setFullYear(tenYears.getFullYear() + 10);
+
   try {
+    // Check if property is already listed fractionally to prevent duplicates
+    const { data: existingListing, error: checkError } = await supabase
+      .from('property_fractionalization')
+      .select('id')
+      .eq('source_property_id', propertyToList.id)
+      .eq('owner_wallet_address', account.toLowerCase())
+      .limit(1);
+
+    if (checkError) throw checkError;
+
+    if (existingListing && existingListing.length > 0) {
+      toast({ 
+        title: 'Already Listed', 
+        description: `${propertyToList.property_name} is already listed as a fractional investment`,
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    // Create fractional listing with complete property details
     const { error } = await supabase.from('property_fractionalization').insert({
       property_id: propertyToList.id,
+      source_property_id: propertyToList.id, // Link to original property
       owner_wallet_address: account.toLowerCase(),
+      property_name: propertyToList.property_name,
+      property_location: propertyToList.property_location,
+      property_description: `Premium fractional investment opportunity in ${propertyToList.property_name}. Located in ${propertyToList.property_location}, this property offers excellent rental income potential.`,
+      property_image_url: propertyToList.image_url || '/src/assets/villa-bali.jpg',
+      property_type: 'residential',
+      bedrooms: 2, // Default values - could be made configurable
+      bathrooms: 2,
+      square_feet: 1200,
       original_purchase_price: originalPrice,
       current_speculation_price: specPrice,
+      monthly_base_rent: originalPrice * 0.015, // Estimate 1.5% monthly rent
       total_tokens_available: tokens,
       tokens_sold: 0,
       min_investment: minInv,
       is_active: true,
+      is_listed_fractionally: true,
+      listing_date: new Date().toISOString(),
       year_10_trigger_date: tenYears.toISOString()
     });
+
     if (error) throw error;
-    toast({ title: 'Listing Created', description: `${propertyToList.property_name || 'Property'} listed at $${specPrice.toLocaleString()}` });
+
+    // Mark the original property as fractionalized
+    await supabase
+      .from('user_properties')
+      .update({ 
+        mortgage_id: `FRAC-${Date.now()}`, // Mark as fractionalized
+        is_active: false // No longer available for direct ownership
+      })
+      .eq('id', propertyToList.id);
+
+    toast({ 
+      title: 'Listing Created Successfully', 
+      description: `${propertyToList.property_name} is now available for fractional investment at $${specPrice.toLocaleString()}`
+    });
+    
     setIsListDialogOpen(false);
     setPropertyToList(null);
     setSpeculationPrice("");
