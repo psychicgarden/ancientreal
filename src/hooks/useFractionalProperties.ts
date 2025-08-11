@@ -48,11 +48,16 @@ export const useFractionalProperties = () => {
     const monthlyPayment = loanAmount * 0.006; // Rough 7.2% APR calculation
     const expectedReturn = ((prop.monthly_base_rent * 12) / prop.current_speculation_price) * 100;
 
+    // Handle null values with fallbacks
+    const propertyName = prop.property_name || `Property ${prop.id.slice(0, 8)}`;
+    const propertyLocation = prop.property_location || 'Location TBD';
+    const propertyImage = prop.property_image_url || '/placeholder.svg';
+
     return {
       id: prop.id,
-      name: prop.property_name,
-      location: prop.property_location,
-      image: prop.property_image_url,
+      name: propertyName,
+      location: propertyLocation,
+      image: propertyImage,
       totalValue: prop.current_speculation_price,
       downPayment,
       monthlyPayment,
@@ -61,7 +66,7 @@ export const useFractionalProperties = () => {
       totalShares: prop.total_tokens_available,
       sharePrice: tokenPrice,
       isBlockchain: true,
-      isVillage: prop.property_location.includes('Mexico') || prop.property_location.includes('Brazil')
+      isVillage: propertyLocation.includes('Mexico') || propertyLocation.includes('Brazil')
     };
   };
 
