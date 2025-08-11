@@ -27,6 +27,8 @@ export interface PropertyInvestmentData {
   totalValue: number;
   downPayment: number;
   monthlyPayment: number;
+  monthlyRent: number; // Add missing field for calculator
+  networkValue: number; // Add missing field for calculator
   expectedReturn: number;
   availableShares: number;
   totalShares: number;
@@ -61,6 +63,8 @@ export const useFractionalProperties = () => {
       totalValue: prop.current_speculation_price,
       downPayment,
       monthlyPayment,
+      monthlyRent: prop.monthly_base_rent || (prop.current_speculation_price * 0.015), // Use actual rent or estimate
+      networkValue: prop.current_speculation_price * 3.11, // 181% appreciation over 10 years
       expectedReturn,
       availableShares: availableTokens,
       totalShares: prop.total_tokens_available,

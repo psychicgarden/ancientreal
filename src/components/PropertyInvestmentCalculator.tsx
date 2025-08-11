@@ -37,8 +37,8 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
   const investmentAmount = investment[0];
   const platformFee = investmentAmount * 0.03; // 3% platform fee for property purchases
   const netInvestment = investmentAmount - platformFee; // Actual amount going to property
-  const propertyValue = property.totalValue;
-  const monthlyRent = property.monthlyRent;
+  const propertyValue = property.totalValue || 0;
+  const monthlyRent = property.monthlyRent || 0;
   
   // Calculate mortgage payment based on net investment (after platform fee)
   const loanAmount = propertyValue - netInvestment;
@@ -59,7 +59,8 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
   const totalInterest = totalPayments - loanAmount;
   
   // Calculate baseline scenario (minimum down payment)
-  const baselineLoanAmount = propertyValue - property.downPayment;
+  const baselineDownPayment = property.downPayment || 0;
+  const baselineLoanAmount = propertyValue - baselineDownPayment;
   const baselineMonthlymortgage = baselineLoanAmount > 0 
     ? (baselineLoanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, loanTermMonths)) / 
       (Math.pow(1 + monthlyInterestRate, loanTermMonths) - 1)
@@ -70,7 +71,7 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
   const totalInterestSaved = baselineTotalInterest - totalInterest;
   
   // Property appreciation calculations
-  const tenYearPropertyValue = property.networkValue; // Using the pre-calculated network value
+  const tenYearPropertyValue = property.networkValue || propertyValue * 2; // Fallback to 2x growth
   const totalAppreciation = tenYearPropertyValue - propertyValue;
   const buyerAppreciationShare = totalAppreciation * 0.5; // 50% split
   const annualAppreciationBenefit = buyerAppreciationShare / 10; // Annualized
@@ -128,15 +129,15 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
               <Slider
                 value={investment}
                 onValueChange={setInvestment}
-                max={property.totalValue}
-                min={property.downPayment}
+                max={property.totalValue || 200000}
+                min={property.downPayment || 30000}
                 step={5000}
                 className="w-full"
               />
             </div>
             <div className="flex justify-between text-xs text-muted-foreground">
-              <span>${property.downPayment.toLocaleString()} (Min Down)</span>
-              <span>${property.totalValue.toLocaleString()} (Full Property)</span>
+              <span>${(property.downPayment || 30000).toLocaleString()} (Min Down)</span>
+              <span>${(property.totalValue || 200000).toLocaleString()} (Full Property)</span>
             </div>
           </div>
 
