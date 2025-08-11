@@ -415,38 +415,36 @@ const Developers = () => {
                const mergedProjects = mergeProjectData(currentProjects, projects);
                return mergedProjects.length > 0 ? mergedProjects.map(project => {
                  const fundingPercentage = project.target_funding > 0 ? project.current_funding / project.target_funding * 100 : 0;
-              return <Card key={project.id} className="bg-gradient-card border-accent/20 hover:shadow-xl transition-all duration-300">
+               return <Card key={project.id} className="bg-gradient-card border-accent/20 hover:shadow-xl transition-all duration-300">
                   <CardContent className="p-6">
                     <div className="aspect-video bg-cover bg-center rounded-lg mb-4 relative overflow-hidden">
-                      {project.image_url ? <img src={project.image_url} alt={project.title} loading="lazy" className="w-full h-full object-cover" /> : <div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center text-muted-foreground">
-                          No Image
-                        </div>}
-                      {/* Presale percentage overlay */}
-                      <div className="absolute top-3 right-3 bg-primary/90 text-primary-foreground px-2 py-1 rounded text-sm font-bold">
-                        {project.presale_percentage}% PRESOLD
-                      </div>
-                      
-                      {/* Development Approved notification */}
-                      {project.development_approved && <div className="absolute top-3 left-3 bg-accent/90 text-primary-foreground px-2 py-1 rounded text-xs font-semibold">
-                          🎉 Development Approved!
-                        </div>}
-                      
-                      {/* Threshold needed notification */}
-                      {project.threshold_needed && <div className="absolute bottom-3 left-3 bg-gold/90 text-gold-foreground px-2 py-1 rounded text-xs font-semibold">
-                          ${project.threshold_needed?.toLocaleString()} needed to reach threshold
-                        </div>}
+                      <img 
+                        src={project.image_url} 
+                        alt={project.title}
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                      {/* Development Approved Badge */}
+                      {fundingPercentage >= 80 && (
+                        <div className="absolute top-3 left-3 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                          🏗️ Development Approved!
+                        </div>
+                      )}
+                      {/* Presold Percentage Badge */}
+                      {fundingPercentage >= 80 && (
+                        <div className="absolute top-3 right-3 bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+                          {Math.round(fundingPercentage)}% PRESOLD
+                        </div>
+                      )}
                     </div>
                     
-                    <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                    <p className="text-muted-foreground mb-2">by {project.creator_name}</p>
-                    
-                    {/* Status badge */}
-                    <div className="mb-3">
-                      <Badge className={`${project.project_status === 'funded' ? 'bg-accent/15 text-accent-foreground border-accent/30' : 'bg-gold/15 text-gold-foreground border-gold/30'}`}>
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-xl font-semibold">{project.title}</h3>
+                      <Badge variant="outline" className="text-xs">
                         {project.status_badge}
                       </Badge>
                     </div>
                     
+                    <p className="text-sm text-muted-foreground mb-1">by {project.creator_name}</p>
                     <p className="text-sm text-muted-foreground mb-4">{project.description}</p>
                     
                     {/* Presale Progress */}
@@ -487,16 +485,9 @@ const Developers = () => {
                       </Badge>
                     </div>
                     
-                    {/* Show different button based on funding status */}
-                    {fundingPercentage >= 80 ? (
-                      <Button className="w-full" variant="secondary" disabled>
-                        Development Approved ✓
-                      </Button>
-                    ) : (
-                      <Button className="w-full" onClick={() => handleInvestClick(project)}>
-                        Invest Now
-                      </Button>
-                    )}
+                    <Button className="w-full" onClick={() => handleInvestClick(project)}>
+                      Invest Now
+                    </Button>
                   </CardContent>
                 </Card>;
                }) : <div className="col-span-full text-center py-8">
