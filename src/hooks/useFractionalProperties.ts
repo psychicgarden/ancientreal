@@ -55,7 +55,12 @@ export const useFractionalProperties = () => {
     const tokenPrice = prop.current_speculation_price / prop.total_tokens_available;
     const downPayment = prop.current_speculation_price * 0.2; // 20% down payment
     const loanAmount = prop.current_speculation_price - downPayment;
-    const monthlyPayment = loanAmount * 0.006; // Rough 7.2% APR calculation
+    
+    // Correct mortgage calculation: 8% APR, 10-year term
+    const monthlyRate = 0.08 / 12; // 8% annual rate / 12 months
+    const numPayments = 10 * 12; // 10 years * 12 months
+    const monthlyPayment = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1);
+    
     const expectedReturn = ((prop.monthly_base_rent * 12) / prop.current_speculation_price) * 100;
 
     // Handle null values with fallbacks

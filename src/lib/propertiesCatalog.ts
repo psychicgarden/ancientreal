@@ -16,40 +16,40 @@ export interface CatalogProperty {
 // Import images via aliases to keep one source of truth
 import villaTulum from "@/assets/villa-tulum.jpg";
 import beachChalet from "@/assets/beach-chalet.jpg";
-import villaCorfu from "@/assets/villa-corfu-greece.jpg";
+import villaEriceira from "@/assets/villa-ericeira-portugal.jpg";
 
 export const PROPERTIES_CATALOG: CatalogProperty[] = [
   {
-    id: "mazunte-art-deco-loft",
-    name: "Art Deco Loft",
+    id: "mazunte-mexico-villa",
+    name: "Mazunte Beach Villa",
     location: "Mazunte, Mexico",
     image: villaTulum,
+    totalValue: 129000,
+    sharePrice: 129,
+    totalShares: 1000,
+    availableShares: 240,
+    expectedReturn: 17.4, // Based on $748 monthly cash flow
+  },
+  {
+    id: "bahia-brazil-villa",
+    name: "Bahia Ocean Villa",
+    location: "Bahia, Brazil",
+    image: beachChalet,
+    totalValue: 120000,
+    sharePrice: 120,
+    totalShares: 1000,
+    availableShares: 520,
+    expectedReturn: 15.9, // Based on $635 monthly cash flow
+  },
+  {
+    id: "ericeira-portugal-villa",
+    name: "Ericeira Coastal Villa",
+    location: "Ericeira, Portugal",
+    image: villaEriceira,
     totalValue: 150000,
     sharePrice: 150,
     totalShares: 1000,
-    availableShares: 240,
-    expectedReturn: 16.8,
-  },
-  {
-    id: "bahia-ocean-villa",
-    name: "Ocean Villa Retreat",
-    location: "Bahia, Brazil",
-    image: beachChalet,
-    totalValue: 130000,
-    sharePrice: 130,
-    totalShares: 1000,
-    availableShares: 520,
-    expectedReturn: 15.2,
-  },
-  {
-    id: "corfu-mediterranean-villa",
-    name: "Mediterranean Villa",
-    location: "Corfu, Greece",
-    image: villaCorfu,
-    totalValue: 280000,
-    sharePrice: 280,
-    totalShares: 1000,
     availableShares: 470,
-    expectedReturn: 17.8,
+    expectedReturn: 18.9, // Based on $944 monthly cash flow
   },
 ];
