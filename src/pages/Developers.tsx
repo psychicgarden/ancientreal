@@ -123,7 +123,7 @@ const Developers = () => {
 
   // Current projects seeking 80% - hardcoded to match screenshot
   const currentProjects = [{
-    id: 'coliving-hub',
+    id: 'a47ac10b-58cc-4372-a567-0e02b2c3d478',
     title: 'Digital Nomad Coliving Hub',
     creator_name: 'Remote Work Studios',
     description: 'Modern coliving spaces designed for digital nomads with high-speed internet, coworking areas, and community events.',
@@ -161,7 +161,7 @@ const Developers = () => {
     threshold_needed: 75000,
     category: 'Hospitality'
   }, {
-    id: 'vertical-farm',
+    id: 'b47ac10b-58cc-4372-a567-0e02b2c3d480',
     title: 'Urban Vertical Farm Complex',
     creator_name: 'AgriTech Builders',
     description: 'Innovative vertical farming facility using hydroponic technology to produce organic vegetables in urban environments.',
