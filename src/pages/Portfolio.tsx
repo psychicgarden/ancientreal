@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Wallet, Home, TrendingUp, Users, Calendar, DollarSign, Building, FileText, BarChart3, ChevronRight, Loader2 } from "lucide-react";
 import { InvestorMortgageDashboard } from "@/components/InvestorMortgageDashboard";
 import { PortfolioSummary } from "@/components/PortfolioSummary";
@@ -13,6 +13,7 @@ import { EnhancedPortfolioAnalytics } from "@/components/EnhancedPortfolioAnalyt
 import { DeveloperInvestmentsAnalytics } from "@/components/DeveloperInvestmentsAnalytics";
 import { TrustSignals } from "@/components/TrustSignals";
 import { CompetitorComparison } from "@/components/CompetitorComparison";
+import { PlatformAnalytics } from "@/components/PlatformAnalytics";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -20,7 +21,9 @@ import { toast } from "@/hooks/use-toast";
 
 const Portfolio = () => {
   const { isConnected, account, connectWallet } = useWallet();
-  const [activeTab, setActiveTab] = useState("properties");
+  const [searchParams] = useSearchParams();
+  const tabFromUrl = searchParams.get("tab");
+  const [activeTab, setActiveTab] = useState(tabFromUrl || "properties");
   const [userProperties, setUserProperties] = useState<any[]>([]);
   const [userTransactions, setUserTransactions] = useState<any[]>([]);
   const [developerInvestments, setDeveloperInvestments] = useState<any[]>([]);
@@ -341,7 +344,7 @@ const Portfolio = () => {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6 lg:w-fit">
+          <TabsList className="grid w-full grid-cols-7 lg:w-fit">
             <TabsTrigger value="properties" className="flex items-center gap-2">
               <Home className="h-4 w-4" />
               My Properties
@@ -361,6 +364,10 @@ const Portfolio = () => {
             <TabsTrigger value="revenue" className="flex items-center gap-2">
               <DollarSign className="h-4 w-4" />
               Bookings & Revenue
+            </TabsTrigger>
+            <TabsTrigger value="platform" className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              Platform Analytics
             </TabsTrigger>
             <TabsTrigger value="comparison" className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
@@ -640,6 +647,10 @@ const Portfolio = () => {
             </div>
           </TabsContent>
 
+          {/* Platform Analytics Tab */}
+          <TabsContent value="platform" className="space-y-6">
+            <PlatformAnalytics />
+          </TabsContent>
 
           {/* Platform Comparison Tab */}
           <TabsContent value="comparison" className="space-y-6">
