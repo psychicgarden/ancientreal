@@ -354,48 +354,62 @@ export const InvestorMortgageDashboard = ({ onNavigateToProperties }: { onNaviga
       </Card>
 
       {/* Property Appreciation */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5" />
-            Property Appreciation (10-Year Projection)
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
-              <div className="text-xl font-bold text-blue-600">$150,000</div>
-              <div className="text-sm text-muted-foreground">Original Value</div>
-            </div>
-            <div className="text-center p-4 bg-green-50 dark:bg-green-950/20 rounded-lg">
-              <div className="text-xl font-bold text-green-600">$467,000</div>
-              <div className="text-sm text-muted-foreground">Projected Value</div>
-            </div>
-            <div className="text-center p-4 bg-purple-50 dark:bg-purple-950/20 rounded-lg">
-              <div className="text-xl font-bold text-purple-600">$317,000</div>
-              <div className="text-sm text-muted-foreground">Total Appreciation</div>
-            </div>
-          </div>
-          
-          <div className="text-sm text-muted-foreground">
-            <strong>Your Appreciation Split (50% of gains):</strong>
-            <div className="mt-2 grid grid-cols-3 gap-2 text-center">
-              <div className="p-2 bg-muted/50 rounded">
-                <div className="font-semibold">$158,500</div>
-                <div className="text-xs">Your Share (50%)</div>
+      {userProperty && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5" />
+              Property Appreciation (10-Year Projection)
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="text-center p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
+                <div className="text-xl font-bold text-blue-600">
+                  ${userProperty.purchase_price?.toLocaleString() || '0'}
+                </div>
+                <div className="text-sm text-muted-foreground">Original Value</div>
               </div>
-              <div className="p-2 bg-muted/50 rounded">
-                <div className="font-semibold">$126,800</div>
-                <div className="text-xs">Ancient (40%)</div>
+              <div className="text-center p-4 bg-green-50 dark:bg-green-950/20 rounded-lg">
+                <div className="text-xl font-bold text-green-600">
+                  ${(userProperty.purchase_price * 2.8)?.toLocaleString() || '0'}
+                </div>
+                <div className="text-sm text-muted-foreground">Projected Value (180% growth)</div>
               </div>
-              <div className="p-2 bg-muted/50 rounded">
-                <div className="font-semibold">$31,700</div>
-                <div className="text-xs">Lenders (10%)</div>
+              <div className="text-center p-4 bg-purple-50 dark:bg-purple-950/20 rounded-lg">
+                <div className="text-xl font-bold text-purple-600">
+                  ${(userProperty.purchase_price * 1.8)?.toLocaleString() || '0'}
+                </div>
+                <div className="text-sm text-muted-foreground">Total Appreciation</div>
               </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+            
+            <div className="text-sm text-muted-foreground">
+              <strong>Your Appreciation Split (50% of gains):</strong>
+              <div className="mt-2 grid grid-cols-3 gap-2 text-center">
+                <div className="p-2 bg-muted/50 rounded">
+                  <div className="font-semibold">
+                    ${(userProperty.purchase_price * 1.8 * 0.5)?.toLocaleString() || '0'}
+                  </div>
+                  <div className="text-xs">Your Share (50%)</div>
+                </div>
+                <div className="p-2 bg-muted/50 rounded">
+                  <div className="font-semibold">
+                    ${(userProperty.purchase_price * 1.8 * 0.4)?.toLocaleString() || '0'}
+                  </div>
+                  <div className="text-xs">Ancient (40%)</div>
+                </div>
+                <div className="p-2 bg-muted/50 rounded">
+                  <div className="font-semibold">
+                    ${(userProperty.purchase_price * 1.8 * 0.1)?.toLocaleString() || '0'}
+                  </div>
+                  <div className="text-xs">Lenders (10%)</div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
