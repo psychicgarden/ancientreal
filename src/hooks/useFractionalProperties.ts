@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import ibizaImg from '@/assets/villa-greece.jpg';
-import bahiaImg from '@/assets/beach-chalet.jpg';
+import villaTulum from '@/assets/villa-tulum.jpg';
+import beachChalet from '@/assets/beach-chalet.jpg';
+import villaEriceira from '@/assets/villa-ericeira-portugal.jpg';
 
 export interface FractionalProperty {
   id: string;
@@ -41,8 +42,9 @@ export interface PropertyInvestmentData {
 }
 
 const imageOverrides: Record<string, string> = {
-  'Ibiza Villa': ibizaImg,
-  'Bahia Ocean Chalet': bahiaImg,
+  'Mazunte Beach Villa': villaTulum,
+  'Bahia Ocean Villa': beachChalet,
+  'Ericeira Coastal Villa': villaEriceira,
 };
 
 export const useFractionalProperties = () => {
@@ -84,7 +86,7 @@ export const useFractionalProperties = () => {
       sharePrice: tokenPrice,
       wholePropertiesSold: prop.whole_properties_sold || 0, // Add whole property sales count
       isBlockchain: true,
-      isVillage: propertyLocation.includes('Mexico') || propertyLocation.includes('Brazil')
+      isVillage: propertyLocation.includes('Mexico') || propertyLocation.includes('Brazil') || propertyLocation.includes('Portugal')
     };
   };
 
