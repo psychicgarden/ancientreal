@@ -390,29 +390,27 @@ const Developers = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.length > 0 ? projects.map(project => {
-              const fundingPercentage = project.target_funding > 0 ? (project.current_funding / project.target_funding) * 100 : 0;
+            {currentProjects.length > 0 ? currentProjects.map(project => {
+              const fundingPercentage = project.target_funding > 0 ? project.current_funding / project.target_funding * 100 : 0;
               return <Card key={project.id} className="bg-gradient-card border-accent/20 hover:shadow-xl transition-all duration-300">
                   <CardContent className="p-6">
                     <div className="aspect-video bg-cover bg-center rounded-lg mb-4 relative overflow-hidden">
-                      {project.image_url ? <img src={project.image_url} alt={project.title} loading="lazy" className="w-full h-full object-cover" /> : 
-                        project.title.includes('Berber') ? <img src="/src/assets/desert-oasis-morocco.jpg" alt={project.title} loading="lazy" className="w-full h-full object-cover" /> :
-                        <div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center text-muted-foreground">
-                          No Image Available
+                      {project.image_url ? <img src={project.image_url} alt={project.title} loading="lazy" className="w-full h-full object-cover" /> : <div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center text-muted-foreground">
+                          No Image
                         </div>}
                       {/* Presale percentage overlay */}
                       <div className="absolute top-3 right-3 bg-primary/90 text-primary-foreground px-2 py-1 rounded text-sm font-bold">
-                        {Math.round(fundingPercentage)}% PRESOLD
+                        {project.presale_percentage}% PRESOLD
                       </div>
                       
                       {/* Development Approved notification */}
-                      {fundingPercentage >= 80 && <div className="absolute top-3 left-3 bg-accent/90 text-primary-foreground px-2 py-1 rounded text-xs font-semibold">
+                      {project.development_approved && <div className="absolute top-3 left-3 bg-accent/90 text-primary-foreground px-2 py-1 rounded text-xs font-semibold">
                           🎉 Development Approved!
                         </div>}
                       
                       {/* Threshold needed notification */}
-                      {fundingPercentage < 80 && <div className="absolute bottom-3 left-3 bg-gold/90 text-gold-foreground px-2 py-1 rounded text-xs font-semibold">
-                          ${Math.round((project.target_funding * 0.8) - project.current_funding).toLocaleString()} needed to reach threshold
+                      {project.threshold_needed && <div className="absolute bottom-3 left-3 bg-gold/90 text-gold-foreground px-2 py-1 rounded text-xs font-semibold">
+                          ${project.threshold_needed?.toLocaleString()} needed to reach threshold
                         </div>}
                     </div>
                     
@@ -421,8 +419,8 @@ const Developers = () => {
                     
                     {/* Status badge */}
                     <div className="mb-3">
-                      <Badge className={`${fundingPercentage >= 80 ? 'bg-accent/15 text-accent-foreground border-accent/30' : 'bg-gold/15 text-gold-foreground border-gold/30'}`}>
-                        {fundingPercentage >= 80 ? 'Funded - Development Starting' : 'Presale Active'}
+                      <Badge className={`${project.project_status === 'funded' ? 'bg-accent/15 text-accent-foreground border-accent/30' : 'bg-gold/15 text-gold-foreground border-gold/30'}`}>
+                        {project.status_badge}
                       </Badge>
                     </div>
                     
@@ -432,12 +430,12 @@ const Developers = () => {
                     <div className="mb-4">
                       <div className="flex justify-between text-sm mb-2">
                         <span>Presale Progress</span>
-                        <span className="font-semibold">{Math.round(fundingPercentage)}%</span>
+                        <span className="font-semibold">{project.presale_percentage}%</span>
                       </div>
-                      <Progress value={fundingPercentage} className="h-2" />
+                      <Progress value={project.presale_percentage} className="h-2" />
                       <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                        <span>Current: ${project.current_funding?.toLocaleString()}</span>
-                        <span>Target: ${project.target_funding?.toLocaleString()}</span>
+                        <span>Units Sold: {project.units_sold}</span>
+                        <span>Public Markup: {project.public_markup}</span>
                       </div>
                     </div>
                     
@@ -447,8 +445,8 @@ const Developers = () => {
                         <p className="font-semibold">${project.target_funding?.toLocaleString()}</p>
                       </div>
                       <div>
-                        <p className="text-muted-foreground">Current Funding</p>
-                        <p className="font-semibold">${project.current_funding?.toLocaleString()}</p>
+                        <p className="text-muted-foreground">Presale Price</p>
+                        <p className="font-semibold">${project.presale_price?.toLocaleString()}</p>
                       </div>
                       <div>
                         <p className="text-muted-foreground">Timeline</p>
@@ -463,9 +461,6 @@ const Developers = () => {
                     <div className="flex flex-wrap gap-1 mt-4 mb-4">
                       <Badge variant="secondary" className="text-xs">
                         {project.category || 'Development'}
-                      </Badge>
-                      <Badge variant="secondary" className="text-xs">
-                        {project.estimated_yield}% Estimated Yield
                       </Badge>
                     </div>
                     
