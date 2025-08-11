@@ -42,9 +42,7 @@ export interface PropertyInvestmentData {
 }
 
 const imageOverrides: Record<string, string> = {
-  'Mazunte Beach Villa': villaTulum,
-  'Bahia Ocean Villa': beachChalet,
-  'Ericeira Coastal Villa': villaEriceira,
+  // No longer needed - using database URLs
 };
 
 export const useFractionalProperties = () => {
