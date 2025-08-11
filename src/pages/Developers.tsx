@@ -22,7 +22,7 @@ const Developers = () => {
   const [investmentModalOpen, setInvestmentModalOpen] = useState(false);
   const [submissionFormOpen, setSubmissionFormOpen] = useState(false);
 
-  // Fetch real projects from database
+  // Fetch real projects from database and merge with display data
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -55,6 +55,27 @@ const Developers = () => {
     };
     fetchProjects();
   }, [toast]);
+
+  // Merge live funding data with hardcoded display data
+  const mergeProjectData = (hardcodedProjects: any[], dbProjects: any[]) => {
+    return hardcodedProjects.map(hardcodedProject => {
+      const dbProject = dbProjects.find(db => db.id === hardcodedProject.id);
+      if (dbProject) {
+        const fundingPercentage = dbProject.target_funding > 0 ? (dbProject.current_funding / dbProject.target_funding) * 100 : 0;
+        const thresholdNeeded = Math.max(0, (dbProject.target_funding * 0.8) - dbProject.current_funding);
+        
+        return {
+          ...hardcodedProject,
+          current_funding: dbProject.current_funding,
+          target_funding: dbProject.target_funding,
+          presale_percentage: Math.round(fundingPercentage),
+          threshold_needed: thresholdNeeded,
+          project_status: dbProject.project_status
+        };
+      }
+      return hardcodedProject;
+    });
+  };
 
   // SEO: set title, description, and canonical
   useEffect(() => {
@@ -389,9 +410,11 @@ const Developers = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {currentProjects.length > 0 ? currentProjects.map(project => {
-              const fundingPercentage = project.target_funding > 0 ? project.current_funding / project.target_funding * 100 : 0;
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+             {(() => {
+               const mergedProjects = mergeProjectData(currentProjects, projects);
+               return mergedProjects.length > 0 ? mergedProjects.map(project => {
+                 const fundingPercentage = project.target_funding > 0 ? project.current_funding / project.target_funding * 100 : 0;
               return <Card key={project.id} className="bg-gradient-card border-accent/20 hover:shadow-xl transition-all duration-300">
                   <CardContent className="p-6">
                     <div className="aspect-video bg-cover bg-center rounded-lg mb-4 relative overflow-hidden">
@@ -469,10 +492,11 @@ const Developers = () => {
                     </Button>
                   </CardContent>
                 </Card>;
-            }) : <div className="col-span-full text-center py-8">
-                <p className="text-muted-foreground">No active projects seeking funding.</p>
-              </div>}
-          </div>
+               }) : <div className="col-span-full text-center py-8">
+                 <p className="text-muted-foreground">No active projects seeking funding.</p>
+               </div>;
+              })()}
+           </div>
         </div>
       </section>
 
