@@ -28,26 +28,37 @@ const FeaturedInvestments = () => {
   // Use real fractional properties from Supabase
   const { properties, loading: propertiesLoading } = useFractionalProperties();
 
-  // Transform properties for Village display
-  const transformedProperties = properties.map(property => ({
-    type: property.location.includes('Mexico') ? "🏝️ Join the Mazunte Village" : "Villa",
-    name: property.name,
-    location: property.location,
-    totalValue: property.totalValue,
-    listPrice: property.totalValue,
-    downPayment: property.downPayment,
-    monthlyPayment: Math.round(property.monthlyPayment),
-    monthlyRent: 2050, // From database monthly_base_rent
-    monthlyProfit: Math.round(2050 - property.monthlyPayment),
-    networkValue: Math.round(property.totalValue * 1.8), // Estimated network value
-    propertiesSold: property.wholePropertiesSold, // Use actual whole property sales count
-    totalProperties: 15,
-    mortgageTerm: "10 years",
-    expectedReturn: property.expectedReturn,
-    image: property.image,
-    isBlockchain: property.isBlockchain,
-    isVillage: true // Make all properties use the NETWORK INVESTMENT layout
-  }));
+  // Transform properties for Village display with correct financial calculations
+  const transformedProperties = properties.map(property => {
+    // Calculate real monthly profit based on actual rent and mortgage payment
+    const monthlyRent = property.monthlyRent; // Use actual database value
+    const monthlyPayment = Math.round(property.monthlyPayment);
+    const monthlyProfit = Math.round(monthlyRent - monthlyPayment);
+    
+    // Calculate network value using 35% appreciation over 5 years + ARW split
+    const fiveYearAppreciation = property.totalValue * 1.35;
+    const networkValue = Math.round(fiveYearAppreciation);
+    
+    return {
+      type: property.location.includes('Mexico') ? "🏝️ Join the Mazunte Village" : "Villa",
+      name: property.name,
+      location: property.location,
+      totalValue: property.totalValue,
+      listPrice: property.totalValue,
+      downPayment: property.downPayment,
+      monthlyPayment,
+      monthlyRent, // Use real database value
+      monthlyProfit, // Calculated from real values
+      networkValue, // Proper appreciation model
+      propertiesSold: property.wholePropertiesSold,
+      totalProperties: 15,
+      mortgageTerm: "10 years",
+      expectedReturn: property.expectedReturn,
+      image: property.image,
+      isBlockchain: property.isBlockchain,
+      isVillage: true // Make all properties use the NETWORK INVESTMENT layout
+    };
+  });
   return <section className="px-6 bg-gradient-to-br from-background via-background to-muted/5 py-[20px]">
       <div className="container mx-auto">
         <SectionHeader
