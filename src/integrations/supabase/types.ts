@@ -967,6 +967,27 @@ export type Database = {
         Args: { property_frac_id: string; rental_month?: string }
         Returns: undefined
       }
+      get_user_fractional_investments: {
+        Args: { wallet_address: string }
+        Returns: {
+          id: string
+          property_id: string
+          investor_wallet_address: string
+          investment_amount: number
+          token_amount: number
+          ownership_percentage: number
+          investment_date: string
+          status: string
+          created_at: string
+          updated_at: string
+          property_name: string
+          property_location: string
+          property_image_url: string
+          current_speculation_price: number
+          monthly_base_rent: number
+          total_tokens_available: number
+        }[]
+      }
       has_role: {
         Args: {
           _user_id: string

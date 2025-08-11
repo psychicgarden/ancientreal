@@ -11,7 +11,7 @@ interface PropertyCardProps {
   image: string;
   title: string;
   location: string;
-  status: "owned" | "mortgaged" | "hosted" | "available" | "pending";
+  status: "owned" | "mortgaged" | "hosted" | "available" | "pending" | "success";
   value: number;
   equity?: number;
   monthlyIncome?: number;
@@ -57,6 +57,8 @@ export const PropertyCard = ({
         return <Badge className="bg-orange-600/95 text-white font-semibold border border-orange-400/50 shadow-lg backdrop-blur-sm px-3 py-1">Available</Badge>;
       case "pending":
         return <Badge className="bg-red-600/95 text-white font-semibold border border-red-400/50 shadow-lg backdrop-blur-sm px-3 py-1">Purchase Failed</Badge>;
+      case "success":
+        return <Badge className="bg-green-600/95 text-white font-semibold border border-green-400/50 shadow-lg backdrop-blur-sm px-3 py-1">Successfully Fractionalized</Badge>;
       default:
         return null;
     }

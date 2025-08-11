@@ -89,11 +89,32 @@ const Portfolio = () => {
           setDeveloperInvestments(investments || []);
         }
 
-        // Fetch fractional investments with proper JOIN query
+        // Fetch fractional investments with manual query since foreign key is now available
         const { data: fractionalData, error: fractionalError } = await supabase
-          .rpc('get_user_fractional_investments', {
-            wallet_address: account.toLowerCase()
-          });
+          .from('fractional_investments')
+          .select(`
+            id,
+            property_id,
+            investor_wallet_address,
+            investment_amount,
+            token_amount,
+            ownership_percentage,
+            investment_date,
+            status,
+            created_at,
+            updated_at,
+            property_fractionalization!inner (
+              property_name,
+              property_location,
+              property_image_url,
+              current_speculation_price,
+              monthly_base_rent,
+              total_tokens_available
+            )
+          `)
+          .eq('investor_wallet_address', account.toLowerCase())
+          .eq('status', 'active')
+          .order('created_at', { ascending: false });
 
         if (fractionalError) {
           console.error('Error fetching fractional investments:', fractionalError);
@@ -170,23 +191,38 @@ const Portfolio = () => {
     }
   }, [isConnected, account]);
 
-  // Convert database properties to display format
-  const displayProperties = userProperties.length > 0 ? userProperties.map(prop => ({
-    id: prop.id,
-    image: prop.image_url || "/src/assets/villa-bali.jpg", // Use database image_url or fallback
-    title: prop.property_name,
-    location: prop.property_location,
-    status: prop.is_active ? "mortgaged" as const : "pending" as const,
-    value: prop.current_value,
-    equity: (prop.current_value * prop.equity_percentage) / 100,
-    monthlyIncome: prop.monthly_payment * 0.7, // Estimate rental income
-    occupancyRate: 85, // Default occupancy rate
-    downPayment: prop.down_payment,
-    mortgageId: prop.mortgage_id,
-    remainingBalance: prop.remaining_balance,
-    isPending: !prop.is_active, // Show if purchase failed/pending
-    failureReason: prop.is_active ? null : "Smart contract deployment required"
-  })) : [];
+  // Convert database properties to display format with proper status logic
+  const displayProperties = userProperties.length > 0 ? userProperties.map(prop => {
+    // Check if this property has been fractionalized (should show as successful, not failed)
+    const hasBeenFractionalized = fractionalInvestments.some(fi => 
+      fi.property_fractionalization?.property_name?.toLowerCase().includes(prop.property_name?.toLowerCase())
+    );
+    
+    // Determine the correct status
+    let status: "mortgaged" | "pending" | "success" = "mortgaged";
+    if (!prop.is_active && hasBeenFractionalized) {
+      status = "success"; // Property was successfully fractionalized
+    } else if (!prop.is_active) {
+      status = "pending"; // Property purchase is still pending/failed
+    }
+    
+    return {
+      id: prop.id,
+      image: prop.image_url || "/src/assets/villa-bali.jpg",
+      title: prop.property_name,
+      location: prop.property_location,
+      status,
+      value: prop.current_value,
+      equity: (prop.current_value * prop.equity_percentage) / 100,
+      monthlyIncome: prop.monthly_payment * 0.7,
+      occupancyRate: 85,
+      downPayment: prop.down_payment,
+      mortgageId: prop.mortgage_id,
+      remainingBalance: prop.remaining_balance,
+      isPending: status === "pending",
+      failureReason: status === "pending" ? "Smart contract deployment required" : null
+    };
+  }) : [];
 
   if (!isConnected) {
     return (
