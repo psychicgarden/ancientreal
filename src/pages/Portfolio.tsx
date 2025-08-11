@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useWallet } from "@/contexts/WalletContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -278,8 +279,8 @@ const Portfolio = () => {
   const fractionalMonthlyIncome = fractionalInvestments.reduce((sum, investment) => {
     const monthlyRent = investment.property_fractionalization?.monthly_base_rent || 0;
     const ownershipPercentage = investment.ownership_percentage || 0;
-    // Estimate 80% of rent goes to investors after expenses
-    return sum + (monthlyRent * ownershipPercentage / 100 * 0.8);
+    // Updated: assume 92% net of gross rent is distributable (aligned with backend)
+    return sum + (monthlyRent * ownershipPercentage / 100 * 0.92);
   }, 0);
 
   const totalValue = displayProperties.reduce((sum, prop) => sum + prop.value, 0) + fractionalValue;
@@ -300,6 +301,50 @@ const Portfolio = () => {
 
   const handlePropertyAction = (action: string, propertyId: string) => {
     toast({ title: action, description: `Action for property ${propertyId}` });
+  };
+
+  // New: Handlers for fractional actions
+  const handleSellTokens = (investment: any) => {
+    console.log('Sell Tokens clicked for investment:', investment?.id, investment);
+    toast({
+      title: 'Secondary Market',
+      description: 'Token selling will open in the Secondary Marketplace soon.',
+    });
+  };
+
+  const handleClaimIncome = async (investment: any) => {
+    if (!account) return;
+    console.log('Claim Income clicked for investment:', investment?.id, investment);
+    // Attempt to check claimable rental income for this property
+    const { data, error } = await supabase
+      .from('investor_rental_claims')
+      .select('claimable_amount, claimed_amount, distribution_id, created_at')
+      .eq('investor_wallet_address', account)
+      .eq('property_fractionalization_id', investment.property_id);
+
+    if (error) {
+      console.error('Error fetching rental claims:', error);
+      toast({ title: 'Could not fetch claimable income', variant: 'destructive' });
+      return;
+    }
+
+    const outstanding = (data || []).reduce((sum, row) => {
+      const claimable = Number(row.claimable_amount || 0);
+      const claimed = Number(row.claimed_amount || 0);
+      return sum + Math.max(0, claimable - claimed);
+    }, 0);
+
+    if (outstanding > 0) {
+      toast({
+        title: 'Claim Ready',
+        description: `You have $${outstanding.toFixed(2)} available to claim.`,
+      });
+    } else {
+      toast({
+        title: 'No Claimable Income Yet',
+        description: 'We will notify you when a rental distribution is available.',
+      });
+    }
   };
 
   return (
@@ -532,9 +577,9 @@ const Portfolio = () => {
                             </span>
                           </div>
                           <div className="flex justify-between">
-                            <span>Monthly Income:</span>
+                            <span>Monthly Income (est):</span>
                             <span className="font-medium text-green-600">
-                              ${(((investment.property_fractionalization?.monthly_base_rent || 0) * investment.ownership_percentage / 100 * 0.8)).toFixed(2)}
+                              ${(((investment.property_fractionalization?.monthly_base_rent || 0) * investment.ownership_percentage / 100 * 0.92)).toFixed(2)}
                             </span>
                           </div>
                           <div className="flex justify-between">
@@ -543,10 +588,10 @@ const Portfolio = () => {
                           </div>
                         </div>
                         <div className="flex gap-2 mt-4">
-                          <Button size="sm" variant="outline" className="flex-1">
+                          <Button size="sm" variant="outline" className="flex-1" onClick={() => handleSellTokens(investment)}>
                             Sell Tokens
                           </Button>
-                          <Button size="sm" className="flex-1">
+                          <Button size="sm" className="flex-1" onClick={() => handleClaimIncome(investment)}>
                             Claim Income
                           </Button>
                         </div>
