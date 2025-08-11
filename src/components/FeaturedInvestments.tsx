@@ -40,7 +40,7 @@ const FeaturedInvestments = () => {
     monthlyRent: 2050, // From database monthly_base_rent
     monthlyProfit: Math.round(2050 - property.monthlyPayment),
     networkValue: Math.round(property.totalValue * 1.8), // Estimated network value
-    propertiesSold: Math.round((property.totalShares - property.availableShares) / property.totalShares * 15),
+    propertiesSold: property.wholePropertiesSold, // Use actual whole property sales count
     totalProperties: 15,
     mortgageTerm: "10 years",
     expectedReturn: property.expectedReturn,

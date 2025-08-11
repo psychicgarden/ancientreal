@@ -35,6 +35,7 @@ export interface PropertyInvestmentData {
   availableShares: number;
   totalShares: number;
   sharePrice: number;
+  wholePropertiesSold: number; // Count of whole properties sold
   isBlockchain?: boolean;
   isVillage?: boolean;
 }
@@ -49,7 +50,7 @@ export const useFractionalProperties = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const transformProperty = (prop: FractionalProperty): PropertyInvestmentData => {
+  const transformProperty = (prop: FractionalProperty & { whole_properties_sold?: number }): PropertyInvestmentData => {
     const availableTokens = prop.total_tokens_available - prop.tokens_sold;
     const tokenPrice = prop.current_speculation_price / prop.total_tokens_available;
     const downPayment = prop.current_speculation_price * 0.2; // 20% down payment
@@ -76,6 +77,7 @@ export const useFractionalProperties = () => {
       availableShares: availableTokens,
       totalShares: prop.total_tokens_available,
       sharePrice: tokenPrice,
+      wholePropertiesSold: prop.whole_properties_sold || 0, // Add whole property sales count
       isBlockchain: true,
       isVillage: propertyLocation.includes('Mexico') || propertyLocation.includes('Brazil')
     };
@@ -84,10 +86,13 @@ export const useFractionalProperties = () => {
   const fetchProperties = async () => {
     try {
       setLoading(true);
-      // Only fetch properties that have been properly listed with complete metadata
+      // Fetch properties with whole property sales count
       const { data, error } = await supabase
         .from('property_fractionalization')
-        .select('*')
+        .select(`
+          *,
+          whole_properties_sold:user_properties(count)
+        `)
         .eq('is_active', true)
         .eq('is_listed_fractionally', true)
         .not('property_name', 'is', null)
@@ -97,7 +102,7 @@ export const useFractionalProperties = () => {
 
       if (error) throw error;
 
-      // Filter out any remaining invalid entries
+      // Filter out any remaining invalid entries and transform with whole property count
       const validProperties = data?.filter(prop => 
         prop.property_name && 
         prop.property_location && 
@@ -105,7 +110,24 @@ export const useFractionalProperties = () => {
         prop.owner_wallet_address !== '0x1234567890123456789012345678901234567890'
       ) || [];
 
-      const transformedProperties = validProperties.map(transformProperty);
+      // Count whole properties sold for each fractionalized property
+      const propertiesWithCounts = await Promise.all(
+        validProperties.map(async (prop) => {
+          const { count } = await supabase
+            .from('user_properties')
+            .select('*', { count: 'exact', head: true })
+            .eq('property_name', prop.property_name)
+            .eq('property_location', prop.property_location)
+            .eq('is_active', true);
+          
+          return {
+            ...prop,
+            whole_properties_sold: count || 0
+          };
+        })
+      );
+
+      const transformedProperties = propertiesWithCounts.map(transformProperty);
       setProperties(transformedProperties);
     } catch (err) {
       console.error('Error fetching fractional properties:', err);
