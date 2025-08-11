@@ -10,10 +10,8 @@ import PropertyInvestmentCalculator from "@/components/PropertyInvestmentCalcula
 import { PropertyPurchaseModal } from "@/components/PropertyPurchaseModal";
 import { Link } from "react-router-dom";
 import SectionHeader from "@/components/SectionHeader";
-
-import villaTulum from "@/assets/villa-tulum.jpg";
-import beachChalet from "@/assets/beach-chalet.jpg";
-import villaCorfu from "@/assets/villa-corfu-greece.jpg";
+import { useFractionalProperties } from "@/hooks/useFractionalProperties";
+import { Skeleton } from "@/components/ui/skeleton";
 const FeaturedInvestments = () => {
   const {
     isConnected,
@@ -26,74 +24,30 @@ const FeaturedInvestments = () => {
   const [calculatorOpen, setCalculatorOpen] = useState(false);
   const [purchaseModalOpen, setPurchaseModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
+  
+  // Use real fractional properties from Supabase
+  const { properties, loading: propertiesLoading } = useFractionalProperties();
 
-  // Hardcoded blockchain data for Mazunte property
-  const mazunteData = {
-    totalValue: 150000,
-    downPayment: 30000,
-    monthlyPayment: 1456,
-    projectedValue: 421500,
-    location: "Calle Rinconcito, Mazunte, Oaxaca, Mexico",
-    legalOwner: "Ancient Holdings Ltd (Nevis Corporation)"
-  };
-  const properties = [{
-    type: "🏝️ Join the Mazunte Village",
-    name: "Art Deco Loft",
-    location: "Mazunte, Mexico",
-    totalValue: isConnected ? mazunteData.totalValue : 150000,
-    listPrice: 150000,
-    downPayment: isConnected ? mazunteData.downPayment : 30000,
-    monthlyPayment: isConnected ? mazunteData.monthlyPayment : 1456,
-    monthlyRent: 2050,
-    monthlyProfit: 594,
-    networkValue: 467000,
-    // Updated with 4% annual rent growth
-    propertiesSold: 11,
+  // Transform properties for Village display
+  const transformedProperties = properties.map(property => ({
+    type: property.location.includes('Mexico') ? "🏝️ Join the Mazunte Village" : "Villa",
+    name: property.name,
+    location: property.location,
+    totalValue: property.totalValue,
+    listPrice: property.totalValue,
+    downPayment: property.downPayment,
+    monthlyPayment: Math.round(property.monthlyPayment),
+    monthlyRent: 2050, // From database monthly_base_rent
+    monthlyProfit: Math.round(2050 - property.monthlyPayment),
+    networkValue: Math.round(property.totalValue * 1.8), // Estimated network value
+    propertiesSold: Math.round((property.totalShares - property.availableShares) / property.totalShares * 15),
     totalProperties: 15,
     mortgageTerm: "10 years",
-    expectedReturn: isConnected ? 181 : 16.8,
-    image: villaTulum,
-    isBlockchain: true,
-    isVillage: true
-  }, {
-    type: "Villa",
-    name: "Ocean Villa Retreat",
-    location: "Bahia, Brazil",
-    totalValue: 130000,
-    listPrice: 130000,
-    downPayment: 26000,
-    monthlyPayment: 1264,
-    monthlyRent: 1800,
-    monthlyProfit: 536,
-    networkValue: 405600,
-    // 130k * 1.12^10
-    propertiesSold: 8,
-    totalProperties: 12,
-    mortgageTerm: "10 years",
-    expectedReturn: 15.2,
-    image: beachChalet,
-    isBlockchain: false,
-    isVillage: true
-  }, {
-    type: "Villa",
-    name: "Mediterranean Villa",
-    location: "Corfu, Greece",
-    totalValue: 280000,
-    listPrice: 280000,
-    downPayment: 56000,
-    monthlyPayment: 2717,
-    monthlyRent: 2950,
-    monthlyProfit: 233,
-    networkValue: 663000,
-    // 280k * 2.37 (10-year appreciation with 4% rent growth)
-    propertiesSold: 5,
-    totalProperties: 10,
-    mortgageTerm: "10 years",
-    expectedReturn: 17.8,
-    image: villaCorfu,
-    isBlockchain: false,
-    isVillage: true
-  }];
+    expectedReturn: property.expectedReturn,
+    image: property.image,
+    isBlockchain: property.isBlockchain,
+    isVillage: property.isVillage
+  }));
   return <section className="px-6 bg-gradient-to-br from-background via-background to-muted/5 py-[20px]">
       <div className="container mx-auto">
         <SectionHeader
@@ -102,8 +56,32 @@ const FeaturedInvestments = () => {
           subtitle="20% Down Financing — Thoughtfully curated eco‑luxury residences. Modern financing for conscious living."
         />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-          {properties.map((property, index) => <Card key={index} className="bg-card/40 backdrop-blur-sm border border-border/30 hover:border-border/60 transition-all duration-500 hover:shadow-2xl group overflow-hidden">
+        {propertiesLoading ? (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+            {[1, 2, 3].map((i) => (
+              <Card key={i} className="bg-card/40 backdrop-blur-sm border border-border/30">
+                <CardContent className="p-0">
+                  <Skeleton className="aspect-[4/3] w-full" />
+                  <div className="p-6">
+                    <Skeleton className="h-6 w-3/4 mb-2" />
+                    <Skeleton className="h-4 w-1/2 mb-6" />
+                    <Skeleton className="h-2 w-full mb-6" />
+                    <div className="space-y-6 mb-8">
+                      <Skeleton className="h-32 w-full" />
+                      <Skeleton className="h-24 w-full" />
+                    </div>
+                    <div className="space-y-3">
+                      <Skeleton className="h-12 w-full" />
+                      <Skeleton className="h-11 w-full" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+            {transformedProperties.map((property, index) => <Card key={index} className="bg-card/40 backdrop-blur-sm border border-border/30 hover:border-border/60 transition-all duration-500 hover:shadow-2xl group overflow-hidden">
               <CardContent className="p-0">
                 
                 {/* Image Header */}
@@ -243,7 +221,8 @@ const FeaturedInvestments = () => {
                 </div>
               </CardContent>
             </Card>)}
-        </div>
+          </div>
+        )}
 
         <div className="text-center">
           <Button variant="outline" size="lg" className="px-8 py-3 text-base font-medium hover:scale-105 transition-transform" asChild>

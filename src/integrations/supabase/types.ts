@@ -491,6 +491,8 @@ export type Database = {
       property_fractionalization: {
         Row: {
           appreciation_cap_percent: number | null
+          bathrooms: number | null
+          bedrooms: number | null
           created_at: string
           current_speculation_price: number
           id: string
@@ -503,8 +505,14 @@ export type Database = {
           original_purchase_price: number
           owner_wallet_address: string
           projected_appreciation_percent: number | null
+          property_description: string | null
           property_expenses_ytd: number | null
           property_id: string
+          property_image_url: string | null
+          property_location: string | null
+          property_name: string | null
+          property_type: string | null
+          square_feet: number | null
           tokens_sold: number
           total_rental_collected: number | null
           total_tokens_available: number
@@ -513,6 +521,8 @@ export type Database = {
         }
         Insert: {
           appreciation_cap_percent?: number | null
+          bathrooms?: number | null
+          bedrooms?: number | null
           created_at?: string
           current_speculation_price: number
           id?: string
@@ -525,8 +535,14 @@ export type Database = {
           original_purchase_price: number
           owner_wallet_address: string
           projected_appreciation_percent?: number | null
+          property_description?: string | null
           property_expenses_ytd?: number | null
           property_id: string
+          property_image_url?: string | null
+          property_location?: string | null
+          property_name?: string | null
+          property_type?: string | null
+          square_feet?: number | null
           tokens_sold?: number
           total_rental_collected?: number | null
           total_tokens_available?: number
@@ -535,6 +551,8 @@ export type Database = {
         }
         Update: {
           appreciation_cap_percent?: number | null
+          bathrooms?: number | null
+          bedrooms?: number | null
           created_at?: string
           current_speculation_price?: number
           id?: string
@@ -547,8 +565,14 @@ export type Database = {
           original_purchase_price?: number
           owner_wallet_address?: string
           projected_appreciation_percent?: number | null
+          property_description?: string | null
           property_expenses_ytd?: number | null
           property_id?: string
+          property_image_url?: string | null
+          property_location?: string | null
+          property_name?: string | null
+          property_type?: string | null
+          square_feet?: number | null
           tokens_sold?: number
           total_rental_collected?: number | null
           total_tokens_available?: number
