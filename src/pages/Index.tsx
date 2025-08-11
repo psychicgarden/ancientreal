@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import FeaturedInvestments from "@/components/FeaturedInvestments";
-import MissedOpportunitySection from "@/components/MissedOpportunitySection";
+
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,8 +16,85 @@ const Index = () => {
       <Header />
       <Hero />
       <FeaturedInvestments />
-      <MissedOpportunitySection />
       
+      {/* The Mathematics of Modern Nomadism */}
+      <section className="py-20 bg-gradient-to-br from-muted/20 to-muted/40">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
+              The Mathematics of Modern Nomadism
+            </h2>
+            <p className="text-xl text-muted-foreground mb-8 max-w-4xl mx-auto">
+              Every decade the average digital nomad burns 216K on dead rent.<br />
+              We transform that into $467,000 in real estate equity.
+            </p>
+          </div>
+
+        <div className="grid md:grid-cols-2 gap-8 mb-8">
+          <div className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6">
+            <h4 className="text-xl font-bold mb-4 text-red-400">Traditional Path</h4>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center py-1">
+                <span className="text-muted-foreground">Monthly Rent</span>
+                <span className="text-lg font-semibold">$1,800</span>
+              </div>
+              <div className="flex justify-between items-center py-1">
+                <span className="text-muted-foreground">Decade Total</span>
+                <span className="text-lg font-semibold">$216,000</span>
+              </div>
+              <div className="flex justify-between items-center py-1">
+                <span className="text-muted-foreground">Equity Built</span>
+                <span className="text-lg font-semibold text-red-400">$0</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-6">
+            <h4 className="text-xl font-bold mb-4 text-green-400">Ancient Path</h4>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center py-1">
+                <span className="text-muted-foreground">Monthly Payment</span>
+                <span className="text-lg font-semibold">$1,456</span>
+              </div>
+              <div className="flex justify-between items-center py-1">
+                <span className="text-muted-foreground">Decade Total</span>
+                <span className="text-lg font-semibold">$204,720</span>
+              </div>
+              <div className="flex justify-between items-center py-1">
+                <span className="text-muted-foreground">Property Value</span>
+                <span className="text-lg font-semibold text-green-400">$467,000</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-center">
+          <div className="bg-gradient-to-r from-primary to-purple-600 text-white p-8 rounded-lg mb-8">
+            <h3 className="text-2xl font-bold mb-4">The Difference</h3>
+            <p className="text-xl mb-6">Identical monthly commitment. Generational wealth outcome.</p>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              <div>
+                <div className="text-sm opacity-90 uppercase tracking-wide">Down Payment</div>
+                <div className="text-3xl font-bold">$30K</div>
+              </div>
+              <div>
+                <div className="text-sm opacity-90 uppercase tracking-wide">Final Equity</div>
+                <div className="text-3xl font-bold">$467K</div>
+              </div>
+              <div>
+                <div className="text-sm opacity-90 uppercase tracking-wide">Total Return</div>
+                <div className="text-3xl font-bold">181%</div>
+              </div>
+            </div>
+          </div>
+          
+          <Button size="lg" className="px-8 py-4 text-lg">
+            Calculate Returns
+          </Button>
+        </div>
+      </div>
+    </section>
       
       {/* Three-Tier Banking Portal */}
       <section className="bg-gradient-to-br from-background to-muted/10 py-[40px]">
