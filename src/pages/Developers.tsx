@@ -147,20 +147,20 @@ const Developers = () => {
     id: 'a47ac10b-58cc-4372-a567-0e02b2c3d478',
     title: 'Digital Nomad Coliving Hub',
     creator_name: 'Remote Work Studios',
-    description: 'Modern coliving spaces designed for digital nomads with high-speed internet, coworking areas, and community events.',
+    description: 'Modern coliving spaces in Bali designed for digital nomads with high-speed internet, coworking areas, and community events in tropical paradise.',
     target_funding: 450000,
-    current_funding: 382500,
-    presale_price: 382500,
-    min_investment: 75000,
+    current_funding: 90000,
+    presale_price: 90000,
+    min_investment: 45000,
     estimated_yield: 22,
-    project_status: 'funded',
+    project_status: 'presale_active',
     timeline: '12 months',
     image_url: '/src/assets/coworking-mallorca.jpg',
-    presale_percentage: 85,
-    status_badge: 'Funded - Development Starting',
-    units_sold: '8/10',
+    presale_percentage: 20,
+    status_badge: 'Presale Active',
+    units_sold: '2/10',
     public_markup: '+17.6%',
-    development_approved: true,
+    threshold_needed: 270000,
     category: 'Real Estate'
   }, {
     id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
@@ -487,9 +487,16 @@ const Developers = () => {
                       </Badge>
                     </div>
                     
-                    <Button className="w-full" onClick={() => handleInvestClick(project)}>
-                      Invest Now
-                    </Button>
+                    {/* Show different button based on funding status */}
+                    {fundingPercentage >= 80 ? (
+                      <Button className="w-full" variant="secondary" disabled>
+                        Development Approved ✓
+                      </Button>
+                    ) : (
+                      <Button className="w-full" onClick={() => handleInvestClick(project)}>
+                        Invest Now
+                      </Button>
+                    )}
                   </CardContent>
                 </Card>;
                }) : <div className="col-span-full text-center py-8">
