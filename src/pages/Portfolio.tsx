@@ -89,23 +89,11 @@ const Portfolio = () => {
           setDeveloperInvestments(investments || []);
         }
 
-        // Fetch fractional investments
+        // Fetch fractional investments with proper JOIN query
         const { data: fractionalData, error: fractionalError } = await supabase
-          .from('fractional_investments')
-          .select(`
-            *,
-            property_fractionalization (
-              property_name,
-              property_location,
-              property_image_url,
-              current_speculation_price,
-              monthly_base_rent,
-              total_tokens_available
-            )
-          `)
-          .eq('investor_wallet_address', account.toLowerCase())
-          .eq('status', 'active')
-          .order('created_at', { ascending: false });
+          .rpc('get_user_fractional_investments', {
+            wallet_address: account.toLowerCase()
+          });
 
         if (fractionalError) {
           console.error('Error fetching fractional investments:', fractionalError);

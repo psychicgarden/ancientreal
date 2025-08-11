@@ -256,7 +256,15 @@ export type Database = {
           token_amount?: number
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_fractional_investments_property_id"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "property_fractionalization"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       investor_rental_claims: {
         Row: {
