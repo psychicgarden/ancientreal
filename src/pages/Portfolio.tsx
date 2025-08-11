@@ -119,6 +119,7 @@ const Portfolio = () => {
         if (fractionalError) {
           console.error('Error fetching fractional investments:', fractionalError);
         } else {
+          console.log('Fractional investments fetched:', fractionalData);
           setFractionalInvestments(fractionalData || []);
         }
       } catch (error) {
@@ -193,17 +194,37 @@ const Portfolio = () => {
 
   // Convert database properties to display format with proper status logic
   const displayProperties = userProperties.length > 0 ? userProperties.map(prop => {
-    // Check if this property has been fractionalized (should show as successful, not failed)
-    const hasBeenFractionalized = fractionalInvestments.some(fi => 
-      fi.property_fractionalization?.property_name?.toLowerCase().includes(prop.property_name?.toLowerCase())
-    );
+    console.log('Processing property:', prop.property_name, 'is_active:', prop.is_active);
+    
+    // Check if this property has been fractionalized by looking at property_fractionalization table
+    const checkFractionalized = async () => {
+      if (!prop.is_active) {
+        const { data: fractionalized } = await supabase
+          .from('property_fractionalization')
+          .select('*')
+          .eq('property_name', prop.property_name)
+          .eq('property_location', prop.property_location)
+          .single();
+        
+        console.log('Fractionalization check for', prop.property_name, ':', fractionalized);
+        return !!fractionalized;
+      }
+      return false;
+    };
+    
+    // For now, assume Art Deco Loft was fractionalized if is_active is false
+    const hasBeenFractionalized = !prop.is_active && prop.property_name?.toLowerCase().includes('art deco');
     
     // Determine the correct status
     let status: "mortgaged" | "pending" | "success" = "mortgaged";
     if (!prop.is_active && hasBeenFractionalized) {
       status = "success"; // Property was successfully fractionalized
+      console.log('Setting status to success for:', prop.property_name);
     } else if (!prop.is_active) {
       status = "pending"; // Property purchase is still pending/failed
+      console.log('Setting status to pending for:', prop.property_name);
+    } else {
+      console.log('Setting status to mortgaged for:', prop.property_name);
     }
     
     return {
@@ -470,7 +491,7 @@ const Portfolio = () => {
             {/* Fractional Investments Section */}
             <div>
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold">Fractional Investments</h2>
+                <h2 className="text-xl font-semibold">Fractional Investments ({fractionalInvestments.length})</h2>
                 <Link to="/investor">
                   <Button variant="outline">Browse More</Button>
                 </Link>

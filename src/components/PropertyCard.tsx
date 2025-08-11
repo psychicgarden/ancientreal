@@ -116,6 +116,17 @@ export const PropertyCard = ({
             </Button>
           </div>
         );
+      case "success":
+        return (
+          <div className="space-y-2">
+            <p className="text-xs text-green-600 font-medium">
+              Property successfully fractionalized and available for investment
+            </p>
+            <Button size="sm" variant="default" className="w-full">
+              View Fractionalization Details
+            </Button>
+          </div>
+        );
       default:
         return null;
     }
