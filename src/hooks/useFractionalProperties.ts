@@ -73,15 +73,28 @@ export const useFractionalProperties = () => {
   const fetchProperties = async () => {
     try {
       setLoading(true);
+      // Only fetch properties that have been properly listed with complete metadata
       const { data, error } = await supabase
         .from('property_fractionalization')
         .select('*')
         .eq('is_active', true)
-        .order('created_at', { ascending: false });
+        .eq('is_listed_fractionally', true)
+        .not('property_name', 'is', null)
+        .not('property_location', 'is', null)
+        .not('owner_wallet_address', 'eq', '0x1234567890123456789012345678901234567890') // Exclude test data
+        .order('listing_date', { ascending: false });
 
       if (error) throw error;
 
-      const transformedProperties = data?.map(transformProperty) || [];
+      // Filter out any remaining invalid entries
+      const validProperties = data?.filter(prop => 
+        prop.property_name && 
+        prop.property_location && 
+        prop.owner_wallet_address &&
+        prop.owner_wallet_address !== '0x1234567890123456789012345678901234567890'
+      ) || [];
+
+      const transformedProperties = validProperties.map(transformProperty);
       setProperties(transformedProperties);
     } catch (err) {
       console.error('Error fetching fractional properties:', err);

@@ -498,7 +498,9 @@ export type Database = {
           id: string
           investor_appreciation_burden_percent: number | null
           is_active: boolean
+          is_listed_fractionally: boolean | null
           last_rental_distribution: string | null
+          listing_date: string | null
           min_investment: number
           monthly_base_rent: number | null
           original_property_value: number | null
@@ -509,9 +511,11 @@ export type Database = {
           property_expenses_ytd: number | null
           property_id: string
           property_image_url: string | null
+          property_image_url_backup: string | null
           property_location: string | null
           property_name: string | null
           property_type: string | null
+          source_property_id: string | null
           square_feet: number | null
           tokens_sold: number
           total_rental_collected: number | null
@@ -528,7 +532,9 @@ export type Database = {
           id?: string
           investor_appreciation_burden_percent?: number | null
           is_active?: boolean
+          is_listed_fractionally?: boolean | null
           last_rental_distribution?: string | null
+          listing_date?: string | null
           min_investment?: number
           monthly_base_rent?: number | null
           original_property_value?: number | null
@@ -539,9 +545,11 @@ export type Database = {
           property_expenses_ytd?: number | null
           property_id: string
           property_image_url?: string | null
+          property_image_url_backup?: string | null
           property_location?: string | null
           property_name?: string | null
           property_type?: string | null
+          source_property_id?: string | null
           square_feet?: number | null
           tokens_sold?: number
           total_rental_collected?: number | null
@@ -558,7 +566,9 @@ export type Database = {
           id?: string
           investor_appreciation_burden_percent?: number | null
           is_active?: boolean
+          is_listed_fractionally?: boolean | null
           last_rental_distribution?: string | null
+          listing_date?: string | null
           min_investment?: number
           monthly_base_rent?: number | null
           original_property_value?: number | null
@@ -569,9 +579,11 @@ export type Database = {
           property_expenses_ytd?: number | null
           property_id?: string
           property_image_url?: string | null
+          property_image_url_backup?: string | null
           property_location?: string | null
           property_name?: string | null
           property_type?: string | null
+          source_property_id?: string | null
           square_feet?: number | null
           tokens_sold?: number
           total_rental_collected?: number | null
@@ -579,7 +591,15 @@ export type Database = {
           updated_at?: string
           year_10_trigger_date?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "property_fractionalization_source_property_id_fkey"
+            columns: ["source_property_id"]
+            isOneToOne: false
+            referencedRelation: "user_properties"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       rental_income_distributions: {
         Row: {
