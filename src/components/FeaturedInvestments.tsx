@@ -46,7 +46,7 @@ const FeaturedInvestments = () => {
     expectedReturn: property.expectedReturn,
     image: property.image,
     isBlockchain: property.isBlockchain,
-    isVillage: property.isVillage
+    isVillage: true // Make all properties use the NETWORK INVESTMENT layout
   }));
   return <section className="px-6 bg-gradient-to-br from-background via-background to-muted/5 py-[20px]">
       <div className="container mx-auto">
