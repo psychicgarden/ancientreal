@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import ibizaImg from '@/assets/villa-greece.jpg';
+import bahiaImg from '@/assets/beach-chalet.jpg';
 
 export interface FractionalProperty {
   id: string;
@@ -37,6 +39,11 @@ export interface PropertyInvestmentData {
   isVillage?: boolean;
 }
 
+const imageOverrides: Record<string, string> = {
+  'Ibiza Villa': ibizaImg,
+  'Bahia Ocean Chalet': bahiaImg,
+};
+
 export const useFractionalProperties = () => {
   const [properties, setProperties] = useState<PropertyInvestmentData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -53,7 +60,7 @@ export const useFractionalProperties = () => {
     // Handle null values with fallbacks
     const propertyName = prop.property_name || `Property ${prop.id.slice(0, 8)}`;
     const propertyLocation = prop.property_location || 'Location TBD';
-    const propertyImage = prop.property_image_url || '/placeholder.svg';
+    const propertyImage = imageOverrides[propertyName] ?? prop.property_image_url ?? '/placeholder.svg';
 
     return {
       id: prop.id,
