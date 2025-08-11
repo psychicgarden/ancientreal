@@ -12,31 +12,54 @@ interface PortfolioData {
   monthlyIncome: number;
 }
 
+interface PropertyData {
+  id: string;
+  property_name: string;
+  ownership_percentage: number;
+  current_value: number;
+  investment_amount: number;
+}
+
 interface EnhancedPortfolioAnalyticsProps {
   portfolioData: PortfolioData;
+  userProperties: PropertyData[];
+  fractionalInvestments: PropertyData[];
 }
 
 export const EnhancedPortfolioAnalytics: React.FC<EnhancedPortfolioAnalyticsProps> = ({ 
-  portfolioData 
+  portfolioData,
+  userProperties,
+  fractionalInvestments
 }) => {
   const totalGain = portfolioData.currentValue - portfolioData.totalInvestment;
   const totalROI = (totalGain / portfolioData.totalInvestment) * 100;
   const annualIncome = portfolioData.monthlyIncome * 12;
   const yieldPercentage = (annualIncome / portfolioData.totalInvestment) * 100;
 
-  // Mock additional analytics data
+  // Generate dynamic portfolio composition from actual user data
+  const capTable = [
+    ...userProperties.map(property => ({
+      property: property.property_name,
+      owned: property.ownership_percentage,
+      total: 100,
+      value: property.current_value
+    })),
+    ...fractionalInvestments.map(investment => ({
+      property: investment.property_name,
+      owned: investment.ownership_percentage,
+      total: 100,
+      value: investment.current_value
+    }))
+  ];
+
+  // Calculate analytics from real data
   const analytics = {
-    equityBuilt: 45000,
-    appreciationGain: totalGain - 45000,
-    diversificationScore: 85,
-    riskLevel: 'Medium',
-    timeToFullOwnership: '7.2 years',
-    projectedValue5Years: portfolioData.currentValue * 1.65,
-    capTable: [
-      { property: 'Bahia Loft', owned: 100, total: 100, value: 165000 },
-      { property: 'Tulum Penthouse', owned: 45, total: 100, value: 190000 },
-      { property: 'Santorini Apartment', owned: 38, total: 100, value: 178000 }
-    ]
+    equityBuilt: totalGain * 0.6, // Estimate 60% from equity building
+    appreciationGain: totalGain * 0.4, // 40% from appreciation
+    diversificationScore: Math.min(95, 30 + (capTable.length * 15)), // Score based on property count
+    riskLevel: capTable.length >= 3 ? 'Low' : capTable.length >= 2 ? 'Medium' : 'High',
+    timeToFullOwnership: `${(8 - (portfolioData.activeProperties * 0.5)).toFixed(1)} years`,
+    projectedValue5Years: portfolioData.currentValue * 1.65
   };
 
   return (
@@ -114,8 +137,8 @@ export const EnhancedPortfolioAnalytics: React.FC<EnhancedPortfolioAnalyticsProp
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {analytics.capTable.map((property, index) => {
-              const ownershipPercent = (property.owned / property.total) * 100;
+            {capTable.length > 0 ? capTable.map((property, index) => {
+              const ownershipPercent = property.owned;
               const propertyValue = (property.value * property.owned) / 100;
               
               return (
@@ -124,7 +147,7 @@ export const EnhancedPortfolioAnalytics: React.FC<EnhancedPortfolioAnalyticsProp
                     <div>
                       <div className="font-medium">{property.property}</div>
                       <div className="text-sm text-muted-foreground">
-                        {property.owned}% ownership • ${propertyValue.toLocaleString()} value
+                        {property.owned.toFixed(1)}% ownership • ${propertyValue.toLocaleString()} value
                       </div>
                     </div>
                     <Badge variant={ownershipPercent === 100 ? "default" : "secondary"}>
@@ -134,7 +157,11 @@ export const EnhancedPortfolioAnalytics: React.FC<EnhancedPortfolioAnalyticsProp
                   <Progress value={ownershipPercent} className="h-2" />
                 </div>
               );
-            })}
+            }) : (
+              <div className="text-center py-8 text-muted-foreground">
+                No properties in portfolio yet
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

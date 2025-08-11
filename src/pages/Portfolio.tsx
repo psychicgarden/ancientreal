@@ -565,7 +565,23 @@ const Portfolio = () => {
               <Badge>Premium Analytics</Badge>
             </div>
             
-            <EnhancedPortfolioAnalytics portfolioData={portfolioData} />
+            <EnhancedPortfolioAnalytics 
+              portfolioData={portfolioData} 
+              userProperties={displayProperties.map(p => ({
+                id: p.id,
+                property_name: p.title,
+                ownership_percentage: 100,
+                current_value: p.value,
+                investment_amount: p.downPayment
+              }))}
+              fractionalInvestments={fractionalInvestments.map(f => ({
+                id: f.id,
+                property_name: f.property_fractionalization?.property_name || 'Unknown Property',
+                ownership_percentage: f.ownership_percentage,
+                current_value: f.property_fractionalization?.current_speculation_price || 0,
+                investment_amount: f.investment_amount
+              }))}
+            />
             
             <TrustSignals />
           </TabsContent>
