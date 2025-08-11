@@ -37,16 +37,15 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [showSmartContract, setShowSmartContract] = useState(false);
 
-  // Use the provided property or fall back to the Art Deco Loft catalog entry
-  const catalogLoft = PROPERTIES_CATALOG.find(p => p.id === "mazunte-art-deco-loft");
+  // Use the provided property data directly (from landing page/database)
   const effectiveProperty = {
     name: property?.name || "Art Deco Loft",
-    totalValue: property?.totalValue ?? 150000,
-    downPayment: property?.downPayment ?? Math.round((property?.totalValue ?? 150000) * 0.2),
+    totalValue: property?.totalValue ?? property?.listPrice ?? 129000,
+    downPayment: property?.downPayment ?? Math.round((property?.totalValue ?? property?.listPrice ?? 129000) * 0.2),
     monthlyPayment: property?.monthlyPayment ?? 1456,
     monthlyProfit: property?.monthlyProfit ?? 594,
-    location: property?.location || catalogLoft?.location || "Mazunte, Mexico",
-    image: property?.image || catalogLoft?.image || "/src/assets/villa-tulum.jpg",
+    location: property?.location || "Mazunte, Mexico",
+    image: property?.image || "/src/assets/boho-art-deco-loft-mexico.jpg",
   };
 
   const fallbackTxHash = () => `pending-${Date.now()}-${Math.floor(Math.random() * 1e6)}`;
