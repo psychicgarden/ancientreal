@@ -93,12 +93,26 @@ const Portfolio = () => {
           setDeveloperInvestments(investments || []);
         }
 
-        // Fetch fractional investments via secure RPC to bypass RLS read issues
+        // Fetch fractional investments directly from table
         const { data: fractionalData, error: fractionalError } = await supabase
-          .rpc('get_user_fractional_investments', { wallet_address: account });
+          .from('fractional_investments')
+          .select(`
+            *,
+            property_fractionalization:property_id (
+              property_name,
+              property_location,
+              property_image_url,
+              current_speculation_price,
+              monthly_base_rent,
+              total_tokens_available
+            )
+          `)
+          .eq('investor_wallet_address', account.toLowerCase())
+          .eq('status', 'active')
+          .order('created_at', { ascending: false });
 
         if (fractionalError) {
-          console.error('Error fetching fractional investments (RPC):', fractionalError);
+          console.error('Error fetching fractional investments:', fractionalError);
         } else {
           const mapped = (fractionalData || []).map((row: any) => ({
             id: row.id,
@@ -111,14 +125,7 @@ const Portfolio = () => {
             status: row.status,
             created_at: row.created_at,
             updated_at: row.updated_at,
-            property_fractionalization: {
-              property_name: row.property_name,
-              property_location: row.property_location,
-              property_image_url: row.property_image_url,
-              current_speculation_price: row.current_speculation_price,
-              monthly_base_rent: row.monthly_base_rent,
-              total_tokens_available: row.total_tokens_available,
-            },
+            property_fractionalization: row.property_fractionalization
           }));
           console.log('Fractional investments (RPC) mapped:', mapped);
           setFractionalInvestments(mapped);
