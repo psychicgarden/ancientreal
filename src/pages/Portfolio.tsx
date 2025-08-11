@@ -24,6 +24,7 @@ const Portfolio = () => {
   const [userProperties, setUserProperties] = useState<any[]>([]);
   const [userTransactions, setUserTransactions] = useState<any[]>([]);
   const [developerInvestments, setDeveloperInvestments] = useState<any[]>([]);
+  const [fractionalInvestments, setFractionalInvestments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Fetch user's properties and transactions from database
@@ -87,6 +88,30 @@ const Portfolio = () => {
         } else {
           setDeveloperInvestments(investments || []);
         }
+
+        // Fetch fractional investments
+        const { data: fractionalData, error: fractionalError } = await supabase
+          .from('fractional_investments')
+          .select(`
+            *,
+            property_fractionalization (
+              property_name,
+              property_location,
+              property_image_url,
+              current_speculation_price,
+              monthly_base_rent,
+              total_tokens_available
+            )
+          `)
+          .eq('investor_wallet_address', account.toLowerCase())
+          .eq('status', 'active')
+          .order('created_at', { ascending: false });
+
+        if (fractionalError) {
+          console.error('Error fetching fractional investments:', fractionalError);
+        } else {
+          setFractionalInvestments(fractionalData || []);
+        }
       } catch (error) {
         console.error('Error fetching user data:', error);
         toast({ title: 'Failed to load portfolio data', variant: 'destructive' });
@@ -132,6 +157,18 @@ const Portfolio = () => {
             schema: 'public',
             table: 'developer_investments',
             filter: `user_wallet_address=eq.${account.toLowerCase()}`
+          },
+          () => {
+            fetchUserData(); // Refetch data when changes occur
+          }
+        )
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'fractional_investments',
+            filter: `investor_wallet_address=eq.${account.toLowerCase()}`
           },
           () => {
             fetchUserData(); // Refetch data when changes occur
@@ -202,13 +239,28 @@ const Portfolio = () => {
     );
   }
 
-  const totalValue = displayProperties.reduce((sum, prop) => sum + prop.value, 0);
-  const totalEquity = displayProperties.reduce((sum, prop) => sum + prop.equity, 0);
-  const totalMonthlyIncome = displayProperties.reduce((sum, prop) => sum + prop.monthlyIncome, 0);
+  // Calculate fractional investment values
+  const fractionalValue = fractionalInvestments.reduce((sum, investment) => {
+    const propertyValue = investment.property_fractionalization?.current_speculation_price || 0;
+    const ownershipPercentage = investment.ownership_percentage || 0;
+    return sum + (propertyValue * ownershipPercentage / 100);
+  }, 0);
+
+  const fractionalMonthlyIncome = fractionalInvestments.reduce((sum, investment) => {
+    const monthlyRent = investment.property_fractionalization?.monthly_base_rent || 0;
+    const ownershipPercentage = investment.ownership_percentage || 0;
+    // Estimate 80% of rent goes to investors after expenses
+    return sum + (monthlyRent * ownershipPercentage / 100 * 0.8);
+  }, 0);
+
+  const totalValue = displayProperties.reduce((sum, prop) => sum + prop.value, 0) + fractionalValue;
+  const totalEquity = displayProperties.reduce((sum, prop) => sum + prop.equity, 0) + fractionalValue;
+  const totalMonthlyIncome = displayProperties.reduce((sum, prop) => sum + prop.monthlyIncome, 0) + fractionalMonthlyIncome;
   const avgOccupancy = displayProperties.length > 0 ? displayProperties.reduce((sum, prop) => sum + prop.occupancyRate, 0) / displayProperties.length : 0;
 
   // Portfolio data for enhanced analytics
-  const totalInvestment = userProperties.reduce((sum, prop) => sum + prop.down_payment, 0) || 0;
+  const totalInvestment = (userProperties.reduce((sum, prop) => sum + prop.down_payment, 0) || 0) + 
+    fractionalInvestments.reduce((sum, investment) => sum + investment.investment_amount, 0);
   const portfolioData = {
     totalInvestment,
     currentValue: totalValue,
@@ -311,14 +363,14 @@ const Portfolio = () => {
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Developer Investments</p>
-                      <p className="text-xl font-bold">{developerInvestments.length}</p>
-                    </div>
-                    <TrendingUp className="h-8 w-8 text-green-500" />
-                  </div>
-                </CardContent>
-              </Card>
+                     <div>
+                       <p className="text-sm text-muted-foreground">Fractional Investments</p>
+                       <p className="text-xl font-bold">{fractionalInvestments.length}</p>
+                     </div>
+                     <TrendingUp className="h-8 w-8 text-green-500" />
+                   </div>
+                 </CardContent>
+               </Card>
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
@@ -354,10 +406,10 @@ const Portfolio = () => {
               </Card>
             </div>
 
-            {/* Property Cards Grid */}
+            {/* Whole Properties Section */}
             <div>
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold">Your Properties</h2>
+                <h2 className="text-xl font-semibold">Whole Properties</h2>
                 <Button>Add Property</Button>
               </div>
               {userProperties.length === 0 ? (
@@ -365,7 +417,7 @@ const Portfolio = () => {
                   <div className="space-y-4">
                     <Home className="h-12 w-12 text-muted-foreground mx-auto" />
                     <div>
-                      <h3 className="text-lg font-semibold">No Properties Yet</h3>
+                      <h3 className="text-lg font-semibold">No Whole Properties Yet</h3>
                       <p className="text-muted-foreground">
                         Visit the Investor Portal to purchase your first property
                       </p>
@@ -386,6 +438,87 @@ const Portfolio = () => {
                       onMakePayment={() => handlePropertyAction("Make Payment", property.id)}
                       onViewAnalytics={() => handlePropertyAction("View Analytics", property.id)}
                     />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Fractional Investments Section */}
+            <div>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-semibold">Fractional Investments</h2>
+                <Link to="/investor">
+                  <Button variant="outline">Browse More</Button>
+                </Link>
+              </div>
+              {fractionalInvestments.length === 0 ? (
+                <Card className="p-8 text-center">
+                  <div className="space-y-4">
+                    <TrendingUp className="h-12 w-12 text-muted-foreground mx-auto" />
+                    <div>
+                      <h3 className="text-lg font-semibold">No Fractional Investments Yet</h3>
+                      <p className="text-muted-foreground">
+                        Start with fractional real estate investments for as little as $50
+                      </p>
+                    </div>
+                    <Link to="/investor">
+                      <Button>Start Investing</Button>
+                    </Link>
+                  </div>
+                </Card>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {fractionalInvestments.map((investment) => (
+                    <Card key={investment.id} className="overflow-hidden">
+                      <div className="aspect-video relative">
+                        <img 
+                          src={investment.property_fractionalization?.property_image_url || "/src/assets/property-1.jpg"} 
+                          alt={investment.property_fractionalization?.property_name}
+                          className="w-full h-full object-cover"
+                        />
+                        <Badge className="absolute top-2 right-2" variant="secondary">
+                          {investment.ownership_percentage.toFixed(2)}% Owned
+                        </Badge>
+                      </div>
+                      <CardContent className="p-4">
+                        <h3 className="font-semibold mb-2">
+                          {investment.property_fractionalization?.property_name}
+                        </h3>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          {investment.property_fractionalization?.property_location}
+                        </p>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex justify-between">
+                            <span>Investment Amount:</span>
+                            <span className="font-medium">${investment.investment_amount.toLocaleString()}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Current Value:</span>
+                            <span className="font-medium">
+                              ${((investment.property_fractionalization?.current_speculation_price || 0) * investment.ownership_percentage / 100).toLocaleString()}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Monthly Income:</span>
+                            <span className="font-medium text-green-600">
+                              ${(((investment.property_fractionalization?.monthly_base_rent || 0) * investment.ownership_percentage / 100 * 0.8)).toFixed(2)}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Tokens Owned:</span>
+                            <span className="font-medium">{investment.token_amount.toLocaleString()}</span>
+                          </div>
+                        </div>
+                        <div className="flex gap-2 mt-4">
+                          <Button size="sm" variant="outline" className="flex-1">
+                            Sell Tokens
+                          </Button>
+                          <Button size="sm" className="flex-1">
+                            Claim Income
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
                   ))}
                 </div>
               )}
