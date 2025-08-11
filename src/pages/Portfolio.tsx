@@ -89,38 +89,35 @@ const Portfolio = () => {
           setDeveloperInvestments(investments || []);
         }
 
-        // Fetch fractional investments with manual query since foreign key is now available
+        // Fetch fractional investments via secure RPC to bypass RLS read issues
         const { data: fractionalData, error: fractionalError } = await supabase
-          .from('fractional_investments')
-          .select(`
-            id,
-            property_id,
-            investor_wallet_address,
-            investment_amount,
-            token_amount,
-            ownership_percentage,
-            investment_date,
-            status,
-            created_at,
-            updated_at,
-            property_fractionalization!inner (
-              property_name,
-              property_location,
-              property_image_url,
-              current_speculation_price,
-              monthly_base_rent,
-              total_tokens_available
-            )
-          `)
-          .eq('investor_wallet_address', account.toLowerCase())
-          .eq('status', 'active')
-          .order('created_at', { ascending: false });
+          .rpc('get_user_fractional_investments', { wallet_address: account });
 
         if (fractionalError) {
-          console.error('Error fetching fractional investments:', fractionalError);
+          console.error('Error fetching fractional investments (RPC):', fractionalError);
         } else {
-          console.log('Fractional investments fetched:', fractionalData);
-          setFractionalInvestments(fractionalData || []);
+          const mapped = (fractionalData || []).map((row: any) => ({
+            id: row.id,
+            property_id: row.property_id,
+            investor_wallet_address: row.investor_wallet_address,
+            investment_amount: row.investment_amount,
+            token_amount: row.token_amount,
+            ownership_percentage: row.ownership_percentage,
+            investment_date: row.investment_date,
+            status: row.status,
+            created_at: row.created_at,
+            updated_at: row.updated_at,
+            property_fractionalization: {
+              property_name: row.property_name,
+              property_location: row.property_location,
+              property_image_url: row.property_image_url,
+              current_speculation_price: row.current_speculation_price,
+              monthly_base_rent: row.monthly_base_rent,
+              total_tokens_available: row.total_tokens_available,
+            },
+          }));
+          console.log('Fractional investments (RPC) mapped:', mapped);
+          setFractionalInvestments(mapped);
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -178,7 +175,7 @@ const Portfolio = () => {
             event: '*',
             schema: 'public',
             table: 'fractional_investments',
-            filter: `investor_wallet_address=eq.${account.toLowerCase()}`
+            filter: `investor_wallet_address=eq.${account}`
           },
           () => {
             fetchUserData(); // Refetch data when changes occur
