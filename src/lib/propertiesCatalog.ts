@@ -50,6 +50,6 @@ export const PROPERTIES_CATALOG: CatalogProperty[] = [
     sharePrice: 150,
     totalShares: 1000,
     availableShares: 470,
-    expectedReturn: 18.9, // Based on $944 monthly cash flow
+    expectedReturn: 18.8, // Based on $2,350 monthly cash flow
   },
 ];
