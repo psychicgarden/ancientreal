@@ -74,26 +74,35 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
       // Use the makePayment from WalletContext
       await makePayment();
       
-      // Map UI property ID to database property_id
       const mappedId = PROPERTY_ID_MAP[property.id] ?? 1;
 
-      // Convert UI USD inputs to USDC-6 base units
-      const principalBaseAmt = Number(toBase(Number(mortgageDetails.principalAmount || 0)));
-      const interestBaseAmt  = Number(toBase(Number(mortgageDetails.interestAmount  || 0)));
+      const principalBase = Number(toBase(Number(mortgageDetails.principalAmount || 0)));
+      const interestBase  = Number(toBase(Number(mortgageDetails.interestAmount  || 0)));
 
-      // --- RPC: apply_mortgage_payment ---
+      // optional tx hash if you have one from chain; otherwise leave as a string tag
+      const txHash = (mortgageDetails as any)?.txHash ?? "ui_payment";
+
       const { error: rpcErr } = await supabase.rpc('apply_mortgage_payment' as any, {
-        p_user_address: account?.toLowerCase(),
-        p_property_id: mappedId,                 // from PROPERTY_ID_MAP
-        p_principal_base: principalBaseAmt,      // integers in base units
-        p_interest_base: interestBaseAmt
-      });
+        user_address: account?.toLowerCase(),
+        property_id: mappedId,
+        principal_delta_base: principalBase,
+        interest_delta_base:  interestBase,
+        tx_hash: txHash,
+      } as any); // add "as any" if TS complains about arg typing
 
       if (rpcErr) {
-        console.error('RPC payment failed', rpcErr);
+        console.error('RPC failed', rpcErr);
         setIsProcessing(false);
+        // show whatever toast/alert you use
         return;
       }
+
+      // success → refresh UI and close
+      // if you use a refetch, call it here; otherwise trigger your local refresh
+      // e.g., refetch?.();
+      setIsProcessing(false);
+      // toast.success('Payment recorded'); // if you use a toaster
+      onClose?.();
 
       // Record payment in payment history using mappedId
       await supabase
