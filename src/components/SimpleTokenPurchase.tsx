@@ -136,7 +136,7 @@ export const SimpleTokenPurchase = () => {
         .from('fractional_investments')
         .insert({
           property_id: selectedProperty.id,
-          investor_wallet_address: account,
+          investor_wallet_address: account.toLowerCase(),
           investment_amount: totalCost,
           token_amount: tokenAmount,
           ownership_percentage: ownership,
