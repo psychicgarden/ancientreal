@@ -10,6 +10,7 @@ import { useWallet } from "@/contexts/WalletContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import NetworkGuard from "@/components/NetworkGuard";
+import { toBase } from "@/lib/money";
 
 interface MortgagePaymentModalProps {
   isOpen: boolean;
@@ -63,17 +64,32 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
       // Use the makePayment from WalletContext and update database
       await makePayment();
       
-      // Update remaining balance in database
-      const { error } = await supabase
+      // Get current property data to update base amounts
+      const { data: currentProperty } = await supabase
         .from('user_properties')
-        .update({ 
-          remaining_balance: Math.max(0, property.remainingBalance - property.monthlyPayment),
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', property.id);
+        .select('*')
+        .eq('id', property.id)
+        .single();
 
-      if (error) {
-        console.error('Error updating property balance:', error);
+      if (currentProperty) {
+        const principalPayment = mortgageDetails.principalAmount;
+        const interestPayment = mortgageDetails.interestAmount;
+        
+        const principalBaseAmt = Number(toBase(Number(principalPayment)));
+        const interestBaseAmt = Number(toBase(Number(interestPayment)));
+
+        const { error } = await supabase
+          .from('user_properties')
+          .update({
+            principal_paid_base: ((currentProperty as any).principal_paid_base ?? 0) + principalBaseAmt,
+            interest_paid_base: ((currentProperty as any).interest_paid_base ?? 0) + interestBaseAmt,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', property.id);
+
+        if (error) {
+          console.error('Error updating property balance:', error);
+        }
       }
 
       // Record payment in payment history

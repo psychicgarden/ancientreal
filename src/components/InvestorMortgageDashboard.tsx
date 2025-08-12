@@ -9,6 +9,14 @@ import { NETWORK_CONFIG, CONTRACTS } from "@/lib/contracts";
 import { supabase } from "@/integrations/supabase/client";
 import { MortgagePaymentModal } from "@/components/MortgagePaymentModal";
 import { fmtUSD } from "@/lib/money";
+
+const asUSD = (base?: number | bigint, legacy?: number) =>
+  base != null ? fmtUSD(base) : (legacy != null ? `$${legacy.toLocaleString()}` : "$0");
+
+const principalBase = (p: any) =>
+  (p?.purchase_price_base ?? null) != null && (p?.down_payment_base ?? null) != null
+    ? Number(p.purchase_price_base) - Number(p.down_payment_base)
+    : null;
 import { 
   Building2, 
   DollarSign, 
@@ -65,19 +73,22 @@ export const InvestorMortgageDashboard = ({ onNavigateToProperties }: { onNaviga
           const property = properties[0]; // Use first active property
           setUserProperty(property);
           
-          // Transform data to match expected format
+          // Transform data to match expected format with base unit support
+          const principalAmt = principalBase(property) ?? (property.purchase_price - property.down_payment);
+          const remainingBal = (property as any).remaining_balance_base ? Number((property as any).remaining_balance_base) / 1_000_000 : property.remaining_balance;
+          
           const mortgageDetails = {
-            isActive: property.remaining_balance > 0,
-            principalAmount: property.purchase_price - property.down_payment,
-            remainingBalance: property.remaining_balance,
+            isActive: remainingBal > 0,
+            principalAmount: principalAmt,
+            remainingBalance: remainingBal,
             monthlyPayment: property.monthly_payment,
             nextPaymentDue: Date.now() + 30 * 24 * 60 * 60 * 1000, // Next month
             isOverdue: false, // Could be calculated based on last payment
             daysPastDue: 0,
             missedPayments: 0,
             startDate: Math.floor(new Date(property.purchase_date).getTime() / 1000),
-            downPayment: property.down_payment,
-            isCompleted: property.remaining_balance <= 0,
+            downPayment: (property as any).down_payment_base ? Number((property as any).down_payment_base) / 1_000_000 : property.down_payment,
+            isCompleted: remainingBal <= 0,
             isForeclosed: false
           };
 
@@ -251,10 +262,12 @@ export const InvestorMortgageDashboard = ({ onNavigateToProperties }: { onNaviga
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ${mortgageData.remainingBalance?.toLocaleString() || '0'}
+              {asUSD((userProperty as any)?.remaining_balance_base, mortgageData.remainingBalance)}
             </div>
             <p className="text-xs text-muted-foreground">
-              of ${mortgageData.principalAmount?.toLocaleString() || '0'} principal
+              of {principalBase(userProperty) != null 
+                ? fmtUSD(principalBase(userProperty)!) 
+                : `$${mortgageData.principalAmount?.toLocaleString() || '0'}`} principal
             </p>
           </CardContent>
         </Card>

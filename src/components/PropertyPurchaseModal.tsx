@@ -84,22 +84,30 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
 
     // Only insert property if not existing
     if (!alreadyExists) {
-      const { error: propInsertErr } = await supabase.from("user_properties").insert([
-        {
-          user_wallet_address: wallet,
-          property_name: effectiveProperty.name,
-          property_location: effectiveProperty.location,
-          image_url: effectiveProperty.image,
-          purchase_price: purchasePrice, // Legacy field - required
-          down_payment: downPayment, // Legacy field - required
-          current_value: purchasePrice, // start at purchase price
-          monthly_payment: monthlyPayment,
-          remaining_balance: remainingBalance, // Legacy field - required
-          equity_percentage: equityPercentage,
-          is_active: opts.status === "completed",
-          mortgage_id: opts.mortgageId || null,
-        },
-      ]);
+      const payload = {
+        user_wallet_address: wallet,
+        property_name: effectiveProperty.name,
+        property_location: effectiveProperty.location,
+        image_url: effectiveProperty.image,
+        purchase_price: purchasePrice, // Legacy field
+        down_payment: downPayment, // Legacy field
+        current_value: purchasePrice,
+        monthly_payment: monthlyPayment,
+        remaining_balance: Math.max(purchasePrice - downPayment, 0),
+        equity_percentage: equityPercentage,
+        is_active: opts.status === "completed",
+        mortgage_id: opts.mortgageId || null,
+        // Base unit fields for new system
+        user_address: wallet.toLowerCase(),
+        property_id: Number(1),
+        currency: "USDC-6",
+        purchase_price_base: Number(toBase(Number(purchasePrice))),
+        down_payment_base: Number(toBase(Number(downPayment))),
+        apr_bps: Math.round(8.0 * 100),
+        term_months: Number(120),
+      };
+
+      const { error: propInsertErr } = await supabase.from("user_properties").insert([payload]);
 
       if (propInsertErr) {
         console.error("Failed to insert user_properties:", propInsertErr);
