@@ -15,7 +15,13 @@ import {
   Receipt,
   Clock,
   Coins,
-  AlertCircle
+  AlertCircle,
+  Star,
+  Users,
+  Wifi,
+  CalendarDays,
+  BarChart3,
+  MapPin
 } from "lucide-react";
 
 interface RentalClaim {
@@ -33,6 +39,9 @@ interface RentalClaim {
     property_expenses: number;
     distributable_amount: number;
     expense_breakdown: any;
+    income_source_breakdown?: any;
+    airbnb_metrics?: any;
+    booking_details?: any;
   };
 }
 
@@ -74,7 +83,10 @@ const RentalIncomeTracker: React.FC = () => {
             total_rental_income,
             property_expenses,
             distributable_amount,
-            expense_breakdown
+            expense_breakdown,
+            income_source_breakdown,
+            airbnb_metrics,
+            booking_details
           )
         `)
         .eq('investor_wallet_address', account.toLowerCase())
@@ -83,15 +95,23 @@ const RentalIncomeTracker: React.FC = () => {
       if (claimsError) throw claimsError;
       setRentalClaims((claims as any) || []);
 
+      // Fetch property names for better display
+      const propertyIds = [...new Set((claims || []).map(c => c.property_fractionalization_id))];
+      const { data: properties } = await supabase
+        .from('property_fractionalization')
+        .select('id, property_name, property_location')
+        .in('id', propertyIds);
+
       // Aggregate property summary
       const summaryMap = new Map<string, PropertyRentalSummary>();
       
       (claims || []).forEach((claim: any) => {
         const propId = claim.property_fractionalization_id;
+        const property = properties?.find(p => p.id === propId);
         if (!summaryMap.has(propId)) {
           summaryMap.set(propId, {
             property_id: propId,
-            property_name: `Property ${propId.slice(0, 8)}`,
+            property_name: property?.property_name || `Property ${propId.slice(0, 8)}`,
             monthly_base_rent: claim.distribution?.total_rental_income || 2050,
             total_claimable: 0,
             total_claimed: 0,
@@ -306,49 +326,137 @@ const RentalIncomeTracker: React.FC = () => {
             </div>
           ) : (
             <div className="space-y-4">
-              {rentalClaims.map((claim) => (
-                <div key={claim.id} className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3">
-                      <Calendar className="h-4 w-4 text-muted-foreground" />
-                      <div>
-                        <p className="font-medium">
-                          {new Date(claim.distribution.distribution_date).toLocaleDateString('en-US', { 
-                            month: 'long', 
-                            year: 'numeric' 
-                          })} Distribution
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {claim.ownership_percentage.toFixed(4)}% ownership • 
-                          Property {claim.property_fractionalization_id.slice(0, 8)}
-                        </p>
+              {rentalClaims.map((claim) => {
+                const airbnbMetrics = claim.distribution.airbnb_metrics || {};
+                const incomeBreakdown = claim.distribution.income_source_breakdown || {};
+                const bookingDetails = claim.distribution.booking_details || {};
+                const propertyName = propertySummary.find(p => p.property_id === claim.property_fractionalization_id)?.property_name;
+                
+                return (
+                  <div key={claim.id} className="border rounded-lg p-6 space-y-4">
+                    {/* Header */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                        <div>
+                          <p className="font-medium">
+                            {new Date(claim.distribution.distribution_date).toLocaleDateString('en-US', { 
+                              month: 'long', 
+                              year: 'numeric' 
+                            })} Distribution
+                          </p>
+                          <p className="text-sm text-muted-foreground flex items-center gap-1">
+                            <MapPin className="h-3 w-3" />
+                            {propertyName} • {claim.ownership_percentage.toFixed(4)}% ownership
+                          </p>
+                        </div>
+                      </div>
+                      
+                      {claim.claimed_at ? (
+                        <Badge variant="secondary">
+                          <Clock className="h-3 w-3 mr-1" />
+                          Claimed
+                        </Badge>
+                      ) : (
+                        <Button
+                          onClick={() => handleClaimRental(claim.id, claim.claimable_amount)}
+                          disabled={claiming === claim.id}
+                          size="sm"
+                        >
+                          {claiming === claim.id ? "Claiming..." : "Claim"}
+                        </Button>
+                      )}
+                    </div>
+
+                    {/* Income Breakdown */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <h4 className="font-medium text-sm">Income Sources</h4>
+                        <div className="space-y-1">
+                          {incomeBreakdown.airbnb_bookings && (
+                            <div className="flex items-center justify-between text-sm">
+                              <span className="flex items-center gap-1">
+                                <Wifi className="h-3 w-3 text-blue-500" />
+                                Airbnb Bookings
+                              </span>
+                              <span className="font-medium">${Number(incomeBreakdown.airbnb_bookings).toFixed(0)}</span>
+                            </div>
+                          )}
+                          {incomeBreakdown.traditional_rent && (
+                            <div className="flex items-center justify-between text-sm">
+                              <span className="flex items-center gap-1">
+                                <Home className="h-3 w-3 text-green-500" />
+                                Traditional Rent
+                              </span>
+                              <span className="font-medium">${Number(incomeBreakdown.traditional_rent).toFixed(0)}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <h4 className="font-medium text-sm">Your Share</h4>
+                        <div className="text-right">
+                          <p className="text-2xl font-bold text-green-600">
+                            ${claim.claimable_amount.toFixed(2)}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            From ${claim.distribution.total_rental_income} total income
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Airbnb Metrics */}
+                    {Object.keys(airbnbMetrics).length > 0 && (
+                      <div className="border-t pt-4">
+                        <div className="flex items-center gap-2 mb-3">
+                          <Wifi className="h-4 w-4 text-blue-500" />
+                          <span className="font-medium text-sm">Airbnb Performance</span>
+                          <Badge variant="outline" className="text-xs">
+                            {bookingDetails.total_bookings || 0} bookings
+                          </Badge>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                          <div>
+                            <p className="text-muted-foreground">Occupancy Rate</p>
+                            <p className="font-semibold">{Number(airbnbMetrics.occupancy_rate || 0).toFixed(0)}%</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground">Avg Nightly Rate</p>
+                            <p className="font-semibold">${Number(airbnbMetrics.average_nightly_rate || 0).toFixed(0)}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground flex items-center gap-1">
+                              <Star className="h-3 w-3" />
+                              Guest Rating
+                            </p>
+                            <p className="font-semibold">{Number(airbnbMetrics.guest_rating || 0).toFixed(1)}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground">Nights Booked</p>
+                            <p className="font-semibold">{Number(airbnbMetrics.total_nights_booked || 0)}</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Demo Integration Status */}
+                    <div className="border-t pt-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
+                          <span className="text-sm text-muted-foreground">Airbnb Sync Active</span>
+                        </div>
+                        <Badge variant="outline" className="text-xs">
+                          Last sync: 2 hours ago
+                        </Badge>
                       </div>
                     </div>
                   </div>
-                  
-                  <div className="text-right mr-4">
-                    <p className="font-semibold">${claim.claimable_amount.toFixed(2)}</p>
-                    <p className="text-sm text-muted-foreground">
-                      From ${claim.distribution.total_rental_income} total rent
-                    </p>
-                  </div>
-
-                  {claim.claimed_at ? (
-                    <Badge variant="secondary">
-                      <Clock className="h-3 w-3 mr-1" />
-                      Claimed
-                    </Badge>
-                  ) : (
-                    <Button
-                      onClick={() => handleClaimRental(claim.id, claim.claimable_amount)}
-                      disabled={claiming === claim.id}
-                      size="sm"
-                    >
-                      {claiming === claim.id ? "Claiming..." : "Claim"}
-                    </Button>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </CardContent>

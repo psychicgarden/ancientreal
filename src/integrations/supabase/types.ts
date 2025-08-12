@@ -823,11 +823,14 @@ export type Database = {
       }
       rental_income_distributions: {
         Row: {
+          airbnb_metrics: Json | null
+          booking_details: Json | null
           created_at: string
           distributable_amount: number
           distribution_date: string
           expense_breakdown: Json | null
           id: string
+          income_source_breakdown: Json | null
           management_fee_amount: number
           management_fee_percent: number
           net_rental_income: number
@@ -837,11 +840,14 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          airbnb_metrics?: Json | null
+          booking_details?: Json | null
           created_at?: string
           distributable_amount?: number
           distribution_date: string
           expense_breakdown?: Json | null
           id?: string
+          income_source_breakdown?: Json | null
           management_fee_amount?: number
           management_fee_percent?: number
           net_rental_income?: number
@@ -851,11 +857,14 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          airbnb_metrics?: Json | null
+          booking_details?: Json | null
           created_at?: string
           distributable_amount?: number
           distribution_date?: string
           expense_breakdown?: Json | null
           id?: string
+          income_source_breakdown?: Json | null
           management_fee_amount?: number
           management_fee_percent?: number
           net_rental_income?: number
