@@ -25,7 +25,7 @@ const Portfolio = () => {
   const [userProperties, setUserProperties] = useState<any[]>([]);
   const [userTransactions, setUserTransactions] = useState<any[]>([]);
   const [developerInvestments, setDeveloperInvestments] = useState<any[]>([]);
-  const [fractionalInvestments, setFractionalInvestments] = useState<any[]>([]);
+  // Removed fractional investments - focusing on mortgage-only functionality
   const [loading, setLoading] = useState(true);
 
   // Debug logging for state changes
@@ -34,12 +34,11 @@ const Portfolio = () => {
       userProperties: userProperties.length,
       userTransactions: userTransactions.length,
       developerInvestments: developerInvestments.length,
-      fractionalInvestments: fractionalInvestments.length,
       loading,
       account,
       isConnected
     });
-  }, [userProperties, userTransactions, developerInvestments, fractionalInvestments, loading, account, isConnected]);
+  }, [userProperties, userTransactions, developerInvestments, loading, account, isConnected]);
 
   const propertiesSectionRef = useRef<HTMLDivElement | null>(null);
   const handleNavigateToProperties = (args?: { propertyId?: string; name?: string; location?: string }) => {
@@ -116,38 +115,7 @@ const Portfolio = () => {
           setDeveloperInvestments(investments || []);
         }
 
-        // Fetch fractional investments using RPC
-        const { data: fractionalData, error: fractionalError } = await supabase
-          .rpc('get_user_fractional_investments', { wallet_address: account.toLowerCase() });
-
-        if (fractionalError) {
-          console.error('Error fetching fractional investments:', fractionalError);
-          setFractionalInvestments([]);
-        } else {
-          // Transform RPC data to match expected format
-          const mapped = (fractionalData || []).map((row: any) => ({
-            id: row.id,
-            property_id: row.property_id,
-            investor_wallet_address: row.investor_wallet_address,
-            investment_amount: row.investment_amount,
-            token_amount: row.token_amount,
-            ownership_percentage: row.ownership_percentage,
-            investment_date: row.investment_date,
-            status: row.status,
-            created_at: row.created_at,
-            updated_at: row.updated_at,
-            property_fractionalization: {
-              property_name: row.property_name,
-              property_location: row.property_location,
-              property_image_url: row.property_image_url,
-              current_speculation_price: row.current_speculation_price,
-              monthly_base_rent: row.monthly_base_rent,
-              total_tokens_available: row.total_tokens_available
-            }
-          }));
-          console.log('✅ Fractional investments loaded via RPC:', mapped);
-          setFractionalInvestments(mapped);
-        }
+        // Removed fractional investments fetching - focusing on mortgage-only functionality
       } catch (error) {
         console.error('Error fetching user data:', error);
         toast({ title: 'Failed to load portfolio data', variant: 'destructive' });
@@ -199,19 +167,7 @@ const Portfolio = () => {
             fetchUserData(); // Refetch data when changes occur
           }
         )
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'fractional_investments',
-            filter: `investor_wallet_address=eq.${account.toLowerCase()}`
-          },
-          () => {
-            console.log('📡 Real-time update received for fractional_investments');
-            fetchUserData(); // Refetch data when changes occur
-          }
-        )
+        // Removed fractional investments real-time subscription
         .subscribe();
 
       return () => {
@@ -264,15 +220,7 @@ const Portfolio = () => {
     // Now that the Art Deco Loft is reactivated, all active properties are "mortgaged"
     const status: "mortgaged" | "pending" | "success" = prop.is_active ? "mortgaged" : "pending";
     
-    // Check if this property also has fractional investments to show additional ownership
-    const hasAdditionalFractionalOwnership = fractionalInvestments.some(fi => 
-      fi.property_fractionalization?.property_name === prop.property_name
-    );
-    
-    // Calculate additional ownership from fractional investments
-    const additionalOwnership = fractionalInvestments
-      .filter(fi => fi.property_fractionalization?.property_name === prop.property_name)
-      .reduce((sum, fi) => sum + (fi.ownership_percentage || 0), 0);
+    // Removed fractional ownership calculations - focusing on mortgage-only functionality
     
     return {
       id: prop.id,
@@ -288,9 +236,7 @@ const Portfolio = () => {
       mortgageId: prop.mortgage_id,
       remainingBalance: prop.remaining_balance,
       isPending: status === "pending",
-      failureReason: status === "pending" ? "Smart contract deployment required" : null,
-      hasAdditionalFractionalOwnership,
-      additionalOwnership: additionalOwnership
+      failureReason: status === "pending" ? "Smart contract deployment required" : null
     };
   }) : [];
 
@@ -333,28 +279,14 @@ const Portfolio = () => {
     );
   }
 
-  // Calculate fractional investment values
-  const fractionalValue = fractionalInvestments.reduce((sum, investment) => {
-    const propertyValue = investment.property_fractionalization?.current_speculation_price || 0;
-    const ownershipPercentage = investment.ownership_percentage || 0;
-    return sum + (propertyValue * ownershipPercentage / 100);
-  }, 0);
-
-  const fractionalMonthlyIncome = fractionalInvestments.reduce((sum, investment) => {
-    const monthlyRent = investment.property_fractionalization?.monthly_base_rent || 0;
-    const ownershipPercentage = investment.ownership_percentage || 0;
-    // Updated: assume 92% net of gross rent is distributable (aligned with backend)
-    return sum + (monthlyRent * ownershipPercentage / 100 * 0.92);
-  }, 0);
-
-  const totalValue = displayProperties.reduce((sum, prop) => sum + prop.value, 0) + fractionalValue;
-  const totalEquity = displayProperties.reduce((sum, prop) => sum + prop.equity, 0) + fractionalValue;
-  const totalMonthlyIncome = displayProperties.reduce((sum, prop) => sum + prop.monthlyIncome, 0) + fractionalMonthlyIncome;
+  // Calculate mortgage property values only
+  const totalValue = displayProperties.reduce((sum, prop) => sum + prop.value, 0);
+  const totalEquity = displayProperties.reduce((sum, prop) => sum + prop.equity, 0);
+  const totalMonthlyIncome = displayProperties.reduce((sum, prop) => sum + prop.monthlyIncome, 0);
   const avgOccupancy = displayProperties.length > 0 ? displayProperties.reduce((sum, prop) => sum + prop.occupancyRate, 0) / displayProperties.length : 0;
 
-  // Portfolio data for enhanced analytics
-  const totalInvestment = (cleanUserProperties.reduce((sum, prop) => sum + prop.down_payment, 0) || 0) + 
-    fractionalInvestments.reduce((sum, investment) => sum + investment.investment_amount, 0);
+  // Portfolio data for enhanced analytics (mortgage properties only)
+  const totalInvestment = cleanUserProperties.reduce((sum, prop) => sum + prop.down_payment, 0) || 0;
   const portfolioData = {
     totalInvestment,
     currentValue: totalValue,
@@ -506,8 +438,8 @@ const Portfolio = () => {
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                      <div>
-                       <p className="text-sm text-muted-foreground">Fractional Investments</p>
-                       <p className="text-xl font-bold">{fractionalInvestments.length}</p>
+                       <p className="text-sm text-muted-foreground">Total Equity</p>
+                       <p className="text-xl font-bold">${totalEquity.toLocaleString()}</p>
                      </div>
                      <TrendingUp className="h-8 w-8 text-green-500" />
                    </div>
@@ -585,86 +517,7 @@ const Portfolio = () => {
               )}
             </div>
 
-            {/* Fractional Investments Section */}
-            <div>
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-semibold">Fractional Investments ({fractionalInvestments.length})</h2>
-                <Link to="/investor">
-                  <Button variant="outline">Browse More</Button>
-                </Link>
-              </div>
-              {fractionalInvestments.length === 0 ? (
-                <Card className="p-8 text-center">
-                  <div className="space-y-4">
-                    <TrendingUp className="h-12 w-12 text-muted-foreground mx-auto" />
-                    <div>
-                      <h3 className="text-lg font-semibold">No Fractional Investments Yet</h3>
-                      <p className="text-muted-foreground">
-                        Start with fractional real estate investments for as little as $50
-                      </p>
-                    </div>
-                    <Link to="/investor">
-                      <Button>Start Investing</Button>
-                    </Link>
-                  </div>
-                </Card>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {fractionalInvestments.map((investment) => (
-                    <Card key={investment.id} className="overflow-hidden">
-                      <div className="aspect-video relative">
-                        <img 
-                          src={investment.property_fractionalization?.property_image_url || "/src/assets/property-1.jpg"} 
-                          alt={investment.property_fractionalization?.property_name}
-                          className="w-full h-full object-cover"
-                        />
-                        <Badge className="absolute top-2 right-2" variant="secondary">
-                          {investment.ownership_percentage.toFixed(2)}% Owned
-                        </Badge>
-                      </div>
-                      <CardContent className="p-4">
-                        <h3 className="font-semibold mb-2">
-                          {investment.property_fractionalization?.property_name}
-                        </h3>
-                        <p className="text-sm text-muted-foreground mb-3">
-                          {investment.property_fractionalization?.property_location}
-                        </p>
-                        <div className="space-y-2 text-sm">
-                          <div className="flex justify-between">
-                            <span>Investment Amount:</span>
-                            <span className="font-medium">${investment.investment_amount.toLocaleString()}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span>Current Value:</span>
-                            <span className="font-medium">
-                              ${((investment.property_fractionalization?.current_speculation_price || 0) * investment.ownership_percentage / 100).toLocaleString()}
-                            </span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span>Monthly Income (est):</span>
-                            <span className="font-medium text-green-600">
-                              ${(((investment.property_fractionalization?.monthly_base_rent || 0) * investment.ownership_percentage / 100 * 0.92)).toFixed(2)}
-                            </span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span>Tokens Owned:</span>
-                            <span className="font-medium">{investment.token_amount.toLocaleString()}</span>
-                          </div>
-                        </div>
-                        <div className="flex gap-2 mt-4">
-                          <Button size="sm" variant="outline" className="flex-1" onClick={() => handleSellTokens(investment)}>
-                            Sell Tokens
-                          </Button>
-                          <Button size="sm" className="flex-1" onClick={() => handleClaimIncome(investment)}>
-                            Claim Income
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </div>
+            {/* Removed fractional investments section - focusing on mortgage-only functionality */}
           </TabsContent>
 
           {/* Advanced Analytics Tab */}
@@ -683,13 +536,7 @@ const Portfolio = () => {
                 current_value: p.value,
                 investment_amount: p.downPayment
               }))}
-              fractionalInvestments={fractionalInvestments.map(f => ({
-                id: f.id,
-                property_name: f.property_fractionalization?.property_name || 'Unknown Property',
-                ownership_percentage: f.ownership_percentage,
-                current_value: f.property_fractionalization?.current_speculation_price || 0,
-                investment_amount: f.investment_amount
-              }))}
+              fractionalInvestments={[]}
             />
             
             <TrustSignals />

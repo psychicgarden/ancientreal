@@ -9,7 +9,7 @@ import PropertyInvestmentCalculator from "@/components/PropertyInvestmentCalcula
 import { PropertyPurchaseModal } from "@/components/PropertyPurchaseModal";
 import { LiquidityTradingHub } from "@/components/LiquidityTradingHub";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { useFractionalProperties } from "@/hooks/useFractionalProperties";
+import { useMortgageProperties } from "@/hooks/useMortgageProperties";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 
@@ -20,8 +20,8 @@ const InvestorPortal = () => {
   const [purchaseModalOpen, setPurchaseModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
 
-  // Use real fractional properties from Supabase
-  const { properties, loading: propertiesLoading } = useFractionalProperties();
+  // Use mortgage properties
+  const { properties, loading: propertiesLoading } = useMortgageProperties();
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -36,7 +36,7 @@ const InvestorPortal = () => {
                 </span>
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-6">
-                Smart contract mortgages, DeFi trading, and yield farming for global nomads.
+                Get a mortgage with just 20% down and start building equity in premium real estate properties.
               </p>
 
 <TabsList className="grid grid-cols-2 w-fit mx-auto">
@@ -58,9 +58,9 @@ const InvestorPortal = () => {
                   <Card className="bg-gradient-card border-accent/20">
                     <CardHeader>
                       <PieChart className="w-8 h-8 text-gold mb-2" />
-                      <CardTitle>20% Down Mortgages</CardTitle>
+                      <CardTitle>20% Down Payment</CardTitle>
                       <CardDescription>
-                        Smart contract mortgages with crypto payments
+                        Get a mortgage with just 20% down on premium properties
                       </CardDescription>
                     </CardHeader>
                   </Card>
@@ -68,9 +68,9 @@ const InvestorPortal = () => {
                   <Card className="bg-gradient-card border-accent/20">
                     <CardHeader>
                       <BarChart3 className="w-8 h-8 text-gold mb-2" />
-                      <CardTitle>10-Year Terms</CardTitle>
+                      <CardTitle>Positive Cash Flow</CardTitle>
                       <CardDescription>
-                        Build equity fast with accelerated payment schedules
+                        Rental income exceeds mortgage payments for immediate profits
                       </CardDescription>
                     </CardHeader>
                   </Card>
@@ -78,9 +78,9 @@ const InvestorPortal = () => {
                   <Card className="bg-gradient-card border-accent/20">
                     <CardHeader>
                       <DollarSign className="w-8 h-8 text-gold mb-2" />
-                      <CardTitle>Instant Ownership</CardTitle>
+                      <CardTitle>Blockchain Security</CardTitle>
                       <CardDescription>
-                        Get property deed on blockchain after down payment
+                        All mortgages secured by smart contracts and NFT property deeds
                       </CardDescription>
                     </CardHeader>
                   </Card>
@@ -88,9 +88,9 @@ const InvestorPortal = () => {
                   <Card className="bg-gradient-card border-accent/20">
                     <CardHeader>
                       <TrendingUp className="w-8 h-8 text-gold mb-2" />
-                      <CardTitle>181% ROI Potential</CardTitle>
+                      <CardTitle>Property Appreciation</CardTitle>
                       <CardDescription>
-                        Equity building + appreciation over 10 years
+                        Benefit from property value increases over 10 years
                       </CardDescription>
                     </CardHeader>
                   </Card>
@@ -99,7 +99,7 @@ const InvestorPortal = () => {
 
               {/* Available Properties */}
               <section>
-                <h2 className="text-3xl font-bold text-center mb-12">Available Properties</h2>
+                <h2 className="text-3xl font-bold text-center mb-12">Available Mortgage Properties</h2>
                 {propertiesLoading ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {[1, 2, 3].map((i) => (
@@ -133,16 +133,9 @@ const InvestorPortal = () => {
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                             />
                             <div className="absolute top-3 left-3 flex gap-2">
-                              {property.isBlockchain && (
-                                <Badge variant="default" className="bg-primary text-primary-foreground">
-                                  Blockchain
-                                </Badge>
-                              )}
-                              {property.isVillage && (
-                                <Badge variant="secondary" className="bg-muted text-muted-foreground">
-                                  Village
-                                </Badge>
-                              )}
+                              <Badge variant="default" className="bg-primary text-primary-foreground">
+                                Mortgage Available
+                              </Badge>
                             </div>
                           </div>
                           
@@ -168,6 +161,10 @@ const InvestorPortal = () => {
                                 <div className="flex justify-between items-center mt-1">
                                   <span className="text-sm text-muted-foreground">Monthly Payment:</span>
                                   <span className="text-lg font-semibold text-green-500">${Math.round(property.monthlyPayment)}</span>
+                                </div>
+                                <div className="flex justify-between items-center mt-1">
+                                  <span className="text-sm text-muted-foreground">Monthly Rent:</span>
+                                  <span className="text-lg font-semibold text-blue-500">${Math.round(property.monthlyRent)}</span>
                                 </div>
                               </div>
                               

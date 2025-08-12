@@ -213,7 +213,7 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-2xl">
             <Building2 className="h-6 w-6" />
-            Mazunte Art Deco Loft - Investment Details
+            {effectiveProperty.name} - Mortgage Details
           </DialogTitle>
         </DialogHeader>
 
@@ -226,7 +226,7 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
               <CardTitle className="flex items-center justify-between">
                 <span>Property Overview</span>
                 <Badge variant="outline" className="bg-green-500/10 text-green-600">
-                  🔗 Blockchain Secured
+                  🏠 Mortgage Available
                 </Badge>
               </CardTitle>
             </CardHeader>
