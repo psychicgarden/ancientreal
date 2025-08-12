@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_settings: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          key: string
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          key: string
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          key?: string
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
       appreciation_events: {
         Row: {
           ancient_share: number
@@ -302,6 +329,36 @@ export type Database = {
           ownership_percentage?: number
           property_fractionalization_id?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      mortgage_payments_ledger: {
+        Row: {
+          created_at: string
+          id: number
+          interest_delta_base: number
+          principal_delta_base: number
+          property_id: number
+          tx_hash: string | null
+          user_address: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          interest_delta_base?: number
+          principal_delta_base?: number
+          property_id: number
+          tx_hash?: string | null
+          user_address: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          interest_delta_base?: number
+          principal_delta_base?: number
+          property_id?: number
+          tx_hash?: string | null
+          user_address?: string
         }
         Relationships: []
       }
@@ -788,57 +845,90 @@ export type Database = {
       }
       user_properties: {
         Row: {
+          apr_bps: number | null
           created_at: string
+          currency: string
           current_value: number
           down_payment: number
+          down_payment_base: number | null
           equity_percentage: number
           id: string
           image_url: string | null
+          interest_paid_base: number
           is_active: boolean
+          loan_amount_base: number | null
           monthly_payment: number
           mortgage_id: string | null
+          principal_paid_base: number
+          property_id: number | null
           property_location: string
           property_name: string
           purchase_date: string
           purchase_price: number
+          purchase_price_base: number | null
           remaining_balance: number
+          remaining_balance_base: number | null
+          term_months: number | null
           updated_at: string
+          user_address: string | null
           user_wallet_address: string
         }
         Insert: {
+          apr_bps?: number | null
           created_at?: string
+          currency?: string
           current_value?: number
           down_payment: number
+          down_payment_base?: number | null
           equity_percentage?: number
           id?: string
           image_url?: string | null
+          interest_paid_base?: number
           is_active?: boolean
+          loan_amount_base?: number | null
           monthly_payment?: number
           mortgage_id?: string | null
+          principal_paid_base?: number
+          property_id?: number | null
           property_location: string
           property_name: string
           purchase_date?: string
           purchase_price: number
+          purchase_price_base?: number | null
           remaining_balance?: number
+          remaining_balance_base?: number | null
+          term_months?: number | null
           updated_at?: string
+          user_address?: string | null
           user_wallet_address: string
         }
         Update: {
+          apr_bps?: number | null
           created_at?: string
+          currency?: string
           current_value?: number
           down_payment?: number
+          down_payment_base?: number | null
           equity_percentage?: number
           id?: string
           image_url?: string | null
+          interest_paid_base?: number
           is_active?: boolean
+          loan_amount_base?: number | null
           monthly_payment?: number
           mortgage_id?: string | null
+          principal_paid_base?: number
+          property_id?: number | null
           property_location?: string
           property_name?: string
           purchase_date?: string
           purchase_price?: number
+          purchase_price_base?: number | null
           remaining_balance?: number
+          remaining_balance_base?: number | null
+          term_months?: number | null
           updated_at?: string
+          user_address?: string | null
           user_wallet_address?: string
         }
         Relationships: []
@@ -950,6 +1040,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      apply_mortgage_payment: {
+        Args:
+          | {
+              p_user_address: string
+              p_property_id: number
+              p_principal_base: number
+              p_interest_base: number
+            }
+          | {
+              p_user_address: string
+              p_property_id: number
+              p_principal_delta_base: number
+              p_interest_delta_base: number
+              p_tx_hash?: string
+            }
+        Returns: Json
+      }
       calculate_appreciation_distribution: {
         Args: { original_price: number; appraised_value: number }
         Returns: {
