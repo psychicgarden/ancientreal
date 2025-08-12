@@ -21,10 +21,7 @@ import {
 } from "lucide-react";
 import { SmartContractViewer } from "./SmartContractViewer";
 import { supabase } from "@/integrations/supabase/client";
-import { PROPERTIES_CATALOG } from "@/lib/propertiesCatalog";
 import NetworkGuard from "@/components/NetworkGuard";
-import { toBase } from "@/lib/money";
-import { PROPERTY_ID_MAP } from "@/lib/constants";
 
 interface PropertyPurchaseModalProps {
   isOpen: boolean;
@@ -64,84 +61,41 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
     }
     const wallet = account.toLowerCase();
 
-    // Check if property already exists for this wallet to avoid duplicates
-    const { data: existingProps, error: existingErr } = await supabase
-      .from("user_properties")
-      .select("id")
-      .eq("user_address", wallet)
-      .eq("property_name", effectiveProperty.name)
-      .limit(1);
-
-    if (existingErr) {
-      console.error("Error checking existing properties:", existingErr);
-    }
-
-    const alreadyExists = (existingProps?.length ?? 0) > 0;
-
+    // Key financials
     const purchasePrice = Number(effectiveProperty.totalValue || 150000);
     const downPayment = Number(effectiveProperty.downPayment || Math.round(purchasePrice * 0.2));
-    const monthlyPayment = Number(effectiveProperty.monthlyPayment || 1456);
-    const remainingBalance = Math.max(purchasePrice - downPayment, 0);
-    const equityPercentage = Math.round((downPayment / purchasePrice) * 100);
 
-    // Only insert property if not existing
-    if (!alreadyExists) {
-      const payload = {
-        user_wallet_address: wallet,
-        property_name: effectiveProperty.name,
-        property_location: effectiveProperty.location,
-        image_url: effectiveProperty.image,
-        purchase_price: purchasePrice, // Legacy field
-        down_payment: downPayment, // Legacy field
-        current_value: purchasePrice,
-        monthly_payment: monthlyPayment,
-        remaining_balance: Math.max(purchasePrice - downPayment, 0),
-        equity_percentage: equityPercentage,
-        is_active: opts.status === "completed",
-        mortgage_id: opts.mortgageId || null,
-        // Base unit fields for new system
-        user_address: wallet.toLowerCase(),
-        property_id: PROPERTY_ID_MAP[effectiveProperty.id] ?? 1,
-        currency: "USDC-6",
-        purchase_price_base: Number(toBase(Number(purchasePrice))),
-        down_payment_base: Number(toBase(Number(downPayment))),
-        apr_bps: Math.round(8.0 * 100),
-        term_months: Number(120),
-      };
-
-      const { error: propInsertErr } = await supabase.from("user_properties").insert([payload]);
-
-      if (propInsertErr) {
-        console.error("Failed to insert user_properties:", propInsertErr);
-      } else {
-        console.log("Inserted property for wallet:", wallet, effectiveProperty.name);
-      }
-    } else {
-      console.log("Property already exists in portfolio; skipping insert.");
-    }
-
-    // Always create a transaction record for traceability
+    // We now ONLY write to user_transactions.
+    // The DB trigger backfills user_properties automatically for completed purchases.
     const txHashValue = opts.txHash || fallbackTxHash();
-    const { error: txInsertErr } = await supabase.from("user_transactions").insert([
-      {
-        user_wallet_address: wallet,
-        transaction_type: "purchase",
-        transaction_hash: txHashValue,
-        amount: downPayment,
-        status: opts.status,
-        metadata: {
-          property_name: effectiveProperty.name,
-          location: effectiveProperty.location,
-          image_url: effectiveProperty.image,
-          mortgage_id: opts.mortgageId || null,
-        },
-      },
-    ]);
+
+    const transactionPayload = {
+      user_wallet_address: wallet,
+      transaction_type: "purchase", // triggers handle both 'purchase' and 'property_purchase'
+      transaction_hash: txHashValue,
+      amount: downPayment,
+      status: opts.status,
+      currency: "USDT",
+      metadata: {
+        property_name: effectiveProperty.name,
+        property_location: effectiveProperty.location, // preferred key for backfill
+        location: effectiveProperty.location,          // kept for compatibility
+        image_url: effectiveProperty.image,
+        mortgage_id: opts.mortgageId || null,
+        propertyValue: purchasePrice,      // used by backfill (preferred)
+        purchase_price: purchasePrice,     // also supported by backfill
+        downPayment: downPayment           // used by backfill to compute loan/equity
+      }
+    };
+
+    const { error: txInsertErr } = await supabase
+      .from("user_transactions")
+      .insert([transactionPayload]);
 
     if (txInsertErr) {
       console.error("Failed to insert user_transactions:", txInsertErr);
     } else {
-      console.log("Inserted transaction:", txHashValue);
+      console.log("Inserted transaction for purchase:", txHashValue, transactionPayload);
     }
   };
 
@@ -183,7 +137,7 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
 
       toast({
         title: "Purchase Successful!",
-        description: "Your property purchase has been completed. Check your portfolio to view your new investment.",
+        description: "Your property purchase has been recorded. Your portfolio will update automatically.",
       });
       
       setTimeout(() => {
@@ -192,14 +146,14 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
       
       onClose();
     } catch (error) {
-      console.error("Purchase failed, saving pending record:", error);
+      console.error("Purchase failed, saving pending transaction:", error);
       await savePurchaseToSupabase({
         status: "pending",
       });
 
       toast({
-        title: "Purchase Failed",
-        description: "We saved a pending record to your portfolio. You can retry from your portfolio.",
+        title: "Purchase Pending",
+        description: "We saved a pending transaction. Once completed, your portfolio will update automatically.",
         variant: "destructive",
       });
     }
