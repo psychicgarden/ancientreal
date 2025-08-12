@@ -28,6 +28,19 @@ const Portfolio = () => {
   const [fractionalInvestments, setFractionalInvestments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Debug logging for state changes
+  useEffect(() => {
+    console.log('🔍 Portfolio state changed:', {
+      userProperties: userProperties.length,
+      userTransactions: userTransactions.length,
+      developerInvestments: developerInvestments.length,
+      fractionalInvestments: fractionalInvestments.length,
+      loading,
+      account,
+      isConnected
+    });
+  }, [userProperties, userTransactions, developerInvestments, fractionalInvestments, loading, account, isConnected]);
+
   const propertiesSectionRef = useRef<HTMLDivElement | null>(null);
   const handleNavigateToProperties = (args?: { propertyId?: string; name?: string; location?: string }) => {
     setActiveTab('properties');
@@ -40,10 +53,12 @@ const Portfolio = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       if (!isConnected || !account) {
+        console.log('🚫 Not fetching data - isConnected:', isConnected, 'account:', account);
         setLoading(false);
         return;
       }
 
+      console.log('🚀 Starting data fetch for account:', account);
       setLoading(true);
       try {
         // Fetch whole property mortgages from user_properties (using user_wallet_address)
@@ -184,9 +199,10 @@ const Portfolio = () => {
             event: '*',
             schema: 'public',
             table: 'user_properties',
-            filter: `user_address=eq.${account.toLowerCase()}`
+            filter: `user_wallet_address=eq.${account.toLowerCase()}`
           },
-          () => {
+          (payload) => {
+            console.log('📡 Real-time update received for user_properties:', payload);
             fetchUserData(); // Refetch data when changes occur
           }
         )
