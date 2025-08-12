@@ -1041,20 +1041,13 @@ export type Database = {
     }
     Functions: {
       apply_mortgage_payment: {
-        Args:
-          | {
-              p_user_address: string
-              p_property_id: number
-              p_principal_base: number
-              p_interest_base: number
-            }
-          | {
-              p_user_address: string
-              p_property_id: number
-              p_principal_delta_base: number
-              p_interest_delta_base: number
-              p_tx_hash?: string
-            }
+        Args: {
+          p_user_address: string
+          p_property_id: number
+          p_principal_delta_base: number
+          p_interest_delta_base: number
+          p_tx_hash?: string
+        }
         Returns: Json
       }
       calculate_appreciation_distribution: {
