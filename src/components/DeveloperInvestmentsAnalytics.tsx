@@ -57,7 +57,7 @@ export const DeveloperInvestmentsAnalytics: React.FC = () => {
             estimated_yield
           )
         `)
-        .eq('user_wallet_address', account.toLowerCase())
+        .eq('user_wallet_address', account?.toLowerCase() ?? '')
         .order('created_at', { ascending: false });
 
       if (error) throw error;

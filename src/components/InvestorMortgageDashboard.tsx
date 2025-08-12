@@ -52,7 +52,7 @@ export const InvestorMortgageDashboard = ({ onNavigateToProperties }: { onNaviga
         const { data: properties, error: propertiesError } = await supabase
           .from('user_properties')
           .select('*')
-          .eq('user_wallet_address', account.toLowerCase())
+          .eq('user_address', account?.toLowerCase() ?? '')
           .eq('is_active', true)
           .order('updated_at', { ascending: false })
           .limit(1);

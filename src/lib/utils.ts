@@ -87,7 +87,7 @@ export async function calculateTotalUserInvestments(
     const { data: userProperties } = await supabase
       .from('user_properties')
       .select('down_payment')
-      .eq('user_wallet_address', userWalletAddress)
+      .eq('user_address', userWalletAddress?.toLowerCase())
       .eq('is_active', true);
 
     // Get fractional investments
@@ -101,7 +101,7 @@ export async function calculateTotalUserInvestments(
     const { data: developerInvestments } = await supabase
       .from('developer_investments')
       .select('investment_amount')
-      .eq('user_wallet_address', userWalletAddress)
+      .eq('user_wallet_address', userWalletAddress?.toLowerCase())
       .eq('investment_status', 'active');
 
     // Sum all investments

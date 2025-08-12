@@ -91,8 +91,12 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
 
       if (rpcErr) {
         console.error('RPC failed', rpcErr);
+        toast({
+          title: "Payment failed",
+          description: "Please try again.",
+          variant: "destructive",
+        });
         setIsProcessing(false);
-        // show whatever toast/alert you use
         return;
       }
 
@@ -118,6 +122,9 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
         title: "Payment Successful",
         description: "Your mortgage payment has been processed successfully.",
       });
+
+      // Trigger success callback to refresh portfolio
+      onSuccess?.();
       
       onClose();
       setStep('review');

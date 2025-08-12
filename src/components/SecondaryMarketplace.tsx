@@ -142,7 +142,7 @@ const fetchOwnedProperties = async () => {
     const { data, error } = await supabase
       .from('user_properties')
       .select('*')
-      .eq('user_wallet_address', account.toLowerCase());
+      .eq('user_address', account?.toLowerCase() ?? '');
     if (error) throw error;
     setOwnedProperties(data || []);
   } catch (error) {

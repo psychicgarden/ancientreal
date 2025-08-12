@@ -68,7 +68,7 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
     const { data: existingProps, error: existingErr } = await supabase
       .from("user_properties")
       .select("id")
-      .eq("user_wallet_address", wallet)
+      .eq("user_address", wallet)
       .eq("property_name", effectiveProperty.name)
       .limit(1);
 

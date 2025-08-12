@@ -103,7 +103,7 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
       const { data: investmentData, error: investmentError } = await supabase
         .from('developer_investments')
         .insert({
-          user_wallet_address: account.toLowerCase(),
+          user_wallet_address: account?.toLowerCase(),
           project_id: projectId,
           investment_amount: investment,
           ownership_percentage: ownershipPercentage,
@@ -138,7 +138,7 @@ export const ProjectInvestmentModal: React.FC<ProjectInvestmentModalProps> = ({
       const { error: transactionError } = await supabase
         .from('user_transactions')
         .insert({
-          user_wallet_address: account.toLowerCase(),
+          user_wallet_address: account?.toLowerCase(),
           transaction_type: 'developer_investment',
           amount: investment,
           currency: 'USDT',

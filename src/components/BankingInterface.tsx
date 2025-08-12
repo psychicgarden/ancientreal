@@ -52,7 +52,7 @@ const BankingInterface = () => {
       const { data, error } = await supabase
         .from('user_staking')
         .select('*')
-        .eq('user_wallet_address', walletAddress)
+        .eq('user_wallet_address', walletAddress?.toLowerCase())
         .maybeSingle();
 
       if (error) {
@@ -73,7 +73,7 @@ const BankingInterface = () => {
       const { data, error } = await supabase
         .from('staking_transactions')
         .select('*')
-        .eq('user_wallet_address', walletAddress)
+        .eq('user_wallet_address', walletAddress?.toLowerCase())
         .order('created_at', { ascending: false })
         .limit(10);
 
@@ -144,7 +144,7 @@ const BankingInterface = () => {
       const { data: txData, error: txError } = await supabase
         .from('staking_transactions')
         .insert({
-          user_wallet_address: walletAddress,
+          user_wallet_address: walletAddress?.toLowerCase(),
           transaction_type: 'deposit',
           amount: amount,
           status: 'pending'
@@ -184,7 +184,7 @@ const BankingInterface = () => {
         await supabase
           .from('user_staking')
           .insert({
-            user_wallet_address: walletAddress,
+            user_wallet_address: walletAddress?.toLowerCase(),
             total_staked: amount,
             total_earned: 0,
             current_apy: 8.0,
@@ -240,7 +240,7 @@ const BankingInterface = () => {
       const { data: txData, error: txError } = await supabase
         .from('staking_transactions')
         .insert({
-          user_wallet_address: walletAddress,
+          user_wallet_address: walletAddress?.toLowerCase(),
           transaction_type: 'withdrawal',
           amount: amount,
           status: 'pending'

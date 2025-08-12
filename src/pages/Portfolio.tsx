@@ -50,7 +50,7 @@ const Portfolio = () => {
         const { data: properties, error: propError } = await supabase
           .from('user_properties')
           .select('*')
-          .eq('user_wallet_address', account.toLowerCase())
+          .eq('user_address', account?.toLowerCase() ?? '')
           .order('created_at', { ascending: false });
 
         if (propError) {
@@ -63,7 +63,7 @@ const Portfolio = () => {
         const { data: transactions, error: txError } = await supabase
           .from('user_transactions')
           .select('*')
-          .eq('user_wallet_address', account.toLowerCase())
+          .eq('user_wallet_address', account?.toLowerCase() ?? '')
           .order('created_at', { ascending: false });
 
         if (txError) {
@@ -89,7 +89,7 @@ const Portfolio = () => {
               image_url
             )
           `)
-          .eq('user_wallet_address', account.toLowerCase())
+          .eq('user_wallet_address', account?.toLowerCase() ?? '')
           .order('created_at', { ascending: false });
 
         if (investmentsError) {
