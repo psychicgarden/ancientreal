@@ -1,9 +1,22 @@
-import VillagePropertyCard from "./VillagePropertyCard";
-import { VILLAGE_PROPERTIES_CATALOG } from "@/lib/villagePropertiesCatalog";
+import OriginalPropertyCard from "./OriginalPropertyCard";
+import { PROPERTIES_CATALOG } from "@/lib/propertiesCatalog";
 import { Button } from "@/components/ui/button";
 
-const FeaturedProperties = () => {
+// Only show original properties that haven't been purchased and fractionalized
+const properties = PROPERTIES_CATALOG.slice(0, 3).map((p) => ({
+  id: p.id,
+  image: p.image,
+  title: p.name,
+  location: p.location,
+  price: p.totalValue,
+  sharePrice: p.sharePrice ?? Math.round(p.totalValue / 1000),
+  totalShares: p.totalShares ?? 1000,
+  availableShares: p.availableShares ?? 1000, // All shares available for new properties
+  expectedReturn: p.expectedReturn ?? 15,
+  type: "Villa",
+}));
 
+const FeaturedProperties = () => {
   return (
     <section id="properties" className="py-24 bg-background">
       <div className="container mx-auto px-6 lg:px-8">
@@ -24,8 +37,8 @@ const FeaturedProperties = () => {
 
         {/* Properties Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {VILLAGE_PROPERTIES_CATALOG.map((property) => (
-            <VillagePropertyCard key={property.id} {...property} />
+          {properties.map((property) => (
+            <OriginalPropertyCard key={property.id} {...property} />
           ))}
         </div>
 
