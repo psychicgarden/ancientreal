@@ -293,6 +293,54 @@ export type Database = {
           },
         ]
       }
+      fractional_investments_archive: {
+        Row: {
+          archived_at: string
+          created_at: string
+          id: string
+          investment_amount: number
+          investment_date: string
+          investor_wallet_address: string
+          original_property_price: number
+          ownership_percentage: number
+          property_id: string
+          speculation_price: number | null
+          status: string
+          token_amount: number
+          updated_at: string
+        }
+        Insert: {
+          archived_at?: string
+          created_at?: string
+          id?: string
+          investment_amount: number
+          investment_date?: string
+          investor_wallet_address: string
+          original_property_price: number
+          ownership_percentage: number
+          property_id: string
+          speculation_price?: number | null
+          status?: string
+          token_amount: number
+          updated_at?: string
+        }
+        Update: {
+          archived_at?: string
+          created_at?: string
+          id?: string
+          investment_amount?: number
+          investment_date?: string
+          investor_wallet_address?: string
+          original_property_price?: number
+          ownership_percentage?: number
+          property_id?: string
+          speculation_price?: number | null
+          status?: string
+          token_amount?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       investor_rental_claims: {
         Row: {
           claimable_amount: number
@@ -319,6 +367,48 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          claimable_amount?: number
+          claimed_amount?: number
+          claimed_at?: string | null
+          created_at?: string
+          distribution_id?: string
+          id?: string
+          investor_wallet_address?: string
+          ownership_percentage?: number
+          property_fractionalization_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      investor_rental_claims_archive: {
+        Row: {
+          archived_at: string
+          claimable_amount: number
+          claimed_amount: number
+          claimed_at: string | null
+          created_at: string
+          distribution_id: string
+          id: string
+          investor_wallet_address: string
+          ownership_percentage: number
+          property_fractionalization_id: string
+          updated_at: string
+        }
+        Insert: {
+          archived_at?: string
+          claimable_amount?: number
+          claimed_amount?: number
+          claimed_at?: string | null
+          created_at?: string
+          distribution_id: string
+          id?: string
+          investor_wallet_address: string
+          ownership_percentage?: number
+          property_fractionalization_id: string
+          updated_at?: string
+        }
+        Update: {
+          archived_at?: string
           claimable_amount?: number
           claimed_amount?: number
           claimed_at?: string | null
@@ -767,6 +857,51 @@ export type Database = {
         }
         Relationships: []
       }
+      secondary_orders_archive: {
+        Row: {
+          archived_at: string
+          created_at: string
+          expiry: string | null
+          id: string
+          order_type: string
+          owner_wallet_address: string
+          price_per_token: number
+          property_fractionalization_id: string
+          status: string
+          token_amount: number
+          tokens_filled: number
+          updated_at: string
+        }
+        Insert: {
+          archived_at?: string
+          created_at?: string
+          expiry?: string | null
+          id?: string
+          order_type: string
+          owner_wallet_address: string
+          price_per_token: number
+          property_fractionalization_id: string
+          status?: string
+          token_amount: number
+          tokens_filled?: number
+          updated_at?: string
+        }
+        Update: {
+          archived_at?: string
+          created_at?: string
+          expiry?: string | null
+          id?: string
+          order_type?: string
+          owner_wallet_address?: string
+          price_per_token?: number
+          property_fractionalization_id?: string
+          status?: string
+          token_amount?: number
+          tokens_filled?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       secondary_trades: {
         Row: {
           buyer_wallet_address: string
@@ -797,6 +932,54 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          buyer_wallet_address?: string
+          created_at?: string
+          id?: string
+          order_id?: string
+          price_per_token?: number
+          property_fractionalization_id?: string
+          seller_wallet_address?: string
+          status?: string
+          token_amount?: number
+          total_cost?: number
+          transaction_hash?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      secondary_trades_archive: {
+        Row: {
+          archived_at: string
+          buyer_wallet_address: string
+          created_at: string
+          id: string
+          order_id: string
+          price_per_token: number
+          property_fractionalization_id: string
+          seller_wallet_address: string
+          status: string
+          token_amount: number
+          total_cost: number
+          transaction_hash: string | null
+          updated_at: string
+        }
+        Insert: {
+          archived_at?: string
+          buyer_wallet_address: string
+          created_at?: string
+          id?: string
+          order_id: string
+          price_per_token: number
+          property_fractionalization_id: string
+          seller_wallet_address: string
+          status?: string
+          token_amount: number
+          total_cost: number
+          transaction_hash?: string | null
+          updated_at?: string
+        }
+        Update: {
+          archived_at?: string
           buyer_wallet_address?: string
           created_at?: string
           id?: string
@@ -883,6 +1066,7 @@ export type Database = {
           remaining_balance: number
           remaining_balance_base: number | null
           term_months: number | null
+          unique_purchase_key: string | null
           updated_at: string
           user_address: string | null
           user_wallet_address: string
@@ -912,6 +1096,7 @@ export type Database = {
           remaining_balance?: number
           remaining_balance_base?: number | null
           term_months?: number | null
+          unique_purchase_key?: string | null
           updated_at?: string
           user_address?: string | null
           user_wallet_address: string
@@ -941,6 +1126,7 @@ export type Database = {
           remaining_balance?: number
           remaining_balance_base?: number | null
           term_months?: number | null
+          unique_purchase_key?: string | null
           updated_at?: string
           user_address?: string | null
           user_wallet_address?: string
@@ -1118,6 +1304,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      backfill_user_property_from_tx: {
+        Args: { _tx_id: string }
+        Returns: undefined
+      }
       calculate_appreciation_distribution: {
         Args: { original_price: number; appraised_value: number }
         Returns: {
@@ -1172,6 +1362,10 @@ export type Database = {
           _tx_hash?: string
         }
         Returns: string
+      }
+      reset_fractional_portfolio: {
+        Args: { p_wallet: string }
+        Returns: Json
       }
     }
     Enums: {
