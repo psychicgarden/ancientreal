@@ -27,6 +27,7 @@ const Portfolio = () => {
   const [developerInvestments, setDeveloperInvestments] = useState<any[]>([]);
   // Removed fractional investments - focusing on mortgage-only functionality
   const [loading, setLoading] = useState(true);
+  const [showAllProperties, setShowAllProperties] = useState(false);
 
   // Debug logging for state changes
   useEffect(() => {
@@ -176,15 +177,27 @@ const Portfolio = () => {
     }
   }, [isConnected, account]);
 
+  // Deduplicate properties and normalize to latest row per unique purchase
+  const uniqueUserProperties = useMemo(() => {
+    const map = new Map<string, any>();
+    for (const p of userProperties) {
+      const key = p.unique_purchase_key || `${p.property_name}|${p.property_location}`;
+      const existing = map.get(key);
+      if (!existing) {
+        map.set(key, p);
+      } else {
+        const a = new Date(existing.updated_at || existing.created_at || 0).getTime();
+        const b = new Date(p.updated_at || p.created_at || 0).getTime();
+        if (b >= a) map.set(key, p);
+      }
+    }
+    return Array.from(map.values());
+  }, [userProperties]);
+
   // Convert database properties to display format with proper status logic  
-  const displayProperties = userProperties.length > 0 ? userProperties.map(prop => {
+  const displayProperties = uniqueUserProperties.length > 0 ? uniqueUserProperties.map(prop => {
     console.log('Processing property:', prop.property_name, 'is_active:', prop.is_active);
-    
-    // Now that the Art Deco Loft is reactivated, all active properties are "mortgaged"
     const status: "mortgaged" | "pending" | "success" = prop.is_active ? "mortgaged" : "pending";
-    
-    // Removed fractional ownership calculations - focusing on mortgage-only functionality
-    
     return {
       id: prop.id,
       image: prop.image_url || "/src/assets/villa-bali.jpg",
@@ -203,6 +216,7 @@ const Portfolio = () => {
     };
   }) : [];
 
+  const visibleProperties = displayProperties.slice(0, showAllProperties ? displayProperties.length : 7);
   if (!isConnected) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 flex flex-col items-center justify-center p-4">
@@ -447,7 +461,14 @@ const Portfolio = () => {
             <div ref={propertiesSectionRef}>
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-semibold">Whole Properties</h2>
-                <Button>Add Property</Button>
+                <div className="flex gap-2">
+                  {displayProperties.length > 7 && (
+                    <Button variant="outline" onClick={() => setShowAllProperties(v => !v)}>
+                      {showAllProperties ? 'Show less' : 'Show all'}
+                    </Button>
+                  )}
+                  <Button>Add Property</Button>
+                </div>
               </div>
               {userProperties.length === 0 ? (
                 <Card className="p-8 text-center">
@@ -466,7 +487,7 @@ const Portfolio = () => {
                 </Card>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {displayProperties.map((property) => (
+                  {visibleProperties.map((property) => (
                     <PropertyCard
                       key={property.id}
                       {...property}

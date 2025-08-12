@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { NETWORK_CONFIG, CONTRACTS } from "@/lib/contracts";
 import { supabase } from "@/integrations/supabase/client";
 import { MortgagePaymentModal } from "@/components/MortgagePaymentModal";
-import { fmtUSD, asUSD, principalBase } from "@/lib/money";
+import { fmtUSD, asUSD, principalBase, fromBase } from "@/lib/money";
 import { 
   Building2, 
   DollarSign, 
@@ -21,6 +21,7 @@ import {
   Target,
   Banknote
 } from "lucide-react";
+import { computeMonthlyPaymentUSD, computeNextDueDate } from "@/lib/finance";
 
 export const InvestorMortgageDashboard = ({ onNavigateToProperties }: { onNavigateToProperties?: (args?: { propertyId?: string; name?: string; location?: string }) => void }) => {
   const { 
@@ -48,11 +49,12 @@ export const InvestorMortgageDashboard = ({ onNavigateToProperties }: { onNaviga
         setLoading(true);
         console.log('Fetching mortgage details for account:', account);
         
-        // Fetch data from Supabase instead of smart contracts
+        // Fetch data from Supabase (support both legacy user_address and new user_wallet_address)
+        const acct = account?.toLowerCase() ?? "";
         const { data: properties, error: propertiesError } = await supabase
           .from('user_properties')
           .select('*')
-          .eq('user_address', account?.toLowerCase() ?? '')
+          .or(`user_address.eq.${acct},user_wallet_address.eq.${acct}`)
           .eq('is_active', true)
           .order('updated_at', { ascending: false })
           .limit(1);
@@ -65,23 +67,41 @@ export const InvestorMortgageDashboard = ({ onNavigateToProperties }: { onNaviga
           const property = properties[0]; // Use first active property
           setUserProperty(property);
           
-          // Transform data to match expected format with base unit support
-          const principalAmt = principalBase(property) ?? (property.purchase_price - property.down_payment);
-          const remainingBal = (property as any).remaining_balance_base ? Number((property as any).remaining_balance_base) / 1_000_000 : property.remaining_balance;
-          
+          // Transform data with correct base-unit conversions
+          const principalAmtUsd = principalBase(property) != null
+            ? fromBase(principalBase(property)!)
+            : Math.max(0, Number(property.purchase_price || 0) - Number(property.down_payment || 0));
+
+          const remainingBalUsd = (property as any).remaining_balance_base != null
+            ? fromBase((property as any).remaining_balance_base)
+            : Number(property.remaining_balance || 0);
+
+          const loanUsd = (property as any).loan_amount_base != null
+            ? fromBase((property as any).loan_amount_base)
+            : principalAmtUsd;
+          const aprBps = Number((property as any).apr_bps ?? 800);
+          const termMonths = Number((property as any).term_months ?? 120);
+          const monthlyPaymentUsd = Number(property.monthly_payment || 0) > 0
+            ? Number(property.monthly_payment)
+            : computeMonthlyPaymentUSD(loanUsd, aprBps, termMonths);
+
+          const due = computeNextDueDate(property.purchase_date);
+
           const mortgageDetails = {
-            isActive: remainingBal > 0,
-            principalAmount: principalAmt,
-            remainingBalance: remainingBal,
-            monthlyPayment: property.monthly_payment,
-            nextPaymentDue: Date.now() + 30 * 24 * 60 * 60 * 1000, // Next month
-            isOverdue: false, // Could be calculated based on last payment
+            isActive: remainingBalUsd > 0,
+            principalAmount: principalAmtUsd,
+            remainingBalance: remainingBalUsd,
+            monthlyPayment: monthlyPaymentUsd,
+            nextPaymentDue: due.getTime(),
+            isOverdue: false,
             daysPastDue: 0,
             missedPayments: 0,
             startDate: Math.floor(new Date(property.purchase_date).getTime() / 1000),
-            downPayment: (property as any).down_payment_base ? Number((property as any).down_payment_base) / 1_000_000 : property.down_payment,
-            isCompleted: remainingBal <= 0,
-            isForeclosed: false
+            downPayment: (property as any).down_payment_base ? fromBase((property as any).down_payment_base) : Number(property.down_payment || 0),
+            isCompleted: remainingBalUsd <= 0,
+            isForeclosed: false,
+            aprBps,
+            termMonths,
           };
 
           const propertyDetails = {
@@ -274,7 +294,7 @@ export const InvestorMortgageDashboard = ({ onNavigateToProperties }: { onNaviga
               ${mortgageData.monthlyPayment?.toLocaleString() || '0'}
             </div>
             <p className="text-xs text-muted-foreground">
-              8% APR, 10 year term
+              {(mortgageData.aprBps ?? 800) / 100}% APR, {(mortgageData.termMonths ?? 120) / 12} year term
             </p>
           </CardContent>
         </Card>
