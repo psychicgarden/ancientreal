@@ -176,7 +176,7 @@ const Portfolio = () => {
     }
   }, [isConnected, account]);
 
-  // Convert database properties to display format with proper status logic
+  // Convert database properties to display format with proper status logic  
   const displayProperties = userProperties.length > 0 ? userProperties.map(prop => {
     console.log('Processing property:', prop.property_name, 'is_active:', prop.is_active);
     
