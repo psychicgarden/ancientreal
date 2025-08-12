@@ -1114,6 +1114,10 @@ export type Database = {
         }
         Returns: Json
       }
+      backfill_user_properties_from_transactions: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       calculate_appreciation_distribution: {
         Args: { original_price: number; appraised_value: number }
         Returns: {
