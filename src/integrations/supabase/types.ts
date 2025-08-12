@@ -883,7 +883,6 @@ export type Database = {
           remaining_balance: number
           remaining_balance_base: number | null
           term_months: number | null
-          unique_purchase_key: string | null
           updated_at: string
           user_address: string | null
           user_wallet_address: string
@@ -913,7 +912,6 @@ export type Database = {
           remaining_balance?: number
           remaining_balance_base?: number | null
           term_months?: number | null
-          unique_purchase_key?: string | null
           updated_at?: string
           user_address?: string | null
           user_wallet_address: string
@@ -943,7 +941,6 @@ export type Database = {
           remaining_balance?: number
           remaining_balance_base?: number | null
           term_months?: number | null
-          unique_purchase_key?: string | null
           updated_at?: string
           user_address?: string | null
           user_wallet_address?: string
@@ -1119,10 +1116,6 @@ export type Database = {
       }
       backfill_user_properties_from_transactions: {
         Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      backfill_user_property_from_tx: {
-        Args: { _tx_id: string }
         Returns: undefined
       }
       calculate_appreciation_distribution: {
