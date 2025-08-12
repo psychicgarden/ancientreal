@@ -407,6 +407,13 @@ export type Database = {
             foreignKeyName: "payment_history_property_id_fkey"
             columns: ["property_id"]
             isOneToOne: false
+            referencedRelation: "app_user_properties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_history_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
             referencedRelation: "user_properties"
             referencedColumns: ["id"]
           },
@@ -657,6 +664,13 @@ export type Database = {
           year_10_trigger_date?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "property_fractionalization_source_property_id_fkey"
+            columns: ["source_property_id"]
+            isOneToOne: false
+            referencedRelation: "app_user_properties"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "property_fractionalization_source_property_id_fkey"
             columns: ["source_property_id"]
@@ -1037,7 +1051,57 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      app_user_properties: {
+        Row: {
+          down_payment: number | null
+          down_payment_base: number | null
+          id: string | null
+          image_url: string | null
+          interest_paid_base: number | null
+          principal_paid_base: number | null
+          property_id: number | null
+          property_name: string | null
+          purchase_price: number | null
+          purchase_price_base: number | null
+          remaining_balance: number | null
+          remaining_balance_base: number | null
+          updated_at: string | null
+          user_address: string | null
+        }
+        Insert: {
+          down_payment?: number | null
+          down_payment_base?: number | null
+          id?: string | null
+          image_url?: string | null
+          interest_paid_base?: number | null
+          principal_paid_base?: number | null
+          property_id?: number | null
+          property_name?: string | null
+          purchase_price?: number | null
+          purchase_price_base?: number | null
+          remaining_balance?: number | null
+          remaining_balance_base?: number | null
+          updated_at?: string | null
+          user_address?: never
+        }
+        Update: {
+          down_payment?: number | null
+          down_payment_base?: number | null
+          id?: string | null
+          image_url?: string | null
+          interest_paid_base?: number | null
+          principal_paid_base?: number | null
+          property_id?: number | null
+          property_name?: string | null
+          purchase_price?: number | null
+          purchase_price_base?: number | null
+          remaining_balance?: number | null
+          remaining_balance_base?: number | null
+          updated_at?: string | null
+          user_address?: never
+        }
+        Relationships: []
+      }
     }
     Functions: {
       apply_mortgage_payment: {
