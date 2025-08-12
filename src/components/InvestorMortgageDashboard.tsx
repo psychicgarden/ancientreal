@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { NETWORK_CONFIG, CONTRACTS } from "@/lib/contracts";
 import { supabase } from "@/integrations/supabase/client";
 import { MortgagePaymentModal } from "@/components/MortgagePaymentModal";
+import { fmtUSD } from "@/lib/money";
 import { 
   Building2, 
   DollarSign, 

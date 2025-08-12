@@ -23,6 +23,7 @@ import { SmartContractViewer } from "./SmartContractViewer";
 import { supabase } from "@/integrations/supabase/client";
 import { PROPERTIES_CATALOG } from "@/lib/propertiesCatalog";
 import NetworkGuard from "@/components/NetworkGuard";
+import { toBase } from "@/lib/money";
 
 interface PropertyPurchaseModalProps {
   isOpen: boolean;
@@ -89,11 +90,11 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
           property_name: effectiveProperty.name,
           property_location: effectiveProperty.location,
           image_url: effectiveProperty.image,
-          purchase_price: purchasePrice,
-          down_payment: downPayment,
+          purchase_price: purchasePrice, // Legacy field - required
+          down_payment: downPayment, // Legacy field - required
           current_value: purchasePrice, // start at purchase price
           monthly_payment: monthlyPayment,
-          remaining_balance: remainingBalance,
+          remaining_balance: remainingBalance, // Legacy field - required
           equity_percentage: equityPercentage,
           is_active: opts.status === "completed",
           mortgage_id: opts.mortgageId || null,
