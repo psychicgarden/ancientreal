@@ -79,16 +79,15 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
       const principalBase = Number(toBase(Number(mortgageDetails.principalAmount || 0)));
       const interestBase  = Number(toBase(Number(mortgageDetails.interestAmount  || 0)));
 
-      // optional tx hash if you have one from chain; otherwise leave as a string tag
-      const txHash = (mortgageDetails as any)?.txHash ?? "ui_payment";
+      const txHash = (mortgageDetails as any)?.txHash ?? null;
 
       const { error: rpcErr } = await supabase.rpc('apply_mortgage_payment' as any, {
-        user_address: account?.toLowerCase(),
-        property_id: mappedId,
-        principal_delta_base: principalBase,
-        interest_delta_base:  interestBase,
-        tx_hash: txHash,
-      } as any); // add "as any" if TS complains about arg typing
+        p_user_address: account?.toLowerCase(),
+        p_property_id: mappedId,
+        p_principal_delta_base: principalBase,
+        p_interest_delta_base: interestBase,
+        p_tx_hash: txHash
+      });
 
       if (rpcErr) {
         console.error('RPC failed', rpcErr);
