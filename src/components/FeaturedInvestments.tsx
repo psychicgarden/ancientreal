@@ -10,7 +10,7 @@ import PropertyInvestmentCalculator from "@/components/PropertyInvestmentCalcula
 import { PropertyPurchaseModal } from "@/components/PropertyPurchaseModal";
 import { Link } from "react-router-dom";
 import SectionHeader from "@/components/SectionHeader";
-import { useMortgageProperties } from "@/hooks/useMortgageProperties";
+import { useFractionalProperties } from "@/hooks/useFractionalProperties";
 import { Skeleton } from "@/components/ui/skeleton";
 const FeaturedInvestments = () => {
   const {
@@ -25,12 +25,19 @@ const FeaturedInvestments = () => {
   const [purchaseModalOpen, setPurchaseModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
   
-  // Use mortgage properties for consistency
-  const { properties, loading: propertiesLoading } = useMortgageProperties();
+  // Use real fractional properties from Supabase
+  const { properties, loading: propertiesLoading } = useFractionalProperties();
 
-  // Transform properties for display
+  // Transform properties for Village display with correct financial calculations
   const transformedProperties = properties.map(property => {
-    const monthlyProfit = Math.round(property.monthlyRent - property.monthlyPayment);
+    // Calculate real monthly profit based on actual rent and mortgage payment
+    const monthlyRent = property.monthlyRent; // Use actual database value
+    const monthlyPayment = Math.round(property.monthlyPayment);
+    const monthlyProfit = Math.round(monthlyRent - monthlyPayment);
+    
+    // Calculate network value using 35% appreciation over 5 years + ARW split
+    const fiveYearAppreciation = property.totalValue * 1.35;
+    const networkValue = Math.round(fiveYearAppreciation);
     
     return {
       type: property.location.includes('Mexico') ? "🏝️ Join the Mazunte Village" : "Villa",
@@ -39,17 +46,17 @@ const FeaturedInvestments = () => {
       totalValue: property.totalValue,
       listPrice: property.totalValue,
       downPayment: property.downPayment,
-      monthlyPayment: Math.round(property.monthlyPayment),
-      monthlyRent: Math.round(property.monthlyRent),
-      monthlyProfit,
-      networkValue: property.networkValue,
-      propertiesSold: 3, // Static for now
+      monthlyPayment,
+      monthlyRent, // Use real database value
+      monthlyProfit, // Calculated from real values
+      networkValue, // Proper appreciation model
+      propertiesSold: property.wholePropertiesSold,
       totalProperties: 15,
       mortgageTerm: "10 years",
       expectedReturn: property.expectedReturn,
       image: property.image,
-      isBlockchain: true,
-      isVillage: true
+      isBlockchain: property.isBlockchain,
+      isVillage: true // Make all properties use the NETWORK INVESTMENT layout
     };
   });
   return <section className="px-6 bg-gradient-to-br from-background via-background to-muted/5 py-[20px]">
