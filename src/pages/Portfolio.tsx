@@ -176,45 +176,8 @@ const Portfolio = () => {
     }
   }, [isConnected, account]);
 
-  // NEW: Deduplicate properties by name+location, keeping the latest updated row
-  const cleanUserProperties = useMemo(() => {
-    if (!Array.isArray(userProperties) || userProperties.length === 0) return [];
-    const map = new Map<string, any>();
-
-    for (const prop of userProperties) {
-      const key = `${(prop.property_name || "").toLowerCase()}|${(prop.property_location || "").toLowerCase()}`;
-      const existing = map.get(key);
-
-      if (!existing) {
-        map.set(key, prop);
-        continue;
-      }
-
-      const timeNew = new Date(prop.updated_at || prop.created_at || 0).getTime();
-      const timeOld = new Date(existing.updated_at || existing.created_at || 0).getTime();
-      if (timeNew >= timeOld) {
-        map.set(key, prop);
-      }
-    }
-
-    const result = Array.from(map.values());
-
-    // Safety: ensure the Art Deco Loft image stays in sync even if an old cache slips through
-    result.forEach((p) => {
-      if (
-        (p.property_name || "").toLowerCase() === "art deco loft" &&
-        p.image_url === "/src/assets/villa-tulum.jpg"
-      ) {
-        p.image_url = "/src/assets/boho-art-deco-loft-mexico.jpg";
-      }
-    });
-
-    console.log("Deduped user properties:", result);
-    return result;
-  }, [userProperties]);
-
   // Convert database properties to display format with proper status logic
-  const displayProperties = cleanUserProperties.length > 0 ? cleanUserProperties.map(prop => {
+  const displayProperties = userProperties.length > 0 ? userProperties.map(prop => {
     console.log('Processing property:', prop.property_name, 'is_active:', prop.is_active);
     
     // Now that the Art Deco Loft is reactivated, all active properties are "mortgaged"
@@ -286,7 +249,7 @@ const Portfolio = () => {
   const avgOccupancy = displayProperties.length > 0 ? displayProperties.reduce((sum, prop) => sum + prop.occupancyRate, 0) / displayProperties.length : 0;
 
   // Portfolio data for enhanced analytics (mortgage properties only)
-  const totalInvestment = cleanUserProperties.reduce((sum, prop) => sum + prop.down_payment, 0) || 0;
+  const totalInvestment = userProperties.reduce((sum, prop) => sum + prop.down_payment, 0) || 0;
   const portfolioData = {
     totalInvestment,
     currentValue: totalValue,
@@ -486,7 +449,7 @@ const Portfolio = () => {
                 <h2 className="text-xl font-semibold">Whole Properties</h2>
                 <Button>Add Property</Button>
               </div>
-              {cleanUserProperties.length === 0 ? (
+              {userProperties.length === 0 ? (
                 <Card className="p-8 text-center">
                   <div className="space-y-4">
                     <Home className="h-12 w-12 text-muted-foreground mx-auto" />
