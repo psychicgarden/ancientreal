@@ -41,6 +41,7 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
 
   // Use the provided property data directly (from landing page/database)
   const effectiveProperty = {
+    id: property?.id || "mazunte-mexico-villa",
     name: property?.name || "Art Deco Loft",
     totalValue: property?.totalValue ?? property?.listPrice ?? 129000,
     downPayment: property?.downPayment ?? Math.round((property?.totalValue ?? property?.listPrice ?? 129000) * 0.2),
@@ -100,9 +101,7 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
         mortgage_id: opts.mortgageId || null,
         // Base unit fields for new system
         user_address: wallet.toLowerCase(),
-        property_id: PROPERTY_ID_MAP[effectiveProperty.name.includes("Mazunte") ? "mazunte-mexico-villa" : 
-                                     effectiveProperty.name.includes("Bahia") ? "bahia-brazil-villa" : 
-                                     "ericeira-portugal-villa"] || 1,
+        property_id: PROPERTY_ID_MAP[effectiveProperty.id] ?? 1,
         currency: "USDC-6",
         purchase_price_base: Number(toBase(Number(purchasePrice))),
         down_payment_base: Number(toBase(Number(downPayment))),
