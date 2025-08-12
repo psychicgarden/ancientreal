@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import FeaturedInvestments from "@/components/FeaturedInvestments";
+import FeaturedProperties from "@/components/FeaturedProperties";
 import OneTimeReset from "@/components/admin/OneTimeReset";
 
 
@@ -17,7 +17,7 @@ const Index = () => {
       <OneTimeReset wallet="0x966feD85116F6D283921a6ed176D7643a99cbf94" />
       <Header />
       <Hero />
-      <FeaturedInvestments />
+      <FeaturedProperties />
       
       {/* The Mathematics of Modern Nomadism */}
       <section className="py-20 bg-gradient-to-br from-muted/20 to-muted/40">

@@ -1,22 +1,25 @@
 import OriginalPropertyCard from "./OriginalPropertyCard";
-import { PROPERTIES_CATALOG } from "@/lib/propertiesCatalog";
+import { useMortgageProperties } from "@/hooks/useMortgageProperties";
 import { Button } from "@/components/ui/button";
-
-// Only show original properties that haven't been purchased and fractionalized
-const properties = PROPERTIES_CATALOG.slice(0, 3).map((p) => ({
-  id: p.id,
-  image: p.image,
-  title: p.name,
-  location: p.location,
-  price: p.totalValue,
-  sharePrice: p.sharePrice ?? Math.round(p.totalValue / 1000),
-  totalShares: p.totalShares ?? 1000,
-  availableShares: p.availableShares ?? 1000, // All shares available for new properties
-  expectedReturn: p.expectedReturn ?? 15,
-  type: "Villa",
-}));
+import { Skeleton } from "@/components/ui/skeleton";
 
 const FeaturedProperties = () => {
+  const { properties: mortgageProperties, loading } = useMortgageProperties();
+
+  // Transform mortgage properties to match OriginalPropertyCard props
+  const properties = mortgageProperties.map((property) => ({
+    id: property.id,
+    image: property.image,
+    title: property.name,
+    location: property.location,
+    price: property.totalValue,
+    sharePrice: Math.round(property.totalValue / 1000), // $129K -> $129 per share
+    totalShares: 1000,
+    availableShares: 1000, // All shares available for new properties
+    expectedReturn: property.expectedReturn,
+    type: "Villa",
+  }));
+
   return (
     <section id="properties" className="py-24 bg-background">
       <div className="container mx-auto px-6 lg:px-8">
@@ -37,9 +40,20 @@ const FeaturedProperties = () => {
 
         {/* Properties Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {properties.map((property) => (
-            <OriginalPropertyCard key={property.id} {...property} />
-          ))}
+          {loading ? (
+            // Loading skeletons
+            Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="space-y-4">
+                <Skeleton className="h-48 w-full rounded-lg" />
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            ))
+          ) : (
+            properties.map((property) => (
+              <OriginalPropertyCard key={property.id} {...property} />
+            ))
+          )}
         </div>
 
         {/* View All Button */}
