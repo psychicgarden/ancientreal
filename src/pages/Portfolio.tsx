@@ -46,17 +46,20 @@ const Portfolio = () => {
 
       setLoading(true);
       try {
-        // Fetch user properties (including failed purchases for transparency)
-        const { data: properties, error: propError } = await supabase
+        // Fetch whole property mortgages from user_properties (using user_wallet_address)
+        const { data: wholeProperties, error: propertiesError } = await supabase
           .from('user_properties')
           .select('*')
-          .eq('user_address', account?.toLowerCase() ?? '')
+          .eq('user_wallet_address', account.toLowerCase())
+          .eq('is_active', true)
           .order('created_at', { ascending: false });
 
-        if (propError) {
-          console.error('Error fetching properties:', propError);
+        if (propertiesError) {
+          console.error('Error fetching user properties:', propertiesError);
+          setUserProperties([]);
         } else {
-          setUserProperties(properties || []);
+          console.log('Whole property mortgages:', wholeProperties);
+          setUserProperties(wholeProperties || []);
         }
 
         // Fetch user transactions
@@ -98,7 +101,7 @@ const Portfolio = () => {
           setDeveloperInvestments(investments || []);
         }
 
-        // Fetch fractional investments first
+        // Fetch fractional investments
         const { data: fractionalData, error: fractionalError } = await supabase
           .from('fractional_investments')
           .select('*')
