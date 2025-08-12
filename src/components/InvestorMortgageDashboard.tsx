@@ -8,15 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { NETWORK_CONFIG, CONTRACTS } from "@/lib/contracts";
 import { supabase } from "@/integrations/supabase/client";
 import { MortgagePaymentModal } from "@/components/MortgagePaymentModal";
-import { fmtUSD } from "@/lib/money";
-
-const asUSD = (base?: number | bigint, legacy?: number) =>
-  base != null ? fmtUSD(base) : (legacy != null ? `$${legacy.toLocaleString()}` : "$0");
-
-const principalBase = (p: any) =>
-  (p?.purchase_price_base ?? null) != null && (p?.down_payment_base ?? null) != null
-    ? Number(p.purchase_price_base) - Number(p.down_payment_base)
-    : null;
+import { fmtUSD, asUSD, principalBase } from "@/lib/money";
 import { 
   Building2, 
   DollarSign, 
