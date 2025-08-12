@@ -14,6 +14,7 @@ import { DeveloperInvestmentsAnalytics } from "@/components/DeveloperInvestments
 import { TrustSignals } from "@/components/TrustSignals";
 import { CompetitorComparison } from "@/components/CompetitorComparison";
 import { PlatformAnalytics } from "@/components/PlatformAnalytics";
+import RentalIncomeTracker from "@/components/RentalIncomeTracker";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -542,65 +543,7 @@ const Portfolio = () => {
 
           {/* Bookings & Revenue Tab */}
           <TabsContent value="revenue" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5" />
-                    Revenue Analytics
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-sm text-muted-foreground">This Month</p>
-                      <p className="text-2xl font-bold text-green-600">$8,000</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">YTD Revenue</p>
-                      <p className="text-2xl font-bold">$89,600</p>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-sm">Average Daily Rate</span>
-                      <span className="font-semibold">$267</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">Booking Conversion</span>
-                      <span className="font-semibold">18.5%</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Calendar className="h-5 w-5" />
-                    Upcoming Bookings
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                      <div>
-                        <p className="font-medium">Villa Tulum</p>
-                        <p className="text-sm text-muted-foreground">Dec 15-22, 2024</p>
-                      </div>
-                      <Badge variant="secondary">$2,240</Badge>
-                    </div>
-                    <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                      <div>
-                        <p className="font-medium">Mykonos Beach House</p>
-                        <p className="text-sm text-muted-foreground">Dec 28 - Jan 5</p>
-                      </div>
-                      <Badge variant="secondary">$4,200</Badge>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+            <RentalIncomeTracker />
           </TabsContent>
 
           {/* Platform Analytics Tab */}
