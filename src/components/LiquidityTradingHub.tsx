@@ -9,7 +9,7 @@ import { EnhancedCollateralLending } from "@/components/EnhancedCollateralLendin
 import { YieldFarmingDashboard } from "@/components/YieldFarmingDashboard";
 import { PeerToPeerTrading } from "@/components/PeerToPeerTrading";
 import { SecondaryMarketplace } from "@/components/SecondaryMarketplace";
-import { SimpleStaking } from "@/components/SimpleStaking";
+
 import { SimpleBorrowing } from "@/components/SimpleBorrowing";
 import { BeginnerPortfolioSummary } from "@/components/BeginnerPortfolioSummary";
 import { FractionalInvestingExplanation } from "@/components/FractionalInvestingExplanation";
@@ -36,7 +36,7 @@ export const LiquidityTradingHub = () => {
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             {isBeginnerMode 
-              ? "Simple 3-step process: Buy property tokens, stake for income, borrow cash instantly"
+              ? "Simple 2-step process: Buy property tokens, borrow cash instantly"
               : "Advanced decentralized trading, lending, and yield farming powered by our proprietary smart contracts"
             }
           </p>
@@ -66,7 +66,7 @@ export const LiquidityTradingHub = () => {
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         {isBeginnerMode ? (
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
               Portfolio
@@ -74,10 +74,6 @@ export const LiquidityTradingHub = () => {
             <TabsTrigger value="buy" className="flex items-center gap-2">
               <DollarSign className="h-4 w-4" />
               Buy Tokens
-            </TabsTrigger>
-            <TabsTrigger value="stake" className="flex items-center gap-2">
-              <Zap className="h-4 w-4" />
-              Stake & Earn
             </TabsTrigger>
             <TabsTrigger value="borrow" className="flex items-center gap-2">
               <Handshake className="h-4 w-4" />
@@ -124,9 +120,6 @@ export const LiquidityTradingHub = () => {
               </div>
             </TabsContent>
 
-            <TabsContent value="stake">
-              <SimpleStaking />
-            </TabsContent>
 
             <TabsContent value="borrow">
               <SimpleBorrowing />
