@@ -97,57 +97,52 @@ export const usePortfolioYield = (walletAddress?: string) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!walletAddress) {
-      setPortfolioYield({ totalValue: 0, totalYield: 0, monthlyIncome: 0, investments: [] });
-      return;
-    }
+    if (!walletAddress) return;
 
     const fetchPortfolioYield = async () => {
       setLoading(true);
       
       try {
-        const wallet = walletAddress.toLowerCase();
-        const { data, error } = await supabase.rpc('get_user_fractional_investments', { wallet_address: wallet });
-        if (error) {
-          console.error('RPC get_user_fractional_investments failed', error);
-          setPortfolioYield({ totalValue: 0, totalYield: 0, monthlyIncome: 0, investments: [] });
-          return;
-        }
+        const { data: investments, error } = await supabase
+          .from('fractional_investments')
+          .select(`
+            *,
+            property_fractionalization:property_id (*)
+          `)
+          .eq('investor_wallet_address', walletAddress.toLowerCase())
+          .eq('status', 'active');
 
-        const rows = Array.isArray(data) ? data : [];
+        if (error) throw error;
+
         let totalValue = 0;
         let totalYield = 0;
         let monthlyIncome = 0;
-        const enrichedInvestments: any[] = [];
+        const enrichedInvestments = [];
 
-        for (const row of rows) {
-          const investmentAmount = Number(row.investment_amount ?? 0);
-          const propertyData = {
-            property_name: row.property_name,
-            property_location: row.property_location,
-            property_image_url: row.property_image_url,
-            current_speculation_price: Number(row.current_speculation_price ?? 0),
-            monthly_base_rent: Number(row.monthly_base_rent ?? 0),
-            total_tokens_available: Number(row.total_tokens_available ?? 0),
-          } as any;
+        for (const investment of investments || []) {
+          const property = investment.property_fractionalization;
+          if (!property) continue;
 
-          const yieldCalc = YieldCalculator.calculateYield(investmentAmount, propertyData);
+          const yieldCalc = YieldCalculator.calculateYield(
+            Number(investment.investment_amount),
+            property
+          );
 
-          totalValue += investmentAmount;
+          totalValue += Number(investment.investment_amount);
           totalYield += yieldCalc.annualYield;
           monthlyIncome += yieldCalc.monthlyIncome;
 
           enrichedInvestments.push({
-            ...row,
-            yieldData: yieldCalc,
+            ...investment,
+            yieldData: yieldCalc
           });
         }
 
         setPortfolioYield({
           totalValue,
-          totalYield: rows.length > 0 ? totalYield / rows.length : 0,
+          totalYield: investments.length > 0 ? totalYield / investments.length : 0,
           monthlyIncome,
-          investments: enrichedInvestments,
+          investments: enrichedInvestments
         });
 
       } catch (err) {

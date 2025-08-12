@@ -1,7 +1,6 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import FeaturedInvestments from "@/components/FeaturedInvestments";
-import OneTimeReset from "@/components/admin/OneTimeReset";
 
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,7 +13,6 @@ import SectionHeader from "@/components/SectionHeader";
 import Footer from "@/components/Footer";
 const Index = () => {
   return <div className="min-h-screen">
-      <OneTimeReset wallet="0x966feD85116F6D283921a6ed176D7643a99cbf94" />
       <Header />
       <Hero />
       <FeaturedInvestments />
