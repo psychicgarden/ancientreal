@@ -10,7 +10,8 @@ import { useWallet } from "@/contexts/WalletContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import NetworkGuard from "@/components/NetworkGuard";
-import { toBase } from "@/lib/money";
+import { toBase, fmtUSD, asUSD, principalBase } from "@/lib/money";
+import { PROPERTY_ID_MAP } from "@/lib/constants";
 
 interface MortgagePaymentModalProps {
   isOpen: boolean;
@@ -59,45 +60,36 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
       return;
     }
 
+    if (!account) {
+      toast({
+        title: "Wallet Required",
+        description: "Please connect your wallet to make a payment.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsProcessing(true);
     try {
-      // Use the makePayment from WalletContext and update database
+      // Use the makePayment from WalletContext
       await makePayment();
       
-      // Get current property data to update base amounts
-      const { data: currentProperty } = await supabase
-        .from('user_properties')
-        .select('*')
-        .eq('id', property.id)
-        .single();
-
-      if (currentProperty) {
-        const principalPayment = mortgageDetails.principalAmount;
-        const interestPayment = mortgageDetails.interestAmount;
-        
-        const principalBaseAmt = Number(toBase(Number(principalPayment)));
-        const interestBaseAmt = Number(toBase(Number(interestPayment)));
-
-        const { error } = await supabase
-          .from('user_properties')
-          .update({
-            principal_paid_base: ((currentProperty as any).principal_paid_base ?? 0) + principalBaseAmt,
-            interest_paid_base: ((currentProperty as any).interest_paid_base ?? 0) + interestBaseAmt,
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', property.id);
-
-        if (error) {
-          console.error('Error updating property balance:', error);
-        }
+      // Map UI property ID to database property_id
+      const propertyId = PROPERTY_ID_MAP[property.id];
+      if (!propertyId) {
+        throw new Error(`Property ID mapping not found for: ${property.id}`);
       }
 
-      // Record payment in payment history
+      // TODO: Add base unit database updates after migration
+      // For now, just record legacy payment tracking
+      console.log('Payment processed for property:', propertyId);
+
+      // Record payment in payment history using propertyId instead of property.id
       await supabase
         .from('payment_history')
         .insert({
           user_wallet_address: account?.toLowerCase(),
-          property_id: property.id,
+          property_id: propertyId.toString(),
           payment_amount: property.monthlyPayment,
           remaining_balance_after: Math.max(0, property.remainingBalance - property.monthlyPayment),
           status: 'completed'

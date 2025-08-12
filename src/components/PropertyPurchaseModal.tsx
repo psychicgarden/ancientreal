@@ -24,6 +24,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { PROPERTIES_CATALOG } from "@/lib/propertiesCatalog";
 import NetworkGuard from "@/components/NetworkGuard";
 import { toBase } from "@/lib/money";
+import { PROPERTY_ID_MAP } from "@/lib/constants";
 
 interface PropertyPurchaseModalProps {
   isOpen: boolean;
@@ -99,7 +100,9 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
         mortgage_id: opts.mortgageId || null,
         // Base unit fields for new system
         user_address: wallet.toLowerCase(),
-        property_id: Number(1),
+        property_id: PROPERTY_ID_MAP[effectiveProperty.name.includes("Mazunte") ? "mazunte-mexico-villa" : 
+                                     effectiveProperty.name.includes("Bahia") ? "bahia-brazil-villa" : 
+                                     "ericeira-portugal-villa"] || 1,
         currency: "USDC-6",
         purchase_price_base: Number(toBase(Number(purchasePrice))),
         down_payment_base: Number(toBase(Number(downPayment))),
