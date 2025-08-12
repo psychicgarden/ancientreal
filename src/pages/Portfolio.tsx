@@ -103,7 +103,7 @@ const Portfolio = () => {
           .from('fractional_investments')
           .select(`
             *,
-            property_fractionalization:property_id (
+            property_fractionalization!inner (
               property_name,
               property_location,
               property_image_url,
@@ -118,6 +118,7 @@ const Portfolio = () => {
 
         if (fractionalError) {
           console.error('Error fetching fractional investments:', fractionalError);
+          console.error('Fractional query failed with:', fractionalError.message);
         } else {
           const mapped = (fractionalData || []).map((row: any) => ({
             id: row.id,
@@ -155,7 +156,7 @@ const Portfolio = () => {
             event: '*',
             schema: 'public',
             table: 'user_properties',
-            filter: `user_wallet_address=eq.${account.toLowerCase()}`
+            filter: `user_address=eq.${account.toLowerCase()}`
           },
           () => {
             fetchUserData(); // Refetch data when changes occur
@@ -191,7 +192,7 @@ const Portfolio = () => {
             event: '*',
             schema: 'public',
             table: 'fractional_investments',
-            filter: `investor_wallet_address=eq.${account}`
+            filter: `investor_wallet_address=eq.${account.toLowerCase()}`
           },
           () => {
             fetchUserData(); // Refetch data when changes occur
