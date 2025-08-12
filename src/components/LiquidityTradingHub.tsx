@@ -10,7 +10,7 @@ import { YieldFarmingDashboard } from "@/components/YieldFarmingDashboard";
 import { PeerToPeerTrading } from "@/components/PeerToPeerTrading";
 import { SecondaryMarketplace } from "@/components/SecondaryMarketplace";
 
-import { SimpleBorrowing } from "@/components/SimpleBorrowing";
+import { SafeBorrowing } from "@/components/SafeBorrowing";
 import { BeginnerPortfolioSummary } from "@/components/BeginnerPortfolioSummary";
 import { FractionalInvestingExplanation } from "@/components/FractionalInvestingExplanation";
 import { TrendingUp, Handshake, DollarSign, Zap, GraduationCap, Settings } from "lucide-react";
@@ -122,7 +122,7 @@ export const LiquidityTradingHub = () => {
 
 
             <TabsContent value="borrow">
-              <SimpleBorrowing />
+              <SafeBorrowing />
             </TabsContent>
           </>
         )}
