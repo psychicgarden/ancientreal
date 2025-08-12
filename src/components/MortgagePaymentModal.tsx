@@ -81,11 +81,19 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
       const principalBaseAmt = Number(toBase(Number(mortgageDetails.principalAmount || 0)));
       const interestBaseAmt  = Number(toBase(Number(mortgageDetails.interestAmount  || 0)));
 
-      // Update payment amounts in database using RPC call to avoid type issues
-      console.log('Recording payment - Principal:', principalBaseAmt, 'Interest:', interestBaseAmt);
-      
-      // For now, just record the payment tracking until base unit columns are fully integrated
-      console.log('Payment processed for property:', mappedId);
+      // --- RPC: apply_mortgage_payment ---
+      const { error: rpcErr } = await supabase.rpc('apply_mortgage_payment' as any, {
+        p_user_address: account?.toLowerCase(),
+        p_property_id: mappedId,                 // from PROPERTY_ID_MAP
+        p_principal_base: principalBaseAmt,      // integers in base units
+        p_interest_base: interestBaseAmt
+      });
+
+      if (rpcErr) {
+        console.error('RPC payment failed', rpcErr);
+        setIsProcessing(false);
+        return;
+      }
 
       // Record payment in payment history using mappedId
       await supabase
