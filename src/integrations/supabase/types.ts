@@ -883,6 +883,7 @@ export type Database = {
           remaining_balance: number
           remaining_balance_base: number | null
           term_months: number | null
+          unique_purchase_key: string | null
           updated_at: string
           user_address: string | null
           user_wallet_address: string
@@ -912,6 +913,7 @@ export type Database = {
           remaining_balance?: number
           remaining_balance_base?: number | null
           term_months?: number | null
+          unique_purchase_key?: string | null
           updated_at?: string
           user_address?: string | null
           user_wallet_address: string
@@ -941,6 +943,7 @@ export type Database = {
           remaining_balance?: number
           remaining_balance_base?: number | null
           term_months?: number | null
+          unique_purchase_key?: string | null
           updated_at?: string
           user_address?: string | null
           user_wallet_address?: string
