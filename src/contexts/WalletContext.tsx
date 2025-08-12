@@ -204,7 +204,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       if (isDemoMode) {
         // Simulate wallet connection in demo mode
         setTimeout(() => {
-          setAccount("0x742d35Cc6635C0532925a3b8C2Fb74E4b2A4b2a");
+          setAccount("0x966fed85116f6d283921a6ed176d7643a99cbf94");
           setChainId("0x1");
           setNetworkName("Demo Network");
           setIsConnected(true);
