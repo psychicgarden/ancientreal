@@ -83,6 +83,57 @@ export type Database = {
         }
         Relationships: []
       }
+      collateral_loans: {
+        Row: {
+          borrowed_at: string
+          collateral_equity_base: number
+          created_at: string
+          due_date: string | null
+          id: string
+          interest_rate_bps: number
+          last_payment_date: string | null
+          loan_amount_base: number
+          loan_to_value_percent: number
+          property_id: number
+          status: string
+          total_interest_paid_base: number
+          updated_at: string
+          user_wallet_address: string
+        }
+        Insert: {
+          borrowed_at?: string
+          collateral_equity_base: number
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          interest_rate_bps?: number
+          last_payment_date?: string | null
+          loan_amount_base: number
+          loan_to_value_percent: number
+          property_id: number
+          status?: string
+          total_interest_paid_base?: number
+          updated_at?: string
+          user_wallet_address: string
+        }
+        Update: {
+          borrowed_at?: string
+          collateral_equity_base?: number
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          interest_rate_bps?: number
+          last_payment_date?: string | null
+          loan_amount_base?: number
+          loan_to_value_percent?: number
+          property_id?: number
+          status?: string
+          total_interest_paid_base?: number
+          updated_at?: string
+          user_wallet_address?: string
+        }
+        Relationships: []
+      }
       developer_investments: {
         Row: {
           created_at: string
