@@ -9,6 +9,7 @@ import { NETWORK_CONFIG, CONTRACTS } from "@/lib/contracts";
 import { supabase } from "@/integrations/supabase/client";
 import { MortgagePaymentModal } from "@/components/MortgagePaymentModal";
 import { fmtUSD, asUSD, principalBase, fromBase } from "@/lib/money";
+import { PROPERTIES_CATALOG } from "@/lib/propertiesCatalog";
 import { 
   Building2, 
   DollarSign, 
@@ -19,7 +20,13 @@ import {
   ExternalLink,
   Clock,
   Target,
-  Banknote
+  Banknote,
+  Home,
+  CreditCard,
+  PiggyBank,
+  CheckCircle2,
+  Star,
+  MapPin
 } from "lucide-react";
 import { computeMonthlyPaymentUSD, computeNextDueDate } from "@/lib/finance";
 
@@ -49,22 +56,30 @@ export const InvestorMortgageDashboard = ({ onNavigateToProperties }: { onNaviga
         setLoading(true);
         console.log('Fetching mortgage details for account:', account);
         
-        // Fetch data from Supabase (support both legacy user_address and new user_wallet_address)
+        // Fetch data from Supabase - Clean up duplicates and get unique properties
         const acct = account?.toLowerCase() ?? "";
         const { data: properties, error: propertiesError } = await supabase
           .from('user_properties')
           .select('*')
           .or(`user_address.eq.${acct},user_wallet_address.eq.${acct}`)
           .eq('is_active', true)
-          .order('updated_at', { ascending: false })
-          .limit(1);
+          .order('updated_at', { ascending: false });
+
+        // Remove duplicates by property_name
+        const uniqueProperties = properties?.reduce((acc: any[], current: any) => {
+          const existingProperty = acc.find(p => p.property_name === current.property_name);
+          if (!existingProperty) {
+            acc.push(current);
+          }
+          return acc;
+        }, []) || [];
 
         if (propertiesError) {
           throw propertiesError;
         }
 
-        if (properties && properties.length > 0) {
-          const property = properties[0]; // Use first active property
+        if (uniqueProperties && uniqueProperties.length > 0) {
+          const property = uniqueProperties[0]; // Use first unique property
           setUserProperty(property);
           
           // Transform data with correct base-unit conversions
@@ -186,133 +201,250 @@ export const InvestorMortgageDashboard = ({ onNavigateToProperties }: { onNaviga
   const paymentProgress = ((4 - mortgageData.missedPayments) / 4) * 100;
   const mortgageProgress = ((mortgageData.principalAmount - mortgageData.remainingBalance) / mortgageData.principalAmount) * 100;
 
+  // Get property details from catalog for better visuals
+  const getPropertyDetails = (propertyName: string) => {
+    const matchingProperty = PROPERTIES_CATALOG.find(p => 
+      p.name.toLowerCase().includes(propertyName.toLowerCase().split(' ')[0]) ||
+      propertyName.toLowerCase().includes(p.name.toLowerCase().split(' ')[0])
+    );
+    return matchingProperty ? {
+      name: matchingProperty.name,
+      location: matchingProperty.location,
+      image: matchingProperty.image,
+      rating: 4.8
+    } : {
+      name: propertyName,
+      location: userProperty?.property_location || 'Unknown Location',
+      image: '/placeholder.svg',
+      rating: 4.8
+    };
+  };
+
+  const propertyDetails = getPropertyDetails(userProperty?.property_name || '');
+
   return (
     <div className="space-y-6">
-      {/* Mortgage Overview */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span className="flex items-center gap-2">
-              <Building2 className="h-5 w-5" />
-              {userProperty?.property_name || 'Active Mortgage'}
-            </span>
-            <div className="flex gap-2">
-              {mortgageData.isForeclosed && (
-                <Badge variant="destructive">Foreclosed</Badge>
-              )}
-              {mortgageData.isCompleted && (
-                <Badge variant="default" className="bg-green-500">Completed</Badge>
-              )}
-              {mortgageData.isActive && !mortgageData.isForeclosed && (
-                <Badge variant="outline" className="bg-blue-500/10 text-blue-600">Active</Badge>
-              )}
+      {/* Hero Section with Property Visual */}
+      <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-background via-muted/30 to-primary/5 border">
+        <div className="absolute inset-0 bg-grid-white/10" />
+        <div className="relative p-8">
+          <div className="flex flex-col lg:flex-row gap-6 items-start">
+            {/* Property Image */}
+            <div className="relative">
+              <div className="w-48 h-32 rounded-lg overflow-hidden border shadow-lg">
+                <img 
+                  src={propertyDetails.image} 
+                  alt={propertyDetails.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="absolute -top-2 -right-2">
+                <Badge className="bg-primary/90 hover:bg-primary">
+                  <Home className="h-3 w-3 mr-1" />
+                  Active
+                </Badge>
+              </div>
             </div>
-          </CardTitle>
-          <CardDescription>
-            Smart Contract Address: {account?.slice(0, 20)}...
-          </CardDescription>
-        </CardHeader>
-      </Card>
+            
+            {/* Property Info */}
+            <div className="flex-1 space-y-4">
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight">
+                  {propertyDetails.name}
+                </h1>
+                <div className="flex items-center gap-2 text-muted-foreground mt-1">
+                  <MapPin className="h-4 w-4" />
+                  <span>{propertyDetails.location}</span>
+                  <div className="flex items-center gap-1 ml-2">
+                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    <span className="text-sm font-medium">{propertyDetails.rating}</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Quick Stats */}
+              <div className="grid grid-cols-3 gap-4">
+                <div className="text-center p-3 rounded-lg bg-background/60 border">
+                  <div className="text-2xl font-bold text-primary">
+                    {mortgageProgress.toFixed(0)}%
+                  </div>
+                  <div className="text-xs text-muted-foreground">Paid Off</div>
+                </div>
+                <div className="text-center p-3 rounded-lg bg-background/60 border">
+                  <div className="text-2xl font-bold text-green-600">
+                    ${((mortgageData.principalAmount - mortgageData.remainingBalance) + mortgageData.downPayment).toLocaleString()}
+                  </div>
+                  <div className="text-xs text-muted-foreground">Total Equity</div>
+                </div>
+                <div className="text-center p-3 rounded-lg bg-background/60 border">
+                  <div className={`text-2xl font-bold ${
+                    isPaymentOverdue ? 'text-destructive' : 
+                    isPaymentSoon ? 'text-yellow-600' : 'text-green-600'
+                  }`}>
+                    {isPaymentOverdue ? 'OVERDUE' : `${daysUntilPayment}d`}
+                  </div>
+                  <div className="text-xs text-muted-foreground">Next Payment</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Payment Status Alert */}
       {(isPaymentOverdue || isPaymentSoon || mortgageData.missedPayments > 0) && (
-        <Card className={`border-l-4 ${
-          isPaymentOverdue || mortgageData.missedPayments >= 3 ? 'border-l-red-500 bg-red-50 dark:bg-red-950/10' :
-          isPaymentSoon ? 'border-l-yellow-500 bg-yellow-50 dark:bg-yellow-950/10' :
-          'border-l-orange-500 bg-orange-50 dark:bg-orange-950/10'
+        <Card className={`relative overflow-hidden ${
+          isPaymentOverdue || mortgageData.missedPayments >= 3 ? 'border-destructive bg-destructive/5' :
+          isPaymentSoon ? 'border-yellow-500 bg-yellow-500/5' :
+          'border-orange-500 bg-orange-500/5'
         }`}>
-          <CardHeader>
+          <div className={`absolute inset-y-0 left-0 w-1 ${
+            isPaymentOverdue || mortgageData.missedPayments >= 3 ? 'bg-destructive' :
+            isPaymentSoon ? 'bg-yellow-500' : 'bg-orange-500'
+          }`} />
+          <CardHeader className="pl-8">
             <CardTitle className="flex items-center gap-2">
               <AlertTriangle className={`h-5 w-5 ${
-                isPaymentOverdue || mortgageData.missedPayments >= 3 ? 'text-red-500' :
-                isPaymentSoon ? 'text-yellow-500' : 'text-orange-500'
+                isPaymentOverdue || mortgageData.missedPayments >= 3 ? 'text-destructive' :
+                isPaymentSoon ? 'text-yellow-600' : 'text-orange-600'
               }`} />
-              Payment Alert
+              Payment Status
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pl-8 space-y-4">
             {isPaymentOverdue && (
-              <p className="text-red-700 dark:text-red-400">
-                ⚠️ Payment is overdue! Make a payment immediately to avoid foreclosure.
-              </p>
+              <div className="flex items-start gap-3 p-4 rounded-lg bg-destructive/10 border border-destructive/20">
+                <AlertTriangle className="h-5 w-5 text-destructive mt-0.5" />
+                <div>
+                  <p className="font-semibold text-destructive">Payment Overdue</p>
+                  <p className="text-sm text-muted-foreground">Make a payment immediately to avoid foreclosure proceedings.</p>
+                </div>
+              </div>
             )}
             {isPaymentSoon && !isPaymentOverdue && (
-              <p className="text-yellow-700 dark:text-yellow-400">
-                💡 Payment due in {daysUntilPayment} days. Consider making your payment soon.
-              </p>
+              <div className="flex items-start gap-3 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                <Clock className="h-5 w-5 text-yellow-600 mt-0.5" />
+                <div>
+                  <p className="font-semibold text-yellow-700">Payment Due Soon</p>
+                  <p className="text-sm text-muted-foreground">Payment due in {daysUntilPayment} days.</p>
+                </div>
+              </div>
             )}
             {mortgageData.missedPayments > 0 && (
-              <p className="text-orange-700 dark:text-orange-400 mt-2">
-                You have {mortgageData.missedPayments} missed payment(s). 
-                {mortgageData.missedPayments >= 3 && " ⚠️ FORECLOSURE WARNING: 1 more missed payment will trigger foreclosure!"}
-              </p>
+              <>
+                <div className="flex items-start gap-3 p-4 rounded-lg bg-orange-500/10 border border-orange-500/20">
+                  <Shield className="h-5 w-5 text-orange-600 mt-0.5" />
+                  <div>
+                    <p className="font-semibold text-orange-700">
+                      {mortgageData.missedPayments} Missed Payment{mortgageData.missedPayments > 1 ? 's' : ''}
+                    </p>
+                    {mortgageData.missedPayments >= 3 && (
+                      <p className="text-sm text-destructive font-medium">⚠️ FORECLOSURE WARNING: One more missed payment will trigger foreclosure!</p>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <div className="flex justify-between text-sm mb-2">
+                    <span className="font-medium">Payment Standing</span>
+                    <span className={`font-semibold ${
+                      mortgageData.missedPayments >= 3 ? 'text-destructive' :
+                      mortgageData.missedPayments >= 2 ? 'text-orange-600' :
+                      'text-green-600'
+                    }`}>
+                      {4 - mortgageData.missedPayments}/4 payments current
+                    </span>
+                  </div>
+                  <Progress 
+                    value={paymentProgress} 
+                    className={`h-3 ${
+                      mortgageData.missedPayments >= 3 ? '[&>div]:bg-destructive' :
+                      mortgageData.missedPayments >= 2 ? '[&>div]:bg-orange-500' :
+                      '[&>div]:bg-green-500'
+                    }`}
+                  />
+                </div>
+              </>
             )}
-            <div className="mt-3">
-              <div className="flex justify-between text-sm mb-1">
-                <span>Foreclosure Risk</span>
-                <span>{4 - mortgageData.missedPayments}/4 payments remaining</span>
-              </div>
-              <Progress 
-                value={paymentProgress} 
-                className={`h-2 ${
-                  mortgageData.missedPayments >= 3 ? '[&>div]:bg-red-500' :
-                  mortgageData.missedPayments >= 2 ? '[&>div]:bg-orange-500' :
-                  '[&>div]:bg-green-500'
-                }`}
-              />
-            </div>
           </CardContent>
         </Card>
       )}
 
       {/* Financial Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Remaining Balance</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <Card className="relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-destructive/5 to-destructive/10" />
+          <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Outstanding Balance</CardTitle>
+            <div className="p-2 rounded-lg bg-destructive/10">
+              <DollarSign className="h-4 w-4 text-destructive" />
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
+          <CardContent className="relative">
+            <div className="text-2xl font-bold text-destructive">
               {asUSD((userProperty as any)?.remaining_balance_base, mortgageData.remainingBalance)}
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground mt-1">
               of {principalBase(userProperty) != null 
                 ? fmtUSD(principalBase(userProperty)!) 
                 : `$${mortgageData.principalAmount?.toLocaleString() || '0'}`} principal
             </p>
+            <div className="mt-2">
+              <Progress value={100 - mortgageProgress} className="h-1 bg-muted [&>div]:bg-destructive/60" />
+            </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <Card className="relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary/10" />
+          <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Monthly Payment</CardTitle>
-            <Banknote className="h-4 w-4 text-muted-foreground" />
+            <div className="p-2 rounded-lg bg-primary/10">
+              <CreditCard className="h-4 w-4 text-primary" />
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-blue-600">
+          <CardContent className="relative">
+            <div className="text-2xl font-bold text-primary">
               ${mortgageData.monthlyPayment?.toLocaleString() || '0'}
             </div>
-            <p className="text-xs text-muted-foreground">
-              {(mortgageData.aprBps ?? 800) / 100}% APR, {(mortgageData.termMonths ?? 120) / 12} year term
+            <p className="text-xs text-muted-foreground mt-1">
+              {(mortgageData.aprBps ?? 800) / 100}% APR • {(mortgageData.termMonths ?? 120) / 12} years
             </p>
+            <div className="flex items-center gap-2 mt-2">
+              <CheckCircle2 className="h-3 w-3 text-green-600" />
+              <span className="text-xs text-green-600 font-medium">Auto-pay enabled</span>
+            </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <Card className="relative overflow-hidden">
+          <div className={`absolute inset-0 bg-gradient-to-br ${
+            isPaymentOverdue ? 'from-destructive/5 to-destructive/10' :
+            isPaymentSoon ? 'from-yellow-500/5 to-yellow-500/10' :
+            'from-green-500/5 to-green-500/10'
+          }`} />
+          <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Next Payment</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <div className={`p-2 rounded-lg ${
+              isPaymentOverdue ? 'bg-destructive/10' :
+              isPaymentSoon ? 'bg-yellow-500/10' :
+              'bg-green-500/10'
+            }`}>
+              <Calendar className={`h-4 w-4 ${
+                isPaymentOverdue ? 'text-destructive' :
+                isPaymentSoon ? 'text-yellow-600' :
+                'text-green-600'
+              }`} />
+            </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="relative">
             <div className={`text-2xl font-bold ${
-              isPaymentOverdue ? 'text-red-600' : 
+              isPaymentOverdue ? 'text-destructive' : 
               isPaymentSoon ? 'text-yellow-600' : 'text-green-600'
             }`}>
               {isPaymentOverdue ? 'OVERDUE' : `${daysUntilPayment} days`}
             </div>
-            <p className="text-xs text-muted-foreground">
-              {mortgageData.nextPaymentDue ? 
+            <p className="text-xs text-muted-foreground mt-1">
+              Due: {mortgageData.nextPaymentDue ? 
                 new Date(mortgageData.nextPaymentDue).toLocaleDateString() : 
                 'Not scheduled'
               }
@@ -320,18 +452,24 @@ export const InvestorMortgageDashboard = ({ onNavigateToProperties }: { onNaviga
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Equity Built</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+        <Card className="relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-green-500/10" />
+          <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Equity</CardTitle>
+            <div className="p-2 rounded-lg bg-green-500/10">
+              <PiggyBank className="h-4 w-4 text-green-600" />
+            </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="relative">
             <div className="text-2xl font-bold text-green-600">
               ${((mortgageData.principalAmount - mortgageData.remainingBalance) + mortgageData.downPayment).toLocaleString()}
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground mt-1">
               Down payment + principal paid
             </p>
+            <div className="mt-2">
+              <Progress value={mortgageProgress} className="h-1 bg-muted [&>div]:bg-green-500/60" />
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -450,61 +588,69 @@ export const InvestorMortgageDashboard = ({ onNavigateToProperties }: { onNaviga
         );
       })()}
 
-      {/* Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Button 
+      {/* Action Buttons */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <Button
           onClick={handleMakePayment}
-          disabled={isPurchasingProperty || mortgageData.isCompleted || mortgageData.isForeclosed}
+          disabled={isPurchasingProperty || mortgageData.isCompleted}
+          className="h-12 flex items-center justify-center gap-2 bg-primary hover:bg-primary/90"
           size="lg"
-          className="w-full"
         >
-          {isPurchasingProperty ? "Processing Payment..." : "Make Monthly Payment"}
+          <CreditCard className="h-5 w-5" />
+          Make Payment (${mortgageData.monthlyPayment?.toLocaleString() || '0'})
         </Button>
         
-        {userProperty && (
-          <MortgagePaymentModal 
-            isOpen={paymentModalOpen}
-            onClose={() => setPaymentModalOpen(false)}
-            property={{
-              id: userProperty.id,
-              title: userProperty.property_name,
-              location: userProperty.property_location,
-              image: userProperty.image_url || "/src/assets/villa-bali.jpg",
-              value: userProperty.current_value,
-              monthlyPayment: userProperty.monthly_payment,
-              remainingBalance: userProperty.remaining_balance
-            }}
-            onSuccess={() => onNavigateToProperties?.({
-              propertyId: userProperty.id,
-              name: userProperty.property_name,
-              location: userProperty.property_location,
+        {onNavigateToProperties && (
+          <Button 
+            variant="outline" 
+            onClick={() => onNavigateToProperties({
+              propertyId: userProperty?.id,
+              name: userProperty?.property_name,
+              location: userProperty?.property_location
             })}
-          />
+            className="h-12 flex items-center justify-center gap-2"
+            size="lg"
+          >
+            <Building2 className="h-5 w-5" />
+            View Property Details
+          </Button>
         )}
         
         <Button 
-          variant="secondary" 
-          size="lg" 
-          className="w-full"
-          onClick={() => onNavigateToProperties?.({
-            propertyId: userProperty?.id,
-            name: userProperty?.property_name,
-            location: userProperty?.property_location,
-          })}
-        >
-          View in My Properties
-        </Button>
-        
-        <Button 
           variant="outline" 
-          size="lg" 
-          className="w-full"
           onClick={handleViewOnExplorer}
+          className="h-12 flex items-center justify-center gap-2"
+          size="lg"
         >
-          <ExternalLink className="h-4 w-4 mr-2" />
-          View on Blockchain Explorer
+          <ExternalLink className="h-5 w-5" />
+          Blockchain Explorer
         </Button>
       </div>
+
+      {/* Payment Modal */}
+      {userProperty && (
+        <MortgagePaymentModal 
+          isOpen={paymentModalOpen}
+          onClose={() => setPaymentModalOpen(false)}
+          property={{
+            id: userProperty.id,
+            title: userProperty.property_name,
+            location: userProperty.property_location,
+            image: propertyDetails.image,
+            value: userProperty.current_value,
+            monthlyPayment: userProperty.monthly_payment,
+            remainingBalance: userProperty.remaining_balance
+          }}
+          onSuccess={() => {
+            setPaymentModalOpen(false);
+            onNavigateToProperties?.({
+              propertyId: userProperty.id,
+              name: userProperty.property_name,
+              location: userProperty.property_location,
+            });
+          }}
+        />
+      )}
     </div>
   );
 };
