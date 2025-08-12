@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { CashOutModal } from "./CashOutModal";
 import { InvestorTierStatus } from "./InvestorTierStatus";
 import { TrendingUp, DollarSign, Home, Repeat } from "lucide-react";
-
 interface PortfolioSummaryProps {
   portfolioData?: {
     totalInvestment: number;
@@ -15,8 +14,7 @@ interface PortfolioSummaryProps {
     monthlyIncome: number;
   };
 }
-
-export const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({ 
+export const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({
   portfolioData = {
     totalInvestment: 150000,
     currentValue: 187500,
@@ -26,18 +24,12 @@ export const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({
   }
 }) => {
   const [showCashOut, setShowCashOut] = useState(false);
-
   const totalGain = portfolioData.currentValue - portfolioData.totalInvestment;
-  const totalROI = (totalGain / portfolioData.totalInvestment) * 100;
-
-  return (
-    <>
+  const totalROI = totalGain / portfolioData.totalInvestment * 100;
+  return <>
       <div className="space-y-6">
         {/* Investor Tier Status */}
-        <InvestorTierStatus 
-          totalInvestmentAmount={portfolioData.totalInvestment} 
-          className="col-span-full"
-        />
+        <InvestorTierStatus totalInvestmentAmount={portfolioData.totalInvestment} className="col-span-full" />
         
         {/* Portfolio Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -97,67 +89,10 @@ export const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({
         </div>
 
         {/* Available Profits Section */}
-        <Card className="bg-gradient-to-r from-green-50/50 to-primary/5 border-green-200/50">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <DollarSign className="h-5 w-5 text-green-600" />
-              Available Profits
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-3xl font-bold text-green-600">
-                  ${portfolioData.availableProfits.toLocaleString()}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  Ready for withdrawal or reinvestment
-                </div>
-              </div>
-              <Badge variant="secondary" className="bg-green-100 text-green-800">
-                Profit Available
-              </Badge>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <Button 
-                variant="outline"
-                onClick={() => setShowCashOut(true)}
-                className="h-12 border-green-500/30 text-green-700 hover:bg-green-50"
-              >
-                <DollarSign className="h-4 w-4 mr-2" />
-                Cash Out (5% fee applies)
-              </Button>
-              
-              <Button 
-                className="h-12 bg-green-600 hover:bg-green-700"
-                onClick={() => {
-                  // TODO: Navigate to investment options
-                  console.log("Reinvesting profits");
-                }}
-              >
-                <Repeat className="h-4 w-4 mr-2" />
-                Reinvest (No fees)
-              </Button>
-            </div>
-
-            <div className="bg-green-50/50 border border-green-200 rounded-lg p-3">
-              <div className="text-sm text-green-800">
-                <strong>💡 Smart Move:</strong> Reinvesting your ${portfolioData.availableProfits.toLocaleString()} profits 
-                saves you ${(portfolioData.availableProfits * 0.05).toLocaleString()} in platform fees while continuing to earn returns.
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        
       </div>
 
       {/* Cash Out Modal */}
-      <CashOutModal
-        open={showCashOut}
-        onOpenChange={setShowCashOut}
-        availableBalance={portfolioData.availableProfits}
-        portfolioValue={portfolioData.currentValue}
-      />
-    </>
-  );
+      <CashOutModal open={showCashOut} onOpenChange={setShowCashOut} availableBalance={portfolioData.availableProfits} portfolioValue={portfolioData.currentValue} />
+    </>;
 };
