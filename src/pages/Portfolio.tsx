@@ -14,6 +14,7 @@ import { DeveloperInvestmentsAnalytics } from "@/components/DeveloperInvestments
 import { TrustSignals } from "@/components/TrustSignals";
 import { CompetitorComparison } from "@/components/CompetitorComparison";
 import { PlatformAnalytics } from "@/components/PlatformAnalytics";
+import OneTimeReset from "@/components/admin/OneTimeReset";
 import RentalIncomeTracker from "@/components/RentalIncomeTracker";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
@@ -323,6 +324,9 @@ const Portfolio = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+      {/* Portfolio Reset Component */}
+      {account && <OneTimeReset wallet={account} />}
+      
       {/* Header */}
       <div className="border-b bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-6">
