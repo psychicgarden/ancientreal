@@ -52,23 +52,28 @@ We Solve That.</p>
               <div className="flex items-center justify-center w-16 h-16 bg-accent-foreground/10 backdrop-blur-sm rounded-xl mx-auto mb-4">
                 <Home className="w-8 h-8 text-gold" />
               </div>
-              <div className="text-3xl font-bold text-accent-foreground mb-2">500+</div>
+              <div className="text-3xl font-bold text-accent-foreground mb-2">500+*</div>
               <div className="text-accent-foreground/70">Premium Properties</div>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center w-16 h-16 bg-accent-foreground/10 backdrop-blur-sm rounded-xl mx-auto mb-4">
                 <TrendingUp className="w-8 h-8 text-gold" />
               </div>
-              <div className="text-3xl font-bold text-accent-foreground mb-2">12.5%</div>
+              <div className="text-3xl font-bold text-accent-foreground mb-2">12.5%*</div>
               <div className="text-accent-foreground/70">Average Returns</div>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center w-16 h-16 bg-accent-foreground/10 backdrop-blur-sm rounded-xl mx-auto mb-4">
                 <Shield className="w-8 h-8 text-gold" />
               </div>
-              <div className="text-3xl font-bold text-accent-foreground mb-2">$2B+</div>
+              <div className="text-3xl font-bold text-accent-foreground mb-2">$2B+*</div>
               <div className="text-accent-foreground/70">Assets Managed</div>
             </div>
+          </div>
+          
+          {/* Disclaimer Notice */}
+          <div className="mt-8 text-center text-xs text-accent-foreground/60 max-w-2xl mx-auto">
+            <p>*Projected figures for demonstration purposes. Past performance does not guarantee future results. All investments carry risk of loss.</p>
           </div>
         </div>
       </div>

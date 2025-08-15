@@ -50,6 +50,38 @@ function Footer({ className }: { className?: string }) {
           </div>
         </div>
 
+        {/* Legal Disclaimers */}
+        <div className="mt-8 pt-6 border-t border-border/20">
+          <div className="space-y-4 text-xs text-muted-foreground">
+            <div className="bg-card/50 p-4 rounded-lg">
+              <h4 className="font-semibold text-foreground mb-2">Investment Risk Disclosure</h4>
+              <p className="leading-relaxed">
+                All investments carry risk of loss. Real estate investments are subject to market fluctuations, 
+                property damage, vacancy risk, and regulatory changes. Past performance does not guarantee future results. 
+                Projected returns are estimates based on current market conditions and are not guaranteed.
+              </p>
+            </div>
+            
+            <div className="bg-card/50 p-4 rounded-lg">
+              <h4 className="font-semibold text-foreground mb-2">Demo Environment Notice</h4>
+              <p className="leading-relaxed">
+                This platform displays demonstration data for educational purposes. Property values, returns, 
+                and projections shown may not reflect actual market conditions. Consult licensed professionals 
+                before making investment decisions.
+              </p>
+            </div>
+            
+            <div className="bg-card/50 p-4 rounded-lg">
+              <h4 className="font-semibold text-foreground mb-2">Regulatory Compliance</h4>
+              <p className="leading-relaxed">
+                Securities offerings subject to regulatory approval. Not an offer of securities in jurisdictions 
+                where prohibited. Investments may be limited to accredited investors. Consult legal and tax 
+                advisors regarding your specific situation.
+              </p>
+            </div>
+          </div>
+        </div>
+
         <div className="mt-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
           <p>© {new Date().getFullYear()} Ancient. All rights reserved.</p>
           <div className="flex items-center gap-4">

@@ -270,6 +270,18 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
             </div>
           </div>
 
+          {/* Investment Disclaimers */}
+          <div className="bg-muted/30 rounded-lg p-4 space-y-2 text-sm">
+            <h4 className="font-semibold text-destructive">⚠️ Important Investment Disclaimers</h4>
+            <ul className="space-y-1 text-muted-foreground text-xs">
+              <li>• All investments carry risk of loss and are not guaranteed</li>
+              <li>• Projected returns are estimates based on current market conditions</li>
+              <li>• Real estate investments subject to market fluctuations and vacancy risk</li>
+              <li>• Past performance does not guarantee future results</li>
+              <li>• Demo environment - consult professionals before investing</li>
+            </ul>
+          </div>
+
           {/* Action Button */}
           <Button 
             className="w-full" 
