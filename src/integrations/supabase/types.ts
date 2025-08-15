@@ -719,7 +719,9 @@ export type Database = {
           listing_date: string | null
           min_investment: number
           monthly_base_rent: number | null
+          mortgage_apr_bps: number | null
           mortgage_down_payment_total: number | null
+          mortgage_term_months: number | null
           original_property_value: number | null
           original_purchase_price: number
           owner_approved_listing: boolean | null
@@ -760,7 +762,9 @@ export type Database = {
           listing_date?: string | null
           min_investment?: number
           monthly_base_rent?: number | null
+          mortgage_apr_bps?: number | null
           mortgage_down_payment_total?: number | null
+          mortgage_term_months?: number | null
           original_property_value?: number | null
           original_purchase_price: number
           owner_approved_listing?: boolean | null
@@ -801,7 +805,9 @@ export type Database = {
           listing_date?: string | null
           min_investment?: number
           monthly_base_rent?: number | null
+          mortgage_apr_bps?: number | null
           mortgage_down_payment_total?: number | null
+          mortgage_term_months?: number | null
           original_property_value?: number | null
           original_purchase_price?: number
           owner_approved_listing?: boolean | null
@@ -1401,6 +1407,10 @@ export type Database = {
       calculate_daily_yield: {
         Args: Record<PropertyKey, never>
         Returns: undefined
+      }
+      calculate_monthly_payment: {
+        Args: { apr_bps: number; loan_amount_usd: number; term_months: number }
+        Returns: number
       }
       distribute_monthly_rental_income: {
         Args: { property_frac_id: string; rental_month?: string }
