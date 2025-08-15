@@ -516,17 +516,7 @@ const Portfolio = () => {
               <Badge>Premium Analytics</Badge>
             </div>
             
-            <EnhancedPortfolioAnalytics 
-              portfolioData={portfolioData} 
-              userProperties={displayProperties.map(p => ({
-                id: p.id,
-                property_name: p.title,
-                ownership_percentage: 100,
-                current_value: p.value,
-                investment_amount: p.downPayment
-              }))}
-              fractionalInvestments={[]}
-            />
+            <EnhancedPortfolioAnalytics />
             
             <TrustSignals />
           </TabsContent>

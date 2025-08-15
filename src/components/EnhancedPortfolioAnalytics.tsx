@@ -1,65 +1,202 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, DollarSign, BarChart3, PieChart, Calendar, Target } from "lucide-react";
-
-interface PortfolioData {
-  totalInvestment: number;
-  currentValue: number;
-  availableProfits: number;
-  activeProperties: number;
-  monthlyIncome: number;
-}
-
-interface PropertyData {
-  id: string;
-  property_name: string;
-  ownership_percentage: number;
-  current_value: number;
-  investment_amount: number;
-}
+import { useWallet } from "@/contexts/WalletContext";
+import { supabase } from "@/integrations/supabase/client";
+import { calculateMortgageMetrics, calculatePortfolioMetrics, MortgageData } from "@/lib/mortgageCalculations";
+import { fromBase } from "@/lib/money";
 
 interface EnhancedPortfolioAnalyticsProps {
-  portfolioData: PortfolioData;
-  userProperties: PropertyData[];
-  fractionalInvestments: PropertyData[];
+  // This component will fetch its own data directly from the database
 }
 
-export const EnhancedPortfolioAnalytics: React.FC<EnhancedPortfolioAnalyticsProps> = ({ 
-  portfolioData,
-  userProperties,
-  fractionalInvestments
-}) => {
-  const totalGain = portfolioData.currentValue - portfolioData.totalInvestment;
-  const totalROI = (totalGain / portfolioData.totalInvestment) * 100;
-  const annualIncome = portfolioData.monthlyIncome * 12;
-  const yieldPercentage = (annualIncome / portfolioData.totalInvestment) * 100;
+export const EnhancedPortfolioAnalytics: React.FC<EnhancedPortfolioAnalyticsProps> = () => {
+  const { isConnected, account } = useWallet();
+  const [mortgageProperties, setMortgageProperties] = useState<any[]>([]);
+  const [fractionalInvestments, setFractionalInvestments] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Generate dynamic portfolio composition from actual user data
-  const capTable = [
-    ...userProperties.map(property => ({
+  useEffect(() => {
+    const fetchPortfolioData = async () => {
+      if (!isConnected || !account) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        // Fetch mortgage properties
+        const { data: userProperties, error: mortgageError } = await supabase
+          .from('user_properties')
+          .select('*')
+          .eq('user_wallet_address', account.toLowerCase())
+          .eq('is_active', true);
+
+        if (mortgageError) throw mortgageError;
+
+        // Fetch fractional investments
+        const { data: fractionalData, error: fractionalError } = await supabase
+          .from('fractional_investments')
+          .select(`
+            *,
+            property_fractionalization (
+              property_name,
+              property_location,
+              current_speculation_price,
+              monthly_base_rent
+            )
+          `)
+          .eq('investor_wallet_address', account.toLowerCase())
+          .eq('status', 'active');
+
+        if (fractionalError) throw fractionalError;
+
+        setMortgageProperties(userProperties || []);
+        setFractionalInvestments(fractionalData || []);
+      } catch (error) {
+        console.error('Error fetching portfolio data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPortfolioData();
+
+    // Real-time subscriptions
+    const propertiesChannel = supabase
+      .channel('user_properties_analytics')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'user_properties',
+        filter: `user_wallet_address=eq.${account?.toLowerCase()}`
+      }, () => fetchPortfolioData())
+      .subscribe();
+
+    const fractionalChannel = supabase
+      .channel('fractional_investments_analytics')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'fractional_investments',
+        filter: `investor_wallet_address=eq.${account?.toLowerCase()}`
+      }, () => fetchPortfolioData())
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(propertiesChannel);
+      supabase.removeChannel(fractionalChannel);
+    };
+  }, [isConnected, account]);
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <Card key={i}>
+              <CardContent className="p-4">
+                <div className="animate-pulse">
+                  <div className="h-4 bg-muted rounded mb-2"></div>
+                  <div className="h-8 bg-muted rounded mb-2"></div>
+                  <div className="h-3 bg-muted rounded w-2/3"></div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Calculate real mortgage metrics
+  const mortgageMetrics = mortgageProperties.map(property => {
+    const mortgageData: MortgageData = {
+      loanAmountBase: BigInt(property.loan_amount_base || 0),
+      principalPaidBase: BigInt(property.principal_paid_base || 0),
+      interestPaidBase: BigInt(property.interest_paid_base || 0),
+      aprBps: Number(property.apr_bps || 800),
+      termMonths: Number(property.term_months || 120),
+      purchaseDate: property.purchase_date
+    };
+    const purchasePrice = property.purchase_price_base ? 
+      fromBase(property.purchase_price_base) : 
+      Number(property.purchase_price || 0);
+    
+    return {
+      ...property,
+      metrics: calculateMortgageMetrics(mortgageData, purchasePrice),
+      purchasePrice
+    };
+  });
+
+  // Calculate portfolio totals using real data
+  const portfolioData = mortgageMetrics.reduce((acc, property) => {
+    return {
+      totalInvestment: acc.totalInvestment + property.purchasePrice,
+      totalEquity: acc.totalEquity + property.metrics.equityBuilt,
+      totalDebt: acc.totalDebt + property.metrics.remainingBalance,
+      totalMonthlyPayment: acc.totalMonthlyPayment + property.metrics.monthlyPayment,
+      totalPrincipalPaid: acc.totalPrincipalPaid + property.metrics.paidBalance,
+      totalInterestPaid: acc.totalInterestPaid + property.metrics.totalInterestPaid
+    };
+  }, {
+    totalInvestment: 0,
+    totalEquity: 0,
+    totalDebt: 0,
+    totalMonthlyPayment: 0,
+    totalPrincipalPaid: 0,
+    totalInterestPaid: 0
+  });
+
+  // Add fractional investment values
+  const totalFractionalInvestment = fractionalInvestments.reduce((sum, inv) => sum + inv.investment_amount, 0);
+  const currentFractionalValue = fractionalInvestments.reduce((sum, inv) => {
+    const currentPrice = inv.property_fractionalization?.current_speculation_price || inv.original_property_price;
+    return sum + (currentPrice * inv.ownership_percentage / 100);
+  }, 0);
+
+  const totalCurrentValue = portfolioData.totalInvestment + (currentFractionalValue - totalFractionalInvestment);
+  const totalGain = portfolioData.totalEquity + (currentFractionalValue - totalFractionalInvestment);
+  const totalROI = portfolioData.totalInvestment > 0 ? (totalGain / portfolioData.totalInvestment) * 100 : 0;
+
+  // Calculate annual yield based on monthly rental income from fractional properties
+  const monthlyRentalIncome = fractionalInvestments.reduce((sum, inv) => {
+    const baseRent = inv.property_fractionalization?.monthly_base_rent || 0;
+    return sum + (baseRent * inv.ownership_percentage / 100);
+  }, 0);
+
+  const annualIncome = monthlyRentalIncome * 12;
+  const yieldPercentage = portfolioData.totalInvestment > 0 ? (annualIncome / portfolioData.totalInvestment) * 100 : 0;
+
+  // Portfolio composition data
+  const allProperties = [
+    ...mortgageMetrics.map(property => ({
       property: property.property_name,
-      owned: property.ownership_percentage,
+      owned: property.metrics.ownershipPercentage,
       total: 100,
-      value: property.current_value
+      value: property.purchasePrice,
+      type: 'mortgage' as const
     })),
     ...fractionalInvestments.map(investment => ({
-      property: investment.property_name,
+      property: investment.property_fractionalization?.property_name || 'Unknown Property',
       owned: investment.ownership_percentage,
       total: 100,
-      value: investment.current_value
+      value: investment.property_fractionalization?.current_speculation_price || investment.original_property_price,
+      type: 'fractional' as const
     }))
   ];
 
-  // Calculate analytics from real data
+  // Analytics calculations
   const analytics = {
-    equityBuilt: totalGain * 0.6, // Estimate 60% from equity building
-    appreciationGain: totalGain * 0.4, // 40% from appreciation
-    diversificationScore: Math.min(95, 30 + (capTable.length * 15)), // Score based on property count
-    riskLevel: capTable.length >= 3 ? 'Low' : capTable.length >= 2 ? 'Medium' : 'High',
-    timeToFullOwnership: `${(8 - (portfolioData.activeProperties * 0.5)).toFixed(1)} years`,
-    projectedValue5Years: portfolioData.currentValue * 1.65
+    equityBuilt: portfolioData.totalEquity,
+    diversificationScore: Math.min(95, 30 + (allProperties.length * 15)),
+    riskLevel: allProperties.length >= 3 ? 'Low' : allProperties.length >= 2 ? 'Medium' : 'High',
+    averageTimeToPayoff: mortgageMetrics.length > 0 
+      ? mortgageMetrics.reduce((sum, p) => sum + p.metrics.remainingMonths, 0) / mortgageMetrics.length / 12
+      : 0,
+    projectedValue5Years: totalCurrentValue * 1.65
   };
 
   return (
@@ -137,7 +274,7 @@ export const EnhancedPortfolioAnalytics: React.FC<EnhancedPortfolioAnalyticsProp
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {capTable.length > 0 ? capTable.map((property, index) => {
+            {allProperties.length > 0 ? allProperties.map((property, index) => {
               const ownershipPercent = property.owned;
               const propertyValue = (property.value * property.owned) / 100;
               
@@ -179,11 +316,11 @@ export const EnhancedPortfolioAnalytics: React.FC<EnhancedPortfolioAnalyticsProp
             <div className="space-y-4">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Time to Full Ownership</span>
-                <span className="font-semibold">{analytics.timeToFullOwnership}</span>
+                <span className="font-semibold">{analytics.averageTimeToPayoff.toFixed(1)} years</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Monthly Payment Total</span>
-                <span className="font-semibold">${portfolioData.monthlyIncome.toLocaleString()}</span>
+                <span className="font-semibold">${portfolioData.totalMonthlyPayment.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Remaining Principal</span>
@@ -211,7 +348,7 @@ export const EnhancedPortfolioAnalytics: React.FC<EnhancedPortfolioAnalyticsProp
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Total Appreciation</span>
                 <span className="font-semibold text-green-600">
-                  ${(analytics.projectedValue5Years - portfolioData.currentValue).toLocaleString()}
+                  ${(analytics.projectedValue5Years - totalCurrentValue).toLocaleString()}
                 </span>
               </div>
               <div className="flex justify-between">
@@ -234,19 +371,19 @@ export const EnhancedPortfolioAnalytics: React.FC<EnhancedPortfolioAnalyticsProp
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-green-50 p-4 rounded-lg">
               <div className="text-green-600 font-semibold">Rental Income</div>
-              <div className="text-2xl font-bold">${(portfolioData.monthlyIncome * 0.7).toLocaleString()}</div>
+              <div className="text-2xl font-bold">${(monthlyRentalIncome * 0.7 * 12).toLocaleString()}</div>
               <div className="text-sm text-muted-foreground">70% of total income</div>
             </div>
             
             <div className="bg-blue-50 p-4 rounded-lg">
               <div className="text-blue-600 font-semibold">Appreciation</div>
-              <div className="text-2xl font-bold">${(portfolioData.monthlyIncome * 0.2).toLocaleString()}</div>
+              <div className="text-2xl font-bold">${(totalGain * 0.2).toLocaleString()}</div>
               <div className="text-sm text-muted-foreground">20% of total income</div>
             </div>
             
             <div className="bg-purple-50 p-4 rounded-lg">
               <div className="text-purple-600 font-semibold">Yield Farming</div>
-              <div className="text-2xl font-bold">${(portfolioData.monthlyIncome * 0.1).toLocaleString()}</div>
+              <div className="text-2xl font-bold">${(totalGain * 0.1).toLocaleString()}</div>
               <div className="text-sm text-muted-foreground">10% of total income</div>
             </div>
           </div>
