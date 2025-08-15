@@ -3,9 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import { TrendingUp, DollarSign, Home, Building, Target, Calculator } from "lucide-react";
 import { InvestorTierStatus } from "./InvestorTierStatus";
+import PropertyInvestmentCalculator from "./PropertyInvestmentCalculator";
 import { useWallet } from "@/contexts/WalletContext";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
 interface PortfolioSummaryProps {
@@ -20,9 +23,11 @@ export const BeginnerPortfolioSummary: React.FC<PortfolioSummaryProps> = ({
   loading: propLoading
 }) => {
   const { isConnected, account } = useWallet();
+  const navigate = useNavigate();
   const [userProperties, setUserProperties] = useState<any[]>([]);
   const [developerInvestments, setDeveloperInvestments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showCalculator, setShowCalculator] = useState(false);
 
   // Use props if provided, otherwise fetch data
   const actualUserProperties = propUserProperties || userProperties;
@@ -110,7 +115,7 @@ export const BeginnerPortfolioSummary: React.FC<PortfolioSummaryProps> = ({
     const totalValue = propertyCurrentValue + developerCurrentValue;
     
     const totalGains = totalValue - totalInvested;
-    const monthlyIncome = uniqueUserProperties.reduce((sum, prop) => sum + ((prop.monthly_payment || 0) * 0.7), 0); // Rental income minus mortgage
+    const monthlyIncome = Math.round(uniqueUserProperties.reduce((sum, prop) => sum + ((prop.monthly_payment || 0) * 0.7), 0)); // Rental income minus mortgage
 
     return {
       totalValue,
@@ -175,8 +180,8 @@ export const BeginnerPortfolioSummary: React.FC<PortfolioSummaryProps> = ({
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Monthly Income</p>
-                <p className="text-2xl font-bold text-blue-600">${portfolioData.monthlyIncome}</p>
-                <p className="text-xs text-muted-foreground">${yearlyIncome.toLocaleString()}/year</p>
+                <p className="text-2xl font-bold text-blue-600">${portfolioData.monthlyIncome.toLocaleString()}</p>
+                <p className="text-xs text-muted-foreground">${Math.round(yearlyIncome).toLocaleString()}/year</p>
               </div>
               <DollarSign className="h-8 w-8 text-blue-600" />
             </div>
@@ -287,24 +292,50 @@ export const BeginnerPortfolioSummary: React.FC<PortfolioSummaryProps> = ({
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div className="p-3 border rounded-lg text-center">
-              <Home className="h-6 w-6 mx-auto mb-2 text-primary" />
+            <Button
+              variant="outline"
+              className="h-auto p-4 flex flex-col items-center gap-2"
+              onClick={() => navigate('/portfolio?tab=properties')}
+            >
+              <Home className="h-6 w-6 text-primary" />
               <div className="text-sm font-medium">Buy Property</div>
-              <div className="text-xs text-muted-foreground">Get a mortgage on new properties</div>
-            </div>
-            <div className="p-3 border rounded-lg text-center">
-              <Building className="h-6 w-6 mx-auto mb-2 text-blue-500" />
+              <div className="text-xs text-muted-foreground text-center">Get a mortgage on new properties</div>
+            </Button>
+            <Button
+              variant="outline"
+              className="h-auto p-4 flex flex-col items-center gap-2"
+              onClick={() => navigate('/developers')}
+            >
+              <Building className="h-6 w-6 text-blue-500" />
               <div className="text-sm font-medium">Invest in Development</div>
-              <div className="text-xs text-muted-foreground">Fund new construction projects</div>
-            </div>
-            <div className="p-3 border rounded-lg text-center">
-              <Calculator className="h-6 w-6 mx-auto mb-2 text-green-500" />
+              <div className="text-xs text-muted-foreground text-center">Fund new construction projects</div>
+            </Button>
+            <Button
+              variant="outline"
+              className="h-auto p-4 flex flex-col items-center gap-2"
+              onClick={() => setShowCalculator(true)}
+            >
+              <Calculator className="h-6 w-6 text-green-500" />
               <div className="text-sm font-medium">Calculate Returns</div>
-              <div className="text-xs text-muted-foreground">Plan your next investment</div>
-            </div>
+              <div className="text-xs text-muted-foreground text-center">Plan your next investment</div>
+            </Button>
           </div>
         </CardContent>
       </Card>
+
+      {/* Property Investment Calculator Modal */}
+      <PropertyInvestmentCalculator
+        open={showCalculator}
+        onOpenChange={setShowCalculator}
+        property={{
+          name: "Sample Property",
+          location: "Investment Calculator",
+          totalValue: 350000,
+          downPayment: 70000,
+          monthlyRent: 2800,
+          networkValue: 350000
+        }}
+      />
     </div>
   );
 };
