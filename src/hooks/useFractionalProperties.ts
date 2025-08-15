@@ -58,7 +58,8 @@ export const useFractionalProperties = () => {
   const transformProperty = (prop: FractionalProperty & { whole_properties_sold?: number }): PropertyInvestmentData => {
     const availableTokens = prop.total_tokens_available - prop.tokens_sold;
     const tokenPrice = prop.current_speculation_price / prop.total_tokens_available;
-    const downPayment = prop.current_speculation_price * 0.2; // 20% down payment
+    const platformFee = prop.current_speculation_price * 0.03; // 3% platform fee on list price
+    const downPayment = (prop.current_speculation_price * 0.2) + platformFee; // 20% down payment + platform fee
     const loanAmount = prop.current_speculation_price - downPayment;
     
     // Use standardized mortgage calculation with 8% APR, 10-year term

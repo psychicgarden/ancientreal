@@ -57,7 +57,7 @@ export function calculateInvestmentMetrics(
   investmentAmount: number,
   propertyData: PropertyMortgageData
 ): InvestmentCalculation {
-  const platformFee = investmentAmount * (propertyData.platformFeePercent || 0.03);
+  const platformFee = propertyData.propertyValue * (propertyData.platformFeePercent || 0.03);
   const netInvestment = investmentAmount - platformFee;
   const loanAmount = Math.max(0, propertyData.propertyValue - netInvestment);
   
