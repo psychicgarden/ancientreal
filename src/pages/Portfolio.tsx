@@ -13,7 +13,7 @@ import { EnhancedPortfolioAnalytics } from "@/components/EnhancedPortfolioAnalyt
 import { DeveloperInvestmentsAnalytics } from "@/components/DeveloperInvestmentsAnalytics";
 import { TrustSignals } from "@/components/TrustSignals";
 import { CompetitorComparison } from "@/components/CompetitorComparison";
-import { PlatformAnalytics } from "@/components/PlatformAnalytics";
+
 import OneTimeReset from "@/components/admin/OneTimeReset";
 import RentalIncomeTracker from "@/components/RentalIncomeTracker";
 import { supabase } from "@/integrations/supabase/client";
@@ -367,7 +367,7 @@ const Portfolio = () => {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-7 lg:w-fit">
+          <TabsList className="grid w-full grid-cols-6 lg:w-fit">
             <TabsTrigger value="properties" className="flex items-center gap-2">
               <Home className="h-4 w-4" />
               My Properties
@@ -387,10 +387,6 @@ const Portfolio = () => {
             <TabsTrigger value="revenue" className="flex items-center gap-2">
               <DollarSign className="h-4 w-4" />
               Bookings & Revenue
-            </TabsTrigger>
-            <TabsTrigger value="platform" className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              Platform Analytics
             </TabsTrigger>
             <TabsTrigger value="comparison" className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
@@ -540,10 +536,6 @@ const Portfolio = () => {
             <RentalIncomeTracker />
           </TabsContent>
 
-          {/* Platform Analytics Tab */}
-          <TabsContent value="platform" className="space-y-6">
-            <PlatformAnalytics />
-          </TabsContent>
 
           {/* Platform Comparison Tab */}
           <TabsContent value="comparison" className="space-y-6">
