@@ -3,12 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
-import { TrendingUp, DollarSign, Home, Building, Target, Calculator } from "lucide-react";
+import { TrendingUp, DollarSign, Home, Building, Target } from "lucide-react";
 import { InvestorTierStatus } from "./InvestorTierStatus";
-import PropertyInvestmentCalculator from "./PropertyInvestmentCalculator";
+
 import { useWallet } from "@/contexts/WalletContext";
-import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
 interface PortfolioSummaryProps {
@@ -23,11 +21,9 @@ export const BeginnerPortfolioSummary: React.FC<PortfolioSummaryProps> = ({
   loading: propLoading
 }) => {
   const { isConnected, account } = useWallet();
-  const navigate = useNavigate();
   const [userProperties, setUserProperties] = useState<any[]>([]);
   const [developerInvestments, setDeveloperInvestments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showCalculator, setShowCalculator] = useState(false);
 
   // Use props if provided, otherwise fetch data
   const actualUserProperties = propUserProperties || userProperties;
@@ -285,57 +281,6 @@ export const BeginnerPortfolioSummary: React.FC<PortfolioSummaryProps> = ({
       )}
 
 
-      {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Next Steps</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <Button
-              variant="outline"
-              className="h-auto p-4 flex flex-col items-center gap-2"
-              onClick={() => navigate('/portfolio?tab=properties')}
-            >
-              <Home className="h-6 w-6 text-primary" />
-              <div className="text-sm font-medium">Buy Property</div>
-              <div className="text-xs text-muted-foreground text-center">Get a mortgage on new properties</div>
-            </Button>
-            <Button
-              variant="outline"
-              className="h-auto p-4 flex flex-col items-center gap-2"
-              onClick={() => navigate('/developers')}
-            >
-              <Building className="h-6 w-6 text-blue-500" />
-              <div className="text-sm font-medium">Invest in Development</div>
-              <div className="text-xs text-muted-foreground text-center">Fund new construction projects</div>
-            </Button>
-            <Button
-              variant="outline"
-              className="h-auto p-4 flex flex-col items-center gap-2"
-              onClick={() => setShowCalculator(true)}
-            >
-              <Calculator className="h-6 w-6 text-green-500" />
-              <div className="text-sm font-medium">Calculate Returns</div>
-              <div className="text-xs text-muted-foreground text-center">Plan your next investment</div>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Property Investment Calculator Modal */}
-      <PropertyInvestmentCalculator
-        open={showCalculator}
-        onOpenChange={setShowCalculator}
-        property={{
-          name: "Sample Property",
-          location: "Investment Calculator",
-          totalValue: 350000,
-          downPayment: 70000,
-          monthlyRent: 2800,
-          networkValue: 350000
-        }}
-      />
     </div>
   );
 };
