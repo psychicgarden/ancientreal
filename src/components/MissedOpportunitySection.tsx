@@ -23,7 +23,7 @@ const MissedOpportunitySection = () => {
       monthly: 1456,
       yearlyTotal: 17472,
       tenYearTotal: 174720,
-      finalEquity: 467000,
+      finalEquity: 285750, // $150K + 50% of 181% appreciation = $285,750
       color: "text-green-500",
       bgColor: "from-green-500/10 to-green-500/5"
     }
@@ -107,7 +107,7 @@ const MissedOpportunitySection = () => {
                   </div>}
 
                 <div className="text-lg text-muted-foreground font-light">
-                  {activeScenario === "rent" ? "After 10 years: You've paid $216,000 and own nothing. Time to find a new rental." : "After 10 years: You own a $467,000 property. Plus you earned rental income along the way."}
+                  {activeScenario === "rent" ? "After 10 years: You've paid $216,000 and own nothing. Time to find a new rental." : "After 10 years: You own $285,750 in property equity. Plus you earned rental income along the way."}
                 </div>
               </CardContent>
             </Card>
@@ -149,7 +149,7 @@ const MissedOpportunitySection = () => {
                   </div>
                   <h4 className="text-xl font-semibold mb-2">Year 10+</h4>
                   <p className="text-muted-foreground font-light">
-                    Own a $467K property free and clear. Rent it out or live mortgage-free forever.
+                    Own $285K in property equity. Rent it out or live mortgage-free forever.
                   </p>
                 </CardContent>
               </Card>

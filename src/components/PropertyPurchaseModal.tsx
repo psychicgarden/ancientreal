@@ -263,12 +263,12 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <span>Expected Property Value (Year 10):</span>
-                  <span className="font-bold">${property.networkValue?.toLocaleString() || '467,000'}</span>
+                  <span className="font-bold">${property.networkValue?.toLocaleString() || '421,500'}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span>Total Appreciation:</span>
                   <span className="font-bold text-green-600">
-                    ${((property.networkValue || 467000) - 150000).toLocaleString()}
+                    ${((property.networkValue || 421500) - 150000).toLocaleString()}
                   </span>
                 </div>
                 <Separator />

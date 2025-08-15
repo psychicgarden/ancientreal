@@ -55,10 +55,12 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
   const annualProfit = monthlyProfit * 12;
   const cashFlowYield = (annualProfit / investmentAmount) * 100;
   
-  // Property appreciation calculations
-  const tenYearPropertyValue = 467000; // Fixed final value as specified
-  const totalAppreciation = tenYearPropertyValue - propertyValue; // $317,000
-  const buyerAppreciationShare = totalAppreciation * 0.5; // 50% split = $158,500
+  // Property appreciation calculations - 181% appreciation model
+  const appreciationPercent = 181;
+  const totalAppreciation = propertyValue * (appreciationPercent / 100); // $271,500
+  const tenYearPropertyValue = propertyValue + totalAppreciation; // $421,500
+  const buyerAppreciationShare = totalAppreciation * 0.5; // 50% split = $135,750
+  const buyerTotalEquity = propertyValue + buyerAppreciationShare; // $285,750
   const annualAppreciationBenefit = buyerAppreciationShare / 10; // Annualized
   
   // Calculate total annual benefit (cash flow + interest savings + appreciation)
@@ -70,7 +72,7 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
   
   // Total wealth actually created (not comparative savings)
   const totalCashFlow = annualProfit * 10;
-  const actualWealthCreated = totalCashFlow + buyerAppreciationShare;
+  const actualWealthCreated = totalCashFlow + buyerTotalEquity; // Include full equity value
   
   // Calculate total 10-year ROI based on actual wealth created
   const total10YearROI = (actualWealthCreated / investmentAmount) * 100;

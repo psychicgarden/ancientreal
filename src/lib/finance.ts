@@ -30,6 +30,27 @@ export function computeMonthlyPaymentUSD(loanAmountUSD: number, aprBps: number |
   return +pmt.toFixed(2);
 }
 
+// Helper function to calculate property appreciation
+export function calculatePropertyAppreciation(
+  propertyValue: number, 
+  appreciationPercent: number = 181, 
+  buyerShare: number = 0.5
+) {
+  const totalAppreciation = propertyValue * (appreciationPercent / 100);
+  const finalPropertyValue = propertyValue + totalAppreciation;
+  const buyerAppreciationShare = totalAppreciation * buyerShare;
+  const buyerTotalEquity = propertyValue + buyerAppreciationShare; // Original value + buyer's share
+  
+  return {
+    totalAppreciation,
+    finalPropertyValue,
+    buyerAppreciationShare,
+    buyerTotalEquity,
+    ancientShare: totalAppreciation * 0.4, // 40% to Ancient LLC
+    lenderShare: totalAppreciation * 0.1    // 10% to lending pool
+  };
+}
+
 export function calculateInvestmentMetrics(
   investmentAmount: number,
   propertyData: PropertyMortgageData
@@ -46,8 +67,9 @@ export function calculateInvestmentMetrics(
   const totalPayments = monthlyPayment * propertyData.termMonths;
   const totalInterestCost = totalPayments - loanAmount;
   
-  // Calculate total equity at loan maturity
-  const totalEquityAtMaturity = propertyData.propertyValue; // Full ownership after payoff
+  // Calculate buyer's total equity at maturity using 181% appreciation model
+  const appreciation = calculatePropertyAppreciation(propertyData.propertyValue);
+  const totalEquityAtMaturity = appreciation.buyerTotalEquity;
   
   return {
     monthlyPayment,
