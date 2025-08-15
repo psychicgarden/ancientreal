@@ -34,6 +34,8 @@ export interface PropertyInvestmentData {
   monthlyPayment: number;
   monthlyRent: number; // Add missing field for calculator
   networkValue: number; // Add missing field for calculator
+  equityYear10: number; // Pre-calculated equity at year 10
+  roiMultiple: number; // Pre-calculated ROI multiple
   projected_appreciation_percent?: number;
   expectedReturn: number;
   availableShares: number;
@@ -56,7 +58,7 @@ function getPropertyMortgage(propertyName: string): number {
     case 'Bahia Ocean Villa':
       return 1262;
     case 'Oceanview Loft':
-      return 1809; // restored baseline
+      return 1457; // correct 8% APR, 10 year calculation
     case 'Art Deco Loft':
       return 1252; // restored baseline
     default:
@@ -115,6 +117,8 @@ export const useFractionalProperties = () => {
       monthlyRent: prop.monthly_base_rent || (prop.current_speculation_price * 0.015), // Use actual rent or estimate
       projected_appreciation_percent: prop.projected_appreciation_percent || 181,
       networkValue: metrics.monthlyNetworkValue, // Use computed value
+      equityYear10: metrics.equityYear10, // Add pre-calculated equity
+      roiMultiple: metrics.roiMultiple, // Add pre-calculated ROI
       expectedReturn,
       availableShares: availableTokens,
       totalShares: prop.total_tokens_available,

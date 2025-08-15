@@ -15,11 +15,8 @@ export interface ComputedMetrics {
 }
 
 export function computeMetrics(p: PropertyData): ComputedMetrics {
-  const utilities = p.utilities ?? 65;
-  const taxPct = p.taxPct ?? 0.0015;
-  
-  const rentAfterBills = p.grossRent - utilities - (p.price * taxPct / 12);
-  const monthlyNetworkValue = rentAfterBills - p.mortgage;
+  // Monthly profit is simply rent minus mortgage (utilities/taxes already included in rent)
+  const monthlyNetworkValue = p.grossRent - p.mortgage;
 
   // 50% share of 181% appreciation, no cap
   const equityYear10 = p.price * 1.905;

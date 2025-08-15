@@ -41,8 +41,8 @@ const FeaturedInvestments = () => {
       monthlyPayment: property.monthlyPayment,
       monthlyRent: property.monthlyRent,
       monthlyProfit: property.networkValue, // Use pre-calculated network value
-      buyerEquity: property.totalValue * 2.81 - (property.totalValue * 0.55), // Simplified equity calc
-      roi: ((property.networkValue * 120 + property.totalValue * 2.26) / property.downPayment), // Use network value for ROI
+      buyerEquity: property.equityYear10, // Use pre-calculated equity
+      roi: property.roiMultiple.toFixed(1), // Use pre-calculated ROI
       propertiesSold: property.wholePropertiesSold,
       totalProperties: 15,
       mortgageTerm: "10 years",
