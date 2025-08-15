@@ -19,8 +19,8 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
   const investmentAmount = investment[0];
   const platformFee = investmentAmount * 0.03; // 3% platform fee for property purchases
   const netInvestment = investmentAmount - platformFee; // Actual amount going to property
-  const propertyValue = 150000;
-  const monthlyRent = 2050;
+  const propertyValue = 150000; // Oceanview Loft property value
+  const monthlyRent = 2266; // Correct rent from database
   
   // Calculate mortgage payment based on net investment (after platform fee)
   const loanAmount = propertyValue - netInvestment;

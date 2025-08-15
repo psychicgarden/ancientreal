@@ -1,5 +1,23 @@
-// Finance utilities for simple amortization and due date calculations
-// Uses dollars for amounts (not base units). Keep logic minimal and deterministic.
+// Centralized mortgage and investment calculation service
+// Uses dollars for amounts (not base units). All calculations standardized.
+
+export interface PropertyMortgageData {
+  propertyValue: number;
+  downPayment: number;
+  aprBps: number;
+  termMonths: number;
+  monthlyRent: number;
+  platformFeePercent?: number;
+}
+
+export interface InvestmentCalculation {
+  monthlyPayment: number;
+  monthlyProfit: number;
+  totalLoanAmount: number;
+  cashFlowYield: number;
+  totalInterestCost: number;
+  totalEquityAtMaturity: number;
+}
 
 export function computeMonthlyPaymentUSD(loanAmountUSD: number, aprBps: number | null | undefined, termMonths: number | null | undefined): number {
   const loan = Math.max(0, Number(loanAmountUSD || 0));
@@ -10,6 +28,35 @@ export function computeMonthlyPaymentUSD(loanAmountUSD: number, aprBps: number |
   if (r === 0) return +(loan / n).toFixed(2);
   const pmt = loan * (r / (1 - Math.pow(1 + r, -n)));
   return +pmt.toFixed(2);
+}
+
+export function calculateInvestmentMetrics(
+  investmentAmount: number,
+  propertyData: PropertyMortgageData
+): InvestmentCalculation {
+  const platformFee = investmentAmount * (propertyData.platformFeePercent || 0.03);
+  const netInvestment = investmentAmount - platformFee;
+  const loanAmount = Math.max(0, propertyData.propertyValue - netInvestment);
+  
+  const monthlyPayment = computeMonthlyPaymentUSD(loanAmount, propertyData.aprBps, propertyData.termMonths);
+  const monthlyProfit = propertyData.monthlyRent - monthlyPayment;
+  const cashFlowYield = investmentAmount > 0 ? (monthlyProfit * 12 / investmentAmount) * 100 : 0;
+  
+  // Calculate total interest cost over loan term
+  const totalPayments = monthlyPayment * propertyData.termMonths;
+  const totalInterestCost = totalPayments - loanAmount;
+  
+  // Calculate total equity at loan maturity
+  const totalEquityAtMaturity = propertyData.propertyValue; // Full ownership after payoff
+  
+  return {
+    monthlyPayment,
+    monthlyProfit,
+    totalLoanAmount: loanAmount,
+    cashFlowYield,
+    totalInterestCost,
+    totalEquityAtMaturity
+  };
 }
 
 // Next payment due date occurs monthly on the same day-of-month as the purchase date.

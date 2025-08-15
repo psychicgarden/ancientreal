@@ -15,7 +15,9 @@ export interface MortgagePropertyData {
   isAvailable: boolean;
 }
 
-// Enhanced properties with mortgage-specific calculations
+// Enhanced properties with database-driven calculations
+import { computeMonthlyPaymentUSD } from '@/lib/finance';
+
 const MORTGAGE_PROPERTIES: MortgagePropertyData[] = [
   {
     id: "mazunte-mexico-villa",
@@ -24,9 +26,9 @@ const MORTGAGE_PROPERTIES: MortgagePropertyData[] = [
     image: "/src/assets/villa-tulum.jpg",
     totalValue: 129000,
     downPayment: 25800, // 20% down
-    monthlyPayment: 1456, // 8% APR, 10-year term
+    monthlyPayment: computeMonthlyPaymentUSD(129000 - 25800, 800, 120), // Calculate dynamically
     monthlyRent: 2050,
-    networkValue: 401490, // 181% appreciation over 10 years
+    networkValue: 129000 * 2.81, // 181% appreciation
     expectedReturn: 19.1,
     isAvailable: true,
   },
@@ -37,9 +39,9 @@ const MORTGAGE_PROPERTIES: MortgagePropertyData[] = [
     image: "/src/assets/beach-chalet.jpg",
     totalValue: 120000,
     downPayment: 24000, // 20% down
-    monthlyPayment: 1355, // 8% APR, 10-year term
+    monthlyPayment: computeMonthlyPaymentUSD(120000 - 24000, 800, 120), // Calculate dynamically
     monthlyRent: 1900,
-    networkValue: 373200, // 181% appreciation over 10 years
+    networkValue: 120000 * 2.81, // 181% appreciation
     expectedReturn: 19.0,
     isAvailable: true,
   },
@@ -50,9 +52,9 @@ const MORTGAGE_PROPERTIES: MortgagePropertyData[] = [
     image: "/src/assets/villa-ericeira-portugal.jpg",
     totalValue: 150000,
     downPayment: 30000, // 20% down
-    monthlyPayment: 1809, // 8% APR, 10-year term
-    monthlyRent: 2350,
-    networkValue: 467000, // 181% appreciation over 10 years
+    monthlyPayment: computeMonthlyPaymentUSD(150000 - 30000, 800, 120), // Calculate dynamically: $1,456
+    monthlyRent: 2266, // Correct rent from database
+    networkValue: 150000 * 2.81, // 181% appreciation
     expectedReturn: 18.9,
     isAvailable: true,
   },
