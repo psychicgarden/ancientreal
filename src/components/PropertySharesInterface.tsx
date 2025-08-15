@@ -7,6 +7,7 @@ import { TrendingUp, MapPin, Users, DollarSign, Calculator } from "lucide-react"
 import { useWallet } from "@/contexts/WalletContext";
 import { useToast } from "@/hooks/use-toast";
 import { useFractionalProperties } from "@/hooks/useFractionalProperties";
+import { OwnerApprovalExplanation } from "@/components/OwnerApprovalExplanation";
 
 export const PropertySharesInterface = () => {
   const { isConnected, connectWallet, account } = useWallet();
@@ -77,6 +78,8 @@ export const PropertySharesInterface = () => {
         </p>
       </div>
 
+      <OwnerApprovalExplanation />
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Property List */}
         <div className="lg:col-span-2 space-y-4">
@@ -140,8 +143,7 @@ export const PropertySharesInterface = () => {
                           {property.wholePropertiesSold} investors
                         </Badge>
                         <Badge className="bg-green-100 text-green-700">
-                          <TrendingUp className="h-3 w-3 mr-1" />
-                          Active
+                          Owner Listed
                         </Badge>
                       </div>
                     </div>
