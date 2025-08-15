@@ -15,7 +15,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
  * Down Payment: 20% ($30,000)
  * Mortgage Term: 10 years @ 8% APR
  * Default Trigger: 4 missed payments
- * Appreciation Split: Buyer 50%, Ancient 40%, Lenders 10% (capped at 110%)
+ * Appreciation Split: Buyer 50%, Ancient 40%, Lenders 10% (full 181% appreciation)
  * Legal Owner: Ancient Holdings Ltd (Nevis Corp)
  */
 contract MazunteMortgage is ERC721, ERC20, Ownable, ReentrancyGuard {
@@ -31,7 +31,7 @@ contract MazunteMortgage is ERC721, ERC20, Ownable, ReentrancyGuard {
     uint256 public constant MORTGAGE_RATE = 800; // 8% APR (basis points)
     uint256 public constant MORTGAGE_TERM_MONTHS = 120; // 10 years
     uint256 public constant MAX_MISSED_PAYMENTS = 4; // Foreclosure trigger
-    uint256 public constant APPRECIATION_CAP = 110; // 110% cap
+    // Removed appreciation cap - full 181% appreciation model
     
     // Appreciation Split (percentages)
     uint256 public constant BUYER_SPLIT = 50; // 50%
@@ -187,11 +187,7 @@ contract MazunteMortgage is ERC721, ERC20, Ownable, ReentrancyGuard {
     function setPropertyAppreciation(uint256 newValue) external onlyOwner {
         require(newValue >= PROPERTY_VALUE, "Value cannot decrease");
         
-        // Cap appreciation at 110%
-        uint256 maxValue = (PROPERTY_VALUE * APPRECIATION_CAP) / 100;
-        if (newValue > maxValue) {
-            newValue = maxValue;
-        }
+        // Allow full appreciation - no cap (181% model)
         
         propertyAppreciationValue = newValue;
     }

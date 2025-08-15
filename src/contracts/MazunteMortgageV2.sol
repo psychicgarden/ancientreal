@@ -45,7 +45,7 @@ contract MazunteMortgageV2 is ERC1155, Ownable, ReentrancyGuard, Pausable {
     uint256 public constant GRACE_PERIOD = 5 days; // Grace period for late payments
     uint256 public constant COOLING_OFF_PERIOD = 10 minutes; // Shortened for demo testing
     uint256 public constant MIN_INVESTMENT = 1 * 1e6; // $1 minimum for demo testing
-    uint256 public constant APPRECIATION_CAP = 11000; // 110% in basis points
+    // Removed appreciation cap - full 181% appreciation model in basis points
     uint256 public constant LATE_PAYMENT_FEE = 50; // 0.5% in basis points
     
     // Token IDs for ERC1155

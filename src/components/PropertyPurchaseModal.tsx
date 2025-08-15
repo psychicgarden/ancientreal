@@ -273,7 +273,7 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
                 </div>
                 <Separator />
                 <div className="text-sm text-muted-foreground">
-                  <strong>Appreciation Split (Capped at 110%):</strong>
+                  <strong>Appreciation Split (Full 181% Model):</strong>
                   <ul className="mt-2 space-y-1 list-disc list-inside ml-4">
                     <li>Buyer: 50% of appreciation</li>
                     <li>Ancient Holdings: 40% of appreciation</li>
