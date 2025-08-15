@@ -40,9 +40,10 @@ const FeaturedInvestments = () => {
     
     // Calculate buyer equity at year 10 using 181% appreciation model
     const appreciatedValue = property.totalValue * 2.81; // 181% appreciation = 2.81x
-    const cappedAppreciation = property.totalValue * 1.10; // 110% cap
-    const buyerEquityFromAppreciation = cappedAppreciation * 0.50; // Buyer gets 50%
-    const buyerEquity = Math.round(appreciatedValue - cappedAppreciation + buyerEquityFromAppreciation);
+    const cappedAppreciation = property.totalValue * 1.10; // 110% cap (maximum appreciation split)
+    const buyerAppreciationShare = cappedAppreciation * 0.50; // Buyer gets 50% of capped appreciation
+    // Buyer equity = appreciated value minus what they owe to Ancient
+    const buyerEquity = Math.round(appreciatedValue - (cappedAppreciation - buyerAppreciationShare));
     
     // Calculate total ROI including rental profits and equity
     const totalReturn = tenYearRentalProfit + buyerEquity - property.downPayment;
