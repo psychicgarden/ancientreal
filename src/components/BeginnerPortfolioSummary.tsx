@@ -1,34 +1,140 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { TrendingUp, DollarSign, Home, Coins, Target, Clock } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { TrendingUp, DollarSign, Home, Building, Target, Calculator } from "lucide-react";
 import { InvestorTierStatus } from "./InvestorTierStatus";
+import { useWallet } from "@/contexts/WalletContext";
+import { supabase } from "@/integrations/supabase/client";
 
-export const BeginnerPortfolioSummary = () => {
-  // Mock data - in real app this would come from props or API
-  const portfolioData = {
-    totalValue: 75000,
-    totalInvested: 50000,
-    totalGains: 25000,
-    monthlyIncome: 625,
-    properties: [
-      { name: "Beachfront Villa", value: 30000, tokens: 30, monthlyReturn: 300 },
-      { name: "Jungle Resort", value: 22500, tokens: 30, monthlyReturn: 225 },
-      { name: "Desert Oasis", value: 22500, tokens: 45, monthlyReturn: 100 }
-    ],
-    stakingPools: [
-      { name: "High-Yield Pool", staked: 15000, apy: 15, monthlyReturn: 187.50 },
-      { name: "Stable Pool", staked: 10000, apy: 8, monthlyReturn: 66.67 }
-    ],
-    activeLoans: [
-      { amount: 15000, monthlyPayment: 1285, remainingMonths: 11 }
-    ]
-  };
+interface PortfolioSummaryProps {
+  userProperties?: any[];
+  developerInvestments?: any[];
+  loading?: boolean;
+}
 
-  const totalReturn = ((portfolioData.totalValue - portfolioData.totalInvested) / portfolioData.totalInvested) * 100;
+export const BeginnerPortfolioSummary: React.FC<PortfolioSummaryProps> = ({
+  userProperties: propUserProperties,
+  developerInvestments: propDeveloperInvestments,
+  loading: propLoading
+}) => {
+  const { isConnected, account } = useWallet();
+  const [userProperties, setUserProperties] = useState<any[]>([]);
+  const [developerInvestments, setDeveloperInvestments] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Use props if provided, otherwise fetch data
+  const actualUserProperties = propUserProperties || userProperties;
+  const actualDeveloperInvestments = propDeveloperInvestments || developerInvestments;
+  const actualLoading = propLoading !== undefined ? propLoading : loading;
+
+  // Fetch data only if not provided via props
+  useEffect(() => {
+    if (propUserProperties && propDeveloperInvestments) {
+      setLoading(false);
+      return;
+    }
+
+    const fetchData = async () => {
+      if (!isConnected || !account) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+
+        // Fetch user properties
+        const { data: properties } = await supabase
+          .from('user_properties')
+          .select('*')
+          .eq('user_wallet_address', account.toLowerCase())
+          .eq('is_active', true)
+          .order('created_at', { ascending: false });
+
+        // Fetch developer investments
+        const { data: investments } = await supabase
+          .from('developer_investments')
+          .select(`
+            *,
+            developer_projects (
+              title,
+              description,
+              creator_name,
+              target_funding,
+              current_funding,
+              image_url
+            )
+          `)
+          .eq('user_wallet_address', account.toLowerCase())
+          .order('created_at', { ascending: false });
+
+        setUserProperties(properties || []);
+        setDeveloperInvestments(investments || []);
+      } catch (error) {
+        console.error('Error fetching portfolio data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [isConnected, account, propUserProperties, propDeveloperInvestments]);
+
+  // Deduplicate properties by unique purchase key
+  const uniqueUserProperties = useMemo(() => {
+    const map = new Map<string, any>();
+    for (const p of actualUserProperties) {
+      const key = p.unique_purchase_key || `${p.property_name}|${p.property_location}`;
+      const existing = map.get(key);
+      if (!existing) {
+        map.set(key, p);
+      } else {
+        const a = new Date(existing.updated_at || existing.created_at || 0).getTime();
+        const b = new Date(p.updated_at || p.created_at || 0).getTime();
+        if (b >= a) map.set(key, p);
+      }
+    }
+    return Array.from(map.values());
+  }, [actualUserProperties]);
+
+  // Calculate real portfolio metrics
+  const portfolioData = useMemo(() => {
+    const propertyInvestment = uniqueUserProperties.reduce((sum, prop) => sum + (prop.down_payment || 0), 0);
+    const developerInvestment = actualDeveloperInvestments.reduce((sum, inv) => sum + (inv.investment_amount || 0), 0);
+    const totalInvested = propertyInvestment + developerInvestment;
+    
+    const propertyCurrentValue = uniqueUserProperties.reduce((sum, prop) => sum + (prop.current_value || 0), 0);
+    const developerCurrentValue = actualDeveloperInvestments.reduce((sum, inv) => sum + (inv.projected_value || inv.investment_amount || 0), 0);
+    const totalValue = propertyCurrentValue + developerCurrentValue;
+    
+    const totalGains = totalValue - totalInvested;
+    const monthlyIncome = uniqueUserProperties.reduce((sum, prop) => sum + ((prop.monthly_payment || 0) * 0.7), 0); // Rental income minus mortgage
+
+    return {
+      totalValue,
+      totalInvested,
+      totalGains,
+      monthlyIncome,
+      properties: uniqueUserProperties.map(prop => ({
+        name: prop.property_name,
+        value: prop.current_value || 0,
+        equity: ((prop.current_value || 0) * (prop.equity_percentage || 0)) / 100,
+        monthlyReturn: (prop.monthly_payment || 0) * 0.7
+      })),
+      developerInvestments: actualDeveloperInvestments.map(inv => ({
+        name: inv.developer_projects?.title || 'Development Project',
+        invested: inv.investment_amount || 0,
+        projectedValue: inv.projected_value || inv.investment_amount || 0,
+        ownershipPercent: inv.ownership_percentage || 0
+      }))
+    };
+  }, [uniqueUserProperties, actualDeveloperInvestments]);
+
+  const totalReturn = portfolioData.totalInvested > 0 ? ((portfolioData.totalValue - portfolioData.totalInvested) / portfolioData.totalInvested) * 100 : 0;
   const yearlyIncome = portfolioData.monthlyIncome * 12;
-  const roi = (yearlyIncome / portfolioData.totalInvested) * 100;
+  const roi = portfolioData.totalInvested > 0 ? (yearlyIncome / portfolioData.totalInvested) * 100 : 0;
 
   return (
     <div className="space-y-6">
@@ -72,7 +178,7 @@ export const BeginnerPortfolioSummary = () => {
                 <p className="text-2xl font-bold text-blue-600">${portfolioData.monthlyIncome}</p>
                 <p className="text-xs text-muted-foreground">${yearlyIncome.toLocaleString()}/year</p>
               </div>
-              <Coins className="h-8 w-8 text-blue-600" />
+              <DollarSign className="h-8 w-8 text-blue-600" />
             </div>
           </CardContent>
         </Card>
@@ -94,89 +200,85 @@ export const BeginnerPortfolioSummary = () => {
       {/* Ancient Investor Tier Status */}
       <InvestorTierStatus totalInvestmentAmount={portfolioData.totalInvested} />
 
-      {/* Properties */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Home className="h-5 w-5" />
-            Your Property Tokens
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {portfolioData.properties.map((property, index) => (
-              <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                <div className="flex-1">
-                  <div className="font-medium">{property.name}</div>
-                  <div className="text-sm text-muted-foreground">{property.tokens} tokens owned</div>
+      {/* Loading state */}
+      {actualLoading ? (
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <Card key={i}>
+              <CardContent className="p-4">
+                <Skeleton className="h-20 w-full" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <>
+          {/* Mortgage Properties */}
+          {portfolioData.properties.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Home className="h-5 w-5" />
+                  Your Mortgage Properties
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {portfolioData.properties.map((property, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div className="flex-1">
+                        <div className="font-medium">{property.name || 'Property Investment'}</div>
+                        <div className="text-sm text-muted-foreground">
+                          ${property.equity.toLocaleString()} equity built
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold">${property.value.toLocaleString()}</div>
+                        <div className="text-sm text-green-600">
+                          +${Math.round(property.monthlyReturn)}/month net
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div className="text-right">
-                  <div className="font-bold">${property.value.toLocaleString()}</div>
-                  <div className="text-sm text-green-600">+${property.monthlyReturn}/month</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              </CardContent>
+            </Card>
+          )}
 
-      {/* Staking Positions */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Coins className="h-5 w-5" />
-            Staking Positions
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {portfolioData.stakingPools.map((pool, index) => (
-              <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                <div className="flex-1">
-                  <div className="font-medium">{pool.name}</div>
-                  <div className="text-sm text-muted-foreground">{pool.apy}% APY</div>
+          {/* Developer Investments */}
+          {portfolioData.developerInvestments.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Building className="h-5 w-5" />
+                  Development Projects
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {portfolioData.developerInvestments.map((investment, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div className="flex-1">
+                        <div className="font-medium">{investment.name}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {investment.ownershipPercent}% ownership
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold">${investment.projectedValue.toLocaleString()}</div>
+                        <div className="text-sm text-blue-600">
+                          ${investment.invested.toLocaleString()} invested
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div className="text-right">
-                  <div className="font-bold">${pool.staked.toLocaleString()}</div>
-                  <div className="text-sm text-green-600">+${pool.monthlyReturn.toFixed(2)}/month</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Active Loans */}
-      {portfolioData.activeLoans.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Clock className="h-5 w-5" />
-              Active Loans
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {portfolioData.activeLoans.map((loan, index) => (
-                <div key={index} className="p-3 border rounded-lg">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="font-medium">Loan Amount: ${loan.amount.toLocaleString()}</span>
-                    <Badge variant="outline">{loan.remainingMonths} months left</Badge>
-                  </div>
-                  <div className="flex justify-between text-sm text-muted-foreground">
-                    <span>Monthly Payment: ${loan.monthlyPayment.toLocaleString()}</span>
-                    <span>Remaining: ${(loan.monthlyPayment * loan.remainingMonths).toLocaleString()}</span>
-                  </div>
-                  <Progress 
-                    value={((12 - loan.remainingMonths) / 12) * 100} 
-                    className="mt-2 h-2" 
-                  />
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          )}
+        </>
       )}
+
 
       {/* Quick Actions */}
       <Card>
@@ -187,18 +289,18 @@ export const BeginnerPortfolioSummary = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div className="p-3 border rounded-lg text-center">
               <Home className="h-6 w-6 mx-auto mb-2 text-primary" />
-              <div className="text-sm font-medium">Buy More Tokens</div>
-              <div className="text-xs text-muted-foreground">Expand your portfolio</div>
+              <div className="text-sm font-medium">Buy Property</div>
+              <div className="text-xs text-muted-foreground">Get a mortgage on new properties</div>
             </div>
             <div className="p-3 border rounded-lg text-center">
-              <Coins className="h-6 w-6 mx-auto mb-2 text-blue-500" />
-              <div className="text-sm font-medium">Increase Staking</div>
-              <div className="text-xs text-muted-foreground">Boost passive income</div>
+              <Building className="h-6 w-6 mx-auto mb-2 text-blue-500" />
+              <div className="text-sm font-medium">Invest in Development</div>
+              <div className="text-xs text-muted-foreground">Fund new construction projects</div>
             </div>
             <div className="p-3 border rounded-lg text-center">
-              <TrendingUp className="h-6 w-6 mx-auto mb-2 text-green-500" />
-              <div className="text-sm font-medium">Compound Returns</div>
-              <div className="text-xs text-muted-foreground">Reinvest earnings</div>
+              <Calculator className="h-6 w-6 mx-auto mb-2 text-green-500" />
+              <div className="text-sm font-medium">Calculate Returns</div>
+              <div className="text-xs text-muted-foreground">Plan your next investment</div>
             </div>
           </div>
         </CardContent>
