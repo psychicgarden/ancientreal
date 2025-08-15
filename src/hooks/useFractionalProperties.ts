@@ -100,7 +100,7 @@ export const useFractionalProperties = () => {
   const fetchProperties = async () => {
     try {
       setLoading(true);
-      // Fetch properties with whole property sales count
+      // Fetch properties with mortgage terms and whole property sales count
       const { data, error } = await supabase
         .from('property_fractionalization')
         .select(`

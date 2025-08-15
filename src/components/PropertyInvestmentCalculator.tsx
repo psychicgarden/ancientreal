@@ -5,6 +5,7 @@ import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calculator, TrendingUp, Home, Users } from "lucide-react";
 import { useWallet } from "@/contexts/WalletContext";
+import { calculateInvestmentMetrics, PropertyMortgageData } from "@/lib/finance";
 
 interface PropertyInvestmentCalculatorProps {
   open: boolean;
@@ -34,66 +35,48 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
   // Early return AFTER all hooks
   if (!property) return null;
 
-  // Investment calculations - Dynamic Mortgage Model with 3% platform fee
+  // Investment calculations using centralized finance service
   const investmentAmount = investment[0];
-  const platformFee = investmentAmount * 0.03; // 3% platform fee for property purchases
-  const netInvestment = investmentAmount - platformFee; // Actual amount going to property
-  const propertyValue = property.totalValue || 0;
-  const monthlyRent = property.monthlyRent || 0;
   
-  // Calculate mortgage payment based on net investment (after platform fee)
-  const loanAmount = propertyValue - netInvestment;
-  const annualInterestRate = 0.08; // 8% annual rate
-  const monthlyInterestRate = annualInterestRate / 12;
-  const loanTermMonths = 10 * 12; // 10 years
-  
-  // Mortgage payment formula: M = P[r(1+r)^n]/[(1+r)^n-1]
-  const monthlyMortgage = loanAmount > 0 
-    ? (loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, loanTermMonths)) / 
-      (Math.pow(1 + monthlyInterestRate, loanTermMonths) - 1)
-    : 0;
-    
-  const monthlyProfit = monthlyRent - monthlyMortgage;
-  
-  // Calculate total interest savings
-  const totalPayments = monthlyMortgage * loanTermMonths;
-  const totalInterest = totalPayments - loanAmount;
-  
-  // Calculate baseline scenario (minimum down payment)
-  const baselineDownPayment = property.downPayment || 0;
-  const baselineLoanAmount = propertyValue - baselineDownPayment;
-  const baselineMonthlymortgage = baselineLoanAmount > 0 
-    ? (baselineLoanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, loanTermMonths)) / 
-      (Math.pow(1 + monthlyInterestRate, loanTermMonths) - 1)
-    : 0;
-  const baselineTotalPayments = baselineMonthlymortgage * loanTermMonths;
-  const baselineTotalInterest = baselineTotalPayments - baselineLoanAmount;
-  
-  const totalInterestSaved = baselineTotalInterest - totalInterest;
-  
-  // Property appreciation calculations using 181% default or database value
-  const appreciationPercent = property.projected_appreciation_percent || 181;
-  const tenYearPropertyValue = propertyValue * (1 + (appreciationPercent / 100));
-  const totalAppreciation = tenYearPropertyValue - propertyValue;
-  const buyerAppreciationShare = totalAppreciation * 0.5; // 50% split
-  const annualAppreciationBenefit = buyerAppreciationShare / 10; // Annualized
-  
-  // Calculate total annual benefit (cash flow + interest savings + appreciation)
-  const annualProfit = monthlyProfit * 12;
-  const annualInterestSavings = totalInterestSaved / 10; // Annual portion of total savings
-  const totalAnnualBenefit = annualProfit + annualInterestSavings + annualAppreciationBenefit;
-  
-  // True ROI: Total annual benefit divided by total investment
-  const trueAnnualROI = (totalAnnualBenefit / investmentAmount) * 100;
-  
-  // Total wealth actually created (not comparative savings)
-  const totalCashFlow = annualProfit * 10;
-  const actualWealthCreated = totalCashFlow + buyerAppreciationShare;
-  
-  // Calculate total 10-year ROI based on actual wealth created
-  const total10YearROI = (actualWealthCreated / investmentAmount) * 100;
+  // Create property data for calculation
+  const propertyData: PropertyMortgageData = {
+    propertyValue: property.totalValue,
+    downPayment: property.downPayment,
+    aprBps: 800, // 8% APR
+    termMonths: 120, // 10 years
+    monthlyRent: property.monthlyRent,
+    platformFeePercent: 0.03
+  };
 
-  const cashFlowYield = (annualProfit / investmentAmount) * 100;
+  // Calculate metrics using centralized service
+  const metrics = calculateInvestmentMetrics(investmentAmount, propertyData);
+
+  // Property appreciation calculations using database value or 181% default
+  const appreciationPercent = property.projected_appreciation_percent || 181;
+  const tenYearPropertyValue = property.totalValue * (1 + (appreciationPercent / 100));
+  const totalAppreciation = tenYearPropertyValue - property.totalValue;
+  const buyerAppreciationShare = totalAppreciation * 0.5; // 50% split
+
+  // Calculate totals for 10-year projection
+  const totalCashFlow = metrics.monthlyProfit * 120; // 10 years
+  const actualWealthCreated = totalCashFlow + buyerAppreciationShare;
+  const total10YearROI = investmentAmount > 0 ? (actualWealthCreated / investmentAmount) * 100 : 0;
+
+  // Interest savings calculation (vs baseline scenario)
+  const baselineData: PropertyMortgageData = {
+    ...propertyData,
+    downPayment: property.downPayment
+  };
+  const baselineMetrics = calculateInvestmentMetrics(property.downPayment, baselineData);
+  const totalInterestSaved = Math.max(0, baselineMetrics.totalInterestCost - metrics.totalInterestCost);
+
+  // Annual calculations
+  const annualProfit = metrics.monthlyProfit * 12;
+  const trueAnnualROI = investmentAmount > 0 ? (total10YearROI / 10) : 0;
+
+  // Platform fee breakdown
+  const platformFee = investmentAmount * 0.03;
+  const netInvestment = investmentAmount - platformFee;
 
 
   return (
@@ -200,7 +183,7 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
                   <span className="font-medium">Monthly Cash Flow</span>
                 </div>
                 <div className="text-2xl font-bold text-green-600">
-                  ${Math.round(monthlyProfit).toLocaleString()}
+                  ${Math.round(metrics.monthlyProfit).toLocaleString()}
                 </div>
                 <div className="text-sm text-muted-foreground">
                   ${Math.round(annualProfit).toLocaleString()}/year
@@ -215,7 +198,7 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
                   <span className="font-medium">Cash Flow Yield</span>
                 </div>
                 <div className="text-2xl font-bold text-blue-600">
-                  {cashFlowYield.toFixed(1)}%
+                  {metrics.cashFlowYield.toFixed(1)}%
                 </div>
                 <div className="text-sm text-muted-foreground">
                   Annual cash return
@@ -299,7 +282,7 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-center text-sm">
                   <div>
                     <div className="text-muted-foreground">Starting Value</div>
-                    <div className="font-semibold">${propertyValue.toLocaleString()}</div>
+                    <div className="font-semibold">${property.totalValue.toLocaleString()}</div>
                   </div>
                   <div>
                     <div className="text-muted-foreground">Final Value (Year 10)</div>
