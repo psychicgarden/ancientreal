@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { calculatePropertyAppreciation } from '@/lib/finance';
 import bohoArtDecoLoft from '@/assets/boho-art-deco-loft-mexico.jpg';
 import luxuryBohoBungalow from '@/assets/luxury-boho-beach-bungalow-bahia.jpg';
 import artDecoCoastalEriceira from '@/assets/art-deco-coastal-ericeira.jpg';
@@ -87,7 +88,6 @@ export const useFractionalProperties = () => {
       monthlyRent: prop.monthly_base_rent, // Use actual rent from database
       projected_appreciation_percent: prop.projected_appreciation_percent || 181,
       networkValue: (() => {
-        const { calculatePropertyAppreciation } = require('@/lib/finance');
         const appreciation = calculatePropertyAppreciation(prop.current_speculation_price, prop.projected_appreciation_percent || 181, 0.5);
         return Math.round(appreciation.buyerTotalEquity);
       })(),

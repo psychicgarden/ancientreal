@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import SectionHeader from "@/components/SectionHeader";
 import { useFractionalProperties } from "@/hooks/useFractionalProperties";
 import { Skeleton } from "@/components/ui/skeleton";
+import { calculatePropertyAppreciation } from '@/lib/finance';
 const FeaturedInvestments = () => {
   const {
     isConnected,
@@ -34,9 +35,6 @@ const FeaturedInvestments = () => {
     const monthlyRent = property.monthlyRent; // Use actual database value
     const monthlyPayment = Math.round(property.monthlyPayment);
     const monthlyProfit = Math.round(monthlyRent - monthlyPayment);
-    
-    // Import calculatePropertyAppreciation from finance lib
-    const { calculatePropertyAppreciation } = require('@/lib/finance');
     
     // Calculate network value using 181% appreciation and buyer's total equity
     const appreciation = calculatePropertyAppreciation(property.totalValue, property.projected_appreciation_percent || 181, 0.5);

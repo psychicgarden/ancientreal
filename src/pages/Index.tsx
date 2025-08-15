@@ -26,7 +26,7 @@ const Index = () => {
             </h2>
             <p className="text-xl text-muted-foreground mb-8 max-w-4xl mx-auto">
               Every decade the average digital nomad burns 216K on dead rent.<br />
-              We transform that into $467,000 in real estate equity.
+              We transform that into $285,750 in real estate equity.
             </p>
           </div>
 
@@ -62,7 +62,7 @@ const Index = () => {
               </div>
               <div className="flex justify-between items-center py-1">
                 <span className="text-muted-foreground">Property Value</span>
-                <span className="text-lg font-semibold text-green-400">$467,000</span>
+                <span className="text-lg font-semibold text-green-400">$285,750</span>
               </div>
             </div>
           </div>
@@ -80,7 +80,7 @@ const Index = () => {
               </div>
               <div>
                 <div className="text-sm opacity-90 uppercase tracking-wide">Final Equity</div>
-                <div className="text-3xl font-bold">$467K</div>
+                <div className="text-3xl font-bold">$285K</div>
               </div>
               <div>
                 <div className="text-sm opacity-90 uppercase tracking-wide">Total Return</div>
