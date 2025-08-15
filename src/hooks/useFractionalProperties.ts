@@ -58,9 +58,13 @@ export const useFractionalProperties = () => {
   const transformProperty = (prop: FractionalProperty & { whole_properties_sold?: number }): PropertyInvestmentData => {
     const availableTokens = prop.total_tokens_available - prop.tokens_sold;
     const tokenPrice = prop.current_speculation_price / prop.total_tokens_available;
-    const platformFee = prop.current_speculation_price * 0.03; // 3% platform fee on list price
-    const downPayment = (prop.current_speculation_price * 0.2) + platformFee; // 20% down payment + platform fee
-    const loanAmount = prop.current_speculation_price - downPayment;
+    
+    // Platform fee is separate upfront cost (3% of property value)
+    const platformFee = prop.current_speculation_price * 0.03;
+    // Down payment is 20% of property value (separate from platform fee)
+    const downPayment = prop.current_speculation_price * 0.2;
+    // Loan amount is 80% of property value (not affected by platform fee)
+    const loanAmount = prop.current_speculation_price * 0.8;
     
     // Use standardized mortgage calculation with 8% APR, 10-year term
     const aprBps = 800; // 8% APR in basis points
@@ -71,7 +75,10 @@ export const useFractionalProperties = () => {
       ? loanAmount * (monthlyRate / (1 - Math.pow(1 + monthlyRate, -termMonths)))
       : 0;
     
-    const expectedReturn = ((prop.monthly_base_rent * 12) / prop.current_speculation_price) * 100;
+    // Calculate cash flow yield based on total upfront cost (down payment + platform fee)
+    const totalUpfrontCost = downPayment + platformFee;
+    const monthlyCashFlow = prop.monthly_base_rent - monthlyPayment;
+    const expectedReturn = totalUpfrontCost > 0 ? ((monthlyCashFlow * 12) / totalUpfrontCost) * 100 : 0;
 
     // Handle null values with fallbacks
     const propertyName = prop.property_name || `Property ${prop.id.slice(0, 8)}`;
@@ -84,7 +91,7 @@ export const useFractionalProperties = () => {
       location: propertyLocation,
       image: propertyImage,
       totalValue: prop.current_speculation_price,
-      downPayment,
+      downPayment: totalUpfrontCost, // Include platform fee in total upfront cost
       monthlyPayment: Math.round(monthlyPayment),
       monthlyRent: prop.monthly_base_rent, // Use actual rent from database
       projected_appreciation_percent: prop.projected_appreciation_percent || 181,
