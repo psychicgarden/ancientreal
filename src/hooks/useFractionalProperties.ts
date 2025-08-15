@@ -73,14 +73,28 @@ export const useFractionalProperties = () => {
     const availableTokens = prop.total_tokens_available - prop.tokens_sold;
     const tokenPrice = prop.current_speculation_price / prop.total_tokens_available;
     
-    // Use centralized math utility with property-specific values
+    // Get correct citizenship cost based on property name
+    const getCitizenshipCost = (propertyName: string): number => {
+      switch (propertyName) {
+        case 'Bahia Ocean Villa':
+          return 26000;
+        case 'Oceanview Loft':
+          return 30000;
+        case 'Art Deco Loft':
+          return 25800;
+        default:
+          return prop.min_investment; // fallback
+      }
+    };
+
+    // Use simplified math utility with correct values
     const metrics = computeMetrics({
-      purchase_price: prop.current_speculation_price,
-      citizenship_cost: prop.min_investment, // This is the citizenship cost, not 20% down
-      monthly_base_rent: prop.monthly_base_rent,
-      mortgage_month: getPropertyMortgage(prop.property_name), // Use specific values
-      utilities_month: 65,
-      property_tax_annual_pct: 0.0015
+      price: prop.current_speculation_price,
+      downPayment: getCitizenshipCost(prop.property_name),
+      grossRent: prop.monthly_base_rent,
+      mortgage: getPropertyMortgage(prop.property_name),
+      utilities: 65,
+      taxPct: 0.0015,
     });
     
     const expectedReturn = ((prop.monthly_base_rent * 12) / prop.current_speculation_price) * 100;
@@ -96,7 +110,7 @@ export const useFractionalProperties = () => {
       location: propertyLocation,
       image: propertyImage,
       totalValue: prop.current_speculation_price,
-      downPayment: prop.min_investment, // Use min_investment as citizenship cost
+      downPayment: getCitizenshipCost(prop.property_name), // Use correct citizenship cost
       monthlyPayment: metrics.mortgage,
       monthlyRent: prop.monthly_base_rent || (prop.current_speculation_price * 0.015), // Use actual rent or estimate
       projected_appreciation_percent: prop.projected_appreciation_percent || 181,

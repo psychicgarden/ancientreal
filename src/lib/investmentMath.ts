@@ -1,12 +1,10 @@
 interface PropertyData {
-  purchase_price: number;
-  citizenship_cost: number;
-  monthly_base_rent: number;
-  mortgage_month?: number;
-  utilities_month?: number;
-  property_tax_annual_pct?: number;
-  mortgage_apr?: number;
-  mortgage_term_years?: number;
+  price: number;
+  downPayment: number;
+  grossRent: number;
+  mortgage: number;
+  utilities?: number;
+  taxPct?: number;
 }
 
 export interface ComputedMetrics {
@@ -17,39 +15,24 @@ export interface ComputedMetrics {
 }
 
 export function computeMetrics(p: PropertyData): ComputedMetrics {
-  const price = p.purchase_price;
-  const down = p.citizenship_cost;
-  const mortgage = p.mortgage_month != null 
-    ? p.mortgage_month 
-    : PMT(price - down, p.mortgage_apr || 0.08, p.mortgage_term_years || 10);
+  const utilities = p.utilities ?? 65;
+  const taxPct = p.taxPct ?? 0.0015;
+  
+  const rentAfterBills = p.grossRent - utilities - (p.price * taxPct / 12);
+  const monthlyNetworkValue = rentAfterBills - p.mortgage;
 
-  const utilities = p.utilities_month ?? 65;
-  const propertyTaxMonthly = ((p.property_tax_annual_pct ?? 0.0015) * price) / 12;
+  // 50% share of 181% appreciation, no cap
+  const equityYear10 = p.price * 1.905;
 
-  const rentAfterBills = p.monthly_base_rent - utilities - propertyTaxMonthly;
-  const monthlyNetworkValue = rentAfterBills - mortgage;
-
-  // Appreciation & equity with 110% cap logic
-  const finalValue = price * 2.81; // 181% appreciation over 10 years
-  const repayBase = Math.min(finalValue - price, price * 1.10);
-  const buyerRepay = 0.50 * repayBase;
-  const equityYear10 = finalValue - buyerRepay;
-
-  const rental10 = monthlyNetworkValue * 12 * 10;
-  const roiMultiple = (equityYear10 + rental10) / down;
+  const rental10 = monthlyNetworkValue * 120;
+  const roiMultiple = (equityYear10 + rental10) / p.downPayment;
 
   return {
     monthlyNetworkValue: round(monthlyNetworkValue),
     equityYear10: round(equityYear10),
     roiMultiple: round(roiMultiple, 1),
-    mortgage: round(mortgage),
+    mortgage: round(p.mortgage),
   };
-}
-
-function PMT(principal: number, apr: number, years: number): number {
-  const monthlyRate = apr / 12;
-  const payments = years * 12;
-  return (principal * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -payments));
 }
 
 function round(value: number, decimals: number = 0): number {
