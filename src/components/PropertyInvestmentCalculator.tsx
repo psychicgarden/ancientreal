@@ -141,6 +141,54 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
             </div>
           </div>
 
+          {/* Total 10-Year Profit - Prominent Display */}
+          <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20">
+            <CardContent className="p-6">
+              <div className="text-center">
+                <div className="text-sm font-medium text-muted-foreground mb-2">Total 10-Year Profit</div>
+                <div className="text-4xl font-bold text-primary mb-2">
+                  ${Math.round(actualWealthCreated).toLocaleString()}
+                </div>
+                <div className="text-lg text-muted-foreground">
+                  {(actualWealthCreated / investmentAmount).toFixed(1)}x your money back
+                </div>
+                <div className="text-sm text-muted-foreground mt-1">
+                  {total10YearROI.toFixed(0)}% total return over 10 years
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Investment Summary */}
+          <Card className="bg-muted/30">
+            <CardContent className="p-6">
+              <h3 className="font-semibold mb-4 text-center">Investment Summary</h3>
+              <div className="grid grid-cols-3 gap-6 text-center">
+                <div>
+                  <div className="text-sm text-muted-foreground">You Invest</div>
+                  <div className="text-2xl font-bold text-red-600">
+                    ${investmentAmount.toLocaleString()}
+                  </div>
+                  <div className="text-xs text-muted-foreground">Today</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">You Get Back</div>
+                  <div className="text-2xl font-bold text-primary">
+                    ${(investmentAmount + actualWealthCreated).toLocaleString()}
+                  </div>
+                  <div className="text-xs text-muted-foreground">After 10 years</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">Pure Profit</div>
+                  <div className="text-2xl font-bold text-green-600">
+                    ${Math.round(actualWealthCreated).toLocaleString()}
+                  </div>
+                  <div className="text-xs text-muted-foreground">Wealth created</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Real-time Calculations */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Card>
@@ -168,7 +216,7 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
                   {cashFlowYield.toFixed(1)}%
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  Cash-on-cash return
+                  Annual cash return
                 </div>
               </CardContent>
             </Card>
@@ -177,14 +225,13 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <Calculator className="w-4 h-4 text-purple-500" />
-                  <span className="font-medium">Interest Eliminated</span>
+                  <span className="font-medium">Mortgage Savings</span>
                 </div>
                 <div className="text-2xl font-bold text-purple-600">
                   ${Math.max(0, Math.round(totalInterestSaved)).toLocaleString()}
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  {investmentAmount >= property.totalValue ? "100% Interest-Free" : 
-                   totalInterestSaved <= 0 ? "No additional savings" : "vs. baseline scenario"}
+                  Interest eliminated
                 </div>
               </CardContent>
             </Card>
@@ -193,13 +240,13 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <TrendingUp className="w-4 h-4 text-orange-500" />
-                  <span className="font-medium">True Annual ROI</span>
+                  <span className="font-medium">Annual ROI</span>
                 </div>
                 <div className="text-2xl font-bold text-orange-600">
                   {trueAnnualROI.toFixed(1)}%
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  {investmentAmount >= property.totalValue ? "Risk-free returns" : "Total return on investment"}
+                  Yearly return rate
                 </div>
               </CardContent>
             </Card>
