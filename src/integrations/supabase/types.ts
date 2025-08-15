@@ -722,6 +722,9 @@ export type Database = {
           mortgage_down_payment_total: number | null
           original_property_value: number | null
           original_purchase_price: number
+          owner_approved_listing: boolean | null
+          owner_listing_date: string | null
+          owner_set_valuation: boolean | null
           owner_wallet_address: string
           projected_appreciation_percent: number | null
           property_description: string | null
@@ -760,6 +763,9 @@ export type Database = {
           mortgage_down_payment_total?: number | null
           original_property_value?: number | null
           original_purchase_price: number
+          owner_approved_listing?: boolean | null
+          owner_listing_date?: string | null
+          owner_set_valuation?: boolean | null
           owner_wallet_address: string
           projected_appreciation_percent?: number | null
           property_description?: string | null
@@ -798,6 +804,9 @@ export type Database = {
           mortgage_down_payment_total?: number | null
           original_property_value?: number | null
           original_purchase_price?: number
+          owner_approved_listing?: boolean | null
+          owner_listing_date?: string | null
+          owner_set_valuation?: boolean | null
           owner_wallet_address?: string
           projected_appreciation_percent?: number | null
           property_description?: string | null

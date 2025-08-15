@@ -108,6 +108,7 @@ export const useFractionalProperties = () => {
         `)
         .eq('is_active', true)
         .eq('is_listed_fractionally', true)
+        .eq('owner_approved_listing', true) // Only show owner-approved listings
         .not('property_name', 'is', null)
         .not('property_location', 'is', null)
         .not('owner_wallet_address', 'eq', '0x1234567890123456789012345678901234567890') // Exclude test data

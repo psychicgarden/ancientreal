@@ -58,7 +58,7 @@ export const PropertyCard = ({
       case "pending":
         return <Badge className="bg-red-600/95 text-white font-semibold border border-red-400/50 shadow-lg backdrop-blur-sm px-3 py-1">Purchase Failed</Badge>;
       case "success":
-        return <Badge className="bg-green-600/95 text-white font-semibold border border-green-400/50 shadow-lg backdrop-blur-sm px-3 py-1">Successfully Fractionalized</Badge>;
+        return <Badge className="bg-green-600/95 text-white font-semibold border border-green-400/50 shadow-lg backdrop-blur-sm px-3 py-1">Owner Listed</Badge>;
       default:
         return null;
     }
