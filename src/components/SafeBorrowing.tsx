@@ -24,8 +24,8 @@ export const SafeBorrowing = () => {
   const selectedPropertyData = properties.find(p => p.property.id === selectedProperty);
   const maxBorrowable = selectedPropertyData ? fromBase(selectedPropertyData.availableToBorrowBase) : 0;
   
-  // Interest calculations (12% APY)
-  const monthlyInterestRate = 0.12 / 12;
+  // Interest calculations (10% APY)
+  const monthlyInterestRate = 0.10 / 12;
   const monthlyPayment = loanAmount > 0 ? (loanAmount * monthlyInterestRate) : 0;
 
   const handleCreateLoan = async () => {
@@ -143,7 +143,7 @@ export const SafeBorrowing = () => {
         <Shield className="h-4 w-4" />
         <AlertDescription>
           <strong>Safe Borrowing:</strong> You can only borrow against equity you've actually paid (down payment + principal payments). 
-          Maximum 50% LTV with 12% APY. Your mortgage payments must be current.
+          Maximum 50% LTV with 10% APY. Your mortgage payments must be current.
         </AlertDescription>
       </Alert>
 
@@ -234,7 +234,7 @@ export const SafeBorrowing = () => {
                         </div>
                         <div className="flex justify-between">
                           <span className="text-sm text-muted-foreground">Interest Rate</span>
-                          <span className="font-medium">12% APY</span>
+                          <span className="font-medium">10% APY</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-sm text-muted-foreground">Monthly Interest</span>

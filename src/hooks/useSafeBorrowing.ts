@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useWallet } from '@/contexts/WalletContext';
 import { toBase, fromBase } from '@/lib/money';
+import { supabase } from '@/integrations/supabase/client';
 
 interface UserProperty {
   id: string;
@@ -52,36 +53,35 @@ export const useSafeBorrowing = () => {
       setLoading(true);
       setError(null);
 
-      // Mock data for now since table types aren't updated yet
-      // This will be replaced with real Supabase queries once types are regenerated
-      const mockProperties: UserProperty[] = [
-        {
-          id: '1',
-          property_name: 'Art Deco Loft Mexico',
-          property_location: 'Mexico City, Mexico',
-          image_url: '/placeholder.svg',
-          property_id: 1,
-          purchase_price_base: 150000000000, // $150k in USDC-6
-          down_payment_base: 30000000000,   // $30k down payment
-          principal_paid_base: 5000000000,  // $5k principal paid
-          interest_paid_base: 2000000000,   // $2k interest paid
-          loan_amount_base: 120000000000    // $120k loan
-        }
-      ];
+      // Fetch user properties from database
+      const { data: userProperties, error: propertiesError } = await supabase
+        .from('user_properties')
+        .select('*')
+        .eq('user_wallet_address', account.toLowerCase())
+        .eq('is_active', true);
 
-      const mockLoans: CollateralLoan[] = [];
+      if (propertiesError) throw propertiesError;
 
-      setCollateralLoans(mockLoans);
+      // Fetch existing collateral loans
+      const { data: existingLoans, error: loansError } = await supabase
+        .from('collateral_loans')
+        .select('*')
+        .eq('user_wallet_address', account.toLowerCase())
+        .in('status', ['active', 'pending']);
+
+      if (loansError) throw loansError;
+
+      setCollateralLoans(existingLoans || []);
 
       // Calculate borrowable amounts for each property
-      const borrowableProperties: BorrowableProperty[] = mockProperties.map(property => {
-        const paidEquityBase = property.down_payment_base + (property.principal_paid_base || 0);
+      const borrowableProperties: BorrowableProperty[] = (userProperties || []).map(property => {
+        const paidEquityBase = (property.down_payment_base || 0) + (property.principal_paid_base || 0);
         
         // Conservative 50% LTV on paid equity only
         const maxBorrowableBase = Math.floor(paidEquityBase / 2);
         
         // Check existing loans against this property
-        const existingLoanBase = mockLoans
+        const existingLoanBase = (existingLoans || [])
           ?.filter(loan => loan.property_id === property.property_id)
           ?.reduce((sum, loan) => sum + loan.loan_amount_base, 0) || 0;
         
@@ -90,7 +90,18 @@ export const useSafeBorrowing = () => {
           : 0;
 
         return {
-          property,
+          property: {
+            id: property.id,
+            property_name: property.property_name || 'Unknown Property',
+            property_location: property.property_location || 'Unknown Location',
+            image_url: property.image_url || '/placeholder.svg',
+            property_id: property.property_id || 0,
+            purchase_price_base: property.purchase_price_base || 0,
+            down_payment_base: property.down_payment_base || 0,
+            principal_paid_base: property.principal_paid_base || 0,
+            interest_paid_base: property.interest_paid_base || 0,
+            loan_amount_base: property.loan_amount_base || 0
+          },
           paidEquityBase,
           maxBorrowableBase,
           existingLoanBase,
@@ -114,20 +125,20 @@ export const useSafeBorrowing = () => {
   ) => {
     if (!account) throw new Error('Wallet not connected');
 
-    // Mock implementation for now - will be replaced with real Supabase insert
     const loanToValuePercent = (loanAmountBase * 100) / collateralEquityBase;
     
-    console.log('Creating mock collateral loan:', {
-      user_wallet_address: account.toLowerCase(),
-      property_id: propertyId,
-      loan_amount_base: loanAmountBase,
-      collateral_equity_base: collateralEquityBase,
-      loan_to_value_percent: loanToValuePercent,
-      interest_rate_bps: 1000 // 10% APY
-    });
+    const { error } = await supabase
+      .from('collateral_loans')
+      .insert({
+        user_wallet_address: account.toLowerCase(),
+        property_id: propertyId,
+        loan_amount_base: loanAmountBase,
+        collateral_equity_base: collateralEquityBase,
+        loan_to_value_percent: loanToValuePercent,
+        interest_rate_bps: 1000 // 10% APY
+      });
     
-    // Simulate successful loan creation
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    if (error) throw error;
     
     // Refresh data after creating loan
     await fetchBorrowableProperties();
