@@ -23,8 +23,10 @@ import {
   FileText,
   Home,
   DollarSign
-} from 'lucide-react';
+ } from 'lucide-react';
 import { PlatformAnalytics } from '@/components/PlatformAnalytics';
+import { useWallet } from '@/contexts/WalletContext';
+import { resetPortfolio } from '@/lib/admin/resetPortfolio';
 
 interface ProjectSubmission {
   id: string;
@@ -56,10 +58,12 @@ interface ProjectSubmission {
 }
 
 const AdminProjects = () => {
+  const { account } = useWallet();
   const [submissions, setSubmissions] = useState<ProjectSubmission[]>([]);
   const [filteredSubmissions, setFilteredSubmissions] = useState<ProjectSubmission[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [resetting, setResetting] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
@@ -167,6 +171,53 @@ const AdminProjects = () => {
     setCategoryFilter('all');
   };
 
+  const handlePortfolioReset = async () => {
+    if (!account) {
+      toast({ 
+        title: 'Wallet Not Connected', 
+        description: 'Please connect your wallet first.',
+        variant: 'destructive' 
+      });
+      return;
+    }
+
+    if (!confirm('Are you sure you want to reset your portfolio data? This will archive all current data and clear your investments. This action cannot be undone.')) {
+      return;
+    }
+
+    setResetting(true);
+    try {
+      // Clear localStorage flag to allow reset
+      const flagKey = `reset-portfolio:${account.toLowerCase()}`;
+      localStorage.removeItem(flagKey);
+      
+      // Call the reset function
+      const result = await resetPortfolio(account);
+      
+      const summary = result?.result 
+        ? Object.entries(result.result)
+            .map(([k, v]) => `${k}: ${v}`)
+            .slice(0, 5)
+            .join(' | ')
+        : 'Portfolio reset completed';
+
+      toast({
+        title: 'Portfolio Reset Successful',
+        description: summary,
+      });
+
+    } catch (error: any) {
+      console.error('Portfolio reset error:', error);
+      toast({
+        title: 'Reset Failed',
+        description: error?.message || 'Unexpected error during reset',
+        variant: 'destructive',
+      });
+    } finally {
+      setResetting(false);
+    }
+  };
+
   if (error) {
     return (
       <div className="min-h-screen bg-background p-8">
@@ -219,6 +270,19 @@ const AdminProjects = () => {
             <Button onClick={fetchSubmissions} variant="outline" className="self-start md:self-auto">
               <RefreshCw className="w-4 h-4 mr-2" />
               Refresh
+            </Button>
+            <Button 
+              onClick={handlePortfolioReset} 
+              variant="destructive" 
+              className="self-start md:self-auto"
+              disabled={resetting || !account}
+            >
+              {resetting ? (
+                <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <AlertCircle className="w-4 h-4 mr-2" />
+              )}
+              {resetting ? 'Resetting...' : 'Reset Portfolio'}
             </Button>
           </div>
         </div>
