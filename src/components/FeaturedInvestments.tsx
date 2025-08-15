@@ -153,10 +153,6 @@ const FeaturedInvestments = () => {
                             <span className="text-sm text-muted-foreground">10-Year Village Value:</span>
                             <span className="text-lg font-bold">${property.networkValue.toLocaleString()}</span>
                           </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-muted-foreground">10 Year ROI:</span>
-                            <span className="text-lg font-bold text-green-600">{(property.networkValue / property.downPayment).toFixed(1)}X</span>
-                          </div>
                           <div className="flex justify-between items-start pt-2">
                             <span className="text-sm text-muted-foreground">Access:</span>
                             <div className="text-right">
