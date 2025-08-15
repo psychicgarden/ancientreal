@@ -86,7 +86,11 @@ export const useFractionalProperties = () => {
       monthlyPayment: Math.round(monthlyPayment),
       monthlyRent: prop.monthly_base_rent, // Use actual rent from database
       projected_appreciation_percent: prop.projected_appreciation_percent || 181,
-      networkValue: prop.current_speculation_price * (1 + ((prop.projected_appreciation_percent || 181) / 100)), // Calculated from database percentage
+      networkValue: (() => {
+        const { calculatePropertyAppreciation } = require('@/lib/finance');
+        const appreciation = calculatePropertyAppreciation(prop.current_speculation_price, prop.projected_appreciation_percent || 181, 0.5);
+        return Math.round(appreciation.buyerTotalEquity);
+      })(),
       expectedReturn,
       availableShares: availableTokens,
       totalShares: prop.total_tokens_available,

@@ -35,9 +35,12 @@ const FeaturedInvestments = () => {
     const monthlyPayment = Math.round(property.monthlyPayment);
     const monthlyProfit = Math.round(monthlyRent - monthlyPayment);
     
-    // Calculate network value using 35% appreciation over 5 years + ARW split
-    const fiveYearAppreciation = property.totalValue * 1.35;
-    const networkValue = Math.round(fiveYearAppreciation);
+    // Import calculatePropertyAppreciation from finance lib
+    const { calculatePropertyAppreciation } = require('@/lib/finance');
+    
+    // Calculate network value using 181% appreciation and buyer's total equity
+    const appreciation = calculatePropertyAppreciation(property.totalValue, property.projected_appreciation_percent || 181, 0.5);
+    const networkValue = Math.round(appreciation.buyerTotalEquity);
     
     return {
       type: property.location.includes('Mexico') ? "🏝️ Join the Mazunte Village" : "Villa",

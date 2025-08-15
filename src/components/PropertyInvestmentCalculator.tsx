@@ -57,9 +57,9 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
   const totalAppreciation = tenYearPropertyValue - property.totalValue;
   const buyerAppreciationShare = totalAppreciation * 0.5; // 50% split
 
-  // Calculate totals for 10-year projection
+  // Calculate totals for 10-year projection using correct metrics
   const totalCashFlow = metrics.monthlyProfit * 120; // 10 years
-  const actualWealthCreated = totalCashFlow + buyerAppreciationShare;
+  const actualWealthCreated = metrics.totalEquityAtMaturity; // Use calculated buyer total equity
   const total10YearROI = investmentAmount > 0 ? (actualWealthCreated / investmentAmount) * 100 : 0;
 
   // Interest savings calculation (vs baseline scenario)
