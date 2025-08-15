@@ -38,13 +38,13 @@ const FeaturedInvestments = () => {
     // Calculate 10-year rental profit
     const tenYearRentalProfit = monthlyProfit * 120; // 120 months = 10 years
     
-    // Calculate buyer equity at year 10 using 181% appreciation model
+    // ARW Model: Buyer equity at year 10 = full property value + capped appreciation benefit
+    // Property appreciates 181% but buyer benefit capped at 110% with 50% split
     const appreciatedValue = property.totalValue * 2.81; // 181% appreciation = 2.81x
-    const cappedAppreciation = property.totalValue * 1.10; // 110% cap
-    const buyerEquityFromAppreciation = cappedAppreciation * 0.50; // Buyer gets 50%
-    const buyerEquity = Math.round(appreciatedValue - cappedAppreciation + buyerEquityFromAppreciation);
+    const cappedAppreciationBenefit = property.totalValue * 1.10 * 0.50; // 50% of 110% cap
+    const buyerEquity = Math.round(appreciatedValue + cappedAppreciationBenefit);
     
-    // Calculate total ROI including rental profits and equity
+    // Calculate total ROI including rental profits and equity position
     const totalReturn = tenYearRentalProfit + buyerEquity - property.downPayment;
     const roi = Math.round((totalReturn / property.downPayment) * 10) / 10; // Round to 1 decimal
     
@@ -140,7 +140,10 @@ const FeaturedInvestments = () => {
                       
                       {/* Network Investment Section */}
                       <div className="bg-gradient-to-br from-muted/30 to-muted/10 rounded-xl p-5 border border-border/20">
-                        <h4 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase mb-4">Network Investment</h4>
+                        <div className="flex items-center justify-between mb-4">
+                          <h4 className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">Network Investment</h4>
+                          <div className="text-xs text-muted-foreground">10-year mortgage + 110% cap</div>
+                        </div>
                         <div className="space-y-3">
                           <div className="flex justify-between items-center">
                             <span className="text-sm text-muted-foreground">List Price:</span>
