@@ -16,18 +16,22 @@ function Footer({ className }: { className?: string }) {
             </p>
           </div>
 
-          <nav className="grid grid-cols-2 gap-6 text-sm">
-            <div className="space-y-3">
-              <p className="text-xs uppercase tracking-wider text-muted-foreground">Platform</p>
-              <Link to="/investor" className="hover-scale text-foreground/80 hover:text-foreground">Invest</Link>
-              <Link to="/portfolio" className="hover-scale text-foreground/80 hover:text-foreground">Portfolio</Link>
-              <Link to="/banking" className="hover-scale text-foreground/80 hover:text-foreground">Banking</Link>
+          <nav className="grid grid-cols-2 gap-8 text-sm">
+            <div className="flex flex-col gap-4">
+              <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Platform</p>
+              <div className="flex flex-col gap-3">
+                <Link to="/investor" className="hover-scale text-foreground/80 hover:text-foreground">Invest</Link>
+                <Link to="/portfolio" className="hover-scale text-foreground/80 hover:text-foreground">Portfolio</Link>
+                <Link to="/banking" className="hover-scale text-foreground/80 hover:text-foreground">Banking</Link>
+              </div>
             </div>
-            <div className="space-y-3">
-              <p className="text-xs uppercase tracking-wider text-muted-foreground">Explore</p>
-              <Link to="/traveler" className="hover-scale text-foreground/80 hover:text-foreground">Travel</Link>
-              <Link to="/community" className="hover-scale text-foreground/80 hover:text-foreground">Community</Link>
-              <Link to="/developers" className="hover-scale text-foreground/80 hover:text-foreground">Developers</Link>
+            <div className="flex flex-col gap-4">
+              <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2">Explore</p>
+              <div className="flex flex-col gap-3">
+                <Link to="/traveler" className="hover-scale text-foreground/80 hover:text-foreground">Travel</Link>
+                <Link to="/community" className="hover-scale text-foreground/80 hover:text-foreground">Community</Link>
+                <Link to="/developers" className="hover-scale text-foreground/80 hover:text-foreground">Developers</Link>
+              </div>
             </div>
           </nav>
 
