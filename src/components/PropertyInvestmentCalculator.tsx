@@ -16,9 +16,9 @@ interface PropertyInvestmentCalculatorProps {
     downPayment: number;
     monthlyRent: number;
     projected_appreciation_percent?: number;
-    networkValue: number; // Pre-calculated monthly profit
-    equityYear10: number; // Pre-calculated equity at year 10
-    roiMultiple: number; // Pre-calculated ROI multiple
+    networkValue?: number; // Pre-calculated monthly profit
+    equityYear10?: number; // Pre-calculated equity at year 10
+    roiMultiple?: number; // Pre-calculated ROI multiple
   } | null;
 }
 
@@ -42,12 +42,12 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
   const netInvestment = investmentAmount - platformFee; // Actual amount going to property
   const propertyValue = property.totalValue || 0;
   
-  // Use pre-calculated monthly profit (already accounts for rent - mortgage)
-  const monthlyProfit = property.networkValue;
+  // Use pre-calculated monthly profit with fallback calculation
+  const monthlyProfit = property.networkValue || (property.monthlyRent - (propertyValue * 0.08 / 12 * 0.8));
   const annualProfit = monthlyProfit * 12;
   
-  // Use pre-calculated equity at year 10
-  const buyerAppreciationShare = property.equityYear10;
+  // Use pre-calculated equity at year 10 with fallback
+  const buyerAppreciationShare = property.equityYear10 || (propertyValue * 1.905);
   
   // Calculate user's proportional share based on investment
   const userOwnershipPercent = (netInvestment / property.downPayment);
@@ -59,8 +59,9 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
   const totalCashFlow = userAnnualProfit * 10;
   const actualWealthCreated = totalCashFlow + userAppreciationShare;
   
-  // Calculate ROI based on pre-calculated multiple
-  const total10YearROI = (property.roiMultiple - 1) * 100; // Convert multiple to percentage
+  // Calculate ROI based on pre-calculated multiple with fallback
+  const roiMultiple = property.roiMultiple || ((buyerAppreciationShare + annualProfit * 10) / property.downPayment);
+  const total10YearROI = (roiMultiple - 1) * 100; // Convert multiple to percentage
   const trueAnnualROI = total10YearROI / 10; // Approximate annual rate
   const cashFlowYield = (userAnnualProfit / investmentAmount) * 100;
 
@@ -199,7 +200,7 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
                   <span className="font-medium">ROI Multiple</span>
                 </div>
                 <div className="text-2xl font-bold text-purple-600">
-                  {property.roiMultiple.toFixed(1)}x
+                  {roiMultiple.toFixed(1)}x
                 </div>
                 <div className="text-sm text-muted-foreground">
                   Money multiplier
@@ -272,7 +273,7 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
                   </div>
                   <div>
                     <div className="text-muted-foreground">Total Network Equity</div>
-                    <div className="font-semibold">${property.equityYear10.toLocaleString()}</div>
+                    <div className="font-semibold">${buyerAppreciationShare.toLocaleString()}</div>
                   </div>
                   <div>
                     <div className="text-muted-foreground">Your Appreciation Share</div>
