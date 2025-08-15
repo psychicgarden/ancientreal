@@ -99,6 +99,9 @@ export const useFractionalProperties = () => {
       taxPct: 0.0015,
     });
     
+    // Debug: Log computed metrics
+    console.log(`Metrics for ${prop.property_name}:`, metrics);
+    
     const expectedReturn = ((prop.monthly_base_rent * 12) / prop.current_speculation_price) * 100;
 
     // Handle null values with fallbacks

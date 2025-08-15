@@ -42,12 +42,16 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
   const netInvestment = investmentAmount - platformFee; // Actual amount going to property
   const propertyValue = property.totalValue || 0;
   
-  // Use pre-calculated monthly profit (already accounts for rent - mortgage)
-  const monthlyProfit = property.networkValue;
+  // Debug: Log property to see what we're getting
+  console.log('PropertyInvestmentCalculator - property:', property);
+  console.log('networkValue:', property.networkValue, 'equityYear10:', property.equityYear10, 'roiMultiple:', property.roiMultiple);
+  
+  // Use pre-calculated monthly profit with safety check
+  const monthlyProfit = property.networkValue || 0;
   const annualProfit = monthlyProfit * 12;
   
-  // Use pre-calculated equity at year 10
-  const buyerAppreciationShare = property.equityYear10;
+  // Use pre-calculated equity at year 10 with safety check
+  const buyerAppreciationShare = property.equityYear10 || 0;
   
   // Calculate user's proportional share based on investment
   const userOwnershipPercent = (netInvestment / property.downPayment);
@@ -59,8 +63,8 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
   const totalCashFlow = userAnnualProfit * 10;
   const actualWealthCreated = totalCashFlow + userAppreciationShare;
   
-  // Use pre-calculated ROI multiple
-  const roiMultiple = property.roiMultiple;
+  // Use pre-calculated ROI multiple with safety check
+  const roiMultiple = property.roiMultiple || 1;
   const total10YearROI = (roiMultiple - 1) * 100; // Convert multiple to percentage
   const trueAnnualROI = total10YearROI / 10; // Approximate annual rate
   const cashFlowYield = (userAnnualProfit / investmentAmount) * 100;
