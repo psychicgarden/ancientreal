@@ -10,7 +10,8 @@ import { MortgageGroupsInterface } from "@/components/MortgageGroupsInterface";
 import { BeginnerPortfolioSummary } from "@/components/BeginnerPortfolioSummary";
 import { MortgageGroupsExplanation } from "@/components/MortgageGroupsExplanation";
 import { SimpleTokenExplanation } from "@/components/SimpleTokenExplanation";
-import { TrendingUp, Handshake, DollarSign, Zap, GraduationCap, Settings, Users } from "lucide-react";
+import { TrendingUp, Handshake, DollarSign, Zap, GraduationCap, Settings, Users, Banknote } from "lucide-react";
+import { SafeBorrowing } from "@/components/SafeBorrowing";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 export const LiquidityTradingHub = () => {
@@ -22,17 +23,18 @@ export const LiquidityTradingHub = () => {
       <div className="text-center space-y-4">
         <h1 className="text-3xl font-bold">Property Investment Hub</h1>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          Three ways to invest in real estate: Join mortgage groups, buy individual property shares, or trade equity with other investors.
+          Four ways to engage with real estate: Join mortgage groups, buy individual property shares, trade equity with other investors, or borrow cash against your equity.
         </p>
         <div className="flex justify-center gap-2 flex-wrap">
           <Badge className="bg-green-100 text-green-700">Collective Ownership</Badge>
           <Badge className="bg-blue-100 text-blue-700">Fractional Shares</Badge>
           <Badge className="bg-purple-100 text-purple-700">Peer-to-Peer Trading</Badge>
+          <Badge className="bg-orange-100 text-orange-700">Collateral Lending</Badge>
         </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="groups" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
             Join Groups
@@ -44,6 +46,10 @@ export const LiquidityTradingHub = () => {
           <TabsTrigger value="trade" className="flex items-center gap-2">
             <Handshake className="h-4 w-4" />
             Trade Equity
+          </TabsTrigger>
+          <TabsTrigger value="borrow" className="flex items-center gap-2">
+            <Banknote className="h-4 w-4" />
+            Borrow Cash
           </TabsTrigger>
         </TabsList>
 
@@ -68,6 +74,12 @@ export const LiquidityTradingHub = () => {
         <TabsContent value="trade">
           <ErrorBoundary>
             <EquityTradingInterface />
+          </ErrorBoundary>
+        </TabsContent>
+
+        <TabsContent value="borrow">
+          <ErrorBoundary>
+            <SafeBorrowing />
           </ErrorBoundary>
         </TabsContent>
       </Tabs>

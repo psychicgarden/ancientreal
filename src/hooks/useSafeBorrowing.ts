@@ -123,7 +123,7 @@ export const useSafeBorrowing = () => {
       loan_amount_base: loanAmountBase,
       collateral_equity_base: collateralEquityBase,
       loan_to_value_percent: loanToValuePercent,
-      interest_rate_bps: 1200 // 12% APY
+      interest_rate_bps: 1000 // 10% APY
     });
     
     // Simulate successful loan creation
