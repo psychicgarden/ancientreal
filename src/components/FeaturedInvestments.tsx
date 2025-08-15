@@ -28,26 +28,14 @@ const FeaturedInvestments = () => {
   // Use real fractional properties from Supabase
   const { properties, loading: propertiesLoading } = useFractionalProperties();
 
-  // Transform properties for Village display with correct financial calculations
+  // Transform properties for Village display using pre-calculated metrics
   const transformedProperties = properties.map(property => {
-    // Calculate real monthly profit based on actual rent and mortgage payment
-    const monthlyRent = property.monthlyRent; // Use actual database value
-    const monthlyPayment = Math.round(property.monthlyPayment);
-    const monthlyProfit = Math.round(monthlyRent - monthlyPayment);
-    
-    // Calculate 10-year rental profit
-    const tenYearRentalProfit = monthlyProfit * 120; // 120 months = 10 years
-    
-    // Calculate buyer equity at year 10 using 181% appreciation model
-    const appreciatedValue = property.totalValue * 2.81; // 181% appreciation = 2.81x
-    const cappedAppreciation = property.totalValue * 1.10; // 110% cap (maximum appreciation split)
-    const buyerAppreciationShare = cappedAppreciation * 0.50; // Buyer gets 50% of capped appreciation
-    // Buyer equity = appreciated value minus what they owe to Ancient
-    const buyerEquity = Math.round(appreciatedValue - (cappedAppreciation - buyerAppreciationShare));
-    
-    // Calculate total ROI including rental profits and equity
-    const totalReturn = tenYearRentalProfit + buyerEquity - property.downPayment;
-    const roi = Math.round((totalReturn / property.downPayment) * 10) / 10; // Round to 1 decimal
+    // Use pre-calculated metrics from the investment math utility
+    const metrics = property.computedMetrics;
+    const monthlyProfit = Math.round(metrics?.monthlyNetwork || property.networkValue);
+    const tenYearRentalProfit = Math.round(metrics?.rentalProfit10y || (monthlyProfit * 120));
+    const buyerEquity = Math.round(metrics?.equityYear10 || 0);
+    const roi = Math.round((metrics?.roiMultiple || 1) * 10) / 10; // Round to 1 decimal
     
     return {
       type: property.location.includes('Mexico') ? "🏝️ Join the Mazunte Village" : "Villa",
@@ -56,8 +44,8 @@ const FeaturedInvestments = () => {
       totalValue: property.totalValue,
       listPrice: property.totalValue,
       downPayment: property.downPayment,
-      monthlyPayment,
-      monthlyRent, // Use real database value
+      monthlyPayment: property.monthlyPayment,
+      monthlyRent: property.monthlyRent, // Use real database value
       monthlyProfit, // Calculated from real values
       buyerEquity, // Calculated equity at year 10
       roi, // Total ROI including rental profits

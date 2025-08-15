@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { computeMetrics, fractionalPropertyToPropertyRow } from '@/lib/investmentMath';
 import bohoArtDecoLoft from '@/assets/boho-art-deco-loft-mexico.jpg';
 import luxuryBohoBungalow from '@/assets/luxury-boho-beach-bungalow-bahia.jpg';
 import artDecoCoastalEriceira from '@/assets/art-deco-coastal-ericeira.jpg';
@@ -41,6 +42,7 @@ export interface PropertyInvestmentData {
   wholePropertiesSold: number; // Count of whole properties sold
   isBlockchain?: boolean;
   isVillage?: boolean;
+  computedMetrics?: any; // Include computed metrics from investmentMath
 }
 
 const imageOverrides: Record<string, string> = {
@@ -55,47 +57,41 @@ export const useFractionalProperties = () => {
   const [error, setError] = useState<string | null>(null);
 
   const transformProperty = (prop: FractionalProperty & { whole_properties_sold?: number }): PropertyInvestmentData => {
+    // Convert to PropertyRow format and compute metrics using centralized utility
+    const propertyRow = fractionalPropertyToPropertyRow(prop);
+    const metrics = computeMetrics(propertyRow);
+    
     const availableTokens = prop.total_tokens_available - prop.tokens_sold;
     const tokenPrice = prop.current_speculation_price / prop.total_tokens_available;
-    const downPayment = prop.current_speculation_price * 0.2; // 20% down payment
-    const loanAmount = prop.current_speculation_price - downPayment;
-    
-    // Property-specific mortgage calculations based on your requirements
-    let monthlyPayment: number;
-    if (prop.property_name === 'Oceanview Loft' && prop.property_location === 'Ericeira, Portugal') {
-      monthlyPayment = 1809; // Exact amount you specified
-    } else {
-      // Standard mortgage calculation: 8% APR, 10-year term for other properties
-      const monthlyRate = 0.08 / 12; // 8% annual rate / 12 months
-      const numPayments = 10 * 12; // 10 years * 12 months
-      monthlyPayment = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1);
-    }
-    
-    const expectedReturn = ((prop.monthly_base_rent * 12) / prop.current_speculation_price) * 100;
 
     // Handle null values with fallbacks
     const propertyName = prop.property_name || `Property ${prop.id.slice(0, 8)}`;
     const propertyLocation = prop.property_location || 'Location TBD';
     const propertyImage = imageOverrides[propertyName] ?? prop.property_image_url ?? '/placeholder.svg';
 
+    // Calculate expected return based on gross rental yield
+    const expectedReturn = ((prop.monthly_base_rent * 12) / prop.current_speculation_price) * 100;
+
     return {
       id: prop.id,
       name: propertyName,
       location: propertyLocation,
       image: propertyImage,
-      totalValue: prop.current_speculation_price,
-      downPayment,
-      monthlyPayment: Math.round(monthlyPayment),
-      monthlyRent: prop.monthly_base_rent || (prop.current_speculation_price * 0.015), // Use actual rent or estimate
+      totalValue: metrics.price,
+      downPayment: metrics.down,
+      monthlyPayment: Math.round(metrics.mortgage),
+      monthlyRent: prop.monthly_base_rent || (prop.current_speculation_price * 0.015),
       projected_appreciation_percent: prop.projected_appreciation_percent || 181,
-      networkValue: prop.current_speculation_price * (1 + ((prop.projected_appreciation_percent || 181) / 100)), // Calculated from database percentage
+      networkValue: Math.round(metrics.monthlyNetwork), // Use calculated monthly network value
       expectedReturn,
       availableShares: availableTokens,
       totalShares: prop.total_tokens_available,
       sharePrice: tokenPrice,
-      wholePropertiesSold: prop.whole_properties_sold || 0, // Add whole property sales count
+      wholePropertiesSold: prop.whole_properties_sold || 0,
       isBlockchain: true,
-      isVillage: propertyLocation.includes('Mexico') || propertyLocation.includes('Brazil') || propertyLocation.includes('Portugal')
+      isVillage: propertyLocation.includes('Mexico') || propertyLocation.includes('Brazil') || propertyLocation.includes('Portugal'),
+      // Add the computed metrics for use in other components
+      computedMetrics: metrics
     };
   };
 
