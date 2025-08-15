@@ -9,11 +9,12 @@ import { EnhancedCollateralLending } from "@/components/EnhancedCollateralLendin
 import { YieldFarmingDashboard } from "@/components/YieldFarmingDashboard";
 import { PeerToPeerTrading } from "@/components/PeerToPeerTrading";
 import { SecondaryMarketplace } from "@/components/SecondaryMarketplace";
+import { MortgageGroupsInterface } from "@/components/MortgageGroupsInterface";
 
 import { SafeBorrowing } from "@/components/SafeBorrowing";
 import { BeginnerPortfolioSummary } from "@/components/BeginnerPortfolioSummary";
 import { FractionalInvestingExplanation } from "@/components/FractionalInvestingExplanation";
-import { TrendingUp, Handshake, DollarSign, Zap, GraduationCap, Settings } from "lucide-react";
+import { TrendingUp, Handshake, DollarSign, Zap, GraduationCap, Settings, Users } from "lucide-react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 export const LiquidityTradingHub = () => {
@@ -66,10 +67,14 @@ export const LiquidityTradingHub = () => {
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         {isBeginnerMode ? (
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
               Portfolio
+            </TabsTrigger>
+            <TabsTrigger value="mortgage-groups" className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              Join Mortgage Groups
             </TabsTrigger>
             <TabsTrigger value="buy" className="flex items-center gap-2">
               <DollarSign className="h-4 w-4" />
@@ -108,6 +113,12 @@ export const LiquidityTradingHub = () => {
               <BeginnerPortfolioSummary />
             </TabsContent>
 
+            <TabsContent value="mortgage-groups">
+              <ErrorBoundary>
+                <MortgageGroupsInterface />
+              </ErrorBoundary>
+            </TabsContent>
+
             <TabsContent value="buy">
               <div className="space-y-6">
                 {/* Fractional Investing Explanation */}
@@ -119,7 +130,6 @@ export const LiquidityTradingHub = () => {
                 </ErrorBoundary>
               </div>
             </TabsContent>
-
 
             <TabsContent value="borrow">
               <SafeBorrowing />
