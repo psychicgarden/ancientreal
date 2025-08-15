@@ -75,7 +75,7 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
   const trueAnnualROI = investmentAmount > 0 ? (total10YearROI / 10) : 0;
 
   // Platform fee breakdown
-  const platformFee = investmentAmount * 0.03;
+  const platformFee = property.totalValue * 0.03; // 3% of property list price
   const netInvestment = investmentAmount - platformFee;
 
 
