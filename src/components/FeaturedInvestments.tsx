@@ -28,25 +28,8 @@ const FeaturedInvestments = () => {
   // Use real fractional properties from Supabase
   const { properties, loading: propertiesLoading } = useFractionalProperties();
 
-  // Transform properties for Village display with correct financial calculations
+  // Use pre-calculated values from the hook
   const transformedProperties = properties.map(property => {
-    // Calculate real monthly profit based on actual rent and mortgage payment
-    const monthlyRent = property.monthlyRent; // Use actual database value
-    const monthlyPayment = Math.round(property.monthlyPayment);
-    const monthlyProfit = Math.round(monthlyRent - monthlyPayment);
-    
-    // Calculate 10-year rental profit
-    const tenYearRentalProfit = monthlyProfit * 120; // 120 months = 10 years
-    
-    // Calculate buyer equity at year 10 using 181% appreciation model
-    const appreciatedValue = property.totalValue * 2.81; // 181% appreciation = 2.81x
-    const cappedAppreciation = property.totalValue * 1.10; // 110% cap
-    const buyerEquityFromAppreciation = cappedAppreciation * 0.50; // Buyer gets 50%
-    const buyerEquity = Math.round(appreciatedValue - cappedAppreciation + buyerEquityFromAppreciation);
-    
-    // Calculate total ROI including rental profits and equity
-    const totalReturn = tenYearRentalProfit + buyerEquity - property.downPayment;
-    const roi = Math.round((totalReturn / property.downPayment) * 10) / 10; // Round to 1 decimal
     
     return {
       type: property.location.includes('Mexico') ? "🏝️ Join the Mazunte Village" : "Villa",
@@ -55,11 +38,11 @@ const FeaturedInvestments = () => {
       totalValue: property.totalValue,
       listPrice: property.totalValue,
       downPayment: property.downPayment,
-      monthlyPayment,
-      monthlyRent, // Use real database value
-      monthlyProfit, // Calculated from real values
-      buyerEquity, // Calculated equity at year 10
-      roi, // Total ROI including rental profits
+      monthlyPayment: property.monthlyPayment,
+      monthlyRent: property.monthlyRent,
+      monthlyProfit: property.networkValue, // Use pre-calculated network value
+      buyerEquity: property.totalValue * 2.81 - (property.totalValue * 0.55), // Simplified equity calc
+      roi: ((property.networkValue * 120 + property.totalValue * 2.26) / property.downPayment), // Use network value for ROI
       propertiesSold: property.wholePropertiesSold,
       totalProperties: 15,
       mortgageTerm: "10 years",
