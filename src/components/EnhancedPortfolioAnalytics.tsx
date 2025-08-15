@@ -134,8 +134,14 @@ export const EnhancedPortfolioAnalytics: React.FC<EnhancedPortfolioAnalyticsProp
 
   // Calculate portfolio totals using real data
   const portfolioData = mortgageMetrics.reduce((acc, property) => {
+    // Get actual down payment (what user actually invested)
+    const downPayment = property.down_payment_base ? 
+      fromBase(property.down_payment_base) : 
+      property.purchasePrice * 0.25; // 25% default down payment
+    
     return {
-      totalInvestment: acc.totalInvestment + property.purchasePrice,
+      totalOriginalInvestment: acc.totalOriginalInvestment + downPayment,
+      totalPropertyValue: acc.totalPropertyValue + property.purchasePrice,
       totalEquity: acc.totalEquity + property.metrics.equityBuilt,
       totalDebt: acc.totalDebt + property.metrics.remainingBalance,
       totalMonthlyPayment: acc.totalMonthlyPayment + property.metrics.monthlyPayment,
@@ -143,7 +149,8 @@ export const EnhancedPortfolioAnalytics: React.FC<EnhancedPortfolioAnalyticsProp
       totalInterestPaid: acc.totalInterestPaid + property.metrics.totalInterestPaid
     };
   }, {
-    totalInvestment: 0,
+    totalOriginalInvestment: 0,
+    totalPropertyValue: 0,
     totalEquity: 0,
     totalDebt: 0,
     totalMonthlyPayment: 0,
@@ -158,9 +165,21 @@ export const EnhancedPortfolioAnalytics: React.FC<EnhancedPortfolioAnalyticsProp
     return sum + (currentPrice * inv.ownership_percentage / 100);
   }, 0);
 
-  const totalCurrentValue = portfolioData.totalInvestment + (currentFractionalValue - totalFractionalInvestment);
-  const totalGain = portfolioData.totalEquity + (currentFractionalValue - totalFractionalInvestment);
-  const totalROI = portfolioData.totalInvestment > 0 ? (totalGain / portfolioData.totalInvestment) * 100 : 0;
+  // Calculate total original investment (what user actually paid out of pocket)
+  const totalOriginalInvestment = portfolioData.totalOriginalInvestment + totalFractionalInvestment;
+  
+  // Calculate current total portfolio value
+  const totalCurrentValue = portfolioData.totalPropertyValue + currentFractionalValue;
+  
+  // Calculate market appreciation (property value increases beyond original purchase price)
+  const propertyAppreciation = currentFractionalValue - fractionalInvestments.reduce((sum, inv) => 
+    sum + (inv.original_property_price * inv.ownership_percentage / 100), 0);
+  
+  // Calculate total gain (equity built + market appreciation)
+  const totalGain = portfolioData.totalEquity + propertyAppreciation;
+  
+  // Calculate true ROI based on original investment
+  const totalROI = totalOriginalInvestment > 0 ? (totalGain / totalOriginalInvestment) * 100 : 0;
 
   // Calculate annual yield based on monthly rental income from fractional properties
   const monthlyRentalIncome = fractionalInvestments.reduce((sum, inv) => {
@@ -169,7 +188,7 @@ export const EnhancedPortfolioAnalytics: React.FC<EnhancedPortfolioAnalyticsProp
   }, 0);
 
   const annualIncome = monthlyRentalIncome * 12;
-  const yieldPercentage = portfolioData.totalInvestment > 0 ? (annualIncome / portfolioData.totalInvestment) * 100 : 0;
+  const yieldPercentage = totalOriginalInvestment > 0 ? (annualIncome / totalOriginalInvestment) * 100 : 0;
 
   // Portfolio composition data
   const allProperties = [
@@ -325,7 +344,7 @@ export const EnhancedPortfolioAnalytics: React.FC<EnhancedPortfolioAnalyticsProp
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Remaining Principal</span>
-                <span className="font-semibold">${(portfolioData.totalInvestment - analytics.equityBuilt).toLocaleString()}</span>
+                <span className="font-semibold">${portfolioData.totalDebt.toLocaleString()}</span>
               </div>
             </div>
           </CardContent>
@@ -353,9 +372,9 @@ export const EnhancedPortfolioAnalytics: React.FC<EnhancedPortfolioAnalyticsProp
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">5-Year ROI</span>
+                <span className="text-muted-foreground">5-Year Growth</span>
                 <span className="font-semibold text-green-600">
-                  {(((analytics.projectedValue5Years - portfolioData.totalInvestment) / portfolioData.totalInvestment) * 100).toFixed(0)}%
+                  {totalOriginalInvestment > 0 ? (((analytics.projectedValue5Years - totalOriginalInvestment) / totalOriginalInvestment) * 100).toFixed(0) : 0}%
                 </span>
               </div>
             </div>
@@ -388,9 +407,9 @@ export const EnhancedPortfolioAnalytics: React.FC<EnhancedPortfolioAnalyticsProp
             
             <div className="bg-purple-50 p-4 rounded-lg">
               <div className="text-purple-600 font-semibold">Property Appreciation</div>
-              <div className="text-2xl font-bold">${totalGain.toLocaleString()}</div>
+              <div className="text-2xl font-bold">${propertyAppreciation.toLocaleString()}</div>
               <div className="text-sm text-muted-foreground">
-                Current unrealized gains
+                Market value increases
               </div>
             </div>
           </div>
