@@ -35,9 +35,18 @@ const FeaturedInvestments = () => {
     const monthlyPayment = Math.round(property.monthlyPayment);
     const monthlyProfit = Math.round(monthlyRent - monthlyPayment);
     
-    // Calculate network value using 35% appreciation over 5 years + ARW split
-    const fiveYearAppreciation = property.totalValue * 1.35;
-    const networkValue = Math.round(fiveYearAppreciation);
+    // Calculate 10-year rental profit
+    const tenYearRentalProfit = monthlyProfit * 120; // 120 months = 10 years
+    
+    // Calculate buyer equity at year 10 using 181% appreciation model
+    const appreciatedValue = property.totalValue * 2.81; // 181% appreciation = 2.81x
+    const cappedAppreciation = property.totalValue * 1.10; // 110% cap
+    const buyerEquityFromAppreciation = cappedAppreciation * 0.50; // Buyer gets 50%
+    const buyerEquity = Math.round(appreciatedValue - cappedAppreciation + buyerEquityFromAppreciation);
+    
+    // Calculate total ROI including rental profits and equity
+    const totalReturn = tenYearRentalProfit + buyerEquity - property.downPayment;
+    const roi = Math.round((totalReturn / property.downPayment) * 10) / 10; // Round to 1 decimal
     
     return {
       type: property.location.includes('Mexico') ? "🏝️ Join the Mazunte Village" : "Villa",
@@ -49,7 +58,8 @@ const FeaturedInvestments = () => {
       monthlyPayment,
       monthlyRent, // Use real database value
       monthlyProfit, // Calculated from real values
-      networkValue, // Proper appreciation model
+      buyerEquity, // Calculated equity at year 10
+      roi, // Total ROI including rental profits
       propertiesSold: property.wholePropertiesSold,
       totalProperties: 15,
       mortgageTerm: "10 years",
@@ -138,26 +148,19 @@ const FeaturedInvestments = () => {
                           </div>
                           <div className="flex justify-between items-center">
                             <span className="text-sm text-muted-foreground">Citizenship Cost:</span>
-                            <div className="text-right">
-                              <div className="text-lg font-bold text-primary">${property.downPayment.toLocaleString()}</div>
-                              <div className="text-xs text-muted-foreground">(founding member rate)</div>
-                            </div>
+                            <span className="text-lg font-bold text-primary">${property.downPayment.toLocaleString()}</span>
                           </div>
-                          <div className="h-px bg-gradient-to-r from-border/50 to-transparent my-3" />
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-muted-foreground">Monthly Network Yield:</span>
+                            <span className="text-sm text-muted-foreground">Monthly Network Value:</span>
                             <span className="text-lg font-bold text-green-600">${property.monthlyProfit}</span>
                           </div>
                           <div className="flex justify-between items-center">
-                            <span className="text-sm text-muted-foreground">10-Year Village Value:</span>
-                            <span className="text-lg font-bold">${property.networkValue.toLocaleString()}</span>
+                            <span className="text-sm text-muted-foreground">Your Equity at Year 10:</span>
+                            <span className="text-lg font-bold">${property.buyerEquity.toLocaleString()}</span>
                           </div>
-                          <div className="flex justify-between items-start pt-2">
-                            <span className="text-sm text-muted-foreground">Access:</span>
-                            <div className="text-right">
-                              <div className="text-sm font-semibold">Entire Ancient</div>
-                              <div className="text-xs text-muted-foreground">archipelago</div>
-                            </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-muted-foreground">ROI:</span>
+                            <span className="text-lg font-bold text-primary">{property.roi}×</span>
                           </div>
                         </div>
                       </div>
