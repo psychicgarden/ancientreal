@@ -17,6 +17,7 @@ export interface FractionalProperty {
   tokens_sold: number;
   min_investment: number;
   property_type: string;
+  projected_appreciation_percent?: number;
   bedrooms?: number;
   bathrooms?: number;
   square_feet?: number;
@@ -32,6 +33,7 @@ export interface PropertyInvestmentData {
   monthlyPayment: number;
   monthlyRent: number; // Add missing field for calculator
   networkValue: number; // Add missing field for calculator
+  projected_appreciation_percent?: number;
   expectedReturn: number;
   availableShares: number;
   totalShares: number;
@@ -85,7 +87,8 @@ export const useFractionalProperties = () => {
       downPayment,
       monthlyPayment: Math.round(monthlyPayment),
       monthlyRent: prop.monthly_base_rent || (prop.current_speculation_price * 0.015), // Use actual rent or estimate
-      networkValue: prop.current_speculation_price * 3.11, // 181% appreciation over 10 years
+      projected_appreciation_percent: prop.projected_appreciation_percent || 181,
+      networkValue: prop.current_speculation_price * (1 + ((prop.projected_appreciation_percent || 181) / 100)), // Calculated from database percentage
       expectedReturn,
       availableShares: availableTokens,
       totalShares: prop.total_tokens_available,

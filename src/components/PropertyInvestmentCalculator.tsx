@@ -15,7 +15,8 @@ interface PropertyInvestmentCalculatorProps {
     totalValue: number;
     downPayment: number;
     monthlyRent: number;
-    networkValue: number;
+    projected_appreciation_percent?: number;
+    networkValue?: number; // Legacy field, kept for backward compatibility
   } | null;
 }
 
@@ -70,8 +71,9 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
   
   const totalInterestSaved = baselineTotalInterest - totalInterest;
   
-  // Property appreciation calculations
-  const tenYearPropertyValue = property.networkValue || propertyValue * 2; // Fallback to 2x growth
+  // Property appreciation calculations using 181% default or database value
+  const appreciationPercent = property.projected_appreciation_percent || 181;
+  const tenYearPropertyValue = propertyValue * (1 + (appreciationPercent / 100));
   const totalAppreciation = tenYearPropertyValue - propertyValue;
   const buyerAppreciationShare = totalAppreciation * 0.5; // 50% split
   const annualAppreciationBenefit = buyerAppreciationShare / 10; // Annualized
