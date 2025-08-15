@@ -130,6 +130,29 @@ export class Web3Integration {
     return { transaction: tx, mortgageId };
   }
 
+  async sendPlatformFee(feeAmount: number): Promise<ethers.ContractTransactionResponse> {
+    const account = await this.getAccount();
+    const feeAmountUSDT = (feeAmount * 1e6).toString(); // Convert to USDT units
+    
+    // Platform treasury address (you should configure this)
+    const PLATFORM_TREASURY = "0x742d35Cc6670C068fC0DB3674fE6c61c2B3d2a0B"; // Replace with actual treasury address
+    
+    // Ensure contracts are configured
+    this.ensureAddressConfigured(CONTRACTS.USDT.address, 'USDT');
+
+    // Check USDT balance
+    const balance = await this.getUSDTBalance(account);
+    if (parseFloat(balance) < feeAmount) {
+      throw new Error(`Insufficient USDT balance for platform fee. Required: ${feeAmount}, Available: ${balance}`);
+    }
+
+    // Transfer platform fee to treasury
+    const tx = await this.contracts.usdt.transfer(PLATFORM_TREASURY, feeAmountUSDT);
+    await tx.wait();
+    
+    return tx;
+  }
+
   async makePayment(): Promise<ethers.ContractTransactionResponse> {
     const account = await this.getAccount();
     

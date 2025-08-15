@@ -726,7 +726,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         isJoiningVillage,
         checkVillageMembership,
         // Enhanced Mazunte Property Functions with Real Web3 Integration
-        purchaseProperty,
+        purchaseProperty: (downPayment: number, platformFee?: number) => purchaseProperty(downPayment, platformFee),
         makePayment,
         getMortgageDetails,
         getMazuntePropertyStatus,

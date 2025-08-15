@@ -21,8 +21,10 @@ import {
   AlertCircle,
   RefreshCw,
   FileText,
-  Home
+  Home,
+  DollarSign
 } from 'lucide-react';
+import { PlatformAnalytics } from '@/components/PlatformAnalytics';
 
 interface ProjectSubmission {
   id: string;
@@ -63,6 +65,7 @@ const AdminProjects = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [selectedSubmission, setSelectedSubmission] = useState<ProjectSubmission | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<'projects' | 'analytics'>('projects');
 
   console.log('AdminProjects component rendered', { submissions: submissions.length, loading, error });
 
@@ -204,9 +207,9 @@ const AdminProjects = () => {
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
           <div>
             <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              Project Submissions Admin
+              Admin Dashboard
             </h1>
-            <p className="text-muted-foreground mt-1">Review and manage project submissions</p>
+            <p className="text-muted-foreground mt-1">Review projects and monitor platform analytics</p>
           </div>
           <div className="flex gap-2">
             <Button onClick={() => window.location.href = '/'} variant="outline" className="self-start md:self-auto">
@@ -220,6 +223,37 @@ const AdminProjects = () => {
           </div>
         </div>
 
+        {/* Tab Navigation */}
+        <div className="flex space-x-1 bg-muted p-1 rounded-lg w-fit">
+          <button
+            onClick={() => setActiveTab('projects')}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              activeTab === 'projects'
+                ? 'bg-background text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            <FileText className="w-4 h-4 mr-2 inline" />
+            Project Submissions
+          </button>
+          <button
+            onClick={() => setActiveTab('analytics')}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              activeTab === 'analytics'
+                ? 'bg-background text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            <DollarSign className="w-4 h-4 mr-2 inline" />
+            Platform Analytics
+          </button>
+        </div>
+
+        {/* Conditional Content Based on Active Tab */}
+        {activeTab === 'analytics' ? (
+          <PlatformAnalytics />
+        ) : (
+          <>
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card className="border-l-4 border-l-blue-500">
@@ -446,12 +480,16 @@ const AdminProjects = () => {
         )}
 
         {/* Modal */}
-        <ProjectSubmissionModal
-          isOpen={isModalOpen}
-          onClose={handleModalClose}
-          submission={selectedSubmission}
-          onSubmissionUpdate={handleSubmissionUpdate}
-        />
+        {activeTab === 'projects' && (
+          <ProjectSubmissionModal
+            isOpen={isModalOpen}
+            onClose={handleModalClose}
+            submission={selectedSubmission}
+            onSubmissionUpdate={handleSubmissionUpdate}
+          />
+        )}
+          </>
+        )}
       </div>
     </div>
   );

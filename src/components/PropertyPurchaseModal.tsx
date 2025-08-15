@@ -54,6 +54,7 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
     status: "completed" | "pending";
     txHash?: string;
     mortgageId?: string;
+    platformFeeTxHash?: string;
   }) => {
     if (!account) {
       console.warn("No wallet account available; skipping portfolio insert.");
@@ -63,39 +64,101 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
 
     // Key financials
     const purchasePrice = Number(effectiveProperty.totalValue || 150000);
-    const downPayment = Number(effectiveProperty.downPayment || Math.round(purchasePrice * 0.2));
+    const actualDownPayment = purchasePrice * 0.2; // 20% down payment
+    const platformFee = purchasePrice * 0.03; // 3% platform fee
+    const totalUpfrontCost = actualDownPayment + platformFee;
 
-    // We now ONLY write to user_transactions.
-    // The DB trigger backfills user_properties automatically for completed purchases.
+    // We now write to user_transactions for down payment AND platform fee separately
     const txHashValue = opts.txHash || fallbackTxHash();
+    const platformFeeTxHashValue = opts.platformFeeTxHash || `${txHashValue}-platform`;
 
-    const transactionPayload = {
+    // Down payment transaction
+    const downPaymentTransaction = {
       user_wallet_address: wallet,
-      transaction_type: "purchase", // triggers handle both 'purchase' and 'property_purchase'
+      transaction_type: "purchase",
       transaction_hash: txHashValue,
-      amount: downPayment,
+      amount: actualDownPayment,
       status: opts.status,
       currency: "USDT",
       metadata: {
         property_name: effectiveProperty.name,
-        property_location: effectiveProperty.location, // preferred key for backfill
-        location: effectiveProperty.location,          // kept for compatibility
+        property_location: effectiveProperty.location,
+        location: effectiveProperty.location,
         image_url: effectiveProperty.image,
         mortgage_id: opts.mortgageId || null,
-        propertyValue: purchasePrice,      // used by backfill (preferred)
-        purchase_price: purchasePrice,     // also supported by backfill
-        downPayment: downPayment           // used by backfill to compute loan/equity
+        propertyValue: purchasePrice,
+        purchase_price: purchasePrice,
+        downPayment: actualDownPayment,
+        platform_fee_amount: platformFee,
+        total_upfront_cost: totalUpfrontCost,
+        transaction_category: "down_payment"
       }
     };
 
-    const { error: txInsertErr } = await supabase
-      .from("user_transactions")
-      .insert([transactionPayload]);
+    // Platform fee transaction
+    const platformFeeTransaction = {
+      user_wallet_address: wallet,
+      transaction_type: "platform_fee",
+      transaction_hash: platformFeeTxHashValue,
+      amount: platformFee,
+      status: opts.status,
+      currency: "USDT",
+      metadata: {
+        property_name: effectiveProperty.name,
+        property_location: effectiveProperty.location,
+        propertyValue: purchasePrice,
+        fee_percentage: 3.0,
+        mortgage_id: opts.mortgageId || null,
+        related_transaction_hash: txHashValue,
+        transaction_category: "platform_fee"
+      }
+    };
 
-    if (txInsertErr) {
-      console.error("Failed to insert user_transactions:", txInsertErr);
-    } else {
-      console.log("Inserted transaction for purchase:", txHashValue, transactionPayload);
+    try {
+      // Insert both transactions
+      const { error: downPaymentError } = await supabase
+        .from("user_transactions")
+        .insert([downPaymentTransaction]);
+
+      if (downPaymentError) {
+        console.error("Failed to insert down payment transaction:", downPaymentError);
+        throw downPaymentError;
+      }
+
+      const { error: platformFeeError } = await supabase
+        .from("user_transactions")
+        .insert([platformFeeTransaction]);
+
+      if (platformFeeError) {
+        console.error("Failed to insert platform fee transaction:", platformFeeError);
+        throw platformFeeError;
+      }
+
+      // Insert platform fee record for analytics
+      const { error: platformFeeRecordError } = await supabase
+        .from("platform_fees")
+        .insert([{
+          user_wallet_address: wallet,
+          fee_amount_usd: platformFee,
+          fee_amount_base: Math.round(platformFee * 1e6), // Convert to base units
+          property_value_usd: purchasePrice,
+          fee_percentage: 3.0,
+          payment_status: opts.status,
+          transaction_hash: platformFeeTxHashValue
+        }]);
+
+      if (platformFeeRecordError) {
+        console.error("Failed to insert platform fee record:", platformFeeRecordError);
+      }
+
+      console.log("Successfully inserted all transactions:", {
+        downPayment: actualDownPayment,
+        platformFee,
+        totalUpfrontCost
+      });
+    } catch (error) {
+      console.error("Failed to save purchase transactions:", error);
+      throw error;
     }
   };
 
@@ -125,19 +188,28 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
 
     try {
       console.log("Starting purchase for:", effectiveProperty.name);
-      const result = await purchaseProperty(effectiveProperty.downPayment || 30000);
+      const purchasePrice = Number(effectiveProperty.totalValue || 150000);
+      const actualDownPayment = purchasePrice * 0.2;
+      const platformFee = purchasePrice * 0.03;
+      
+      // Execute both down payment and platform fee transactions
+      const result = await purchaseProperty(actualDownPayment, platformFee);
 
-      // Use only mortgageId from the result; let savePurchaseToSupabase generate a fallback tx hash.
+      // Extract transaction hashes from the result
       const mortgageId = result?.mortgageId;
+      const downPaymentTxHash = result?.downPaymentTx?.hash;
+      const platformFeeTxHash = result?.platformFeeTx?.hash;
 
       await savePurchaseToSupabase({
         status: "completed",
         mortgageId,
+        txHash: downPaymentTxHash,
+        platformFeeTxHash,
       });
 
       toast({
         title: "Purchase Successful!",
-        description: "Your property purchase has been recorded. Your portfolio will update automatically.",
+        description: `Property purchased! Down payment: $${actualDownPayment.toLocaleString()}, Platform fee: $${platformFee.toLocaleString()}`,
       });
       
       setTimeout(() => {
