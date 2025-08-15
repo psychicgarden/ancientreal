@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { MortgagePaymentModal } from "@/components/MortgagePaymentModal";
 import { fmtUSD, fromBase } from "@/lib/money";
 import { PROPERTIES_CATALOG } from "@/lib/propertiesCatalog";
+import { calculateMortgageMetrics, calculatePortfolioMetrics, MortgageData } from "@/lib/mortgageCalculations";
 import { 
   Building2, 
   DollarSign, 
@@ -26,9 +27,11 @@ import {
   ChevronDown,
   ChevronUp,
   Filter,
-  Eye
+  Eye,
+  Target,
+  BarChart3,
+  LineChart
 } from "lucide-react";
-import { computeMonthlyPaymentUSD, computeNextDueDate } from "@/lib/finance";
 
 interface PropertyGroup {
   location: string;
@@ -56,6 +59,14 @@ interface PropertyMortgageData {
   mortgageProgress: number;
   purchaseDate: Date;
   userProperty: any;
+  metrics: {
+    ownershipPercentage: number;
+    timeToPayoff: string;
+    loanToValueRatio: number;
+    equityBuilt: number;
+    remainingMonths: number;
+    monthsElapsed: number;
+  };
 }
 
 export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onNavigateToProperties?: () => void }) => {
@@ -94,16 +105,18 @@ export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onN
               fromBase((property as any).purchase_price_base) : 
               Number(property.purchase_price || 0);
             
-            const downPayment = (property as any).down_payment_base ? 
-              fromBase((property as any).down_payment_base) : 
-              Number(property.down_payment || 0);
-            
-            const remainingBalance = (property as any).remaining_balance_base ? 
-              fromBase((property as any).remaining_balance_base) : 
-              Number(property.remaining_balance || 0);
+            // Create mortgage data object for calculations
+            const mortgageData: MortgageData = {
+              loanAmountBase: BigInt((property as any).loan_amount_base || 0),
+              principalPaidBase: BigInt((property as any).principal_paid_base || 0),
+              interestPaidBase: BigInt((property as any).interest_paid_base || 0),
+              aprBps: Number((property as any).apr_bps || 800),
+              termMonths: Number((property as any).term_months || 120),
+              purchaseDate: property.purchase_date
+            };
 
-            const equity = purchasePrice - remainingBalance;
-            const mortgageProgress = purchasePrice > 0 ? ((purchasePrice - remainingBalance) / purchasePrice) * 100 : 0;
+            // Calculate accurate mortgage metrics
+            const metrics = calculateMortgageMetrics(mortgageData, purchasePrice);
             
             // Get property details from catalog
             const catalogProperty = PROPERTIES_CATALOG.find(p => 
@@ -117,16 +130,24 @@ export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onN
               location: property.property_location,
               image: catalogProperty?.image || '/placeholder.svg',
               purchasePrice,
-              downPayment,
-              remainingBalance,
-              monthlyPayment: Number(property.monthly_payment || 0),
-              nextPaymentDue: computeNextDueDate(property.purchase_date),
-              equity,
+              downPayment: purchasePrice - fromBase(mortgageData.loanAmountBase),
+              remainingBalance: metrics.remainingBalance,
+              monthlyPayment: metrics.monthlyPayment,
+              nextPaymentDue: metrics.nextPaymentDue,
+              equity: metrics.equityBuilt,
               isOverdue: false, // TODO: Calculate based on payment history
               daysPastDue: 0,
-              mortgageProgress,
+              mortgageProgress: metrics.ownershipPercentage,
               purchaseDate: new Date(property.purchase_date),
-              userProperty: property
+              userProperty: property,
+              metrics: {
+                ownershipPercentage: metrics.ownershipPercentage,
+                timeToPayoff: metrics.timeToPayoff,
+                loanToValueRatio: metrics.loanToValueRatio,
+                equityBuilt: metrics.equityBuilt,
+                remainingMonths: metrics.remainingMonths,
+                monthsElapsed: metrics.monthsElapsed
+              }
             };
           });
 
@@ -145,6 +166,28 @@ export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onN
     };
 
     fetchMortgageData();
+
+    // Set up real-time subscription for mortgage payment updates
+    const channel = supabase
+      .channel('user_properties_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'user_properties',
+          filter: `user_wallet_address=eq.${account?.toLowerCase()}`
+        },
+        () => {
+          // Refetch data when properties are updated (e.g., after payments)
+          fetchMortgageData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [isConnected, account, toast]);
 
   // Group properties by location
@@ -173,14 +216,27 @@ export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onN
     return groups;
   }, [] as PropertyGroup[]);
 
-  // Portfolio totals
+  // Calculate professional portfolio metrics
+  const mortgageData = properties.map(p => ({
+    loanAmountBase: BigInt((p.userProperty as any).loan_amount_base || 0),
+    principalPaidBase: BigInt((p.userProperty as any).principal_paid_base || 0),
+    interestPaidBase: BigInt((p.userProperty as any).interest_paid_base || 0),
+    aprBps: Number((p.userProperty as any).apr_bps || 800),
+    termMonths: Number((p.userProperty as any).term_months || 120),
+    purchaseDate: p.userProperty.purchase_date,
+    propertyValue: p.purchasePrice
+  }));
+
+  const portfolioMetrics = calculatePortfolioMetrics(mortgageData);
+  
+  // Portfolio totals (for backward compatibility)
   const portfolioTotals = {
-    totalValue: properties.reduce((sum, p) => sum + p.purchasePrice, 0),
-    totalDownPayment: properties.reduce((sum, p) => sum + p.downPayment, 0),
-    totalMonthlyPayment: properties.reduce((sum, p) => sum + p.monthlyPayment, 0),
-    totalEquity: properties.reduce((sum, p) => sum + p.equity, 0),
-    totalOutstanding: properties.reduce((sum, p) => sum + p.remainingBalance, 0),
-    averageProgress: properties.length > 0 ? properties.reduce((sum, p) => sum + p.mortgageProgress, 0) / properties.length : 0
+    totalValue: portfolioMetrics.totalValue,
+    totalDownPayment: portfolioMetrics.totalValue - portfolioMetrics.totalDebt - portfolioMetrics.totalPrincipalPaid,
+    totalMonthlyPayment: portfolioMetrics.totalMonthlyPayment,
+    totalEquity: portfolioMetrics.totalEquity,
+    totalOutstanding: portfolioMetrics.totalDebt,
+    averageProgress: portfolioMetrics.portfolioOwnership
   };
 
   const toggleGroupExpansion = (location: string) => {
@@ -246,51 +302,63 @@ export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onN
                 Managing {properties.length} properties across {propertyGroups.length} locations
               </p>
               
-              {/* Key Portfolio Metrics */}
+              {/* Professional Portfolio Metrics */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="text-center p-4 rounded-lg bg-background/60 border">
                   <div className="text-2xl font-bold text-primary">
-                    ${portfolioTotals.totalDownPayment.toLocaleString()}
+                    ${Math.round(portfolioMetrics.totalEquity).toLocaleString()}
                   </div>
-                  <div className="text-sm text-muted-foreground">Total Down Payments</div>
+                  <div className="text-sm text-muted-foreground">Total Equity Built</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {portfolioMetrics.portfolioOwnership.toFixed(1)}% ownership
+                  </div>
                 </div>
                 <div className="text-center p-4 rounded-lg bg-background/60 border">
                   <div className="text-2xl font-bold text-destructive">
-                    ${portfolioTotals.totalOutstanding.toLocaleString()}
+                    ${Math.round(portfolioMetrics.totalDebt).toLocaleString()}
                   </div>
-                  <div className="text-sm text-muted-foreground">Outstanding Balance</div>
+                  <div className="text-sm text-muted-foreground">Remaining Balance</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {portfolioMetrics.portfolioLTV.toFixed(1)}% LTV
+                  </div>
                 </div>
                 <div className="text-center p-4 rounded-lg bg-background/60 border">
                   <div className="text-2xl font-bold text-blue-600">
-                    ${portfolioTotals.totalMonthlyPayment.toLocaleString()}
+                    ${Math.round(portfolioMetrics.totalMonthlyPayment).toLocaleString()}
                   </div>
                   <div className="text-sm text-muted-foreground">Monthly Payments</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    10-year mortgages
+                  </div>
                 </div>
                 <div className="text-center p-4 rounded-lg bg-background/60 border">
                   <div className="text-2xl font-bold text-green-600">
-                    ${portfolioTotals.totalEquity.toLocaleString()}
+                    {portfolioMetrics.averageTimeToPayoff}
                   </div>
-                  <div className="text-sm text-muted-foreground">Total Equity</div>
+                  <div className="text-sm text-muted-foreground">Avg Time to Payoff</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {portfolioMetrics.numberOfProperties} properties
+                  </div>
                 </div>
               </div>
             </div>
             
-            {/* Portfolio Progress Circle */}
+            {/* Professional Progress Circle */}
             <div className="relative">
               <div className="w-32 h-32 rounded-full border-8 border-muted relative">
                 <div 
                   className="absolute inset-0 rounded-full border-8 border-transparent border-t-primary"
                   style={{ 
-                    transform: `rotate(${(portfolioTotals.averageProgress / 100) * 360}deg)`,
+                    transform: `rotate(${(portfolioMetrics.portfolioOwnership / 100) * 360}deg)`,
                     transition: 'transform 1s ease-in-out'
                   }}
                 />
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-primary">
-                      {portfolioTotals.averageProgress.toFixed(0)}%
+                      {portfolioMetrics.portfolioOwnership.toFixed(0)}%
                     </div>
-                    <div className="text-xs text-muted-foreground">Avg Paid</div>
+                    <div className="text-xs text-muted-foreground">Ownership</div>
                   </div>
                 </div>
               </div>
@@ -307,7 +375,7 @@ export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onN
           <TabsTrigger value="individual">Individual Properties</TabsTrigger>
         </TabsList>
 
-        {/* Portfolio Overview Tab */}
+        {/* Professional Analytics Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card>
@@ -318,47 +386,109 @@ export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onN
               <CardContent>
                 <div className="text-2xl font-bold">{properties.length}</div>
                 <p className="text-xs text-muted-foreground">
-                  {propertyGroups.length} locations
+                  {propertyGroups.length} locations • 10-year mortgages
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Portfolio Value</CardTitle>
-                <Building2 className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium">Portfolio LTV</CardTitle>
+                <Target className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">${portfolioTotals.totalValue.toLocaleString()}</div>
+                <div className="text-2xl font-bold">{portfolioMetrics.portfolioLTV.toFixed(1)}%</div>
+                <Progress value={portfolioMetrics.portfolioLTV} className="mt-2" />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Loan-to-value ratio
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Principal Paid</CardTitle>
+                <BarChart3 className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">${Math.round(portfolioMetrics.totalPrincipalPaid).toLocaleString()}</div>
                 <p className="text-xs text-muted-foreground">
-                  Total property values
+                  ${Math.round(portfolioMetrics.totalInterestPaid).toLocaleString()} interest paid
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Mortgage Progress</CardTitle>
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium">Time to Payoff</CardTitle>
+                <Clock className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{portfolioTotals.averageProgress.toFixed(1)}%</div>
-                <Progress value={portfolioTotals.averageProgress} className="mt-2" />
+                <div className="text-2xl font-bold">{portfolioMetrics.averageTimeToPayoff}</div>
+                <p className="text-xs text-muted-foreground">
+                  Average across all properties
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Additional Analytics Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <LineChart className="h-5 w-5" />
+                  Mortgage Progress by Property
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {properties.map((property) => (
+                  <div key={property.id} className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <div className="font-medium">{property.name}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {property.metrics.ownershipPercentage.toFixed(1)}% owned • {property.metrics.timeToPayoff} remaining
+                        </div>
+                      </div>
+                      <Badge variant="outline">
+                        {property.metrics.loanToValueRatio.toFixed(0)}% LTV
+                      </Badge>
+                    </div>
+                    <Progress value={property.metrics.ownershipPercentage} className="h-3" />
+                  </div>
+                ))}
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Next Payment</CardTitle>
-                <Calendar className="h-4 w-4 text-muted-foreground" />
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <DollarSign className="h-5 w-5" />
+                  Payment Breakdown
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
-                  ${portfolioTotals.totalMonthlyPayment.toLocaleString()}
+                <div className="space-y-4">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Total Monthly Payment</span>
+                    <span className="font-semibold">${Math.round(portfolioMetrics.totalMonthlyPayment).toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Principal Portion (~70%)</span>
+                    <span className="font-semibold">${Math.round(portfolioMetrics.totalMonthlyPayment * 0.7).toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Interest Portion (~30%)</span>
+                    <span className="font-semibold">${Math.round(portfolioMetrics.totalMonthlyPayment * 0.3).toLocaleString()}</span>
+                  </div>
+                  <div className="border-t pt-3">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Total Interest to Date</span>
+                      <span className="font-semibold">${Math.round(portfolioMetrics.totalInterestPaid).toLocaleString()}</span>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Combined monthly payment
-                </p>
               </CardContent>
             </Card>
           </div>
@@ -420,33 +550,36 @@ export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onN
                     </div>
                   </div>
                   
-                  <div className="space-y-3">
-                    {group.properties.map((property, index) => (
-                      <div key={property.id} className="flex items-center justify-between p-4 rounded-lg border bg-background/60">
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-lg overflow-hidden">
-                            <img 
-                              src={property.image} 
-                              alt={property.name}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                          <div>
-                            <h4 className="font-medium">
-                              {property.name} #{index + 1}
-                            </h4>
-                            <p className="text-sm text-muted-foreground">
-                              ${property.monthlyPayment.toLocaleString()}/mo • {property.mortgageProgress.toFixed(0)}% paid
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <div className="text-right">
-                            <div className="text-sm font-medium">
-                              ${property.remainingBalance.toLocaleString()}
+                    <div className="space-y-3">
+                      {group.properties.map((property, index) => (
+                        <div key={property.id} className="flex items-center justify-between p-4 rounded-lg border bg-background/60">
+                          <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-lg overflow-hidden">
+                              <img 
+                                src={property.image} 
+                                alt={property.name}
+                                className="w-full h-full object-cover"
+                              />
                             </div>
-                            <div className="text-xs text-muted-foreground">remaining</div>
+                            <div>
+                              <h4 className="font-medium">
+                                {property.name} #{index + 1}
+                              </h4>
+                              <p className="text-sm text-muted-foreground">
+                                ${Math.round(property.monthlyPayment).toLocaleString()}/mo • {property.metrics.ownershipPercentage.toFixed(1)}% owned
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {property.metrics.timeToPayoff} remaining • {property.metrics.loanToValueRatio.toFixed(0)}% LTV
+                              </p>
+                            </div>
                           </div>
+                          <div className="flex items-center gap-3">
+                            <div className="text-right">
+                              <div className="text-sm font-medium">
+                                ${Math.round(property.remainingBalance).toLocaleString()}
+                              </div>
+                              <div className="text-xs text-muted-foreground">remaining</div>
+                            </div>
                           <Button 
                             size="sm" 
                             onClick={() => handleMakePayment(property)}
@@ -502,20 +635,20 @@ export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onN
                     </div>
                     <div>
                       <span className="text-muted-foreground">Monthly Payment:</span>
-                      <p className="font-medium">${property.monthlyPayment.toLocaleString()}</p>
+                      <p className="font-medium">${Math.round(property.monthlyPayment).toLocaleString()}</p>
                     </div>
                     <div>
                       <span className="text-muted-foreground">Remaining Balance:</span>
-                      <p className="font-medium text-destructive">${property.remainingBalance.toLocaleString()}</p>
+                      <p className="font-medium text-destructive">${Math.round(property.remainingBalance).toLocaleString()}</p>
                     </div>
                   </div>
                   
                   <div>
                     <div className="flex justify-between text-sm mb-2">
                       <span>Mortgage Progress</span>
-                      <span className="font-medium">{property.mortgageProgress.toFixed(1)}%</span>
+                      <span className="font-medium">{property.metrics.ownershipPercentage.toFixed(1)}%</span>
                     </div>
-                    <Progress value={property.mortgageProgress} />
+                    <Progress value={property.metrics.ownershipPercentage} />
                   </div>
                   
                   <div className="flex gap-2">
