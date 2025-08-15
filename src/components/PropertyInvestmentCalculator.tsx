@@ -16,9 +16,7 @@ interface PropertyInvestmentCalculatorProps {
     downPayment: number;
     monthlyRent: number;
     projected_appreciation_percent?: number;
-    networkValue: number; // Pre-calculated monthly profit
-    equityYear10: number; // Pre-calculated equity at year 10
-    roiMultiple: number; // Pre-calculated ROI multiple
+    networkValue?: number; // Legacy field, kept for backward compatibility
   } | null;
 }
 
@@ -36,38 +34,66 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
   // Early return AFTER all hooks
   if (!property) return null;
 
-  // Use pre-calculated values - Fixed Mortgage Model
+  // Investment calculations - Dynamic Mortgage Model with 3% platform fee
   const investmentAmount = investment[0];
   const platformFee = investmentAmount * 0.03; // 3% platform fee for property purchases
   const netInvestment = investmentAmount - platformFee; // Actual amount going to property
   const propertyValue = property.totalValue || 0;
+  const monthlyRent = property.monthlyRent || 0;
   
-  // Debug: Log property to see what we're getting
-  console.log('PropertyInvestmentCalculator - property:', property);
-  console.log('networkValue:', property.networkValue, 'equityYear10:', property.equityYear10, 'roiMultiple:', property.roiMultiple);
+  // Calculate mortgage payment based on net investment (after platform fee)
+  const loanAmount = propertyValue - netInvestment;
+  const annualInterestRate = 0.08; // 8% annual rate
+  const monthlyInterestRate = annualInterestRate / 12;
+  const loanTermMonths = 10 * 12; // 10 years
   
-  // Use pre-calculated monthly profit with safety check
-  const monthlyProfit = property.networkValue || 0;
+  // Mortgage payment formula: M = P[r(1+r)^n]/[(1+r)^n-1]
+  const monthlyMortgage = loanAmount > 0 
+    ? (loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, loanTermMonths)) / 
+      (Math.pow(1 + monthlyInterestRate, loanTermMonths) - 1)
+    : 0;
+    
+  const monthlyProfit = monthlyRent - monthlyMortgage;
+  
+  // Calculate total interest savings
+  const totalPayments = monthlyMortgage * loanTermMonths;
+  const totalInterest = totalPayments - loanAmount;
+  
+  // Calculate baseline scenario (minimum down payment)
+  const baselineDownPayment = property.downPayment || 0;
+  const baselineLoanAmount = propertyValue - baselineDownPayment;
+  const baselineMonthlymortgage = baselineLoanAmount > 0 
+    ? (baselineLoanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, loanTermMonths)) / 
+      (Math.pow(1 + monthlyInterestRate, loanTermMonths) - 1)
+    : 0;
+  const baselineTotalPayments = baselineMonthlymortgage * loanTermMonths;
+  const baselineTotalInterest = baselineTotalPayments - baselineLoanAmount;
+  
+  const totalInterestSaved = baselineTotalInterest - totalInterest;
+  
+  // Property appreciation calculations using 181% default or database value
+  const appreciationPercent = property.projected_appreciation_percent || 181;
+  const tenYearPropertyValue = propertyValue * (1 + (appreciationPercent / 100));
+  const totalAppreciation = tenYearPropertyValue - propertyValue;
+  const buyerAppreciationShare = totalAppreciation * 0.5; // 50% split
+  const annualAppreciationBenefit = buyerAppreciationShare / 10; // Annualized
+  
+  // Calculate total annual benefit (cash flow + interest savings + appreciation)
   const annualProfit = monthlyProfit * 12;
+  const annualInterestSavings = totalInterestSaved / 10; // Annual portion of total savings
+  const totalAnnualBenefit = annualProfit + annualInterestSavings + annualAppreciationBenefit;
   
-  // Use pre-calculated equity at year 10 with safety check
-  const buyerAppreciationShare = property.equityYear10 || 0;
+  // True ROI: Total annual benefit divided by total investment
+  const trueAnnualROI = (totalAnnualBenefit / investmentAmount) * 100;
   
-  // Calculate user's proportional share based on investment
-  const userOwnershipPercent = (netInvestment / property.downPayment);
-  const userMonthlyProfit = monthlyProfit * userOwnershipPercent;
-  const userAnnualProfit = userMonthlyProfit * 12;
-  const userAppreciationShare = buyerAppreciationShare * userOwnershipPercent;
+  // Total wealth actually created (not comparative savings)
+  const totalCashFlow = annualProfit * 10;
+  const actualWealthCreated = totalCashFlow + buyerAppreciationShare;
   
-  // Total wealth created for user's investment
-  const totalCashFlow = userAnnualProfit * 10;
-  const actualWealthCreated = totalCashFlow + userAppreciationShare;
-  
-  // Use pre-calculated ROI multiple with safety check
-  const roiMultiple = property.roiMultiple || 1;
-  const total10YearROI = (roiMultiple - 1) * 100; // Convert multiple to percentage
-  const trueAnnualROI = total10YearROI / 10; // Approximate annual rate
-  const cashFlowYield = (userAnnualProfit / investmentAmount) * 100;
+  // Calculate total 10-year ROI based on actual wealth created
+  const total10YearROI = (actualWealthCreated / investmentAmount) * 100;
+
+  const cashFlowYield = (annualProfit / investmentAmount) * 100;
 
 
   return (
@@ -174,10 +200,10 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
                   <span className="font-medium">Monthly Cash Flow</span>
                 </div>
                 <div className="text-2xl font-bold text-green-600">
-                  ${Math.round(userMonthlyProfit).toLocaleString()}
+                  ${Math.round(monthlyProfit).toLocaleString()}
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  ${Math.round(userAnnualProfit).toLocaleString()}/year
+                  ${Math.round(annualProfit).toLocaleString()}/year
                 </div>
               </CardContent>
             </Card>
@@ -201,13 +227,13 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <Calculator className="w-4 h-4 text-purple-500" />
-                  <span className="font-medium">ROI Multiple</span>
+                  <span className="font-medium">Mortgage Savings</span>
                 </div>
                 <div className="text-2xl font-bold text-purple-600">
-                  {roiMultiple.toFixed(1)}x
+                  ${Math.max(0, Math.round(totalInterestSaved)).toLocaleString()}
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  Money multiplier
+                  Interest eliminated
                 </div>
               </CardContent>
             </Card>
@@ -248,15 +274,15 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
                   </div>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">Your Share (%)</div>
+                  <div className="text-sm text-muted-foreground">Interest Saved</div>
                   <div className="text-lg font-bold text-purple-600">
-                    {(userOwnershipPercent * 100).toFixed(1)}%
+                    ${Math.round(totalInterestSaved).toLocaleString()}
                   </div>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">Property Appreciation</div>
+                  <div className="text-sm text-muted-foreground">Property Appreciation (50%)</div>
                   <div className="text-lg font-bold text-blue-600">
-                    ${Math.round(userAppreciationShare).toLocaleString()}
+                    ${Math.round(buyerAppreciationShare).toLocaleString()}
                   </div>
                 </div>
                 <div>
@@ -270,18 +296,22 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
               {/* Property Appreciation Breakdown */}
               <div className="mt-6 pt-4 border-t">
                 <h4 className="font-medium mb-3 text-center">Property Appreciation Breakdown</h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-center text-sm">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-center text-sm">
                   <div>
                     <div className="text-muted-foreground">Starting Value</div>
                     <div className="font-semibold">${propertyValue.toLocaleString()}</div>
                   </div>
                   <div>
-                    <div className="text-muted-foreground">Total Network Equity</div>
-                    <div className="font-semibold">${buyerAppreciationShare.toLocaleString()}</div>
+                    <div className="text-muted-foreground">Final Value (Year 10)</div>
+                    <div className="font-semibold">${tenYearPropertyValue.toLocaleString()}</div>
                   </div>
                   <div>
-                    <div className="text-muted-foreground">Your Appreciation Share</div>
-                    <div className="font-semibold text-blue-600">${Math.round(userAppreciationShare).toLocaleString()}</div>
+                    <div className="text-muted-foreground">Total Appreciation</div>
+                    <div className="font-semibold text-blue-600">${totalAppreciation.toLocaleString()}</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Your Share (50%)</div>
+                    <div className="font-semibold text-blue-600">${Math.round(buyerAppreciationShare).toLocaleString()}</div>
                   </div>
                 </div>
               </div>

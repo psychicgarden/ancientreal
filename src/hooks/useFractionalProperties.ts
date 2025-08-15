@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { computeMetrics } from '@/lib/investmentMath';
 import bohoArtDecoLoft from '@/assets/boho-art-deco-loft-mexico.jpg';
 import luxuryBohoBungalow from '@/assets/luxury-boho-beach-bungalow-bahia.jpg';
 import artDecoCoastalEriceira from '@/assets/art-deco-coastal-ericeira.jpg';
@@ -34,8 +33,6 @@ export interface PropertyInvestmentData {
   monthlyPayment: number;
   monthlyRent: number; // Add missing field for calculator
   networkValue: number; // Add missing field for calculator
-  equityYear10: number; // Pre-calculated equity at year 10
-  roiMultiple: number; // Pre-calculated ROI multiple
   projected_appreciation_percent?: number;
   expectedReturn: number;
   availableShares: number;
@@ -52,20 +49,6 @@ const imageOverrides: Record<string, string> = {
   'Oceanview Loft': artDecoCoastalEriceira,
 };
 
-// Property-specific mortgage payments to preserve baseline values
-function getPropertyMortgage(propertyName: string): number {
-  switch (propertyName) {
-    case 'Bahia Ocean Villa':
-      return 1262;
-    case 'Oceanview Loft':
-      return 1457; // correct 8% APR, 10 year calculation
-    case 'Art Deco Loft':
-      return 1252; // restored baseline
-    default:
-      return 0; // never return undefined
-  }
-}
-
 export const useFractionalProperties = () => {
   const [properties, setProperties] = useState<PropertyInvestmentData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -74,33 +57,19 @@ export const useFractionalProperties = () => {
   const transformProperty = (prop: FractionalProperty & { whole_properties_sold?: number }): PropertyInvestmentData => {
     const availableTokens = prop.total_tokens_available - prop.tokens_sold;
     const tokenPrice = prop.current_speculation_price / prop.total_tokens_available;
+    const downPayment = prop.current_speculation_price * 0.2; // 20% down payment
+    const loanAmount = prop.current_speculation_price - downPayment;
     
-    // Get correct citizenship cost based on property name
-    const getCitizenshipCost = (propertyName: string): number => {
-      switch (propertyName) {
-        case 'Bahia Ocean Villa':
-          return 26000;
-        case 'Oceanview Loft':
-          return 30000;
-        case 'Art Deco Loft':
-          return 25800;
-        default:
-          return prop.min_investment; // fallback
-      }
-    };
-
-    // Use simplified math utility with correct values
-    const metrics = computeMetrics({
-      price: prop.current_speculation_price,
-      downPayment: getCitizenshipCost(prop.property_name),
-      grossRent: prop.monthly_base_rent,
-      mortgage: getPropertyMortgage(prop.property_name),
-      utilities: 65,
-      taxPct: 0.0015,
-    });
-    
-    // Debug: Log computed metrics
-    console.log(`Metrics for ${prop.property_name}:`, metrics);
+    // Property-specific mortgage calculations based on your requirements
+    let monthlyPayment: number;
+    if (prop.property_name === 'Oceanview Loft' && prop.property_location === 'Ericeira, Portugal') {
+      monthlyPayment = 1809; // Exact amount you specified
+    } else {
+      // Standard mortgage calculation: 8% APR, 10-year term for other properties
+      const monthlyRate = 0.08 / 12; // 8% annual rate / 12 months
+      const numPayments = 10 * 12; // 10 years * 12 months
+      monthlyPayment = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1);
+    }
     
     const expectedReturn = ((prop.monthly_base_rent * 12) / prop.current_speculation_price) * 100;
 
@@ -115,13 +84,11 @@ export const useFractionalProperties = () => {
       location: propertyLocation,
       image: propertyImage,
       totalValue: prop.current_speculation_price,
-      downPayment: getCitizenshipCost(prop.property_name), // Use correct citizenship cost
-      monthlyPayment: metrics.mortgage,
+      downPayment,
+      monthlyPayment: Math.round(monthlyPayment),
       monthlyRent: prop.monthly_base_rent || (prop.current_speculation_price * 0.015), // Use actual rent or estimate
       projected_appreciation_percent: prop.projected_appreciation_percent || 181,
-      networkValue: metrics.monthlyNetworkValue, // Use computed value
-      equityYear10: metrics.equityYear10, // Add pre-calculated equity
-      roiMultiple: metrics.roiMultiple, // Add pre-calculated ROI
+      networkValue: prop.current_speculation_price * (1 + ((prop.projected_appreciation_percent || 181) / 100)), // Calculated from database percentage
       expectedReturn,
       availableShares: availableTokens,
       totalShares: prop.total_tokens_available,
