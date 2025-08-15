@@ -58,8 +58,8 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
   const buyerAppreciationShare = totalAppreciation * 0.5; // 50% split
 
   // Calculate totals for 10-year projection using correct metrics
-  const totalCashFlow = metrics.monthlyProfit * 120; // 10 years
-  const actualWealthCreated = metrics.totalEquityAtMaturity; // Use calculated buyer total equity
+  const totalCashFlow = metrics.totalCashFlowProfit;
+  const actualWealthCreated = metrics.totalProfit; // True profit: cash flow + equity - investment
   const total10YearROI = investmentAmount > 0 ? (actualWealthCreated / investmentAmount) * 100 : 0;
 
   // Interest savings calculation (vs baseline scenario)
@@ -135,7 +135,7 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
                   ${Math.round(actualWealthCreated).toLocaleString()}
                 </div>
                 <div className="text-lg text-muted-foreground">
-                  {(actualWealthCreated / investmentAmount).toFixed(1)}x your money back
+                  {((investmentAmount + actualWealthCreated) / investmentAmount).toFixed(1)}x your money back
                 </div>
                 <div className="text-sm text-muted-foreground mt-1">
                   {total10YearROI.toFixed(0)}% total return over 10 years
@@ -251,7 +251,7 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
                   <div className="text-xs text-muted-foreground">(includes 3% fee)</div>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">Cash Flow</div>
+                  <div className="text-sm text-muted-foreground">Cash Flow Profit</div>
                   <div className="text-lg font-bold text-green-600">
                     ${Math.round(totalCashFlow).toLocaleString()}
                   </div>
@@ -263,13 +263,13 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
                   </div>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">Property Appreciation (50%)</div>
+                  <div className="text-sm text-muted-foreground">Final Equity Value</div>
                   <div className="text-lg font-bold text-blue-600">
-                    ${Math.round(buyerAppreciationShare).toLocaleString()}
+                    ${Math.round(metrics.totalEquityAtMaturity).toLocaleString()}
                   </div>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">Total Wealth Created</div>
+                  <div className="text-sm text-muted-foreground">Total Profit</div>
                   <div className="text-lg font-bold text-primary">
                     ${Math.round(actualWealthCreated).toLocaleString()}
                   </div>

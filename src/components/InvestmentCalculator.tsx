@@ -70,11 +70,11 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
   // True ROI: Total annual benefit divided by total investment
   const trueAnnualROI = (totalAnnualBenefit / investmentAmount) * 100;
   
-  // Total wealth actually created (not comparative savings)
+  // Total wealth actually created (profit calculation)
   const totalCashFlow = annualProfit * 10;
-  const actualWealthCreated = totalCashFlow + buyerTotalEquity; // Include full equity value
+  const actualWealthCreated = totalCashFlow + buyerTotalEquity - investmentAmount; // True profit: cash flow + equity - investment
   
-  // Calculate total 10-year ROI based on actual wealth created
+  // Calculate total 10-year ROI based on actual profit
   const total10YearROI = (actualWealthCreated / investmentAmount) * 100;
 
   return (
@@ -202,7 +202,7 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
                   <div className="text-xs text-muted-foreground">(includes 3% fee)</div>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">Cash Flow</div>
+                  <div className="text-sm text-muted-foreground">Cash Flow Profit</div>
                   <div className="text-lg font-bold text-green-600">
                     ${Math.round(totalCashFlow).toLocaleString()}
                   </div>
@@ -214,13 +214,13 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
                   </div>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">Property Appreciation (50%)</div>
+                  <div className="text-sm text-muted-foreground">Final Equity Value</div>
                   <div className="text-lg font-bold text-blue-600">
-                    ${Math.round(buyerAppreciationShare).toLocaleString()}
+                    ${Math.round(buyerTotalEquity).toLocaleString()}
                   </div>
                 </div>
                 <div>
-                  <div className="text-sm text-muted-foreground">Total Wealth Created</div>
+                  <div className="text-sm text-muted-foreground">Total Profit</div>
                   <div className="text-lg font-bold text-primary">
                     ${Math.round(actualWealthCreated).toLocaleString()}
                   </div>

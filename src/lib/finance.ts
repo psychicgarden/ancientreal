@@ -17,6 +17,8 @@ export interface InvestmentCalculation {
   cashFlowYield: number;
   totalInterestCost: number;
   totalEquityAtMaturity: number;
+  totalCashFlowProfit: number;
+  totalProfit: number;
 }
 
 export function computeMonthlyPaymentUSD(loanAmountUSD: number, aprBps: number | null | undefined, termMonths: number | null | undefined): number {
@@ -71,13 +73,21 @@ export function calculateInvestmentMetrics(
   const appreciation = calculatePropertyAppreciation(propertyData.propertyValue);
   const totalEquityAtMaturity = appreciation.buyerTotalEquity;
   
+  // Calculate total cash flow profit over the term
+  const totalCashFlowProfit = monthlyProfit * propertyData.termMonths;
+  
+  // Calculate total profit: Cash flow + Final equity - Initial investment
+  const totalProfit = totalCashFlowProfit + totalEquityAtMaturity - investmentAmount;
+  
   return {
     monthlyPayment,
     monthlyProfit,
     totalLoanAmount: loanAmount,
     cashFlowYield,
     totalInterestCost,
-    totalEquityAtMaturity
+    totalEquityAtMaturity,
+    totalCashFlowProfit,
+    totalProfit
   };
 }
 
