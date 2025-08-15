@@ -62,8 +62,8 @@ export const OwnerApprovalExplanation = () => {
           </span>
           <div className="flex-1"></div>
           <Button asChild variant="outline" size="sm">
-            <Link to="/property-owner">
-              List Your Property
+            <Link to="/portfolio">
+              Manage Properties
             </Link>
           </Button>
         </div>

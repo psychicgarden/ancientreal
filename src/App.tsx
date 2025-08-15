@@ -18,7 +18,7 @@ import TestRoute from "./pages/TestRoute";
 import NotFound from "./pages/NotFound";
 import { WalletProvider } from "@/contexts/WalletContext";
 import { Navigate } from "react-router-dom";
-import { PropertyOwnerDashboard } from "@/components/PropertyOwnerDashboard";
+
 
 const queryClient = new QueryClient();
 
@@ -40,7 +40,7 @@ const App = () => (
             <Route path="/developers" element={<Developers />} />
             <Route path="/legal" element={<LegalPortal />} />
             <Route path="/admin/projects" element={<AdminProjects />} />
-            <Route path="/property-owner" element={<PropertyOwnerDashboard />} />
+            
             <Route path="/test-route" element={<TestRoute />} />
             <Route path="/test" element={<SmartContractTest />} />
             <Route path="/investor-report" element={<Navigate to="/portfolio?tab=platform" replace />} />
