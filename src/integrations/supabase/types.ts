@@ -560,6 +560,56 @@ export type Database = {
           },
         ]
       }
+      platform_fees: {
+        Row: {
+          created_at: string
+          fee_amount_base: number
+          fee_amount_usd: number
+          fee_percentage: number
+          id: string
+          payment_status: string
+          property_id: string | null
+          property_value_usd: number
+          transaction_hash: string | null
+          updated_at: string
+          user_wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          fee_amount_base: number
+          fee_amount_usd: number
+          fee_percentage?: number
+          id?: string
+          payment_status?: string
+          property_id?: string | null
+          property_value_usd: number
+          transaction_hash?: string | null
+          updated_at?: string
+          user_wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          fee_amount_base?: number
+          fee_amount_usd?: number
+          fee_percentage?: number
+          id?: string
+          payment_status?: string
+          property_id?: string | null
+          property_value_usd?: number
+          transaction_hash?: string | null
+          updated_at?: string
+          user_wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_fees_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "property_fractionalization"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
