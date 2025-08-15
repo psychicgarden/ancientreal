@@ -708,7 +708,10 @@ export type Database = {
           bedrooms: number | null
           created_at: string
           current_speculation_price: number
+          down_payment_per_person: number | null
+          group_size_limit: number | null
           id: string
+          investment_type: string | null
           investor_appreciation_burden_percent: number | null
           is_active: boolean
           is_listed_fractionally: boolean | null
@@ -716,6 +719,7 @@ export type Database = {
           listing_date: string | null
           min_investment: number
           monthly_base_rent: number | null
+          mortgage_down_payment_total: number | null
           original_property_value: number | null
           original_purchase_price: number
           owner_wallet_address: string
@@ -742,7 +746,10 @@ export type Database = {
           bedrooms?: number | null
           created_at?: string
           current_speculation_price: number
+          down_payment_per_person?: number | null
+          group_size_limit?: number | null
           id?: string
+          investment_type?: string | null
           investor_appreciation_burden_percent?: number | null
           is_active?: boolean
           is_listed_fractionally?: boolean | null
@@ -750,6 +757,7 @@ export type Database = {
           listing_date?: string | null
           min_investment?: number
           monthly_base_rent?: number | null
+          mortgage_down_payment_total?: number | null
           original_property_value?: number | null
           original_purchase_price: number
           owner_wallet_address: string
@@ -776,7 +784,10 @@ export type Database = {
           bedrooms?: number | null
           created_at?: string
           current_speculation_price?: number
+          down_payment_per_person?: number | null
+          group_size_limit?: number | null
           id?: string
+          investment_type?: string | null
           investor_appreciation_burden_percent?: number | null
           is_active?: boolean
           is_listed_fractionally?: boolean | null
@@ -784,6 +795,7 @@ export type Database = {
           listing_date?: string | null
           min_investment?: number
           monthly_base_rent?: number | null
+          mortgage_down_payment_total?: number | null
           original_property_value?: number | null
           original_purchase_price?: number
           owner_wallet_address?: string
