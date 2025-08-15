@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Link, useSearchParams } from "react-router-dom";
 import { Wallet, Home, TrendingUp, Users, Calendar, DollarSign, Building, FileText, BarChart3, ChevronRight, Loader2 } from "lucide-react";
-import { InvestorMortgageDashboard } from "@/components/InvestorMortgageDashboard";
+import { MultiPropertyMortgageDashboard } from "@/components/MultiPropertyMortgageDashboard";
 import { PortfolioSummary } from "@/components/PortfolioSummary";
 import { PropertyCard } from "@/components/PropertyCard";
 import { EnhancedPortfolioAnalytics } from "@/components/EnhancedPortfolioAnalytics";
@@ -542,7 +542,7 @@ const Portfolio = () => {
 
           {/* Mortgage & Financing Tab */}
           <TabsContent value="mortgage" className="space-y-6">
-            <InvestorMortgageDashboard onNavigateToProperties={handleNavigateToProperties} />
+            <MultiPropertyMortgageDashboard onNavigateToProperties={handleNavigateToProperties} />
           </TabsContent>
 
           {/* Bookings & Revenue Tab */}

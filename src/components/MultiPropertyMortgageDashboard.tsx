@@ -1,0 +1,561 @@
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useWallet } from "@/contexts/WalletContext";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { MortgagePaymentModal } from "@/components/MortgagePaymentModal";
+import { fmtUSD, fromBase } from "@/lib/money";
+import { PROPERTIES_CATALOG } from "@/lib/propertiesCatalog";
+import { 
+  Building2, 
+  DollarSign, 
+  Calendar, 
+  AlertTriangle, 
+  TrendingUp, 
+  Home,
+  CreditCard,
+  CheckCircle2,
+  Star,
+  MapPin,
+  PiggyBank,
+  Clock,
+  ChevronDown,
+  ChevronUp,
+  Filter,
+  Eye
+} from "lucide-react";
+import { computeMonthlyPaymentUSD, computeNextDueDate } from "@/lib/finance";
+
+interface PropertyGroup {
+  location: string;
+  properties: PropertyMortgageData[];
+  totalValue: number;
+  totalDownPayment: number;
+  totalMonthlyPayment: number;
+  totalEquity: number;
+  totalOutstanding: number;
+}
+
+interface PropertyMortgageData {
+  id: string;
+  name: string;
+  location: string;
+  image: string;
+  purchasePrice: number;
+  downPayment: number;
+  remainingBalance: number;
+  monthlyPayment: number;
+  nextPaymentDue: Date;
+  equity: number;
+  isOverdue: boolean;
+  daysPastDue: number;
+  mortgageProgress: number;
+  purchaseDate: Date;
+  userProperty: any;
+}
+
+export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onNavigateToProperties?: () => void }) => {
+  const { isConnected, account } = useWallet();
+  const { toast } = useToast();
+  
+  const [properties, setProperties] = useState<PropertyMortgageData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState<PropertyMortgageData | null>(null);
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
+  const [activeTab, setActiveTab] = useState("overview");
+
+  useEffect(() => {
+    const fetchMortgageData = async () => {
+      if (!isConnected || !account) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        
+        const { data: userProperties, error } = await supabase
+          .from('user_properties')
+          .select('*')
+          .eq('user_wallet_address', account.toLowerCase())
+          .eq('is_active', true)
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (userProperties && userProperties.length > 0) {
+          const transformedProperties: PropertyMortgageData[] = userProperties.map((property) => {
+            const purchasePrice = (property as any).purchase_price_base ? 
+              fromBase((property as any).purchase_price_base) : 
+              Number(property.purchase_price || 0);
+            
+            const downPayment = (property as any).down_payment_base ? 
+              fromBase((property as any).down_payment_base) : 
+              Number(property.down_payment || 0);
+            
+            const remainingBalance = (property as any).remaining_balance_base ? 
+              fromBase((property as any).remaining_balance_base) : 
+              Number(property.remaining_balance || 0);
+
+            const equity = purchasePrice - remainingBalance;
+            const mortgageProgress = purchasePrice > 0 ? ((purchasePrice - remainingBalance) / purchasePrice) * 100 : 0;
+            
+            // Get property details from catalog
+            const catalogProperty = PROPERTIES_CATALOG.find(p => 
+              p.name.toLowerCase().includes(property.property_name.toLowerCase().split(' ')[0]) ||
+              property.property_name.toLowerCase().includes(p.name.toLowerCase().split(' ')[0])
+            );
+
+            return {
+              id: property.id,
+              name: property.property_name,
+              location: property.property_location,
+              image: catalogProperty?.image || '/placeholder.svg',
+              purchasePrice,
+              downPayment,
+              remainingBalance,
+              monthlyPayment: Number(property.monthly_payment || 0),
+              nextPaymentDue: computeNextDueDate(property.purchase_date),
+              equity,
+              isOverdue: false, // TODO: Calculate based on payment history
+              daysPastDue: 0,
+              mortgageProgress,
+              purchaseDate: new Date(property.purchase_date),
+              userProperty: property
+            };
+          });
+
+          setProperties(transformedProperties);
+        }
+      } catch (error) {
+        console.error('Error fetching mortgage data:', error);
+        toast({
+          title: "Data Loading Error",
+          description: "Failed to load mortgage data. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMortgageData();
+  }, [isConnected, account, toast]);
+
+  // Group properties by location
+  const propertyGroups: PropertyGroup[] = properties.reduce((groups, property) => {
+    const existingGroup = groups.find(g => g.location === property.location);
+    
+    if (existingGroup) {
+      existingGroup.properties.push(property);
+      existingGroup.totalValue += property.purchasePrice;
+      existingGroup.totalDownPayment += property.downPayment;
+      existingGroup.totalMonthlyPayment += property.monthlyPayment;
+      existingGroup.totalEquity += property.equity;
+      existingGroup.totalOutstanding += property.remainingBalance;
+    } else {
+      groups.push({
+        location: property.location,
+        properties: [property],
+        totalValue: property.purchasePrice,
+        totalDownPayment: property.downPayment,
+        totalMonthlyPayment: property.monthlyPayment,
+        totalEquity: property.equity,
+        totalOutstanding: property.remainingBalance
+      });
+    }
+    
+    return groups;
+  }, [] as PropertyGroup[]);
+
+  // Portfolio totals
+  const portfolioTotals = {
+    totalValue: properties.reduce((sum, p) => sum + p.purchasePrice, 0),
+    totalDownPayment: properties.reduce((sum, p) => sum + p.downPayment, 0),
+    totalMonthlyPayment: properties.reduce((sum, p) => sum + p.monthlyPayment, 0),
+    totalEquity: properties.reduce((sum, p) => sum + p.equity, 0),
+    totalOutstanding: properties.reduce((sum, p) => sum + p.remainingBalance, 0),
+    averageProgress: properties.length > 0 ? properties.reduce((sum, p) => sum + p.mortgageProgress, 0) / properties.length : 0
+  };
+
+  const toggleGroupExpansion = (location: string) => {
+    const newExpanded = new Set(expandedGroups);
+    if (newExpanded.has(location)) {
+      newExpanded.delete(location);
+    } else {
+      newExpanded.add(location);
+    }
+    setExpandedGroups(newExpanded);
+  };
+
+  const handleMakePayment = (property: PropertyMortgageData) => {
+    setSelectedProperty(property);
+    setPaymentModalOpen(true);
+  };
+
+  if (!isConnected) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Connect Wallet</CardTitle>
+          <CardDescription>Connect your wallet to view your mortgage portfolio</CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  if (loading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Loading Portfolio...</CardTitle>
+          <CardDescription>Fetching your property mortgages</CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  if (properties.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>No Active Mortgages</CardTitle>
+          <CardDescription>You don't have any active mortgages. Consider purchasing a property!</CardDescription>
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Portfolio Summary Header */}
+      <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-background via-muted/30 to-primary/5 border">
+        <div className="absolute inset-0 bg-grid-white/10" />
+        <div className="relative p-8">
+          <div className="flex flex-col lg:flex-row gap-6 items-start">
+            <div className="flex-1">
+              <h1 className="text-3xl font-bold tracking-tight mb-2">
+                Mortgage Portfolio
+              </h1>
+              <p className="text-muted-foreground mb-6">
+                Managing {properties.length} properties across {propertyGroups.length} locations
+              </p>
+              
+              {/* Key Portfolio Metrics */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="text-center p-4 rounded-lg bg-background/60 border">
+                  <div className="text-2xl font-bold text-primary">
+                    ${portfolioTotals.totalDownPayment.toLocaleString()}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Total Down Payments</div>
+                </div>
+                <div className="text-center p-4 rounded-lg bg-background/60 border">
+                  <div className="text-2xl font-bold text-destructive">
+                    ${portfolioTotals.totalOutstanding.toLocaleString()}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Outstanding Balance</div>
+                </div>
+                <div className="text-center p-4 rounded-lg bg-background/60 border">
+                  <div className="text-2xl font-bold text-blue-600">
+                    ${portfolioTotals.totalMonthlyPayment.toLocaleString()}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Monthly Payments</div>
+                </div>
+                <div className="text-center p-4 rounded-lg bg-background/60 border">
+                  <div className="text-2xl font-bold text-green-600">
+                    ${portfolioTotals.totalEquity.toLocaleString()}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Total Equity</div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Portfolio Progress Circle */}
+            <div className="relative">
+              <div className="w-32 h-32 rounded-full border-8 border-muted relative">
+                <div 
+                  className="absolute inset-0 rounded-full border-8 border-transparent border-t-primary"
+                  style={{ 
+                    transform: `rotate(${(portfolioTotals.averageProgress / 100) * 360}deg)`,
+                    transition: 'transform 1s ease-in-out'
+                  }}
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-primary">
+                      {portfolioTotals.averageProgress.toFixed(0)}%
+                    </div>
+                    <div className="text-xs text-muted-foreground">Avg Paid</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Tabs for different views */}
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="overview">Portfolio Overview</TabsTrigger>
+          <TabsTrigger value="by-location">By Location</TabsTrigger>
+          <TabsTrigger value="individual">Individual Properties</TabsTrigger>
+        </TabsList>
+
+        {/* Portfolio Overview Tab */}
+        <TabsContent value="overview" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Properties Owned</CardTitle>
+                <Home className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{properties.length}</div>
+                <p className="text-xs text-muted-foreground">
+                  {propertyGroups.length} locations
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Portfolio Value</CardTitle>
+                <Building2 className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">${portfolioTotals.totalValue.toLocaleString()}</div>
+                <p className="text-xs text-muted-foreground">
+                  Total property values
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Mortgage Progress</CardTitle>
+                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{portfolioTotals.averageProgress.toFixed(1)}%</div>
+                <Progress value={portfolioTotals.averageProgress} className="mt-2" />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Next Payment</CardTitle>
+                <Calendar className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  ${portfolioTotals.totalMonthlyPayment.toLocaleString()}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Combined monthly payment
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* By Location Tab */}
+        <TabsContent value="by-location" className="space-y-4">
+          {propertyGroups.map((group) => (
+            <Card key={group.location} className="overflow-hidden">
+              <CardHeader 
+                className="cursor-pointer hover:bg-muted/50 transition-colors"
+                onClick={() => toggleGroupExpansion(group.location)}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <MapPin className="h-5 w-5 text-primary" />
+                    <div>
+                      <CardTitle className="text-lg">{group.location}</CardTitle>
+                      <CardDescription>
+                        {group.properties.length} properties • ${group.totalValue.toLocaleString()} total value
+                      </CardDescription>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <div className="text-sm font-medium">${group.totalMonthlyPayment.toLocaleString()}/mo</div>
+                      <div className="text-xs text-muted-foreground">
+                        ${group.totalOutstanding.toLocaleString()} outstanding
+                      </div>
+                    </div>
+                    {expandedGroups.has(group.location) ? 
+                      <ChevronUp className="h-4 w-4" /> : 
+                      <ChevronDown className="h-4 w-4" />
+                    }
+                  </div>
+                </div>
+              </CardHeader>
+              
+              {expandedGroups.has(group.location) && (
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div className="text-center p-3 rounded-lg bg-muted/50">
+                      <div className="text-lg font-bold text-primary">
+                        ${group.totalDownPayment.toLocaleString()}
+                      </div>
+                      <div className="text-xs text-muted-foreground">Down Payments</div>
+                    </div>
+                    <div className="text-center p-3 rounded-lg bg-muted/50">
+                      <div className="text-lg font-bold text-green-600">
+                        ${group.totalEquity.toLocaleString()}
+                      </div>
+                      <div className="text-xs text-muted-foreground">Total Equity</div>
+                    </div>
+                    <div className="text-center p-3 rounded-lg bg-muted/50">
+                      <div className="text-lg font-bold">
+                        {((group.totalEquity / group.totalValue) * 100).toFixed(1)}%
+                      </div>
+                      <div className="text-xs text-muted-foreground">Equity Ratio</div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    {group.properties.map((property, index) => (
+                      <div key={property.id} className="flex items-center justify-between p-4 rounded-lg border bg-background/60">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-lg overflow-hidden">
+                            <img 
+                              src={property.image} 
+                              alt={property.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div>
+                            <h4 className="font-medium">
+                              {property.name} #{index + 1}
+                            </h4>
+                            <p className="text-sm text-muted-foreground">
+                              ${property.monthlyPayment.toLocaleString()}/mo • {property.mortgageProgress.toFixed(0)}% paid
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="text-right">
+                            <div className="text-sm font-medium">
+                              ${property.remainingBalance.toLocaleString()}
+                            </div>
+                            <div className="text-xs text-muted-foreground">remaining</div>
+                          </div>
+                          <Button 
+                            size="sm" 
+                            onClick={() => handleMakePayment(property)}
+                          >
+                            Pay
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              )}
+            </Card>
+          ))}
+        </TabsContent>
+
+        {/* Individual Properties Tab */}
+        <TabsContent value="individual" className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {properties.map((property, index) => (
+              <Card key={property.id} className="overflow-hidden">
+                <CardHeader>
+                  <div className="flex items-start gap-4">
+                    <div className="w-16 h-16 rounded-lg overflow-hidden">
+                      <img 
+                        src={property.image} 
+                        alt={property.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <CardTitle className="text-lg">{property.name}</CardTitle>
+                      <CardDescription className="flex items-center gap-1">
+                        <MapPin className="h-3 w-3" />
+                        {property.location}
+                      </CardDescription>
+                      <Badge variant="secondary" className="mt-1">
+                        Property #{index + 1}
+                      </Badge>
+                    </div>
+                  </div>
+                </CardHeader>
+                
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div>
+                      <span className="text-muted-foreground">Purchase Price:</span>
+                      <p className="font-medium">${property.purchasePrice.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Down Payment:</span>
+                      <p className="font-medium">${property.downPayment.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Monthly Payment:</span>
+                      <p className="font-medium">${property.monthlyPayment.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Remaining Balance:</span>
+                      <p className="font-medium text-destructive">${property.remainingBalance.toLocaleString()}</p>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span>Mortgage Progress</span>
+                      <span className="font-medium">{property.mortgageProgress.toFixed(1)}%</span>
+                    </div>
+                    <Progress value={property.mortgageProgress} />
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button 
+                      className="flex-1" 
+                      onClick={() => handleMakePayment(property)}
+                    >
+                      <CreditCard className="h-4 w-4 mr-2" />
+                      Make Payment
+                    </Button>
+                    <Button variant="outline" size="sm">
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+      </Tabs>
+
+      {/* Payment Modal */}
+      {paymentModalOpen && selectedProperty && (
+        <MortgagePaymentModal
+          isOpen={paymentModalOpen}
+          onClose={() => {
+            setPaymentModalOpen(false);
+            setSelectedProperty(null);
+          }}
+          property={{
+            id: selectedProperty.id,
+            title: selectedProperty.name,
+            location: selectedProperty.location,
+            image: selectedProperty.image,
+            value: selectedProperty.purchasePrice,
+            monthlyPayment: selectedProperty.monthlyPayment,
+            remainingBalance: selectedProperty.remainingBalance
+          }}
+        />
+      )}
+    </div>
+  );
+};
