@@ -371,21 +371,27 @@ export const EnhancedPortfolioAnalytics: React.FC<EnhancedPortfolioAnalyticsProp
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-green-50 p-4 rounded-lg">
-              <div className="text-green-600 font-semibold">Rental Income</div>
-              <div className="text-2xl font-bold">${(monthlyRentalIncome * 0.7 * 12).toLocaleString()}</div>
-              <div className="text-sm text-muted-foreground">70% of total income</div>
+              <div className="text-green-600 font-semibold">Monthly Rental Income</div>
+              <div className="text-2xl font-bold">${monthlyRentalIncome.toLocaleString()}</div>
+              <div className="text-sm text-muted-foreground">
+                ${(monthlyRentalIncome * 12).toLocaleString()} annually
+              </div>
             </div>
             
             <div className="bg-blue-50 p-4 rounded-lg">
-              <div className="text-blue-600 font-semibold">Appreciation</div>
-              <div className="text-2xl font-bold">${(totalGain * 0.2).toLocaleString()}</div>
-              <div className="text-sm text-muted-foreground">20% of total income</div>
+              <div className="text-blue-600 font-semibold">Equity Building</div>
+              <div className="text-2xl font-bold">${analytics.equityBuilt.toLocaleString()}</div>
+              <div className="text-sm text-muted-foreground">
+                From principal payments
+              </div>
             </div>
             
             <div className="bg-purple-50 p-4 rounded-lg">
-              <div className="text-purple-600 font-semibold">Yield Farming</div>
-              <div className="text-2xl font-bold">${(totalGain * 0.1).toLocaleString()}</div>
-              <div className="text-sm text-muted-foreground">10% of total income</div>
+              <div className="text-purple-600 font-semibold">Property Appreciation</div>
+              <div className="text-2xl font-bold">${totalGain.toLocaleString()}</div>
+              <div className="text-sm text-muted-foreground">
+                Current unrealized gains
+              </div>
             </div>
           </div>
         </CardContent>
