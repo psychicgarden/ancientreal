@@ -74,9 +74,8 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
   const annualProfit = metrics.monthlyProfit * 12;
   const trueAnnualROI = investmentAmount > 0 ? (total10YearROI / 10) : 0;
 
-  // Platform fee breakdown
-  const platformFee = property.totalValue * 0.03; // 3% of property list price
-  const netInvestment = investmentAmount - platformFee;
+  // Platform fee is separate upfront cost (3% of property list price)
+  const platformFee = property.totalValue * 0.03;
 
 
   return (
@@ -107,8 +106,8 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
             </div>
             
             <div className="flex items-center justify-between p-3 bg-primary/5 rounded-lg text-sm">
-              <span className="font-medium">Net Amount to Property:</span>
-              <span className="font-bold">${netInvestment.toLocaleString()}</span>
+              <span className="font-medium">Your Equity Investment:</span>
+              <span className="font-bold">${investmentAmount.toLocaleString()}</span>
             </div>
             <div className="px-3">
               <Slider
@@ -135,7 +134,7 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
                   ${Math.round(actualWealthCreated).toLocaleString()}
                 </div>
                 <div className="text-lg text-muted-foreground">
-                  {((investmentAmount + actualWealthCreated) / investmentAmount).toFixed(1)}x your money back
+                  {((actualWealthCreated / investmentAmount) + 1).toFixed(1)}x total return
                 </div>
                 <div className="text-sm text-muted-foreground mt-1">
                   {total10YearROI.toFixed(0)}% total return over 10 years
@@ -246,9 +245,9 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
               </h3>
               <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 text-center">
                 <div>
-                  <div className="text-sm text-muted-foreground">Total Investment</div>
+                  <div className="text-sm text-muted-foreground">Equity Investment</div>
                   <div className="text-lg font-bold">${investmentAmount.toLocaleString()}</div>
-                  <div className="text-xs text-muted-foreground">(includes 3% fee)</div>
+                  <div className="text-xs text-muted-foreground">Property equity</div>
                 </div>
                 <div>
                   <div className="text-sm text-muted-foreground">Cash Flow Profit</div>
