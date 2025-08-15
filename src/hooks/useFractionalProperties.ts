@@ -56,11 +56,11 @@ function getPropertyMortgage(propertyName: string): number {
     case 'Bahia Ocean Villa':
       return 1262;
     case 'Oceanview Loft':
-      return 1519;
+      return 1809; // restored baseline
     case 'Art Deco Loft':
-      return 1418;
+      return 1252; // restored baseline
     default:
-      return undefined; // Will use calculated PMT
+      return 0; // never return undefined
   }
 }
 

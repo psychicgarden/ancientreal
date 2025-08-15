@@ -35,6 +35,6 @@ export function computeMetrics(p: PropertyData): ComputedMetrics {
   };
 }
 
-function round(value: number, decimals: number = 0): number {
-  return Number(value.toFixed(decimals));
+function round(value: unknown, decimals: number = 0): number {
+  return Number(((typeof value === 'number' ? value : Number(value) || 0)).toFixed(decimals));
 }
