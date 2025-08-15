@@ -20,9 +20,18 @@ import { WalletProvider } from "@/contexts/WalletContext";
 import { Navigate } from "react-router-dom";
 
 
-const queryClient = new QueryClient();
+// Create QueryClient instance outside of component to prevent recreation
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      retry: 1,
+    },
+  },
+});
 
-const App = () => (
+function App() {
+  return (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <WalletProvider>
@@ -51,6 +60,7 @@ const App = () => (
       </WalletProvider>
     </TooltipProvider>
   </QueryClientProvider>
-);
+  );
+}
 
 export default App;

@@ -153,6 +153,7 @@ export class Web3Integration {
     return tx;
   }
 
+
   async makePayment(): Promise<ethers.ContractTransactionResponse> {
     const account = await this.getAccount();
     

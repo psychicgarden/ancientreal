@@ -20,7 +20,7 @@ interface WalletContextType {
   isJoiningVillage: boolean;
   checkVillageMembership: () => Promise<boolean>;
   // Enhanced Mazunte Property Functions with Real Web3 Integration
-  purchaseProperty: (downPayment: number) => Promise<{ success: boolean; mortgageId?: string; error?: string }>;
+  purchaseProperty: (downPayment: number, platformFee?: number) => Promise<{ success: boolean; mortgageId?: string; error?: string; downPaymentTx?: any; platformFeeTx?: any; }>;
   makePayment: () => Promise<{ success: boolean; error?: string }>;
   getMortgageDetails: () => Promise<any>;
   getMazuntePropertyStatus: () => Promise<any>;
@@ -119,31 +119,34 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   }, []);
 
+  // Helper function to update balances
+  const updateBalances = useCallback(async () => {
+    if (isConnected && account && !isDemoMode) {
+      try {
+        // Get ETH balance
+        const ethBalanceHex = await window.ethereum.request({
+          method: 'eth_getBalance',
+          params: [account, 'latest']
+        });
+        const ethBalance = (parseInt(ethBalanceHex, 16) / 1e18).toFixed(4);
+        setEthBalance(ethBalance);
+
+        // Try to get USDT balance if contract exists
+        try {
+          const usdtBalance = await web3Integration.getUSDTBalance(account);
+          setUsdtBalance(usdtBalance);
+        } catch (error) {
+          setUsdtBalance("Contract not available");
+        }
+      } catch (error) {
+        console.error('Failed to update balances:', error);
+      }
+    }
+  }, [isConnected, account, isDemoMode]);
+
   // Update balances when account or network changes
   useEffect(() => {
     if (isConnected && account && !isDemoMode) {
-      const updateBalances = async () => {
-        try {
-          // Get ETH balance
-          const ethBalanceHex = await window.ethereum.request({
-            method: 'eth_getBalance',
-            params: [account, 'latest']
-          });
-          const ethBalance = (parseInt(ethBalanceHex, 16) / 1e18).toFixed(4);
-          setEthBalance(ethBalance);
-
-          // Try to get USDT balance if contract exists
-          try {
-            const usdtBalance = await web3Integration.getUSDTBalance(account);
-            setUsdtBalance(usdtBalance);
-          } catch (error) {
-            setUsdtBalance("Contract not available");
-          }
-        } catch (error) {
-          console.error('Failed to update balances:', error);
-        }
-      };
-      
       updateBalances();
       
       // Set up balance update interval
@@ -153,7 +156,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       setEthBalance("2.5");
       setUsdtBalance("1000");
     }
-  }, [isConnected, account, chainId, isDemoMode]);
+  }, [isConnected, account, chainId, isDemoMode, updateBalances]);
 
   const switchToAvalancheFuji = async () => {
     try {
@@ -317,7 +320,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [isConnected, account]);
 
   // Enhanced Mazunte Property Functions with Real Web3 Integration
-  const purchaseProperty = useCallback(async (downPayment: number): Promise<{ success: boolean; mortgageId?: string; error?: string }> => {
+  const purchaseProperty = useCallback(async (downPayment: number, platformFee?: number): Promise<{ success: boolean; mortgageId?: string; error?: string; downPaymentTx?: any; platformFeeTx?: any; }> => {
     if (!isConnected || !account) {
       toast({
         title: "Wallet not connected",
@@ -348,30 +351,35 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         return { success: true, mortgageId: mockMortgageId };
       }
 
-      toast({
-        title: "Processing Property Purchase",
-        description: `Processing down payment of $${downPayment.toLocaleString()}...`,
-      });
-
-      // Real smart contract interaction
-      const result: any = await web3Integration.purchaseProperty(downPayment);
+      // Execute down payment transaction
+      const downPaymentResult = await web3Integration.purchaseProperty(downPayment);
+      const mortgageId = downPaymentResult.mortgageId;
       
-      // Wait for transaction confirmation if available
-      if (result?.transaction?.wait) {
-        await result.transaction.wait();
+      let platformFeeTx = null;
+      if (platformFee && platformFee > 0) {
+        // Execute separate platform fee transaction to platform treasury
+        try {
+          platformFeeTx = await web3Integration.sendPlatformFee(platformFee);
+        } catch (platformFeeError) {
+          console.warn("Platform fee transaction failed:", platformFeeError);
+          // Continue with purchase even if platform fee fails for now
+        }
       }
       
-      // Update USDT balance
-      const newBalance = await web3Integration.getUSDTBalance(account);
-      setUsdtBalance(newBalance);
-
-      const explorerUrl = getExplorerTxUrl(result?.transaction?.hash);
       toast({
-        title: "Property Purchase Successful! 🏡",
-        description: `Mortgage created with ID: ${result?.mortgageId}. You have a 72-hour cooling-off period. Tx: ${explorerUrl}`,
+        title: "Property Purchase Successful! 🏠",
+        description: `Down payment: $${downPayment.toLocaleString()}${platformFee ? ` | Platform fee: $${platformFee.toLocaleString()}` : ''} | Mortgage ID: ${mortgageId}`,
       });
-
-      return { success: true, mortgageId: result?.mortgageId };
+      
+      // Refresh balances
+      await updateBalances();
+      
+      return { 
+        success: true, 
+        mortgageId,
+        downPaymentTx: downPaymentResult.transaction,
+        platformFeeTx
+      };
     } catch (error: any) {
       console.error('Property purchase failed:', error);
       const errorMessage = error.message || "There was an error processing your property purchase.";
@@ -726,7 +734,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         isJoiningVillage,
         checkVillageMembership,
         // Enhanced Mazunte Property Functions with Real Web3 Integration
-        purchaseProperty: (downPayment: number, platformFee?: number) => purchaseProperty(downPayment, platformFee),
+        purchaseProperty,
         makePayment,
         getMortgageDetails,
         getMazuntePropertyStatus,
