@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.12 (cd3cf9e)"
@@ -1352,11 +1352,11 @@ export type Database = {
     Functions: {
       apply_mortgage_payment: {
         Args: {
-          p_user_address: string
-          p_property_id: number
-          p_principal_delta_base: number
           p_interest_delta_base: number
+          p_principal_delta_base: number
+          p_property_id: number
           p_tx_hash?: string
+          p_user_address: string
         }
         Returns: Json
       }
@@ -1369,12 +1369,12 @@ export type Database = {
         Returns: undefined
       }
       calculate_appreciation_distribution: {
-        Args: { original_price: number; appraised_value: number }
+        Args: { appraised_value: number; original_price: number }
         Returns: {
-          capped_appreciation: number
           ancient_share: number
-          lender_share: number
           buyer_share: number
+          capped_appreciation: number
+          lender_share: number
         }[]
       }
       calculate_daily_yield: {
@@ -1388,36 +1388,36 @@ export type Database = {
       get_user_fractional_investments: {
         Args: { wallet_address: string }
         Returns: {
-          id: string
-          property_id: string
-          investor_wallet_address: string
-          investment_amount: number
-          token_amount: number
-          ownership_percentage: number
-          investment_date: string
-          status: string
           created_at: string
-          updated_at: string
-          property_name: string
-          property_location: string
-          property_image_url: string
           current_speculation_price: number
+          id: string
+          investment_amount: number
+          investment_date: string
+          investor_wallet_address: string
           monthly_base_rent: number
+          ownership_percentage: number
+          property_id: string
+          property_image_url: string
+          property_location: string
+          property_name: string
+          status: string
+          token_amount: number
           total_tokens_available: number
+          updated_at: string
         }[]
       }
       has_role: {
         Args: {
-          _user_id: string
           _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
         }
         Returns: boolean
       }
       process_secondary_order_fill: {
         Args: {
-          _order_id: string
           _buyer_wallet_address: string
           _fill_amount: number
+          _order_id: string
           _price_per_token: number
           _tx_hash?: string
         }
