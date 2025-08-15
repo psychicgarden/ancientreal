@@ -13,7 +13,8 @@ import { MortgageGroupsInterface } from "@/components/MortgageGroupsInterface";
 
 import { SafeBorrowing } from "@/components/SafeBorrowing";
 import { BeginnerPortfolioSummary } from "@/components/BeginnerPortfolioSummary";
-import { FractionalInvestingExplanation } from "@/components/FractionalInvestingExplanation";
+import { MortgageGroupsExplanation } from "@/components/MortgageGroupsExplanation";
+import { SimpleTokenExplanation } from "@/components/SimpleTokenExplanation";
 import { TrendingUp, Handshake, DollarSign, Zap, GraduationCap, Settings, Users } from "lucide-react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
@@ -114,15 +115,21 @@ export const LiquidityTradingHub = () => {
             </TabsContent>
 
             <TabsContent value="mortgage-groups">
-              <ErrorBoundary>
-                <MortgageGroupsInterface />
-              </ErrorBoundary>
+              <div className="space-y-6">
+                {/* Mortgage Groups Explanation */}
+                <MortgageGroupsExplanation />
+                
+                {/* Available Mortgage Groups */}
+                <ErrorBoundary>
+                  <MortgageGroupsInterface />
+                </ErrorBoundary>
+              </div>
             </TabsContent>
 
             <TabsContent value="buy">
               <div className="space-y-6">
-                {/* Fractional Investing Explanation */}
-                <FractionalInvestingExplanation />
+                {/* Simple Token Explanation */}
+                <SimpleTokenExplanation />
                 
                 {/* Available Investments */}
                 <ErrorBoundary>
