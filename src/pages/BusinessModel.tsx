@@ -145,7 +145,7 @@ const BusinessModel = () => {
           <div className="text-center">
             <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-full mb-12 border border-white/20">
               <div className="text-3xl">🏛</div>
-              <span className="font-semibold text-xl tracking-wide">Ancient Development Flywheel</span>
+              <span className="font-semibold text-xl tracking-wide">Ancient: The World's First Network State</span>
             </div>
             
             <h1 className="text-6xl md:text-8xl font-bold mb-8 bg-gradient-to-r from-white via-white/95 to-white/80 bg-clip-text text-transparent leading-tight">
