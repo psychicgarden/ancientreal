@@ -16,6 +16,7 @@ import AdminProjects from "./pages/AdminProjects";
 import TestRoute from "./pages/TestRoute";
 import NotFound from "./pages/NotFound";
 import { WalletProvider } from "@/contexts/WalletContext";
+import ChatBot from "@/components/ChatBot";
 import { Navigate } from "react-router-dom";
 
 function App() {
@@ -38,12 +39,14 @@ function App() {
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/investor-portal" element={<InvestorPortal />} />
                 <Route path="/investor" element={<InvestorPortal />} />
                 <Route path="/portfolio" element={<Portfolio />} />
                 <Route path="/banking" element={<Banking />} />
                 <Route path="/traveler" element={<TravelerPortal />} />
                 <Route path="/community" element={<Community />} />
                 <Route path="/developers" element={<Developers />} />
+                <Route path="/legal-portal" element={<LegalPortal />} />
                 <Route path="/legal" element={<LegalPortal />} />
                 <Route path="/admin/projects" element={<AdminProjects />} />
                 <Route path="/test-route" element={<TestRoute />} />
@@ -51,6 +54,7 @@ function App() {
                 <Route path="/investor-report" element={<Navigate to="/portfolio?tab=platform" replace />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              <ChatBot />
             </BrowserRouter>
           </WalletProvider>
         </TooltipProvider>
