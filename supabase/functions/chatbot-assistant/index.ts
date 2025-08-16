@@ -156,6 +156,102 @@ PLATFORM OVERVIEW:
 - Built on Avalanche Fuji Testnet using USDT for transactions
 - Features include: fractional property investment, mortgage groups, yield farming, secondary marketplace
 
+BUSINESS MODEL: Three Phases to $12B
+
+PHASE 1 – Foundation & Proof of Concept (Years 1-6)
+What we do:
+• Build and sell 178 regenerative homes across 5 strategic lifestyle hubs
+• Deploy a conservative mortgage pool ($2M, 48 loans total) to prove 99%+ repayment
+• Develop and refine the technology stack (fractional marketplace, tokenization rails, lender servicing)
+
+Execution Table (canonical numbers):
+Location | Year | Homes | Revenue | Profit | Mortgages
+Mazunte, Mexico | 1–2 | 15 | $2.06M | $0.93M | 3
+Bahia, Brazil | 2–3 | 21 | $3.04M | $1.47M | 5
+Porto, Portugal | 3–4 | 31 | $4.87M | $2.54M | 8
+Corfu, Greece | 4–5 | 48 | $8.45M | $4.85M | 12
+Ericeira, Portugal | 5–6 | 63 | $12.60M | $7.88M | 20
+Total | 6 yrs | 178 | $31.02M | $17.67M | 48
+
+Returns to Investor (Phase 1):
+• Profits generated: $17.67M
+• Investor's 70% preferred share: $12.37M
+• Return: 1.65x in 6 years (even if the company stops here, investor walks away positive)
+
+PHASE 2 – Platform Launch & Scale (Years 3-7)
+What we do:
+• Transition from developer → platform
+• Attract external developers to list their projects  
+• Scale mortgage operations with institutional capital
+• Enable fractional ownership from $1,000 for retail buyers globally
+
+Key Milestones:
+• Attract 50+ builders into the developer marketplace
+• Grow mortgage pool to 700+ loans funded by a $50M institutional facility
+• Open platform to 12 countries across LatAm and Europe
+• Monetize via: Platform fees (~3%), Servicing fees (0.5–1%), Capital gains capture (ARWs: 40% to Ancient, 10% lenders, 50% buyers)
+
+Growth Metrics:
+Year | Users | Properties | Annual Revenue | Company Valuation
+3 | 15,000 | 200 | $15M | $240M
+5 | 150,000 | 1,500 | $127M | $1.65B
+7 | 500,000 | 5,000 | $350M | $5.25B
+
+PHASE 3 – Global Domination (Years 7-10+)
+What we do:
+• Become the Shopify × Airbnb × Robinhood of regenerative real estate
+• Expand across 25 countries with network-effect scale
+
+At scale:
+• 2M+ global users
+• 15,000 new properties listed annually
+• Annual revenue: $914.5M (diversified across developer fees, servicing, ARWs, marketplace)
+
+CASH-FLOW WATERFALL & INVESTOR DISTRIBUTIONS
+
+Phase 1 – Development Flips (178 Homes)
+Sources of Cash Flow:
+• Build/sell spread from homes = $17.67M profit
+• Very light mortgage pool = 48 loans, not material to cash flow
+
+Distribution Waterfall:
+1. Investor 70% Preferred Share of Profits: $17.67M × 70% = $12.37M paid to investors over 6 years
+2. GP/Company 30% Share: $17.67M × 30% = $5.30M retained by company
+
+Investor Profile:
+• Multiple = 1.65x in 6 years, even if company stopped here
+• Risk = low → mortgage exposure capped at $2M pool
+
+Phase 2 – Platform Scale (Marketplace + Mortgages)
+Sources of Cash Flow:
+• Developer fees (≈3% of property value)
+• Mortgage servicing spread (0.75%)
+• ARW capture (Ancient takes 40%)
+• Marketplace fractional transaction fees (0.5–1%)
+
+Distribution Waterfall:
+1. Investors continue to receive 70% of Profits until end of Phase 2
+2. Company retains 30%, fueling reinvestment into tech, global expansion, and working capital
+
+Phase 3 – Global Network-State (2M Users)
+Sources of Cash Flow:
+• Global developer listings (~15,000/year)
+• Servicing on $5B+ mortgages
+• ARWs captured at scale (50% buyer / 40% Ancient / 10% lenders)
+• Platform network fees
+
+Distribution Waterfall:
+1. Investor Preferred Ends → Convert to Equity Stake
+2. At IPO/strategic exit, investors receive equity appreciation from their original ParentCo shares
+3. By this stage, they've already received $12.37M cash distributions from Phase 1 + 70% share from Phase 2 profits
+
+MARKET TRENDS & TAILWINDS:
+• Tokenization of real assets: Expected to exceed $16T by 2030 (BCG, Citigroup)
+• Global mortgage gap: $400B+ unmet demand in emerging markets (World Bank)
+• Digital nomad surge: 40M+ nomads by 2030; high concentration in coastal lifestyle hubs
+• Sustainable real estate premium: Regenerative builds already selling 10–25% above market in EU/LatAm
+• Platform winners: History shows category leaders (Airbnb, Shopify) capture 30–50% of sector value
+
 INVESTMENT MODELS:
 1. BUY SHARES (Fractional Investment): Users can start investing from just $50 with no minimum down payment. Purchase fractional tokens representing property ownership with flexible investment amounts.
 2. JOIN GROUPS (Mortgage Groups): 3-6 people split a 20% down payment of the full property price, with the remaining 80% financed via smart contracts for collective full property ownership.
