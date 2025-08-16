@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import PlatformAssessment from "@/components/PlatformAssessment";
 
 // Import property images
 import villaTulum from "@/assets/villa-tulum.jpg";
