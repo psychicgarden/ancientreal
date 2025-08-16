@@ -39,6 +39,100 @@ serve(async (req) => {
 
     const { message, context, conversationHistory = [] }: ChatRequest = await req.json();
 
+    // Offline fallback responses for common questions
+    const offlineResponses: Record<string, string> = {
+      'tether': `Ancient uses the exact same legal structure as Tether Gold (XAUT) — a proven model managing $500M+ in tokenized assets.
+
+**How it works:**
+• SPV (Special Purpose Vehicle) legally owns the Mexican properties
+• Tokens represent economic rights to the SPV's cash flows and appreciation
+• Same structure used by RealT ($100M+ US properties), Reental (Spain), and Binaryx (Bali)
+
+**Why it's legally sound:**
+• Property title stays with the SPV (traditional legal ownership)
+• Tokens are the transparent cap table (replacing Excel spreadsheets)
+• Operating agreements + smart contracts automate distributions
+• KYC/AML compliance with global standards
+
+**Key difference from "blockchain property deeds":**
+We're NOT tokenizing municipal deeds — we're modernizing ownership records and cash flows. The deed stays off-chain with the SPV; ownership rights and yields are on-chain.
+
+This is the standard for institutional tokenized assets globally. Even Tether Gold isn't recognized by Switzerland as a "blockchain gold title" — it's a custodial model with beneficial claims, exactly like our structure.`,
+      
+      'legal': `Ancient's legal framework is built on proven, institutional-grade structures:
+
+**Core Structure:**
+• Nevis Holding Company owns Mexican SPVs
+• Each property held by dedicated SPV
+• Tokens represent beneficial ownership in SPVs
+• Full KYC/AML compliance
+
+**Regulatory Compliance:**
+• Securities framework via Reg D exemptions
+• Accredited investor verification
+• Professional legal documentation
+• Insurance coverage through partnerships
+
+**Investor Protection:**
+• Segregated asset ownership per property
+• Transparent on-chain ownership records
+• Automated distribution via smart contracts
+• Professional property management
+
+This structure is used by major platforms like RealT, Reental, and follows the same legal principles as Tether Gold's tokenization model.`,
+      
+      'investment': `Ancient offers fractional real estate investment in premium Mexican coastal properties:
+
+**Investment Model:**
+• 20% down payment required
+• Remaining 80% financed via smart contracts
+• Monthly rental yields distributed automatically
+• Property appreciation shared: 50% buyer, 40% Ancient, 10% lenders
+
+**Current Properties:**
+• Art Deco Loft Mexico: $240K, 8.5% yield
+• Bahia Beach Bungalow: $180K, 9.2% yield  
+• Ericeira Oceanview: $320K, 7.8% yield
+
+**Process:**
+1. Connect wallet & complete KYC
+2. Select property and investment amount
+3. Smart contract handles mortgage & ownership
+4. Receive monthly rental distributions
+5. Trade shares on secondary marketplace
+
+All backed by legal SPV structure and professional property management.`
+    };
+
+    // Check for offline response triggers
+    const messageLower = message.toLowerCase();
+    for (const [key, response] of Object.entries(offlineResponses)) {
+      if (messageLower.includes(key) || 
+          (key === 'tether' && (messageLower.includes('similar') || messageLower.includes('legal'))) ||
+          (key === 'investment' && (messageLower.includes('invest') || messageLower.includes('how to')))) {
+        
+        // Log the offline response
+        try {
+          await supabase.from('chatbot_conversations').insert({
+            user_message: message,
+            assistant_response: response,
+            user_wallet_address: context?.walletAddress?.toLowerCase(),
+            context: { ...context, offline_response: true },
+            created_at: new Date().toISOString()
+          });
+        } catch (logError) {
+          console.log('Failed to log offline conversation:', logError);
+        }
+
+        return new Response(JSON.stringify({ 
+          response,
+          success: true 
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+    }
+
     // Build knowledge base context
     let knowledgeContext = `You are Ancient's AI assistant for the world's first decentralized nation built on fractional real estate ownership.
 
@@ -281,11 +375,23 @@ Answer user questions about the platform, investment process, calculations, and 
 
   } catch (error) {
     console.error('Chatbot error:', error);
+    
+    // Enhanced fallback with specific responses
+    const messageLower = (await req.clone().json()).message?.toLowerCase() || '';
+    let fallbackResponse = "I'm temporarily unavailable. Please try again shortly.";
+    
+    if (messageLower.includes('tether') || messageLower.includes('legal') || messageLower.includes('similar')) {
+      fallbackResponse = "Ancient uses the same proven SPV legal structure as Tether Gold and other major tokenized asset platforms. The SPV owns the property legally, while tokens represent your economic rights to cash flows and appreciation. This is the standard institutional approach for tokenized real estate globally.";
+    } else if (messageLower.includes('invest') || messageLower.includes('how to')) {
+      fallbackResponse = "You can invest in Ancient properties with just 20% down. Connect your wallet, complete KYC, and choose from our curated Mexican coastal properties. Each offers 7-9% annual yields plus appreciation potential.";
+    }
+    
     return new Response(JSON.stringify({ 
       error: error.message,
-      success: false 
+      response: fallbackResponse,
+      success: true // Still return success to show fallback response
     }), {
-      status: 500,
+      status: 200, // Return 200 so frontend shows the fallback
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
