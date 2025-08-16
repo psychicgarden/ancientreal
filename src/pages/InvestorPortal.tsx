@@ -3,11 +3,13 @@ import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrendingUp, PieChart, DollarSign, BarChart3, Calculator, Zap, MapPin } from "lucide-react";
+import { TrendingUp, PieChart, DollarSign, BarChart3, Calculator, Zap, MapPin, Building, Users } from "lucide-react";
 import { useWallet } from "@/contexts/WalletContext";
 import PropertyInvestmentCalculator from "@/components/PropertyInvestmentCalculator";
 import { PropertyPurchaseModal } from "@/components/PropertyPurchaseModal";
 import { LiquidityTradingHub } from "@/components/LiquidityTradingHub";
+import { PropertyFractionalizationInterface } from "@/components/PropertyFractionalizationInterface";
+import { OwnedListingsOverview } from "@/components/OwnedListingsOverview";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { useMortgageProperties } from "@/hooks/useMortgageProperties";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -39,10 +41,18 @@ const InvestorPortal = () => {
                 Get a mortgage with just 20% down and start building equity in premium real estate properties.
               </p>
 
-<TabsList className="grid grid-cols-2 w-fit mx-auto">
+<TabsList className="grid grid-cols-4 w-fit mx-auto">
   <TabsTrigger value="properties" className="flex items-center gap-2">
     <DollarSign className="h-4 w-4" />
-    Property Investment
+    Buy Properties
+  </TabsTrigger>
+  <TabsTrigger value="list-property" className="flex items-center gap-2">
+    <Building className="h-4 w-4" />
+    List My Property
+  </TabsTrigger>
+  <TabsTrigger value="my-listings" className="flex items-center gap-2">
+    <Users className="h-4 w-4" />
+    My Listings
   </TabsTrigger>
   <TabsTrigger value="defi" className="flex items-center gap-2">
     <Zap className="h-4 w-4" />
@@ -214,6 +224,18 @@ const InvestorPortal = () => {
               </section>
 </TabsContent>
 
+
+            <TabsContent value="list-property">
+              <ErrorBoundary>
+                <PropertyFractionalizationInterface />
+              </ErrorBoundary>
+            </TabsContent>
+
+            <TabsContent value="my-listings">
+              <ErrorBoundary>
+                <OwnedListingsOverview />
+              </ErrorBoundary>
+            </TabsContent>
 
             <TabsContent value="defi">
               <ErrorBoundary>
