@@ -156,12 +156,22 @@ PLATFORM OVERVIEW:
 - Built on Avalanche Fuji Testnet using USDT for transactions
 - Features include: fractional property investment, mortgage groups, yield farming, secondary marketplace
 
+USE OF FUNDS - $7.5M Seed A:
+1. Land Acquisition - $1.5M (20%): Secure 4 prime development plots across Mazunte (Mexico), Bahia (Brazil), Ericeira (Portugal), and Greece
+2. Construction Fund - $3.5M (47%): Core pool to finance first development cycle, recycled from each flip revenue
+3. Platform & Technology - $1.0M (13%): Build Ancient digital platform, tokenization, DAO governance, marketplace
+4. Legal & Compliance - $500K (7%): International structuring, Nevis ParentCo + SPVs, securities compliance
+5. Team & Operations - $750K (10%): 2 years runway for founding team and local project managers
+6. Marketing & Launch - $250K (3%): Launch campaign for Founding Pass NFTs, community building
+
+INVESTOR RISK CLARITY: Your capital is never used for mortgages. Those are entirely external and off our balance sheet.
+
 BUSINESS MODEL: Three Phases to $12B
 
 PHASE 1 – Foundation & Proof of Concept (Years 1-6)
 What we do:
-• Build and sell 178 regenerative homes across 5 strategic lifestyle hubs
-• Deploy a conservative mortgage pool ($2M, 48 loans total) to prove 99%+ repayment
+• Build and sell 178 regenerative homes across 5 strategic lifestyle hubs (EQUITY-ONLY, NO DEBT)
+• All mortgages are external capital (banks, institutional lenders, DeFi pools) - NOT from company raise
 • Develop and refine the technology stack (fractional marketplace, tokenization rails, lender servicing)
 
 Execution Table (canonical numbers):
@@ -426,9 +436,30 @@ Answer user questions about the platform, investment process, calculations, and 
       }
     }
 
+    // Enhanced system prompt with query type detection
+    const systemPrompt = `${knowledgeContext}
+
+CRITICAL INSTRUCTIONS FOR QUERY ROUTING:
+
+FOR BUSINESS/INVESTOR QUESTIONS (investment allocation, capital deployment, business returns, how raised funds are used, business model, scaling strategy):
+- Reference the "USE OF FUNDS" section for $7.5M allocation breakdown
+- Reference the "BUSINESS MODEL" section for three-phase execution 
+- Reference the "CASH-FLOW WATERFALL" section for investor returns
+- Always mention: "Your capital is never used for mortgages - those are entirely external"
+
+FOR RETAIL USER QUESTIONS (how to invest, what properties, user experience):
+- Reference the "INVESTMENT MODELS" section (Buy Shares vs Join Groups)
+- Reference the "PROPERTY PORTFOLIO" section for specific properties
+- Reference the "KEY FEATURES" section for platform capabilities
+
+KEYWORDS THAT TRIGGER BUSINESS MODEL RESPONSES:
+- "7.5M", "investment allocation", "capital deployment", "business model", "how is money spent", "use of funds", "business returns", "scaling", "phases", "investor returns"
+
+Always be precise, professional, and reference the exact sections mentioned above based on the query type.`;
+
     // Prepare messages for OpenAI
     const messages: ChatMessage[] = [
-      { role: 'system', content: knowledgeContext },
+      { role: 'system', content: systemPrompt },
       ...conversationHistory.slice(-6), // Keep last 3 exchanges for context
       { role: 'user', content: message }
     ];
