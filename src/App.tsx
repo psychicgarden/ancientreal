@@ -15,6 +15,7 @@ import LegalPortal from "./pages/LegalPortal";
 import AdminProjects from "./pages/AdminProjects";
 import TestRoute from "./pages/TestRoute";
 import NotFound from "./pages/NotFound";
+import BusinessModel from "./pages/BusinessModel";
 import { WalletProvider } from "@/contexts/WalletContext";
 import ChatBot from "@/components/ChatBot";
 import { Navigate } from "react-router-dom";
@@ -48,6 +49,7 @@ function App() {
                 <Route path="/developers" element={<Developers />} />
                 <Route path="/legal-portal" element={<LegalPortal />} />
                 <Route path="/legal" element={<LegalPortal />} />
+                <Route path="/business-model" element={<BusinessModel />} />
                 <Route path="/admin/projects" element={<AdminProjects />} />
                 <Route path="/test-route" element={<TestRoute />} />
                 <Route path="/test" element={<SmartContractTest />} />
