@@ -52,12 +52,6 @@ const PlatformAssessment = () => {
     }
   ];
 
-  const currentBudgetAllocation = {
-    "Platform & Tech": 350000,
-    "Contingency": 465000,
-    "Audit Ring-fence": 50000
-  };
-
   const enhancementPriorities = [
     {
       priority: "Phase 1 (Pre-Flip 1)",
@@ -147,38 +141,6 @@ const PlatformAssessment = () => {
         </CardContent>
       </Card>
 
-      {/* Current Budget Allocation */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="w-6 h-6 text-primary" />
-            Current Budget Allocation
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="grid md:grid-cols-3 gap-4">
-              <div className="flex justify-between items-center p-4 bg-primary/5 rounded-lg border border-primary/20">
-                <span className="font-medium">Platform & Tech</span>
-                <span className="font-mono text-primary font-semibold">
-                  ${currentBudgetAllocation["Platform & Tech"].toLocaleString()}
-                </span>
-              </div>
-              <div className="flex justify-between items-center p-4 bg-muted/50 rounded-lg">
-                <span className="font-medium">Contingency</span>
-                <span className="font-mono">${currentBudgetAllocation["Contingency"].toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between items-center p-4 bg-amber-50 rounded-lg border border-amber-200">
-                <span className="font-medium">Audit Ring-fence</span>
-                <span className="font-mono text-amber-700">${currentBudgetAllocation["Audit Ring-fence"].toLocaleString()}</span>
-              </div>
-            </div>
-            <div className="text-center text-sm text-primary">
-              Total Tech Budget: <span className="font-semibold">5.4%</span> of total cap ($400K total)
-            </div>
-          </div>
-        </CardContent>
-      </Card>
 
       {/* Enhancement Roadmap */}
       <Card>
