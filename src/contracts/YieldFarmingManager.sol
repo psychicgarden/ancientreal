@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 /**
  * @title YieldFarmingManager
@@ -53,6 +54,11 @@ contract YieldFarmingManager is Ownable, ReentrancyGuard, Pausable {
     uint256 public strategyCount;
     uint256 public constant SECONDS_PER_YEAR = 365 * 24 * 60 * 60;
     uint256 public constant BASIS_POINTS = 10000;
+    
+    // Chainlink Price Feed for USDT/USD
+    AggregatorV3Interface internal priceFeed;
+    bool public usePriceFeed;
+    uint256 public fallbackPrice; // Emergency fallback price in 8 decimals
 
     // Events
     event PoolAdded(uint256 indexed poolId, address stakingToken, address rewardToken, uint256 rewardRate);
@@ -73,7 +79,12 @@ contract YieldFarmingManager is Ownable, ReentrancyGuard, Pausable {
         _;
     }
 
-    constructor() {}
+    constructor() {
+        // Avalanche Fuji Testnet USDT/USD price feed
+        priceFeed = AggregatorV3Interface(0x7898AcCC83587C3C55116c5230C17a6d39CB739b);
+        usePriceFeed = true;
+        fallbackPrice = 100000000; // $1.00 in 8 decimals
+    }
 
     /**
      * @dev Add a new staking pool
@@ -380,6 +391,61 @@ contract YieldFarmingManager is Ownable, ReentrancyGuard, Pausable {
     }
 
     /**
+     * @dev Get pool APY in USD terms using Chainlink price feed
+     */
+    function getPoolAPYInUSD(uint256 _poolId) external view poolExists(_poolId) returns (uint256) {
+        Pool memory pool = pools[_poolId];
+        if (pool.totalStaked == 0) return 0;
+        
+        uint256 yearlyRewards = pool.rewardRate * SECONDS_PER_YEAR;
+        uint256 apyInTokens = (yearlyRewards * 100) / pool.totalStaked;
+        
+        // Convert to USD using price feed
+        uint256 usdtPrice = getLatestPrice();
+        return (apyInTokens * usdtPrice) / 1e8; // Adjust for price feed decimals
+    }
+
+    /**
+     * @dev Get latest USDT/USD price from Chainlink
+     */
+    function getLatestPrice() public view returns (uint256) {
+        if (!usePriceFeed) {
+            return fallbackPrice;
+        }
+        
+        try priceFeed.latestRoundData() returns (
+            uint80 /* roundId */,
+            int256 price,
+            uint256 /* startedAt */,
+            uint256 updatedAt,
+            uint80 /* answeredInRound */
+        ) {
+            // Check if price is stale (older than 1 hour)
+            if (block.timestamp - updatedAt > 3600) {
+                return fallbackPrice;
+            }
+            
+            // Ensure price is positive
+            if (price <= 0) {
+                return fallbackPrice;
+            }
+            
+            return uint256(price);
+        } catch {
+            return fallbackPrice;
+        }
+    }
+
+    /**
+     * @dev Get user balance in USD terms
+     */
+    function getUserBalanceInUSD(uint256 _poolId, address _user) external view poolExists(_poolId) returns (uint256) {
+        UserInfo memory user = userInfo[_poolId][_user];
+        uint256 usdtPrice = getLatestPrice();
+        return (user.stakedAmount * usdtPrice) / 1e8; // Convert to USD with proper decimals
+    }
+
+    /**
      * @dev Get user's pools
      */
     function getUserPools(address _user) external view returns (uint256[] memory) {
@@ -412,6 +478,29 @@ contract YieldFarmingManager is Ownable, ReentrancyGuard, Pausable {
 
     function unpause() external onlyOwner {
         _unpause();
+    }
+
+    /**
+     * @dev Admin function to toggle price feed usage
+     */
+    function togglePriceFeed(bool _usePriceFeed) external onlyOwner {
+        usePriceFeed = _usePriceFeed;
+    }
+
+    /**
+     * @dev Admin function to update fallback price
+     */
+    function updateFallbackPrice(uint256 _newPrice) external onlyOwner {
+        require(_newPrice > 0, "YieldFarm: invalid price");
+        fallbackPrice = _newPrice;
+    }
+
+    /**
+     * @dev Admin function to update price feed address
+     */
+    function updatePriceFeed(address _newPriceFeed) external onlyOwner {
+        require(_newPriceFeed != address(0), "YieldFarm: invalid address");
+        priceFeed = AggregatorV3Interface(_newPriceFeed);
     }
 
     /**
