@@ -182,7 +182,7 @@ const BusinessModel = () => {
               </p>
               <div className="w-24 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto mb-6"></div>
               <p className="text-base lg:text-lg text-white/90 leading-relaxed font-light">
-                We convert that waste into fractional, on-chain property deeds.
+                We convert that into fractional, on-chain deeds of dream properties.
               </p>
             </div>
           </div>
