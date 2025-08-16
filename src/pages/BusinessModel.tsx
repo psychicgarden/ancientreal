@@ -176,24 +176,7 @@ const BusinessModel = () => {
           </div>
 
           {/* Story Metrics Row */}
-          <div className="grid md:grid-cols-4 gap-8 max-w-5xl mx-auto">
-            <div className="text-center group">
-              <div className="text-4xl md:text-5xl font-bold text-primary mb-2 group-hover:scale-105 transition-transform">50M+</div>
-              <div className="text-muted-foreground text-sm uppercase tracking-wider">Digital Nomads</div>
-            </div>
-            <div className="text-center group">
-              <div className="text-4xl md:text-5xl font-bold text-accent mb-2 group-hover:scale-105 transition-transform">$900B</div>
-              <div className="text-muted-foreground text-sm uppercase tracking-wider">Dead Spend</div>
-            </div>
-            <div className="text-center group">
-              <div className="text-4xl md:text-5xl font-bold text-gold mb-2 group-hover:scale-105 transition-transform">6</div>
-              <div className="text-muted-foreground text-sm uppercase tracking-wider">Countries</div>
-            </div>
-            <div className="text-center group">
-              <div className="text-4xl md:text-5xl font-bold text-destructive mb-2 group-hover:scale-105 transition-transform">Zero</div>
-              <div className="text-muted-foreground text-sm uppercase tracking-wider">Cross-Border Mortgages</div>
-            </div>
-          </div>
+          
         </div>
       </section>
 
