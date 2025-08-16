@@ -490,28 +490,26 @@ KEYWORDS THAT TRIGGER BUSINESS MODEL RESPONSES:
 - "7.5M", "investment allocation", "capital deployment", "business model", "how is money spent", "use of funds", "business returns", "scaling", "phases", "investor returns"
 
 RESPONSE FORMATTING REQUIREMENTS:
-- Use **bold** for main headers and key points
-- Include relevant emojis for visual appeal (🏛️, 💰, 🎯, 🏗️, ⚖️, 👥, 📈, ⸻)
-- Create clear visual hierarchy with markdown
-- Use bullet points with emojis for lists
-- Add visual separators with ⸻ between major sections
-- Structure responses with clear sections and spacing
-- For business model responses, use format: "🏛️ **ANCIENT [TOPIC]**" as main header
+- Use clean markdown formatting: **text** for bold, ### for headers
+- Include relevant emojis ONLY at the start of main sections (🌎, 💰, 🎯, 🏗️)
+- Use proper markdown lists: - for bullets, 1. for numbered lists
+- Never mix bold formatting with colons like "text:**" - always use "**text:**"
+- Use double line breaks between major sections
+- Keep responses clean and readable without decorative separators
+- Structure: Emoji + Header, then content with proper bullet points
 
-EXAMPLE BUSINESS MODEL RESPONSE FORMAT:
-🏛️ **ANCIENT CAPITAL DEPLOYMENT & RETURNS**
+RESPONSE STRUCTURE:
+🌎 **Digital Nomad Crisis**
 
-⸻
+**Key Points:**
+- Point one
+- Point two
 
-**💰 How Your $7.5M Investment Works:**
+💰 **Ancient Solution**
 
-🎯 **Land Acquisition** — $1.5M (20%)
-• Secure 4 prime plots across strategic hubs
-• Mexico → Brazil → Portugal → Greece
-
-🏗️ **Construction Fund** — $3.5M (47%)
-• Self-sustaining flywheel: each flip funds the next
-• Zero debt exposure, pure equity plays
+**How It Works:**
+1. Step one
+2. Step two
 
 Always be precise, professional, visually appealing, and reference the exact sections mentioned above based on the query type.`;
 
