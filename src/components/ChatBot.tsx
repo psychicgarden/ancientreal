@@ -28,7 +28,7 @@ const ChatBot: React.FC = () => {
   const [hasGreeted, setHasGreeted] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const { address, isConnected } = useWallet();
+  const { account, isConnected } = useWallet();
   const location = useLocation();
 
   const quickReplies: QuickReply[] = [
@@ -96,7 +96,7 @@ const ChatBot: React.FC = () => {
           message: messageText,
           context: {
             currentPage: location.pathname,
-            walletAddress: address,
+            walletAddress: account,
             userType: isConnected ? 'connected' : 'visitor'
           },
           conversationHistory: messages.slice(-6).map(m => ({
