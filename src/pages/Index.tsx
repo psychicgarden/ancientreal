@@ -25,7 +25,7 @@ const Index = () => {
               The Mathematics of Modern Nomadism
             </h2>
             <p className="text-xl text-muted-foreground mb-8 max-w-4xl mx-auto">
-              Every decade the average digital nomad burns 216K on dead rent.<br />
+              Every decade the average digital nomad burns 272K on dead rent.<br />
               We transform that into $285,750 in real estate equity.
             </p>
           </div>
@@ -36,11 +36,11 @@ const Index = () => {
             <div className="space-y-3">
               <div className="flex justify-between items-center py-1">
                 <span className="text-muted-foreground">Monthly Rent</span>
-                <span className="text-lg font-semibold">$1,800</span>
+                <span className="text-lg font-semibold">$2,266</span>
               </div>
               <div className="flex justify-between items-center py-1">
                 <span className="text-muted-foreground">Decade Total</span>
-                <span className="text-lg font-semibold">$216,000</span>
+                <span className="text-lg font-semibold">$271,920</span>
               </div>
               <div className="flex justify-between items-center py-1">
                 <span className="text-muted-foreground">Equity Built</span>
@@ -58,7 +58,7 @@ const Index = () => {
               </div>
               <div className="flex justify-between items-center py-1">
                 <span className="text-muted-foreground">Decade Total</span>
-                <span className="text-lg font-semibold">$204,720</span>
+                <span className="text-lg font-semibold">$174,720</span>
               </div>
               <div className="flex justify-between items-center py-1">
                 <span className="text-muted-foreground">Property Value</span>
@@ -71,22 +71,25 @@ const Index = () => {
         <div className="text-center">
           <div className="bg-gradient-to-r from-primary to-purple-600 text-white p-8 rounded-lg mb-8">
             <h3 className="text-2xl font-bold mb-4">The Difference</h3>
-            <p className="text-xl mb-6">Identical monthly commitment. Generational wealth outcome.</p>
+            <p className="text-xl mb-6">Stop burning money on rent. Start building generational wealth.</p>
             
             <div className="grid md:grid-cols-3 gap-6">
               <div>
-                <div className="text-sm opacity-90 uppercase tracking-wide">Down Payment</div>
-                <div className="text-3xl font-bold">$30K</div>
+                <div className="text-sm opacity-90 uppercase tracking-wide">Avoided Dead Rent</div>
+                <div className="text-3xl font-bold">$272K</div>
               </div>
               <div>
-                <div className="text-sm opacity-90 uppercase tracking-wide">Final Equity</div>
-                <div className="text-3xl font-bold">$285K</div>
+                <div className="text-sm opacity-90 uppercase tracking-wide">Property Equity Gained</div>
+                <div className="text-3xl font-bold">$286K</div>
               </div>
               <div>
-                <div className="text-sm opacity-90 uppercase tracking-wide">Total Return</div>
-                <div className="text-3xl font-bold">181%</div>
+                <div className="text-sm opacity-90 uppercase tracking-wide">Total Wealth Creation</div>
+                <div className="text-3xl font-bold">$558K+</div>
               </div>
             </div>
+            <p className="text-sm opacity-90 mt-4 max-w-2xl mx-auto">
+              Get both the property equity AND avoid throwing away rent money. Your monthly payment builds wealth instead of enriching landlords.
+            </p>
           </div>
           
           <Button size="lg" className="px-8 py-4 text-lg">
