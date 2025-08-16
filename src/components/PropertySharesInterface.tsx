@@ -8,6 +8,9 @@ import { useWallet } from "@/contexts/WalletContext";
 import { useToast } from "@/hooks/use-toast";
 import { useFractionalProperties } from "@/hooks/useFractionalProperties";
 import { OwnerApprovalExplanation } from "@/components/OwnerApprovalExplanation";
+import { InvestorTierStatus } from "@/components/InvestorTierStatus";
+import { calculateTotalUserInvestments } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
 
 export const PropertySharesInterface = () => {
   const { isConnected, connectWallet, account } = useWallet();
@@ -15,6 +18,22 @@ export const PropertySharesInterface = () => {
   const { properties, loading } = useFractionalProperties();
   const [selectedProperty, setSelectedProperty] = useState<any>(null);
   const [investmentAmount, setInvestmentAmount] = useState('');
+  const [totalInvestment, setTotalInvestment] = useState(0);
+
+  React.useEffect(() => {
+    const fetchTotalInvestment = async () => {
+      if (account) {
+        try {
+          const total = await calculateTotalUserInvestments(account, supabase);
+          setTotalInvestment(total);
+        } catch (error) {
+          console.error('Error fetching total investment:', error);
+        }
+      }
+    };
+    
+    fetchTotalInvestment();
+  }, [account]);
 
   const calculateShares = (amount: number, sharePrice: number) => {
     return Math.floor(amount / sharePrice);
@@ -77,6 +96,10 @@ export const PropertySharesInterface = () => {
           Purchase individual shares of rental properties. Start earning passive income immediately.
         </p>
       </div>
+
+      {account && (
+        <InvestorTierStatus totalInvestmentAmount={totalInvestment} />
+      )}
 
       <OwnerApprovalExplanation />
 

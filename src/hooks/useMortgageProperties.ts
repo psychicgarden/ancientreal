@@ -25,8 +25,8 @@ const MORTGAGE_PROPERTIES: MortgagePropertyData[] = [
     location: "Mazunte, Mexico",
     image: "/src/assets/villa-tulum.jpg",
     totalValue: 129000,
-    downPayment: 25800, // 20% down
-    monthlyPayment: computeMonthlyPaymentUSD(129000 - 25800, 800, 120), // Calculate dynamically
+    downPayment: 51600, // 40% down
+    monthlyPayment: computeMonthlyPaymentUSD(129000 - 51600, 800, 120), // Calculate dynamically
     monthlyRent: 2050,
     networkValue: 129000 * 2.81, // 181% appreciation
     expectedReturn: 19.1,
@@ -38,8 +38,8 @@ const MORTGAGE_PROPERTIES: MortgagePropertyData[] = [
     location: "Bahia, Brazil",
     image: "/src/assets/beach-chalet.jpg",
     totalValue: 120000,
-    downPayment: 24000, // 20% down
-    monthlyPayment: computeMonthlyPaymentUSD(120000 - 24000, 800, 120), // Calculate dynamically
+    downPayment: 48000, // 40% down
+    monthlyPayment: computeMonthlyPaymentUSD(120000 - 48000, 800, 120), // Calculate dynamically
     monthlyRent: 1900,
     networkValue: 120000 * 2.81, // 181% appreciation
     expectedReturn: 19.0,
@@ -51,8 +51,8 @@ const MORTGAGE_PROPERTIES: MortgagePropertyData[] = [
     location: "Ericeira, Portugal", 
     image: "/src/assets/villa-ericeira-portugal.jpg",
     totalValue: 150000,
-    downPayment: 30000, // 20% down
-    monthlyPayment: computeMonthlyPaymentUSD(150000 - 30000, 800, 120), // Calculate dynamically: $1,456
+    downPayment: 60000, // 40% down
+    monthlyPayment: computeMonthlyPaymentUSD(150000 - 60000, 800, 120), // Calculate dynamically
     monthlyRent: 2266, // Correct rent from database
     networkValue: 150000 * 2.81, // 181% appreciation
     expectedReturn: 18.9,

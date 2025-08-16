@@ -23,11 +23,11 @@ export const LiquidityTradingHub = () => {
       <div className="text-center space-y-4">
         <h1 className="text-3xl font-bold">Property Investment Hub</h1>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          Four ways to engage with real estate: Join mortgage groups, buy individual property shares, trade equity with other investors, or borrow cash against your equity.
+          Four ways to engage with real estate: Join mortgage groups with 40% down payments, buy individual property shares, trade equity with other investors, or borrow cash against your equity.
         </p>
         <div className="flex justify-center gap-2 flex-wrap">
-          <Badge className="bg-green-100 text-green-700">Collective Ownership</Badge>
-          <Badge className="bg-blue-100 text-blue-700">Fractional Shares</Badge>
+          <Badge className="bg-green-100 text-green-700">40% Down Payment Groups</Badge>
+          <Badge className="bg-blue-100 text-blue-700">Fractional Shares + Tier Benefits</Badge>
           <Badge className="bg-purple-100 text-purple-700">Peer-to-Peer Trading</Badge>
           <Badge className="bg-orange-100 text-orange-700">Collateral Lending</Badge>
         </div>
