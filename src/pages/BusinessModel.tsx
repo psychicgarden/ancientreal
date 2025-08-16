@@ -164,13 +164,8 @@ const BusinessModel = () => {
           
           {/* Problem Statement */}
           <div className="max-w-5xl mx-auto mb-12 space-y-6">
-            <p className="text-xl md:text-2xl text-foreground/90 leading-relaxed">
-              50 million high-earning nomads burn <strong className="text-primary font-bold">$900B annually on rent</strong>, 
-              trapped in a cycle of paying for places they'll never own.
-            </p>
-            <p className="text-lg md:text-xl text-foreground/80">
-              We've built the only platform that converts that "dead spend" into fractional, on-chain deeds of dream properties.
-            </p>
+            
+            
             
             {/* Closing Statement */}
             <div className="mt-8 p-6 bg-background/20 backdrop-blur-md rounded-2xl border border-border/30 shadow-luxury">
