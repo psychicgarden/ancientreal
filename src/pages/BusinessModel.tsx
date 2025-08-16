@@ -165,7 +165,7 @@ const BusinessModel = () => {
         </div>
         
         {/* Centered Main Content */}
-        <div className="relative z-10 w-full max-w-6xl mx-auto px-6 text-center">
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-6 text-center mt-24 lg:mt-32">
           {/* Main Hero Text - Two Lines as Requested */}
           <div className="space-y-4 mb-12">
             <h1 className="text-5xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight">
