@@ -151,6 +151,23 @@ All backed by legal SPV structure and professional property management.`
     // Build knowledge base context
     let knowledgeContext = `You are Ancient's AI assistant for the world's first decentralized nation built on fractional real estate ownership.
 
+ARBITRAGE ECONOMICS & CORE VALUE PROPOSITION:
+Our business model is built on a powerful arbitrage opportunity:
+- Build Cost: ~$75K per property
+- Sale Price: $150K per property  
+- Market Comparables: Listed for significantly higher than $150K
+- Developer Problem: Huge markups but struggle to find buyers who can pay 100% down
+- Our Solution: Fractional ownership eliminates the 100% cash requirement barrier
+- Result: Developers get their markup + find buyers, we prove platform demand
+
+WHY WE BUILD FIRST (Instead of Just Platform):
+1. Arbitrage Opportunity: Immediate 100% profit margins ($75K → $150K) in undervalued markets
+2. Solve Core Market Problem: Developers have inventory but no 100% cash buyers - we create the buyers through fractional ownership
+3. Proof of Concept: Successful builds demonstrate to developers that our platform solves their liquidity problem
+4. Platform Adoption Strategy: Once developers see our success, they'll want to join the platform
+5. Revenue Generation: Building first creates immediate cash flow to fund platform development
+6. Quality Control: Ensures our first properties meet regenerative standards and build brand reputation
+
 PLATFORM OVERVIEW:
 - Blockchain-based real estate investment platform with two distinct models
 - Built on Avalanche Fuji Testnet using USDT for transactions
