@@ -228,22 +228,22 @@ const BusinessModel = () => {
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             {[
               {
-                icon: "🚀",
-                title: "Institutional Flip",
-                stat: "$1T+",
-                desc: "Tokenized assets already settled by JPMorgan, Goldman Sachs, and Franklin Templeton. The rails are live — institutions have crossed the Rubicon."
+                icon: "📈",
+                title: "Digital-Nomad Boom",
+                stat: "50M → 100M+",
+                desc: "6× growth since 2019, accelerating toward 100M+ by 2030"
               },
               {
-                icon: "🌍",
-                title: "Regulatory Green Lights",
-                stat: "6+ Jurisdictions",
-                desc: "EU (MiCA), UAE, Singapore, UK, Brazil & Mexico now run tokenization sandboxes or laws. The rules are clear. The market is open."
+                icon: "🧳",
+                title: "Massive Pipeline",
+                stat: "35M+",
+                desc: "North-American & European workers intend to go nomadic within two years"
               },
               {
-                icon: "🏗",
-                title: "Market Inflection",
-                stat: "4× in 18 Months",
-                desc: "Real-estate RWAs quadrupled as BlackRock × Securitize and JPM Onyx went live. Just $4B tokenized so far out of a $16T market — the wave hasn't started."
+                icon: "💻",
+                title: "Remote Work Default",
+                stat: "80%",
+                desc: "White-collar staff work hybrid/remote, severing income from geography"
               },
               {
                 icon: "🏠",
