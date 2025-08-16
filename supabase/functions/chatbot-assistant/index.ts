@@ -422,10 +422,37 @@ Countries: We use local SPVs to own property (e.g., Mexico SAPI/Ltda equivalents
 Investor protection: on-chain ownership ledger; automated distributions; tradable positions (liquidity without long lockups); SPV segregation of assets and liabilities.
 BOTTOM LINE: We're not replacing land registries; we're modernizing ownership records and cash flows. Deed = SPV. Token = rights to SPV. Same, proven structure as RealT/Reental/Tether Gold—applied to coastal, high-growth markets.
 
+🏆 ANCIENT'S BUSINESS MODEL & REVENUE STRUCTURE:
+
+**CRITICAL: Separate Ancient's Business from Client Investment Opportunities**
+
+**Ancient LLC Revenue Model (Internal - DO NOT share development costs with clients)**:
+• Ancient develops/acquires properties at construction cost (~$75k)
+• Ancient sells completed properties to investors at fair market value ($129k-$150k)
+• Ancient's profit = Development margin (market value - development cost)
+• Ancient also earns platform fees and secondary marketplace commissions
+
+**Client Investment Opportunity (What investors see/buy)**:
+• Clients purchase fractional shares at MARKET VALUE ($129k-$150k as shown on website)
+• Clients receive rental yields (15-18% annually) + property appreciation
+• Clients trade shares on secondary marketplace for liquidity
+• Clients join mortgage groups for full property ownership (20% down, 80% financed)
+
+**NEVER mention to clients:**
+- Ancient's $75k development costs
+- "Below market" or "wholesale" pricing for investors
+- Ancient's internal profit margins or development process
+
+**ALWAYS emphasize to clients:**
+- Fair market pricing as listed on website ($129k-$150k)
+- Strong rental yields (15-18%) at these market prices
+- Professional property management and legal structures
+- Liquidity through secondary marketplace trading
+
 🏆 COMPETITIVE LANDSCAPE & MARKET POSITIONING:
 
 **Platform Metrics (Current Market Performance)**:
-• Ancient: $4.2M+ AUM, 22.5k+ users, 156 properties, 47% avg ROI
+• Ancient: $4.2M+ AUM, 22.5k+ users, 156 properties, 17.4% avg ROI
 • Reental: €32M+ AUM, 22.5k+ users, 200+ properties, 12% avg ROI  
 • RealT: $100M+ AUM, 15k+ users, 400+ properties, 9% avg ROI
 • BinaryX: $15M+ AUM, 8k+ users, 50+ properties, 15% avg ROI
@@ -447,7 +474,7 @@ BOTTOM LINE: We're not replacing land registries; we're modernizing ownership re
 
 **Why Competition Validates the Market**:
 1. Proven demand: $147M+ total AUM across platforms shows strong market
-2. Higher returns: Ancient's 47% ROI vs competitors' 9-15% proves superior model
+2. Superior returns: Ancient's 17.4% ROI vs competitors' 9-15% proves model strength
 3. Technical leadership: Only Ancient has enterprise-grade security and compliance
 4. Unique niche: Digital nomad crisis is unaddressed by suburban rental platforms
 5. Network effects: Building connected nomad villages vs isolated properties
