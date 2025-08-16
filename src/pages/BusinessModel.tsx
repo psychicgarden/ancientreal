@@ -197,15 +197,8 @@ const BusinessModel = () => {
               <p>
                 <strong className="text-primary text-2xl">🌎 100M+ Digital Nomads by 2030, Zero Mortgage Infrastructure</strong>
               </p>
-              <p className="text-lg">
-                Since 2019 the number of digital nomads has exploded 6X — and is expected to surpass 100M by 2030.
-                These aren't backpackers in coffee shops. They're senior engineers earning $150K from Tulum, 
-                founders building $500K businesses from Bali who've abandoned the fiction that cities determine opportunity.
-              </p>
-              <p className="text-lg font-medium text-accent">
-                Yet despite earning professional incomes, they are excluded from homeownership — 
-                spending $900B+ annually on rent with no path to building equity.
-              </p>
+              
+              
             </div>
           </div>
 
