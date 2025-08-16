@@ -144,11 +144,7 @@ const BusinessModel = () => {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Ultra Premium Backdrop */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src={villaTulum} 
-            alt="Ancient Network State Vision" 
-            className="w-full h-full object-cover scale-110 filter brightness-[0.7] contrast-[1.1] saturate-[1.2]" 
-          />
+          <img src={villaTulum} alt="Ancient Network State Vision" className="w-full h-full object-cover scale-110 filter brightness-[0.7] contrast-[1.1] saturate-[1.2]" />
           {/* Cinematic Gradient System */}
           <div className="absolute inset-0 bg-gradient-to-br from-background/98 via-background/40 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/20 to-transparent" />
@@ -201,39 +197,12 @@ const BusinessModel = () => {
 
               {/* Call to Action */}
               <div className="pt-8">
-                <Button 
-                  variant="default" 
-                  size="lg" 
-                  className="text-xl lg:text-2xl px-12 py-6 h-auto rounded-full font-medium bg-gradient-primary hover:opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl" 
-                  onClick={() => navigate('/investors')}
-                >
-                  Join the Movement
-                  <ArrowRight className="ml-3 w-6 h-6" />
-                </Button>
+                
               </div>
             </div>
 
             {/* Right Column - Metrics Dashboard */}
-            <div className="lg:col-span-4 space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-background/5 backdrop-blur-2xl rounded-2xl border border-border/10 p-6 text-center hover:bg-background/10 transition-all duration-500 hover:scale-105 group">
-                  <div className="text-4xl lg:text-5xl font-bold text-accent mb-2 group-hover:scale-110 transition-transform duration-300">50M+</div>
-                  <div className="text-foreground/60 text-sm uppercase tracking-wider font-medium">Nomads</div>
-                </div>
-                <div className="bg-background/5 backdrop-blur-2xl rounded-2xl border border-border/10 p-6 text-center hover:bg-background/10 transition-all duration-500 hover:scale-105 group">
-                  <div className="text-4xl lg:text-5xl font-bold text-accent mb-2 group-hover:scale-110 transition-transform duration-300">$900B</div>
-                  <div className="text-foreground/60 text-sm uppercase tracking-wider font-medium">Dead Spend</div>
-                </div>
-                <div className="bg-background/5 backdrop-blur-2xl rounded-2xl border border-border/10 p-6 text-center hover:bg-background/10 transition-all duration-500 hover:scale-105 group">
-                  <div className="text-4xl lg:text-5xl font-bold text-accent mb-2 group-hover:scale-110 transition-transform duration-300">6</div>
-                  <div className="text-foreground/60 text-sm uppercase tracking-wider font-medium">Countries</div>
-                </div>
-                <div className="bg-background/5 backdrop-blur-2xl rounded-2xl border border-border/10 p-6 text-center hover:bg-background/10 transition-all duration-500 hover:scale-105 group">
-                  <div className="text-4xl lg:text-5xl font-bold text-accent mb-2 group-hover:scale-110 transition-transform duration-300">Zero</div>
-                  <div className="text-foreground/60 text-sm uppercase tracking-wider font-medium">Solutions</div>
-                </div>
-              </div>
-            </div>
+            
           </div>
         </div>
 
