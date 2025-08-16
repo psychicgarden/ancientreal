@@ -141,70 +141,58 @@ const BusinessModel = () => {
   const totalPlatformFees = flywheelData.reduce((sum, flip) => sum + flip.platformFee, 0);
   return <div className="min-h-screen bg-gradient-subtle">
       {/* Wide Banner Hero Section */}
-      <section className="relative h-[75vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img 
             src="/lovable-uploads/5225db95-1cf5-4d8b-908e-7d497ff48029.png" 
             alt="Ancient Network State Vision" 
-            className="w-full h-full object-cover filter brightness-[0.6] contrast-[1.2] saturate-[1.1]" 
+            className="w-full h-full object-cover filter brightness-[0.4] contrast-[1.3] saturate-[1.2]" 
           />
-          {/* Gradient Overlays */}
-          <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/40 to-background/90" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-background/30" />
+          {/* Dramatic Gradient Overlays */}
+          <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-transparent to-black/40" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
         </div>
         
-        {/* Banner Content - Horizontal Layout */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            
-            {/* Left Column - Main Content */}
-            <div className="text-left space-y-6">
-              {/* Ancient Brand */}
-              <div className="space-y-3">
-                <h3 className="text-3xl lg:text-5xl font-bold text-white drop-shadow-2xl tracking-[0.1em] uppercase">
-                  Ancient
-                </h3>
-                <div className="w-32 h-1 bg-gradient-primary"></div>
-                <p className="text-lg lg:text-xl text-white/90 font-light italic">
-                  The World's First Network State
-                </p>
-              </div>
-              
-              {/* Main Headlines */}
-              <div className="space-y-4">
-                <h1 className="text-4xl lg:text-6xl xl:text-7xl font-bold leading-tight tracking-tight drop-shadow-2xl">
-                  <span className="block text-white">Building</span>
-                  <span className="block bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">Infrastructure</span>
-                </h1>
-                <h2 className="text-2xl lg:text-3xl xl:text-4xl font-light text-white/95 leading-tight drop-shadow-lg">
-                  for a Borderless World
-                </h2>
-              </div>
-            </div>
-
-            {/* Right Column - Problem Statement */}
-            <div className="bg-white/10 backdrop-blur-2xl rounded-2xl border border-white/20 p-6 lg:p-8 shadow-2xl">
-              <p className="text-xl lg:text-2xl font-light leading-relaxed text-white mb-6">
-                50 million nomads burn <span className="font-bold text-green-400">$900B annually</span> on dead rent.
+        {/* Clean ANCIENT top-left */}
+        <div className="absolute top-8 left-8 z-20">
+          <h3 className="text-2xl lg:text-4xl font-light text-white/95 tracking-[0.3em] uppercase">
+            ANCIENT
+          </h3>
+        </div>
+        
+        {/* Centered Main Content */}
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-6 text-center">
+          {/* Main Hero Text - Centered and Wide */}
+          <div className="space-y-6 mb-12">
+            <h1 className="text-5xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight">
+              <span className="block text-white drop-shadow-2xl">Building</span>
+              <span className="block bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent drop-shadow-2xl">Infrastructure</span>
+            </h1>
+            <h2 className="text-3xl lg:text-4xl xl:text-5xl font-light text-white/95 leading-tight tracking-wide drop-shadow-lg">
+              for a Borderless World
+            </h2>
+          </div>
+          
+          {/* Value Proposition - Clean and Centered */}
+          <div className="max-w-4xl mx-auto space-y-8">
+            <div className="bg-black/20 backdrop-blur-xl rounded-3xl border border-white/10 p-8 lg:p-12 shadow-2xl">
+              <p className="text-2xl lg:text-3xl xl:text-4xl font-light leading-relaxed text-white mb-8">
+                50 million nomads burn <span className="font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">$900B annually</span> on dead rent.
               </p>
-              <p className="text-lg text-white/90 leading-relaxed mb-6">
+              <div className="w-32 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto mb-8"></div>
+              <p className="text-xl lg:text-2xl text-white/90 leading-relaxed font-light">
                 We convert that waste into fractional, on-chain property deeds.
-              </p>
-              <div className="w-full h-px bg-gradient-to-r from-transparent via-white/30 to-transparent mb-4"></div>
-              <p className="text-base lg:text-lg font-medium text-white/90 italic">
-                "Borders wrote the last chapter of property; code writes the next"
               </p>
             </div>
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-          <div className="flex flex-col items-center space-y-2">
-            <div className="w-6 h-10 border border-white/30 rounded-full flex justify-center animate-bounce">
-              <div className="w-1 h-3 bg-white/50 rounded-full mt-2 animate-pulse"></div>
-            </div>
+        {/* Elegant Scroll Indicator */}
+        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 z-20">
+          <div className="flex flex-col items-center space-y-3">
+            <div className="w-1 h-8 bg-gradient-to-b from-white/60 to-transparent rounded-full animate-pulse"></div>
+            <div className="text-white/50 text-sm font-light tracking-widest uppercase">Scroll</div>
           </div>
         </div>
       </section>
