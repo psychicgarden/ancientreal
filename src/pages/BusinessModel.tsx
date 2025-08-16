@@ -140,66 +140,70 @@ const BusinessModel = () => {
   const navigate = useNavigate();
   const totalPlatformFees = flywheelData.reduce((sum, flip) => sum + flip.platformFee, 0);
   return <div className="min-h-screen bg-gradient-subtle">
-      {/* Luxury Soho House Inspired Hero Banner */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Ultra Premium Backdrop */}
+      {/* Wide Banner Hero Section */}
+      <section className="relative h-[75vh] flex items-center justify-center overflow-hidden">
+        {/* Background Image */}
         <div className="absolute inset-0 z-0">
-          <img src="/lovable-uploads/5225db95-1cf5-4d8b-908e-7d497ff48029.png" alt="Ancient Network State Vision" className="w-full h-full object-cover scale-110 filter brightness-[0.6] contrast-[1.2] saturate-[1.1]" />
-          {/* Cinematic Gradient System */}
-          <div className="absolute inset-0 bg-gradient-to-br from-background/95 via-background/30 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/10 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5" />
+          <img 
+            src="/lovable-uploads/5225db95-1cf5-4d8b-908e-7d497ff48029.png" 
+            alt="Ancient Network State Vision" 
+            className="w-full h-full object-cover filter brightness-[0.6] contrast-[1.2] saturate-[1.1]" 
+          />
+          {/* Gradient Overlays */}
+          <div className="absolute inset-0 bg-gradient-to-r from-background/90 via-background/40 to-background/90" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-background/30" />
         </div>
         
-        {/* Centered Content System */}
-        <div className="relative z-10 w-full max-w-8xl mx-auto px-6 lg:px-8">
-          <div className="flex flex-col items-center justify-center min-h-screen py-20 text-center">
+        {/* Banner Content - Horizontal Layout */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             
-            {/* Ancient Network State - Prominently Centered */}
-            <div className="relative mb-8">
-              <div className="absolute -top-6 -left-6 w-20 h-20 bg-gradient-primary rounded-full opacity-20 animate-pulse"></div>
-              <h3 className="text-4xl lg:text-6xl xl:text-7xl font-bold text-white drop-shadow-2xl tracking-[0.15em] uppercase mb-4">
-                Ancient
-              </h3>
-              <div className="w-48 h-1 bg-gradient-primary mx-auto mb-6"></div>
-              <p className="text-xl lg:text-2xl xl:text-3xl text-white/90 font-light italic drop-shadow-lg">
-                The World's First Network State
-              </p>
-            </div>
-            
-            {/* Main Headlines */}
-            <div className="space-y-8 mb-12">
-              <h1 className="text-6xl lg:text-8xl xl:text-9xl font-bold leading-[0.85] tracking-tight drop-shadow-2xl">
-                <span className="block text-white">Building</span>
-                <span className="block bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">Infrastructure</span>
-              </h1>
-              <h2 className="text-3xl lg:text-5xl xl:text-6xl font-light text-white/95 leading-tight drop-shadow-lg">
-                for a Borderless World
-              </h2>
+            {/* Left Column - Main Content */}
+            <div className="text-left space-y-6">
+              {/* Ancient Brand */}
+              <div className="space-y-3">
+                <h3 className="text-3xl lg:text-5xl font-bold text-white drop-shadow-2xl tracking-[0.1em] uppercase">
+                  Ancient
+                </h3>
+                <div className="w-32 h-1 bg-gradient-primary"></div>
+                <p className="text-lg lg:text-xl text-white/90 font-light italic">
+                  The World's First Network State
+                </p>
+              </div>
+              
+              {/* Main Headlines */}
+              <div className="space-y-4">
+                <h1 className="text-4xl lg:text-6xl xl:text-7xl font-bold leading-tight tracking-tight drop-shadow-2xl">
+                  <span className="block text-white">Building</span>
+                  <span className="block bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">Infrastructure</span>
+                </h1>
+                <h2 className="text-2xl lg:text-3xl xl:text-4xl font-light text-white/95 leading-tight drop-shadow-lg">
+                  for a Borderless World
+                </h2>
+              </div>
             </div>
 
-            {/* Problem Statement */}
-            <div className="bg-white/10 backdrop-blur-2xl rounded-3xl border border-white/20 p-8 lg:p-12 shadow-2xl max-w-4xl mx-auto">
-              <p className="text-2xl lg:text-3xl xl:text-4xl font-light leading-relaxed text-white mb-8">
+            {/* Right Column - Problem Statement */}
+            <div className="bg-white/10 backdrop-blur-2xl rounded-2xl border border-white/20 p-6 lg:p-8 shadow-2xl">
+              <p className="text-xl lg:text-2xl font-light leading-relaxed text-white mb-6">
                 50 million nomads burn <span className="font-bold text-green-400">$900B annually</span> on dead rent.
               </p>
-              <p className="text-xl lg:text-2xl text-white/90 leading-relaxed mb-8">
+              <p className="text-lg text-white/90 leading-relaxed mb-6">
                 We convert that waste into fractional, on-chain property deeds.
               </p>
-              <div className="w-full h-px bg-gradient-to-r from-transparent via-white/30 to-transparent mb-6"></div>
-              <p className="text-lg lg:text-xl font-medium text-white/90 italic">
+              <div className="w-full h-px bg-gradient-to-r from-transparent via-white/30 to-transparent mb-4"></div>
+              <p className="text-base lg:text-lg font-medium text-white/90 italic">
                 "Borders wrote the last chapter of property; code writes the next"
               </p>
             </div>
           </div>
         </div>
 
-        {/* Refined Scroll Indicator */}
-        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2">
-          <div className="flex flex-col items-center space-y-2 animate-fade-in">
-            <div className="w-px h-16 bg-gradient-to-b from-transparent via-foreground/30 to-transparent"></div>
-            <div className="w-6 h-10 border border-foreground/20 rounded-full flex justify-center animate-bounce">
-              <div className="w-1 h-3 bg-foreground/30 rounded-full mt-2 animate-pulse"></div>
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+          <div className="flex flex-col items-center space-y-2">
+            <div className="w-6 h-10 border border-white/30 rounded-full flex justify-center animate-bounce">
+              <div className="w-1 h-3 bg-white/50 rounded-full mt-2 animate-pulse"></div>
             </div>
           </div>
         </div>
