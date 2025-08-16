@@ -174,25 +174,17 @@ const BusinessModel = () => {
             </h1>
           </div>
           
-          {/* Value Proposition - Clean and Centered */}
-          <div className="max-w-4xl mx-auto space-y-8">
-            <div className="bg-black/20 backdrop-blur-xl rounded-3xl border border-white/10 p-8 lg:p-12 shadow-2xl">
-              <p className="text-2xl lg:text-3xl xl:text-4xl font-light leading-relaxed text-white mb-8">
+          {/* Value Proposition - Positioned Lower */}
+          <div className="max-w-3xl mx-auto mt-16">
+            <div className="bg-black/20 backdrop-blur-xl rounded-3xl border border-white/10 p-6 lg:p-8 shadow-2xl">
+              <p className="text-lg lg:text-xl xl:text-2xl font-light leading-relaxed text-white mb-6">
                 50 million nomads burn <span className="font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">$900B annually</span> on dead rent.
               </p>
-              <div className="w-32 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto mb-8"></div>
-              <p className="text-xl lg:text-2xl text-white/90 leading-relaxed font-light">
+              <div className="w-24 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto mb-6"></div>
+              <p className="text-base lg:text-lg text-white/90 leading-relaxed font-light">
                 We convert that waste into fractional, on-chain property deeds.
               </p>
             </div>
-          </div>
-        </div>
-
-        {/* Elegant Scroll Indicator */}
-        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 z-20">
-          <div className="flex flex-col items-center space-y-3">
-            <div className="w-1 h-8 bg-gradient-to-b from-white/60 to-transparent rounded-full animate-pulse"></div>
-            <div className="text-white/50 text-sm font-light tracking-widest uppercase">Scroll</div>
           </div>
         </div>
       </section>
