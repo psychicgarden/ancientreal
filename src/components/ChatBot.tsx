@@ -61,6 +61,14 @@ const ChatBot: React.FC = () => {
     }
   }, [isOpen, hasGreeted, location.pathname, isConnected]);
 
+  // Reset greeting when reopening chat to ensure fresh branding
+  useEffect(() => {
+    if (!isOpen) {
+      setHasGreeted(false);
+      setMessages([]);
+    }
+  }, [isOpen]);
+
   const getContextualGreeting = (): string => {
     const pageGreetings: Record<string, string> = {
       '/': "Welcome to Ancient — the world's first decentralized nation. I'm here to guide you through our pioneering approach to fractional real estate ownership, where community meets capital in the most sought-after destinations. How may I assist you today?",

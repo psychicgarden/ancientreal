@@ -232,7 +232,7 @@ Answer user questions about the platform, investment process, calculations, and 
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4.1-2025-04-14',
+        model: 'gpt-5-mini-2025-08-07', // Switch to more cost-effective model
         messages,
         max_completion_tokens: 800,
         stream: false
