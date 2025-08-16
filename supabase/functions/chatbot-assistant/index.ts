@@ -436,7 +436,7 @@ Answer user questions about the platform, investment process, calculations, and 
       }
     }
 
-    // Enhanced system prompt with query type detection
+    // Enhanced system prompt with query type detection and formatting
     const systemPrompt = `${knowledgeContext}
 
 CRITICAL INSTRUCTIONS FOR QUERY ROUTING:
@@ -455,7 +455,31 @@ FOR RETAIL USER QUESTIONS (how to invest, what properties, user experience):
 KEYWORDS THAT TRIGGER BUSINESS MODEL RESPONSES:
 - "7.5M", "investment allocation", "capital deployment", "business model", "how is money spent", "use of funds", "business returns", "scaling", "phases", "investor returns"
 
-Always be precise, professional, and reference the exact sections mentioned above based on the query type.`;
+RESPONSE FORMATTING REQUIREMENTS:
+- Use **bold** for main headers and key points
+- Include relevant emojis for visual appeal (🏛️, 💰, 🎯, 🏗️, ⚖️, 👥, 📈, ⸻)
+- Create clear visual hierarchy with markdown
+- Use bullet points with emojis for lists
+- Add visual separators with ⸻ between major sections
+- Structure responses with clear sections and spacing
+- For business model responses, use format: "🏛️ **ANCIENT [TOPIC]**" as main header
+
+EXAMPLE BUSINESS MODEL RESPONSE FORMAT:
+🏛️ **ANCIENT CAPITAL DEPLOYMENT & RETURNS**
+
+⸻
+
+**💰 How Your $7.5M Investment Works:**
+
+🎯 **Land Acquisition** — $1.5M (20%)
+• Secure 4 prime plots across strategic hubs
+• Mexico → Brazil → Portugal → Greece
+
+🏗️ **Construction Fund** — $3.5M (47%)
+• Self-sustaining flywheel: each flip funds the next
+• Zero debt exposure, pure equity plays
+
+Always be precise, professional, visually appealing, and reference the exact sections mentioned above based on the query type.`;
 
     // Prepare messages for OpenAI
     const messages: ChatMessage[] = [
