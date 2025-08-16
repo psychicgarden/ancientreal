@@ -381,25 +381,25 @@ const BusinessModel = () => {
 
                       {/* Cash In Breakdown */}
                       <div className="bg-primary/5 rounded-lg p-4">
-                        <div className="text-sm text-muted-foreground mb-3">Cash In Breakdown</div>
-                        <div className="space-y-2 text-sm">
+                        <div className="text-sm font-medium text-foreground mb-3">Cash In Breakdown</div>
+                        <div className="space-y-1.5 text-sm">
                           {(() => {
                         const financedUnits = Math.floor(flip.units * 0.8); // 80% financed
                         const cashUnits = flip.units - financedUnits;
-                        const financedCash = financedUnits * 135 * 0.2; // 20% down
-                        const cashPurchases = cashUnits * 135;
+                        const financedCash = financedUnits * 135 * 0.2; // 20% down payments
+                        const cashPurchases = cashUnits * 135; // full cash purchases
                         return <>
-                                <div className="flex justify-between">
-                                  <span>{financedUnits} financed (20% down):</span>
-                                  <span className="font-medium">${(financedCash / 1000).toFixed(0)}K</span>
+                                <div className="flex justify-between items-center">
+                                  <span className="text-muted-foreground">{financedUnits} financed (20% down):</span>
+                                  <span className="font-mono font-semibold">${financedCash.toFixed(0)}K</span>
                                 </div>
-                                <div className="flex justify-between">
-                                  <span>{cashUnits} cash purchases:</span>
-                                  <span className="font-medium">${(cashPurchases / 1000).toFixed(0)}K</span>
+                                <div className="flex justify-between items-center">
+                                  <span className="text-muted-foreground">{cashUnits} cash purchases:</span>
+                                  <span className="font-mono font-semibold">${cashPurchases.toFixed(0)}K</span>
                                 </div>
-                                <div className="border-t pt-2 flex justify-between font-semibold text-primary">
-                                  <span>Total Cash In:</span>
-                                  <span>${flip.cashIn}M</span>
+                                <div className="border-t pt-2 mt-2 flex justify-between items-center">
+                                  <span className="font-semibold text-foreground">Total Cash In:</span>
+                                  <span className="font-mono text-lg font-bold text-primary">${flip.cashIn}M</span>
                                 </div>
                               </>;
                       })()}
