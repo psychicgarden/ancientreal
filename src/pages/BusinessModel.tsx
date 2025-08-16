@@ -144,11 +144,7 @@ const BusinessModel = () => {
       <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src="/src/assets/eco-smart-city.jpg" 
-            alt="Eco Smart City Vision" 
-            className="w-full h-full object-cover filter brightness-[0.4] contrast-[1.3] saturate-[1.2]" 
-          />
+          <img src="/src/assets/eco-smart-city.jpg" alt="Eco Smart City Vision" className="w-full h-full object-cover filter brightness-[0.4] contrast-[1.3] saturate-[1.2]" />
           {/* Dramatic Gradient Overlays */}
           <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-transparent to-black/40" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
@@ -312,7 +308,7 @@ const BusinessModel = () => {
       </section>
 
       {/* Flywheel Flow */}
-      <section className="py-20 px-4 bg-background/50">
+      <section className="px-4 bg-background/50 py-[50px]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">The Development Flywheel</h2>
