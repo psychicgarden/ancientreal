@@ -312,9 +312,12 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
                 <DollarSign className="h-5 w-5" />
                 Investment Breakdown
               </CardTitle>
+              <CardDescription>
+                Complete cost breakdown for your property investment
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 <div className="text-center p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
                   <div className="text-xl font-bold text-blue-600">
                     ${property.downPayment?.toLocaleString() || '30,000'}
@@ -322,6 +325,15 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
                   <div className="text-sm text-muted-foreground">Down Payment (20%)</div>
                   <div className="text-xs text-muted-foreground mt-1">
                     Founding Member Rate
+                  </div>
+                </div>
+                <div className="text-center p-4 bg-orange-50 dark:bg-orange-950/20 rounded-lg">
+                  <div className="text-xl font-bold text-orange-600">
+                    ${Math.round((property.totalValue || 150000) * 0.03).toLocaleString()}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Platform Fee (3%)</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    One-time transaction fee
                   </div>
                 </div>
                 <div className="text-center p-4 bg-green-50 dark:bg-green-950/20 rounded-lg">
@@ -340,6 +352,21 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
                   <div className="text-sm text-muted-foreground">Monthly Profit</div>
                   <div className="text-xs text-muted-foreground mt-1">
                     Rental Income - Mortgage
+                  </div>
+                </div>
+              </div>
+              
+              {/* Total Upfront Cost Summary */}
+              <div className="border-t pt-4">
+                <div className="bg-muted/30 p-4 rounded-lg">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm font-medium">Total Upfront Investment:</span>
+                    <span className="text-lg font-bold">
+                      ${((property.downPayment || 30000) + Math.round((property.totalValue || 150000) * 0.03)).toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    Down Payment + Platform Fee = Total Amount Charged
                   </div>
                 </div>
               </div>
