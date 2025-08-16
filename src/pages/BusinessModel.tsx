@@ -13,7 +13,6 @@ import villaGreece from "@/assets/villa-greece.jpg";
 import villaBali from "@/assets/villa-bali.jpg";
 import penthouseMexico from "@/assets/penthouse-mexico.jpg";
 import ecoSmartCity from "@/assets/eco-smart-city.jpg";
-
 const flywheelData = [{
   flip: "Flip 1",
   location: "Mazunte, Mexico",
@@ -87,7 +86,6 @@ const flywheelData = [{
   image: penthouseMexico,
   structure: "Turkish SPV"
 }];
-
 const revenueStreams = [{
   title: "Platform Fees",
   amount: "$453.6K",
@@ -107,7 +105,6 @@ const revenueStreams = [{
   timeline: "10-year capture",
   icon: "🚀"
 }];
-
 const landAcquisition = [{
   country: "Mexico",
   budget: "$270K",
@@ -139,11 +136,9 @@ const landAcquisition = [{
   structure: "Turkish SPV",
   risk: "Military zone clearance"
 }];
-
 const BusinessModel = () => {
   const navigate = useNavigate();
   const totalPlatformFees = flywheelData.reduce((sum, flip) => sum + flip.platformFee, 0);
-  
   return <div className="min-h-screen bg-gradient-subtle">
       {/* Wide Banner Hero Section */}
       <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
@@ -191,7 +186,7 @@ const BusinessModel = () => {
       </section>
 
       {/* Why Now Section */}
-      <section className="py-20 px-4 bg-background">
+      <section className="px-4 bg-background py-[50px]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -604,5 +599,4 @@ const BusinessModel = () => {
       </section>
     </div>;
 };
-
 export default BusinessModel;
