@@ -87,14 +87,20 @@ This is the standard for institutional tokenized assets globally. Even Tether Go
 
 This structure is used by major platforms like RealT, Reental, and follows the same legal principles as Tether Gold's tokenization model.`,
       
-      'investment': `Ancient offers fractional real estate investment in premium Mexican coastal properties:
+      'investment': `Ancient offers two investment models for premium Mexican coastal properties:
 
-**Investment Model:**
-
-• 20% down payment required
-• Remaining 80% financed via smart contracts
+**1. Buy Shares (Fractional Investment):**
+• Start investing from just $50 - no minimum down payment
+• Purchase fractional tokens representing property ownership
+• Flexible investment amounts based on your budget
 • Monthly rental yields distributed automatically
-• Property appreciation shared: 50% buyer, 40% Ancient, 10% lenders
+• Trade shares on secondary marketplace anytime
+
+**2. Join Groups (Mortgage Groups):**
+• 3-6 people split 20% down payment of full property price
+• Remaining 80% financed via smart contracts
+• Group members collectively own the entire property
+• Higher investment threshold but full property ownership
 
 **Current Properties:**
 
@@ -105,8 +111,8 @@ This structure is used by major platforms like RealT, Reental, and follows the s
 **Process:**
 
 1. Connect wallet & complete KYC
-2. Select property and investment amount
-3. Smart contract handles mortgage & ownership
+2. Choose "Buy Shares" (fractional) or "Join Groups" (mortgage)
+3. Smart contracts handle ownership & distributions
 4. Receive monthly rental distributions
 5. Trade shares on secondary marketplace
 
@@ -146,19 +152,22 @@ All backed by legal SPV structure and professional property management.`
     let knowledgeContext = `You are Ancient's AI assistant for the world's first decentralized nation built on fractional real estate ownership.
 
 PLATFORM OVERVIEW:
-- Blockchain-based fractional real estate investment platform
-- Users can purchase fractional ownership in premium properties with 20% down payment
-- Smart contracts handle mortgages, rental income distribution, and secondary trading
+- Blockchain-based real estate investment platform with two distinct models
 - Built on Avalanche Fuji Testnet using USDT for transactions
-- Features include: property investment, mortgage management, yield farming, secondary marketplace
+- Features include: fractional property investment, mortgage groups, yield farming, secondary marketplace
+
+INVESTMENT MODELS:
+1. BUY SHARES (Fractional Investment): Users can start investing from just $50 with no minimum down payment. Purchase fractional tokens representing property ownership with flexible investment amounts.
+2. JOIN GROUPS (Mortgage Groups): 3-6 people split a 20% down payment of the full property price, with the remaining 80% financed via smart contracts for collective full property ownership.
 
 KEY FEATURES:
-1. FRACTIONAL INVESTMENT: Users buy shares of properties with 20% down payment, remaining 80% is financed
-2. SMART MORTGAGES: Automated mortgage payments through smart contracts
-3. RENTAL YIELDS: Monthly rental income distributed to fractional owners based on ownership percentage
-4. SECONDARY TRADING: P2P marketplace for trading property shares
-5. COLLATERAL LENDING: Borrow against property equity
-6. KYC VERIFICATION: Required for compliance and access to features
+1. FRACTIONAL SHARES: Flexible investment starting from $50 with no down payment required
+2. MORTGAGE GROUPS: 20% down payment split among 3-6 group members for full property ownership
+3. SMART CONTRACTS: Automated payments and ownership management
+4. RENTAL YIELDS: Monthly rental income distributed based on ownership percentage
+5. SECONDARY TRADING: P2P marketplace for trading property shares
+6. COLLATERAL LENDING: Borrow against property equity
+7. KYC VERIFICATION: Required for compliance and access to features
 
 PROPERTY PORTFOLIO:
 - Art Deco Loft in Mexico: $240,000, 8.5% annual yield, luxury beachfront property
@@ -166,8 +175,9 @@ PROPERTY PORTFOLIO:
 - Ericeira Oceanview Apartment: $320,000, 7.8% annual yield, Portuguese coastal property
 
 FINANCIAL MODEL:
-- Down payment: 20% of property value
-- Mortgage terms: 10 years at 8% APR
+- Fractional Shares: Start from $50, no down payment required
+- Mortgage Groups: 20% down payment split among 3-6 group members  
+- Mortgage terms: 10 years at 8% APR (for groups)
 - Platform fee: 3% of property value
 - Monthly rental distribution after expenses (20%) and management fees (8%)
 - Appreciation sharing: 50% buyer, 40% Ancient Holdings, 10% lenders
@@ -394,7 +404,7 @@ Answer user questions about the platform, investment process, calculations, and 
     if (messageLower.includes('tether') || messageLower.includes('legal') || messageLower.includes('similar')) {
       fallbackResponse = "Ancient uses the same proven SPV legal structure as Tether Gold and other major tokenized asset platforms. The SPV owns the property legally, while tokens represent your economic rights to cash flows and appreciation. This is the standard institutional approach for tokenized real estate globally.";
     } else if (messageLower.includes('invest') || messageLower.includes('how to')) {
-      fallbackResponse = "You can invest in Ancient properties with just 20% down. Connect your wallet, complete KYC, and choose from our curated Mexican coastal properties. Each offers 7-9% annual yields plus appreciation potential.";
+      fallbackResponse = "Ancient offers two investment options: Buy Shares (fractional investment starting from $50) or Join Groups (split 20% down payment with 3-6 people). Connect your wallet, complete KYC, and choose from our curated Mexican coastal properties. Each offers 7-9% annual yields plus appreciation potential.";
     }
     
     return new Response(JSON.stringify({ 
