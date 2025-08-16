@@ -154,9 +154,7 @@ const BusinessModel = () => {
             </h1>
             
             <div className="max-w-5xl mx-auto text-xl text-white/80 space-y-4 leading-relaxed mb-16">
-              <p className="text-2xl font-medium text-white">
-                6 Locations × 4 Strategic Flips = 9× ROI
-              </p>
+              
               <p>
                 The first mortgage protocol designed for 100M+ digital nomads who spend $900B annually on rent
                 but are excluded from every traditional mortgage system on Earth.
