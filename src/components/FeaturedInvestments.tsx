@@ -40,6 +40,12 @@ const FeaturedInvestments = () => {
     const appreciation = calculatePropertyAppreciation(property.totalValue, property.projected_appreciation_percent || 181, 0.5);
     const networkValue = Math.round(appreciation.buyerTotalEquity);
     
+    // Calculate 10-year total return multiple
+    const totalCashFlow = monthlyProfit * 120; // 10 years = 120 months
+    const equityGain = networkValue - property.downPayment;
+    const totalReturn = (totalCashFlow + equityGain + property.downPayment) / property.downPayment;
+    const totalReturnMultiple = Math.round(totalReturn * 10) / 10; // Round to 1 decimal
+    
     return {
       type: property.location.includes('Mexico') ? "🏝️ Join the Mazunte Village" : "Villa",
       name: property.name,
@@ -51,6 +57,7 @@ const FeaturedInvestments = () => {
       monthlyRent, // Use real database value
       monthlyProfit, // Calculated from real values
       networkValue, // Proper appreciation model
+      totalReturnMultiple, // 10-year total return multiple
       propertiesSold: property.wholePropertiesSold,
       totalProperties: 15,
       mortgageTerm: "10 years",
@@ -107,7 +114,13 @@ const FeaturedInvestments = () => {
                     <div className="text-sm font-semibold">{property.propertiesSold}/{property.totalProperties} sold</div>
                   </div>
                   
-                  {property.isBlockchain && isConnected && <Badge className="absolute top-4 right-4 bg-green-500/90 text-white backdrop-blur-sm">
+                  {/* Total Return Badge */}
+                  <div className="absolute top-4 right-4 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground backdrop-blur-sm rounded-lg px-3 py-1.5 shadow-lg">
+                    <div className="text-xs font-medium opacity-90 mb-0.5">Total Return</div>
+                    <div className="text-sm font-bold">{property.totalReturnMultiple}x</div>
+                  </div>
+                  
+                  {property.isBlockchain && isConnected && <Badge className="absolute bottom-4 right-4 bg-green-500/90 text-white backdrop-blur-sm">
                       🔗 LIVE
                     </Badge>}
                 </div>
