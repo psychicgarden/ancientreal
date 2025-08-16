@@ -7,6 +7,7 @@ import { calculateInvestorTier, getNextTierThreshold, getTierProgress } from "@/
 
 interface InvestorTierStatusProps {
   totalInvestmentAmount: number;
+  propertyName?: string;
   className?: string;
 }
 
@@ -26,6 +27,7 @@ const tierColors = {
 
 export const InvestorTierStatus: React.FC<InvestorTierStatusProps> = ({ 
   totalInvestmentAmount,
+  propertyName,
   className = ""
 }) => {
   const currentTier = calculateInvestorTier(totalInvestmentAmount);
@@ -59,12 +61,12 @@ export const InvestorTierStatus: React.FC<InvestorTierStatusProps> = ({
         </div>
         
         <div className="space-y-2">
-          <h4 className="font-medium text-sm">Your Tier Benefits:</h4>
+          <h4 className="font-medium text-sm">Your Tier Benefits{propertyName ? ` at ${propertyName}` : ''}:</h4>
           <ul className="space-y-1">
             {currentTier.benefits.map((benefit, index) => (
               <li key={index} className="text-sm text-muted-foreground flex items-start">
                 <span className="text-green-500 mr-2">•</span>
-                {benefit}
+                {propertyName ? benefit.replace('at any owned property', `at ${propertyName}`) : benefit}
               </li>
             ))}
           </ul>

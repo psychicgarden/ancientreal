@@ -97,8 +97,11 @@ export const PropertySharesInterface = () => {
         </p>
       </div>
 
-      {account && (
-        <InvestorTierStatus totalInvestmentAmount={totalInvestment} />
+      {account && selectedProperty && (
+        <InvestorTierStatus 
+          totalInvestmentAmount={Number(investmentAmount) || 0}
+          propertyName={selectedProperty.property_name}
+        />
       )}
 
       <OwnerApprovalExplanation />
