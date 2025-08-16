@@ -151,22 +151,39 @@ All backed by legal SPV structure and professional property management.`
     // Build knowledge base context
     let knowledgeContext = `You are Ancient's AI assistant for the world's first decentralized nation built on fractional real estate ownership.
 
-ARBITRAGE ECONOMICS & CORE VALUE PROPOSITION:
-Our business model is built on a powerful arbitrage opportunity:
-- Build Cost: ~$75K per property
-- Sale Price: $150K per property  
-- Market Comparables: Listed for significantly higher than $150K
-- Developer Problem: Huge markups but struggle to find buyers who can pay 100% down
-- Our Solution: Fractional ownership eliminates the 100% cash requirement barrier
-- Result: Developers get their markup + find buyers, we prove platform demand
+🌎 THE DIGITAL NOMAD CRISIS & MARKET OPPORTUNITY:
+The largest demographic migration in modern history is creating an entirely new asset class that Wall Street hasn't discovered yet.
 
-WHY WE BUILD FIRST (Instead of Just Platform):
-1. Arbitrage Opportunity: Immediate 100% profit margins ($75K → $150K) in undervalued markets
-2. Solve Core Market Problem: Developers have inventory but no 100% cash buyers - we create the buyers through fractional ownership
-3. Proof of Concept: Successful builds demonstrate to developers that our platform solves their liquidity problem
-4. Platform Adoption Strategy: Once developers see our success, they'll want to join the platform
-5. Revenue Generation: Building first creates immediate cash flow to fund platform development
-6. Quality Control: Ensures our first properties meet regenerative standards and build brand reputation
+MASSIVE MARKET SIZE:
+- 50M+ digital nomads today (up 6× from 7M in 2019)
+- Expected to surpass 100M by 2030
+- 35M+ additional North American & European workers intend to go nomadic within two years
+- These are high-earning professionals: senior engineers earning $150K from Tulum, founders building $500K businesses from Bali
+
+THE $250 BILLION FINANCING VOID:
+- Digital nomads spend $900B+ annually on rent with ZERO equity building
+- They're ditching $4K NYC studios for $1.6K art-deco lofts in Tulum - spending half as much but getting receipts instead of deeds
+- Every bank on Earth rejects them: Need 3+ years local credit history, "foreign buyer" rates start at 20%+, cross-border mortgage infrastructure doesn't exist
+- Result: The highest-skilled, highest-earning migration in human history is excluded from homeownership
+
+ANCIENT'S SOLUTION - BORDERLESS MORTGAGE PROTOCOL:
+- Convert "dead rent spend" into fractional, on-chain property deeds
+- First trust-less, borderless mortgage protocol for a borderless world
+- Build equity instead of burning rent receipts
+- Access dream properties in nomad hubs like Tulum, Bali, Portugal
+
+ARBITRAGE ECONOMICS THAT POWERS THE MODEL:
+- Build Cost: ~$75K per property in undervalued nomad destinations
+- Sale Price: $150K per property (still below market comparables)
+- Developer Problem: Huge markups but struggle to find 100% cash buyers
+- Our Solution: Fractional ownership eliminates the 100% cash barrier
+- Perfect Storm: Tokenized real estate market forecast to soar from $310M → $1.4T by 2030
+
+WHY WE BUILD FIRST:
+1. Prove the arbitrage works in target nomad destinations
+2. Demonstrate to developers that we solve their liquidity problem
+3. Create immediate revenue to fund borderless mortgage infrastructure
+4. Establish Ancient as the mortgage rail, deed registry, and town square for post-city civilization
 
 PLATFORM OVERVIEW:
 - Blockchain-based real estate investment platform with two distinct models
