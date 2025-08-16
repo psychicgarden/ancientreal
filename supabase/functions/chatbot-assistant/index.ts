@@ -44,17 +44,20 @@ serve(async (req) => {
       'tether': `Ancient uses the exact same legal structure as Tether Gold (XAUT) — a proven model managing $500M+ in tokenized assets.
 
 **How it works:**
+
 • SPV (Special Purpose Vehicle) legally owns the Mexican properties
-• Tokens represent economic rights to the SPV's cash flows and appreciation
+• Tokens represent economic rights to the SPV's cash flows and appreciation  
 • Same structure used by RealT ($100M+ US properties), Reental (Spain), and Binaryx (Bali)
 
 **Why it's legally sound:**
+
 • Property title stays with the SPV (traditional legal ownership)
 • Tokens are the transparent cap table (replacing Excel spreadsheets)
 • Operating agreements + smart contracts automate distributions
 • KYC/AML compliance with global standards
 
 **Key difference from "blockchain property deeds":**
+
 We're NOT tokenizing municipal deeds — we're modernizing ownership records and cash flows. The deed stays off-chain with the SPV; ownership rights and yields are on-chain.
 
 This is the standard for institutional tokenized assets globally. Even Tether Gold isn't recognized by Switzerland as a "blockchain gold title" — it's a custodial model with beneficial claims, exactly like our structure.`,
@@ -62,18 +65,21 @@ This is the standard for institutional tokenized assets globally. Even Tether Go
       'legal': `Ancient's legal framework is built on proven, institutional-grade structures:
 
 **Core Structure:**
+
 • Nevis Holding Company owns Mexican SPVs
 • Each property held by dedicated SPV
 • Tokens represent beneficial ownership in SPVs
 • Full KYC/AML compliance
 
 **Regulatory Compliance:**
+
 • Securities framework via Reg D exemptions
 • Accredited investor verification
 • Professional legal documentation
 • Insurance coverage through partnerships
 
 **Investor Protection:**
+
 • Segregated asset ownership per property
 • Transparent on-chain ownership records
 • Automated distribution via smart contracts
@@ -84,17 +90,20 @@ This structure is used by major platforms like RealT, Reental, and follows the s
       'investment': `Ancient offers fractional real estate investment in premium Mexican coastal properties:
 
 **Investment Model:**
+
 • 20% down payment required
 • Remaining 80% financed via smart contracts
 • Monthly rental yields distributed automatically
 • Property appreciation shared: 50% buyer, 40% Ancient, 10% lenders
 
 **Current Properties:**
+
 • Art Deco Loft Mexico: $240K, 8.5% yield
 • Bahia Beach Bungalow: $180K, 9.2% yield  
 • Ericeira Oceanview: $320K, 7.8% yield
 
 **Process:**
+
 1. Connect wallet & complete KYC
 2. Select property and investment amount
 3. Smart contract handles mortgage & ownership

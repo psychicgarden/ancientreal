@@ -169,6 +169,11 @@ const ChatBot: React.FC = () => {
     );
   }
 
+  // Simple markdown processor for bold text
+  const processMarkdown = (text: string) => {
+    return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  };
+
   return (
     <Card className="fixed bottom-6 right-6 w-96 h-[600px] z-50 flex flex-col bg-background border shadow-2xl">
       {/* Header */}
@@ -204,7 +209,14 @@ const ChatBot: React.FC = () => {
                   : 'bg-muted text-foreground border'
               }`}
             >
-              <div className="whitespace-pre-wrap">{message.content}</div>
+              <div 
+                className="leading-relaxed"
+                dangerouslySetInnerHTML={{ 
+                  __html: processMarkdown(message.content)
+                    .replace(/\n\n/g, '<br><br>')
+                    .replace(/\n/g, '<br>')
+                }}
+              />
               <div className={`text-xs mt-1 opacity-70`}>
                 {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </div>
