@@ -208,29 +208,71 @@ const BusinessModel = () => {
                     </div>
 
                     {/* Financial Data */}
-                    <div className="p-8 space-y-4">
+                    <div className="p-8 space-y-6">
                       <div>
                         <h3 className="text-2xl font-bold mb-2">{flip.location}</h3>
                         <p className="text-muted-foreground">{flip.units} Units • {flip.structure}</p>
                       </div>
                       
+                      {/* Per-Unit Economics */}
+                      <div className="bg-background/50 rounded-lg p-4">
+                        <div className="text-sm text-muted-foreground mb-2">Per-Unit Economics</div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <div className="text-xs text-muted-foreground">Build Cost</div>
+                            <div className="font-semibold">$75K/unit</div>
+                          </div>
+                          <div>
+                            <div className="text-xs text-muted-foreground">Sale Price</div>
+                            <div className="font-semibold">$135K/unit</div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Total Economics */}
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <div className="text-sm text-muted-foreground">Build Cost</div>
+                          <div className="text-sm text-muted-foreground">Total Build Cost</div>
                           <div className="text-lg font-semibold">${flip.buildCost}M</div>
                         </div>
                         <div>
-                          <div className="text-sm text-muted-foreground">Sales Price</div>
+                          <div className="text-sm text-muted-foreground">Total Sales Price</div>
                           <div className="text-lg font-semibold">${flip.salesPrice}M</div>
                         </div>
-                        <div>
-                          <div className="text-sm text-muted-foreground">Cash In</div>
-                          <div className="text-lg font-semibold text-primary">${flip.cashIn}M</div>
+                      </div>
+
+                      {/* Cash In Breakdown */}
+                      <div className="bg-primary/5 rounded-lg p-4">
+                        <div className="text-sm text-muted-foreground mb-3">Cash In Breakdown</div>
+                        <div className="space-y-2 text-sm">
+                          {(() => {
+                            const financedUnits = Math.floor(flip.units * 0.8); // 80% financed
+                            const cashUnits = flip.units - financedUnits;
+                            const financedCash = financedUnits * 135 * 0.2; // 20% down
+                            const cashPurchases = cashUnits * 135;
+                            return (
+                              <>
+                                <div className="flex justify-between">
+                                  <span>{financedUnits} financed (20% down):</span>
+                                  <span className="font-medium">${(financedCash / 1000).toFixed(0)}K</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>{cashUnits} cash purchases:</span>
+                                  <span className="font-medium">${(cashPurchases / 1000).toFixed(0)}K</span>
+                                </div>
+                                <div className="border-t pt-2 flex justify-between font-semibold text-primary">
+                                  <span>Total Cash In:</span>
+                                  <span>${flip.cashIn}M</span>
+                                </div>
+                              </>
+                            );
+                          })()}
                         </div>
-                        <div>
-                          <div className="text-sm text-muted-foreground">Platform Fee</div>
-                          <div className="text-lg font-semibold text-accent">${flip.platformFee}K</div>
-                        </div>
+                      </div>
+
+                      <div>
+                        <div className="text-sm text-muted-foreground">Platform Fee (3%)</div>
+                        <div className="text-lg font-semibold text-accent">${flip.platformFee}K</div>
                       </div>
                     </div>
 
