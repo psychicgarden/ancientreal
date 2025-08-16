@@ -422,7 +422,37 @@ Countries: We use local SPVs to own property (e.g., Mexico SAPI/Ltda equivalents
 Investor protection: on-chain ownership ledger; automated distributions; tradable positions (liquidity without long lockups); SPV segregation of assets and liabilities.
 BOTTOM LINE: We're not replacing land registries; we're modernizing ownership records and cash flows. Deed = SPV. Token = rights to SPV. Same, proven structure as RealT/Reental/Tether Gold—applied to coastal, high-growth markets.
 
-Answer user questions about the platform, investment process, calculations, and features. When asked about legal structure, compliance, or "how is this legal?", reference the detailed legal tokenization framework above. Be helpful, accurate, and professional.`;
+🏆 COMPETITIVE LANDSCAPE & MARKET POSITIONING:
+
+**Platform Metrics (Current Market Performance)**:
+• Ancient: $4.2M+ AUM, 22.5k+ users, 156 properties, 47% avg ROI
+• Reental: €32M+ AUM, 22.5k+ users, 200+ properties, 12% avg ROI  
+• RealT: $100M+ AUM, 15k+ users, 400+ properties, 9% avg ROI
+• BinaryX: $15M+ AUM, 8k+ users, 50+ properties, 15% avg ROI
+
+**Technical Differentiation (Ancient is the ONLY platform with)**:
+• Smart Contract Security with multi-sig wallets and circuit breakers
+• Oracle Price Feeds for real-time asset valuation
+• Legal Compliance Portal with integrated KYC/AML
+• Multi-Jurisdiction Structure (Nevis + Mexican SPVs)
+• Advanced yield farming and secondary marketplace AMM
+
+**Market Positioning Differences**:
+• Reental: European focus, traditional rentals, limited technical innovation
+• RealT: US suburban rental properties, daily yields, slow linear growth
+• BinaryX: Bali tourism properties, simple tokenization, no advanced features
+• Ancient: Global digital nomad villages, borderless mortgage infrastructure, multi-layer revenue model
+
+**Key Category Differentiator**: Ancient is the ONLY platform solving the $250B digital nomad financing crisis. Others are traditional real estate tokenization platforms focused on suburban rentals. Ancient is building borderless mortgage infrastructure for a borderless world.
+
+**Why Competition Validates the Market**:
+1. Proven demand: $147M+ total AUM across platforms shows strong market
+2. Higher returns: Ancient's 47% ROI vs competitors' 9-15% proves superior model
+3. Technical leadership: Only Ancient has enterprise-grade security and compliance
+4. Unique niche: Digital nomad crisis is unaddressed by suburban rental platforms
+5. Network effects: Building connected nomad villages vs isolated properties
+
+Answer user questions about the platform, investment process, calculations, and features. When asked about legal structure, compliance, or "how is this legal?", reference the detailed legal tokenization framework above. When asked about competition, reference the competitive analysis above. Be helpful, accurate, and professional.`;
 
     // Add current page context
     if (context?.currentPage) {
@@ -488,6 +518,9 @@ FOR RETAIL USER QUESTIONS (how to invest, what properties, user experience):
 
 KEYWORDS THAT TRIGGER BUSINESS MODEL RESPONSES:
 - "7.5M", "investment allocation", "capital deployment", "business model", "how is money spent", "use of funds", "business returns", "scaling", "phases", "investor returns"
+
+KEYWORDS THAT TRIGGER COMPETITIVE ANALYSIS RESPONSES:
+- "competition", "competitors", "competitive", "vs", "compare", "comparison", "other platforms", "reental", "realt", "binaryx", "lofty", "alternative", "why ancient", "differentiation", "market", "crowded", "saturated", "too many"
 
 RESPONSE FORMATTING REQUIREMENTS:
 - Use clean markdown formatting: **text** for bold, ### for headers
