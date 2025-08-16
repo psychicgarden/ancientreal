@@ -38,7 +38,7 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
 
   // Use the provided property data directly (from landing page/database)
   const effectiveProperty = {
-    id: property?.id || "mazunte-mexico-villa",
+    id: property?.id || "7d8cf02f-7de9-47a9-8b63-c02c7a76c7f6", // Art Deco Loft UUID
     name: property?.name || "Art Deco Loft",
     totalValue: property?.totalValue ?? property?.listPrice ?? 129000,
     downPayment: property?.downPayment ?? Math.round((property?.totalValue ?? property?.listPrice ?? 129000) * 0.2),
