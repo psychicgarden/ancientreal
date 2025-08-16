@@ -45,40 +45,77 @@ export const PlatformAnalytics = () => {
     try {
       setError(null);
       
-      // Fetch platform fees and also get user transactions to get property names
-      const [feesResult, transactionsResult] = await Promise.all([
-        supabase
-          .from('platform_fees')
-          .select('*')
-          .order('created_at', { ascending: false }),
-        supabase
-          .from('user_transactions')
-          .select('user_wallet_address, metadata, created_at')
-          .eq('transaction_type', 'platform_fee')
-          .order('created_at', { ascending: false })
-      ]);
+      // First try to fetch from platform_fees table
+      const feesResult = await supabase
+        .from('platform_fees')
+        .select('*')
+        .order('created_at', { ascending: false });
 
       if (feesResult.error) throw feesResult.error;
 
-      const fees = feesResult.data || [];
-      const transactions = transactionsResult.data || [];
-      
-      // Enhance fees with property names from transaction metadata
-      const enhancedFees = fees.map(fee => {
-        const matchingTx = transactions.find(tx => 
-          tx.user_wallet_address === fee.user_wallet_address &&
-          Math.abs(new Date(tx.created_at).getTime() - new Date(fee.created_at).getTime()) < 5000 // Within 5 seconds
-        );
-        
-        const metadata = matchingTx?.metadata as any;
-        return {
-          ...fee,
-          property_name: metadata?.property_name || 'Unknown Property',
-          property_location: metadata?.property_location || 'Unknown Location'
-        };
-      });
+      let platformFeeData = feesResult.data || [];
 
-      setPlatformFees(enhancedFees);
+      // If platform_fees table is empty, fallback to user_transactions
+      if (platformFeeData.length === 0) {
+        console.log('Platform fees table empty, falling back to user_transactions');
+        
+        const { data: transactions, error: txError } = await supabase
+          .from('user_transactions')
+          .select('*')
+          .eq('transaction_type', 'platform_fee')
+          .eq('status', 'completed')
+          .order('created_at', { ascending: false });
+
+        if (txError) throw txError;
+
+        // Transform transaction data to match platform_fees structure
+        platformFeeData = (transactions || []).map(tx => {
+          const metadata = tx.metadata as any;
+          return {
+            id: tx.id,
+            user_wallet_address: tx.user_wallet_address,
+            property_id: metadata?.property_id || null,
+            fee_amount_usd: tx.amount,
+            fee_amount_base: Math.round(tx.amount * 1000000),
+            property_value_usd: metadata?.property_value || (tx.amount / 0.03),
+            fee_percentage: metadata?.fee_percentage || 3.0,
+            transaction_hash: tx.transaction_hash,
+            payment_status: 'completed',
+            created_at: tx.created_at,
+            updated_at: tx.updated_at,
+            property_name: metadata?.property_name || 'Unknown Property',
+            property_location: metadata?.property_location || 'Unknown Location'
+          };
+        });
+
+        console.log('Fallback data loaded:', platformFeeData.length, 'transactions');
+      } else {
+        // Enhance existing platform_fees data with property names from transactions
+        const transactionsResult = await supabase
+          .from('user_transactions')
+          .select('user_wallet_address, metadata, created_at, transaction_hash')
+          .eq('transaction_type', 'platform_fee')
+          .order('created_at', { ascending: false });
+
+        const transactions = transactionsResult.data || [];
+        
+        platformFeeData = platformFeeData.map(fee => {
+          const matchingTx = transactions.find(tx => 
+            tx.transaction_hash === fee.transaction_hash ||
+            (tx.user_wallet_address === fee.user_wallet_address &&
+             Math.abs(new Date(tx.created_at).getTime() - new Date(fee.created_at).getTime()) < 10000)
+          );
+          
+          const metadata = matchingTx?.metadata as any;
+          return {
+            ...fee,
+            property_name: metadata?.property_name || 'Unknown Property',
+            property_location: metadata?.property_location || 'Unknown Location'
+          };
+        });
+      }
+
+      setPlatformFees(platformFeeData);
     } catch (error) {
       console.error('Error fetching platform fees:', error);
       setError(error instanceof Error ? error.message : 'Unknown error');
