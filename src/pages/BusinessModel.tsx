@@ -12,6 +12,7 @@ import villaEriceira from "@/assets/villa-ericeira-portugal.jpg";
 import villaGreece from "@/assets/villa-greece.jpg";
 import villaBali from "@/assets/villa-bali.jpg";
 import penthouseMexico from "@/assets/penthouse-mexico.jpg";
+import ecoSmartCity from "@/assets/eco-smart-city.jpg";
 const flywheelData = [{
   flip: "Flip 1",
   location: "Mazunte, Mexico",
@@ -139,46 +140,69 @@ const BusinessModel = () => {
   const navigate = useNavigate();
   const totalPlatformFees = flywheelData.reduce((sum, flip) => sum + flip.platformFee, 0);
   return <div className="min-h-screen bg-gradient-subtle">
-      {/* Sexy Business Model Hero */}
-      <section className="relative py-32 px-4 bg-gradient-hero">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center">
-            <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-full mb-12 border border-white/20">
-              <div className="text-3xl">🏛</div>
-              <span className="font-semibold text-xl tracking-wide">Ancient: The World's First Network State</span>
-            </div>
-            
-            <h1 className="text-6xl md:text-8xl font-bold mb-8 bg-gradient-to-r from-white via-white/95 to-white/80 bg-clip-text text-transparent leading-tight">
-              Building Infrastructure<br />
-              <span className="text-accent">for a Borderless World</span>
-            </h1>
-            
-            <div className="max-w-5xl mx-auto text-xl text-white/80 space-y-4 leading-relaxed mb-16">
-              
+      {/* Hero Section with Backdrop */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Backdrop Image */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={ecoSmartCity} 
+            alt="Luxury eco village" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/75 to-background/60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-background/20" />
+        </div>
+        
+        {/* Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 text-center">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-3 bg-background/20 backdrop-blur-md text-foreground px-8 py-4 rounded-full mb-8 border border-border/30 shadow-luxury">
+            <div className="text-2xl">🏛</div>
+            <span className="font-semibold text-lg tracking-wide">Ancient: The World's First Network State</span>
+          </div>
+          
+          {/* Main Headlines */}
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 bg-gradient-to-r from-foreground via-foreground/95 to-foreground/80 bg-clip-text text-transparent leading-tight">
+            Building Infrastructure<br />
+            <span className="text-primary">for a Borderless World</span>
+          </h1>
+          
+          {/* Market Reality Section */}
+          <div className="max-w-4xl mx-auto mb-12">
+            <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-primary/90">
+              The Market Reality
+            </h2>
+            <div className="space-y-4 text-lg md:text-xl text-foreground/80 leading-relaxed">
               <p>
-                The first mortgage protocol designed for 100M+ digital nomads who spend $900B annually on rent
-                but are excluded from every traditional mortgage system on Earth.
+                50 million high-earning nomads burn nearly <strong className="text-primary font-bold">$900B annually on rent</strong> because they cannot access global mortgages. We've built the only platform that converts that "dead spend" into fractional, on-chain deeds of dream properties.
               </p>
             </div>
+            
+            {/* Closing Statement */}
+            <div className="mt-8 p-6 bg-background/30 backdrop-blur-sm rounded-2xl border border-border/20">
+              <blockquote className="text-xl md:text-2xl font-medium text-foreground/90 italic">
+                "Borders wrote the last chapter of property; code writes the next."
+              </blockquote>
+            </div>
+          </div>
 
-            {/* Elegant Metrics Row */}
-            <div className="grid md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-              <div className="text-center">
-                <div className="text-4xl font-bold text-white mb-2">$24.53M</div>
-                <div className="text-white/70 text-sm uppercase tracking-wider">Total Returns</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold text-white mb-2">112</div>
-                <div className="text-white/70 text-sm uppercase tracking-wider">Units Built</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold text-white mb-2">6</div>
-                <div className="text-white/70 text-sm uppercase tracking-wider">Countries</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold text-white mb-2">$250B</div>
-                <div className="text-white/70 text-sm uppercase tracking-wider">Market Void</div>
-              </div>
+          {/* Elegant Metrics Row */}
+          <div className="grid md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+            <div className="text-center">
+              <div className="text-4xl font-bold text-foreground mb-2">$24.53M</div>
+              <div className="text-muted-foreground text-sm uppercase tracking-wider">Total Returns</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-foreground mb-2">112</div>
+              <div className="text-muted-foreground text-sm uppercase tracking-wider">Units Built</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-foreground mb-2">6</div>
+              <div className="text-muted-foreground text-sm uppercase tracking-wider">Countries</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-foreground mb-2">$250B</div>
+              <div className="text-muted-foreground text-sm uppercase tracking-wider">Market Void</div>
             </div>
           </div>
         </div>
