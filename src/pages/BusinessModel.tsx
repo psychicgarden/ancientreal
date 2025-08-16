@@ -140,63 +140,103 @@ const BusinessModel = () => {
   const navigate = useNavigate();
   const totalPlatformFees = flywheelData.reduce((sum, flip) => sum + flip.platformFee, 0);
   return <div className="min-h-screen bg-gradient-subtle">
-      {/* Hero Section with Backdrop */}
+      {/* Stunning Soho House Inspired Hero Banner */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Backdrop Image */}
-        <div className="absolute inset-0 z-0">
-          <img src={ecoSmartCity} alt="Luxury eco village" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/75 to-background/60" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-background/20" />
+        {/* Luxury Backdrop with Parallax Effect */}
+        <div className="absolute inset-0 z-0 transform-gpu">
+          <img 
+            src={villaTulum} 
+            alt="Ancient Network State Vision" 
+            className="w-full h-full object-cover scale-105 transition-transform duration-700 ease-out" 
+          />
+          {/* Sophisticated Multi-Layer Overlays */}
+          <div className="absolute inset-0 bg-gradient-to-br from-background/95 via-background/60 to-background/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-background/10" />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5" />
         </div>
         
-        {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-3 bg-background/20 backdrop-blur-md text-foreground px-8 py-4 rounded-full mb-8 border border-border/30 shadow-luxury">
-            <div className="text-2xl">🏛</div>
-            <span className="font-semibold text-lg tracking-wide">Ancient: The World's First Network State</span>
+        {/* Floating Content with Glass Morphism */}
+        <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
+          {/* Premium Badge */}
+          <div className="inline-flex items-center gap-4 bg-background/15 backdrop-blur-xl text-foreground px-10 py-5 rounded-full mb-12 border border-border/20 shadow-luxury animate-fade-in">
+            <div className="w-3 h-3 rounded-full bg-gradient-primary animate-pulse"></div>
+            <span className="font-medium text-xl tracking-wide">Ancient: The World's First Network State</span>
           </div>
           
-          {/* Main Headlines */}
-          
-          
-          {/* Market Reality Section */}
-          <div className="max-w-4xl mx-auto mb-12">
-            <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-primary/90">
-              The Market Reality
-            </h2>
-            <div className="space-y-4 text-lg md:text-xl text-foreground/80 leading-relaxed">
-              <p>
-                50 million high-earning nomads burn nearly <strong className="text-primary font-bold">$900B annually on rent</strong> because they cannot access global mortgages. We've built the only platform that converts that "dead spend" into fractional, on-chain deeds of dream properties.
+          {/* Dramatic Headlines */}
+          <div className="space-y-8 mb-16">
+            <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold leading-none tracking-tight">
+              <span className="block text-foreground mb-2">Building</span>
+              <span className="block bg-gradient-primary bg-clip-text text-transparent">Infrastructure</span>
+              <span className="block text-foreground/90 text-5xl md:text-6xl lg:text-7xl mt-4">for a Borderless World</span>
+            </h1>
+          </div>
+
+          {/* The Problem Narrative */}
+          <div className="max-w-5xl mx-auto mb-16">
+            <div className="bg-background/10 backdrop-blur-lg rounded-3xl border border-border/20 p-8 md:p-12 shadow-luxury">
+              <p className="text-2xl md:text-3xl font-light leading-relaxed text-foreground/90 mb-6">
+                50 million high-earning nomads burn <span className="font-bold text-accent">$900B annually</span> on dead rent because no bank offers global mortgages.
               </p>
-            </div>
-            
-            {/* Closing Statement */}
-            <div className="mt-8 p-6 bg-background/30 backdrop-blur-sm rounded-2xl border border-border/20">
-              <blockquote className="text-xl md:text-2xl font-medium text-foreground/90 italic">
-                "Borders wrote the last chapter of property; code writes the next."
-              </blockquote>
+              <p className="text-xl md:text-2xl text-foreground/80 mb-8">
+                We've built the only platform that converts that dead spend into fractional, on-chain deeds of dream properties.
+              </p>
+              
+              {/* Power Quote */}
+              <div className="border-t border-border/20 pt-6">
+                <blockquote className="text-2xl md:text-3xl font-medium text-foreground/95 italic">
+                  "Borders wrote the last chapter of property;<br/>code writes the next."
+                </blockquote>
+              </div>
             </div>
           </div>
 
-          {/* Elegant Metrics Row */}
-          <div className="grid md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-            <div className="text-center">
-              <div className="text-4xl font-bold text-foreground mb-2">$24.53M</div>
-              <div className="text-muted-foreground text-sm uppercase tracking-wider">Total Returns</div>
+          {/* Impactful Metrics - Luxury Layout */}
+          <div className="grid md:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            <div className="group">
+              <div className="bg-background/10 backdrop-blur-lg rounded-2xl border border-border/20 p-6 hover:bg-background/20 transition-all duration-300 hover:scale-105">
+                <div className="text-5xl md:text-6xl font-bold text-accent mb-3">50M+</div>
+                <div className="text-muted-foreground text-sm uppercase tracking-wider font-medium">Global Nomads</div>
+              </div>
             </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-foreground mb-2">112</div>
-              <div className="text-muted-foreground text-sm uppercase tracking-wider">Units Built</div>
+            <div className="group">
+              <div className="bg-background/10 backdrop-blur-lg rounded-2xl border border-border/20 p-6 hover:bg-background/20 transition-all duration-300 hover:scale-105">
+                <div className="text-5xl md:text-6xl font-bold text-accent mb-3">$900B</div>
+                <div className="text-muted-foreground text-sm uppercase tracking-wider font-medium">Dead Spend</div>
+              </div>
             </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-foreground mb-2">6</div>
-              <div className="text-muted-foreground text-sm uppercase tracking-wider">Countries</div>
+            <div className="group">
+              <div className="bg-background/10 backdrop-blur-lg rounded-2xl border border-border/20 p-6 hover:bg-background/20 transition-all duration-300 hover:scale-105">
+                <div className="text-5xl md:text-6xl font-bold text-accent mb-3">6</div>
+                <div className="text-muted-foreground text-sm uppercase tracking-wider font-medium">Countries</div>
+              </div>
             </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-foreground mb-2">$250B</div>
-              <div className="text-muted-foreground text-sm uppercase tracking-wider">Market Void</div>
+            <div className="group">
+              <div className="bg-background/10 backdrop-blur-lg rounded-2xl border border-border/20 p-6 hover:bg-background/20 transition-all duration-300 hover:scale-105">
+                <div className="text-5xl md:text-6xl font-bold text-accent mb-3">Zero</div>
+                <div className="text-muted-foreground text-sm uppercase tracking-wider font-medium">Solutions</div>
+              </div>
             </div>
+          </div>
+
+          {/* Elegant CTA */}
+          <div className="mt-16">
+            <Button 
+              variant="luxury" 
+              size="lg" 
+              className="text-xl px-12 py-6 rounded-full font-medium"
+              onClick={() => navigate('/investors')}
+            >
+              Join the Movement
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div className="w-6 h-10 border-2 border-foreground/30 rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-foreground/30 rounded-full mt-2 animate-pulse"></div>
           </div>
         </div>
       </section>
@@ -273,18 +313,6 @@ const BusinessModel = () => {
               </Card>)}
           </div>
 
-          <Card className="bg-gradient-accent/10 border-accent/20">
-            <CardContent className="p-8 text-center">
-              <h3 className="text-2xl font-bold mb-4">The Market Reality</h3>
-              <p className="text-lg text-muted-foreground mb-6 max-w-4xl mx-auto">
-                Millions of high-earning nomads burn nearly <strong className="text-accent">$1 trillion annually on rent</strong> because they cannot access global mortgages. 
-                We've built the only platform that converts that "dead spend" into fractional, on-chain deeds of dream properties.
-              </p>
-              <div className="text-xl font-medium text-accent">
-                Borders wrote the last chapter of property; code writes the next.
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </section>
 
