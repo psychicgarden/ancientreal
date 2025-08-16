@@ -67,7 +67,7 @@ export const MortgageGroupsInterface = () => {
         current_speculation_price: prop.totalValue,
         monthly_base_rent: prop.monthlyRent,
         group_size_limit: 6, // Fixed group size for all properties
-        down_payment_per_person: prop.downPayment / 6, // Divide 40% down payment by 6 people
+        down_payment_per_person: prop.downPayment / 6, // Divide 20% down payment by 6 people
         mortgage_down_payment_total: prop.downPayment,
         bedrooms: 3, // Default values for display
         bathrooms: 2,
