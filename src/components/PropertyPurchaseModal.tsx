@@ -134,7 +134,7 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
         throw platformFeeError;
       }
 
-      // Insert platform fee record for analytics
+      // Insert platform fee record for analytics with property identification
       const { error: platformFeeRecordError } = await supabase
         .from("platform_fees")
         .insert([{
@@ -144,17 +144,23 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
           property_value_usd: purchasePrice,
           fee_percentage: 3.0,
           payment_status: opts.status,
-          transaction_hash: platformFeeTxHashValue
+          transaction_hash: platformFeeTxHashValue,
+          property_id: effectiveProperty.id || null
         }]);
 
       if (platformFeeRecordError) {
         console.error("Failed to insert platform fee record:", platformFeeRecordError);
       }
 
-      console.log("Successfully inserted all transactions:", {
+      console.log("🏠 AUDIT: Successfully inserted all transactions to database:", {
         downPayment: actualDownPayment,
         platformFee,
-        totalUpfrontCost
+        totalUpfrontCost,
+        propertyName: effectiveProperty.name,
+        propertyLocation: effectiveProperty.location,
+        mortgageId: opts.mortgageId,
+        downPaymentTxHash: txHashValue,
+        platformFeeTxHash: platformFeeTxHashValue
       });
     } catch (error) {
       console.error("Failed to save purchase transactions:", error);
@@ -187,18 +193,33 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
     }
 
     try {
-      console.log("Starting purchase for:", effectiveProperty.name);
+      console.log("🏠 AUDIT: Starting purchase for:", effectiveProperty.name);
       const purchasePrice = Number(effectiveProperty.totalValue || 150000);
       const actualDownPayment = purchasePrice * 0.2;
       const platformFee = purchasePrice * 0.03;
       
+      console.log("🏠 AUDIT: Purchase details:", {
+        property: effectiveProperty.name,
+        purchasePrice,
+        actualDownPayment,
+        platformFee,
+        totalUpfront: actualDownPayment + platformFee
+      });
+      
       // Execute both down payment and platform fee transactions
       const result = await purchaseProperty(actualDownPayment, platformFee);
+      console.log("🏠 AUDIT: Purchase result from wallet:", result);
 
       // Extract transaction hashes from the result
       const mortgageId = result?.mortgageId;
       const downPaymentTxHash = result?.downPaymentTx?.hash;
       const platformFeeTxHash = result?.platformFeeTx?.hash;
+
+      console.log("🏠 AUDIT: Transaction hashes:", {
+        mortgageId,
+        downPaymentTxHash,
+        platformFeeTxHash
+      });
 
       await savePurchaseToSupabase({
         status: "completed",
@@ -206,6 +227,8 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
         txHash: downPaymentTxHash,
         platformFeeTxHash,
       });
+
+      console.log("🏠 AUDIT: Successfully saved to Supabase, redirecting to portfolio");
 
       toast({
         title: "Purchase Successful!",
@@ -218,7 +241,7 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
       
       onClose();
     } catch (error) {
-      console.error("Purchase failed, saving pending transaction:", error);
+      console.error("🏠 AUDIT: Purchase failed, saving pending transaction:", error);
       await savePurchaseToSupabase({
         status: "pending",
       });

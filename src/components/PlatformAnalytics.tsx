@@ -21,6 +21,9 @@ interface PlatformFeeData {
   payment_status: string;
   created_at: string;
   property_value_usd: number;
+  property_id?: string;
+  property_name?: string;
+  property_location?: string;
 }
 
 interface DailyFeeData {
@@ -41,14 +44,41 @@ export const PlatformAnalytics = () => {
   const fetchPlatformFees = async () => {
     try {
       setError(null);
-      const { data, error } = await supabase
-        .from('platform_fees')
-        .select('*')
-        .order('created_at', { ascending: false });
+      
+      // Fetch platform fees and also get user transactions to get property names
+      const [feesResult, transactionsResult] = await Promise.all([
+        supabase
+          .from('platform_fees')
+          .select('*')
+          .order('created_at', { ascending: false }),
+        supabase
+          .from('user_transactions')
+          .select('user_wallet_address, metadata, created_at')
+          .eq('transaction_type', 'platform_fee')
+          .order('created_at', { ascending: false })
+      ]);
 
-      if (error) throw error;
+      if (feesResult.error) throw feesResult.error;
 
-      setPlatformFees(data || []);
+      const fees = feesResult.data || [];
+      const transactions = transactionsResult.data || [];
+      
+      // Enhance fees with property names from transaction metadata
+      const enhancedFees = fees.map(fee => {
+        const matchingTx = transactions.find(tx => 
+          tx.user_wallet_address === fee.user_wallet_address &&
+          Math.abs(new Date(tx.created_at).getTime() - new Date(fee.created_at).getTime()) < 5000 // Within 5 seconds
+        );
+        
+        const metadata = matchingTx?.metadata as any;
+        return {
+          ...fee,
+          property_name: metadata?.property_name || 'Unknown Property',
+          property_location: metadata?.property_location || 'Unknown Location'
+        };
+      });
+
+      setPlatformFees(enhancedFees);
     } catch (error) {
       console.error('Error fetching platform fees:', error);
       setError(error instanceof Error ? error.message : 'Unknown error');
@@ -325,7 +355,7 @@ export const PlatformAnalytics = () => {
                     <div>
                       <p className="font-medium">${fee.fee_amount_usd.toLocaleString()}</p>
                       <p className="text-sm text-muted-foreground">
-                        {fee.user_wallet_address.slice(0, 6)}...{fee.user_wallet_address.slice(-4)}
+                        {fee.property_name || 'Unknown Property'} • {fee.user_wallet_address.slice(0, 6)}...{fee.user_wallet_address.slice(-4)}
                       </p>
                     </div>
                   </div>

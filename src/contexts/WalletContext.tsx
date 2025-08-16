@@ -336,19 +336,40 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       if (isDemoMode) {
         toast({
           title: "Processing Property Purchase (Demo)",
-          description: `Processing down payment of $${downPayment.toLocaleString()}...`,
+          description: `Processing down payment of $${downPayment.toLocaleString()}${platformFee ? ` and platform fee of $${platformFee.toLocaleString()}` : ''}...`,
         });
 
         await new Promise(resolve => setTimeout(resolve, 2000));
         
         const mockMortgageId = `demo_${Date.now()}`;
+        const timestamp = Date.now();
+        
+        // Create mock transaction objects that match the expected format
+        const mockDownPaymentTx = {
+          hash: `0xdemo_downpayment_${timestamp}`,
+          blockNumber: 123456,
+          gasUsed: "21000",
+          status: 1
+        };
+        
+        const mockPlatformFeeTx = platformFee && platformFee > 0 ? {
+          hash: `0xdemo_platformfee_${timestamp}`,
+          blockNumber: 123456,
+          gasUsed: "21000", 
+          status: 1
+        } : null;
 
         toast({
           title: "Property Purchase Successful! 🏡 (Demo)",
-          description: `Demo mortgage created with ID: ${mockMortgageId}`,
+          description: `Demo mortgage created with ID: ${mockMortgageId}${platformFee ? ` | Platform fee: $${platformFee.toLocaleString()}` : ''}`,
         });
 
-        return { success: true, mortgageId: mockMortgageId };
+        return { 
+          success: true, 
+          mortgageId: mockMortgageId,
+          downPaymentTx: mockDownPaymentTx,
+          platformFeeTx: mockPlatformFeeTx
+        };
       }
 
       // Execute down payment transaction
