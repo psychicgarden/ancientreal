@@ -63,14 +63,14 @@ const ChatBot: React.FC = () => {
 
   const getContextualGreeting = (): string => {
     const pageGreetings: Record<string, string> = {
-      '/': "Welcome to Mazunte! 🏖️ I'm here to help you understand our fractional real estate investment platform. You can invest in premium properties with just 20% down payment and earn rental yields. What would you like to know?",
-      '/investor-portal': "Ready to start investing? 💰 I can guide you through our available properties, investment requirements, and the purchase process. Each property offers attractive rental yields and potential appreciation.",
+      '/': "Welcome to Ancient — the world's first decentralized nation. I'm here to guide you through our pioneering approach to fractional real estate ownership, where community meets capital in the most sought-after destinations. How may I assist you today?",
+      '/investor-portal': "Ready to join our investment community? I'll walk you through curated opportunities that blend financial returns with cultural immersion. Each property has been selected for both yield potential and connection to our global network.",
       '/portfolio': isConnected 
-        ? "Let me help you understand your portfolio performance! 📊 I can explain your mortgage payments, rental yields, equity growth, and trading options."
-        : "To view your portfolio, you'll need to connect your wallet first. I can explain how portfolio tracking works and what metrics you'll see once connected.",
-      '/banking': "Exploring our banking features? 🏦 I can explain collateral lending, yield farming with your property equity, and how to optimize your returns while managing risk.",
-      '/community': "Welcome to the village! 🌴 I can tell you about village citizenship, community governance, and how property ownership connects you to our global network.",
-      '/legal-portal': "Have questions about our legal structure? ⚖️ I can explain our compliance framework, legal documentation, insurance coverage, and regulatory approach."
+        ? "Let's review your position within our decentralized nation. I can detail your portfolio performance, yield distributions, and opportunities to expand your involvement in our community."
+        : "To access your portfolio, please connect your wallet. Once connected, you'll see how your investments contribute to our shared vision of modern nomadic living.",
+      '/banking': "Exploring our financial ecosystem? I can explain how to leverage your property equity, optimize yields, and participate in our innovative lending protocols that power the decentralized nation.",
+      '/community': "Welcome to the heart of Ancient — our global community of digital nomads and conscious investors. I can share how property ownership grants you citizenship and access to our worldwide network.",
+      '/legal-portal': "Our legal framework represents years of careful structuring to ensure compliance while pioneering new models of ownership. I can explain how we've created a legally sound foundation for the future of property investment."
     };
 
     return pageGreetings[location.pathname] || pageGreetings['/'];
@@ -119,11 +119,20 @@ const ChatBot: React.FC = () => {
 
     } catch (error) {
       console.error('Chat error:', error);
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
-        variant: "destructive",
-      });
+      
+      // Show specific error message for API quota issues
+      const errorMessage = error.message?.includes('429') || error.message?.includes('quota') 
+        ? "Our AI assistant is currently at capacity. Please try again in a few moments."
+        : "I'm temporarily unavailable. Please try again shortly.";
+        
+      const assistantMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: errorMessage,
+        timestamp: new Date()
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
     } finally {
       setIsLoading(false);
     }
@@ -158,7 +167,7 @@ const ChatBot: React.FC = () => {
       <div className="flex items-center justify-between p-4 border-b bg-primary text-primary-foreground rounded-t-lg">
         <div className="flex items-center gap-2">
           <MessageCircle className="h-5 w-5" />
-          <span className="font-semibold">Mazunte Assistant</span>
+          <span className="font-semibold">Ancient</span>
           <Badge variant="secondary" className="bg-primary-foreground/20 text-primary-foreground text-xs">
             AI
           </Badge>

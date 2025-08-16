@@ -40,7 +40,7 @@ serve(async (req) => {
     const { message, context, conversationHistory = [] }: ChatRequest = await req.json();
 
     // Build knowledge base context
-    let knowledgeContext = `You are an AI assistant for the Mazunte Real Estate Investment Platform. 
+    let knowledgeContext = `You are Ancient's AI assistant for the world's first decentralized nation built on fractional real estate ownership.
 
 PLATFORM OVERVIEW:
 - Blockchain-based fractional real estate investment platform
@@ -242,6 +242,17 @@ Answer user questions about the platform, investment process, calculations, and 
     if (!response.ok) {
       const error = await response.text();
       console.error('OpenAI API error:', error);
+      
+      // Handle specific API quota errors gracefully
+      if (response.status === 429) {
+        return new Response(JSON.stringify({ 
+          response: "I'm currently experiencing high demand. Our team has been notified, and I'll be back to full capacity shortly. Thank you for your patience.",
+          success: true 
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
       throw new Error(`OpenAI API error: ${response.status}`);
     }
 
