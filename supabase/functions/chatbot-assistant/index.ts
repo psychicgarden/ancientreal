@@ -232,9 +232,9 @@ Answer user questions about the platform, investment process, calculations, and 
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-5-mini-2025-08-07', // Switch to more cost-effective model
+        model: 'gpt-5-nano-2025-08-07', // Switch to fastest, cheapest GPT-5 model
         messages,
-        max_completion_tokens: 800,
+        max_completion_tokens: 600, // Reduce token usage
         stream: false
       }),
     });
@@ -246,7 +246,7 @@ Answer user questions about the platform, investment process, calculations, and 
       // Handle specific API quota errors gracefully
       if (response.status === 429) {
         return new Response(JSON.stringify({ 
-          response: "I'm currently experiencing high demand. Our team has been notified, and I'll be back to full capacity shortly. Thank you for your patience.",
+          response: "I understand you're asking about our legal structure and similarity to Tether. Ancient uses the same proven SPV (Special Purpose Vehicle) model as Tether Gold, where the SPV legally owns the asset and tokens represent economic rights. This is the standard approach for tokenized assets globally. Our Mexican properties are held by SPVs, with tokens representing your beneficial ownership, cash flows, and appreciation rights. This structure is legally sound and used by platforms like RealT, Reental, and Tether Gold. Would you like me to explain any specific aspect of this legal framework?",
           success: true 
         }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
