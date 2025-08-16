@@ -98,20 +98,23 @@ const revenueStreams = [
   {
     title: "Platform Fees",
     amount: "$453.6K",
-    description: "3% transaction fees from all property sales",
-    timeline: "Immediate capture"
+    description: "Infrastructure revenue for serving nomad economy",
+    timeline: "Immediate capture",
+    icon: "🏛"
   },
   {
     title: "Mortgage Interest",
     amount: "$7.46M",
-    description: "8% annual yield on $9.324M mortgage portfolio",
-    timeline: "10-year stream"
+    description: "8% yield serving the $250B cross-border lending void",
+    timeline: "10-year stream",
+    icon: "🌐"
   },
   {
     title: "ARW Appreciation",
     amount: "$16.62M",
-    description: "50% share of $33.24M total property appreciation",
-    timeline: "10-year capture"
+    description: "Capturing nomad wealth lost to rent into property equity",
+    timeline: "10-year capture",
+    icon: "🚀"
   }
 ];
 
@@ -130,8 +133,88 @@ const BusinessModel = () => {
 
   return (
     <div className="min-h-screen bg-gradient-subtle">
-      {/* Hero Section - Investor Snapshot */}
-      <section className="relative py-20 px-4">
+      {/* Manifesto Hero Section */}
+      <section className="relative py-24 px-4 bg-gradient-hero">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-accent/10 text-accent px-6 py-3 rounded-full mb-8">
+              <div className="text-2xl">🏛</div>
+              <span className="font-medium text-lg">Ancient: The World's First Network State</span>
+            </div>
+            <h1 className="text-4xl md:text-6xl font-bold mb-8 text-foreground leading-tight">
+              In a world where people travel freely<br />
+              <span className="bg-gradient-primary bg-clip-text text-transparent">but own nothing</span>,<br />
+              Ancient changes everything.
+            </h1>
+            <div className="max-w-4xl mx-auto text-lg text-muted-foreground space-y-6 leading-relaxed">
+              <p>
+                <strong className="text-primary">🌎 100M+ Digital Nomads by 2030, Zero Mortgage Infrastructure</strong>
+              </p>
+              <p>
+                The largest demographic migration in modern history is creating an entirely new asset class that Wall Street hasn't discovered yet. 
+                As 50+ million high-earning nomads abandon geographic constraints for location-independent lifestyles, they're ditching their $4k NYC studio flats 
+                for $1,600 art-deco lofts in Tulum, spending half as much and living a life their parents only dreamed of.
+              </p>
+              <p className="text-accent font-medium">
+                Since 2019 the number of digital nomads has exploded 6X — and is expected to surpass 100M by 2030.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Now Section */}
+      <section className="py-20 px-4 bg-background">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              🌪 Perfect Storm: <span className="text-primary">Why Now?</span>
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Nine macro trends converging to create the largest financing void in modern history
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 mb-12">
+            {[
+              { icon: "📈", title: "Digital-Nomad Boom", stat: "50M → 100M+", desc: "6× growth since 2019, accelerating toward 100M+ by 2030" },
+              { icon: "🧳", title: "Massive Pipeline", stat: "35M+", desc: "North-American & European workers intend to go nomadic within two years" },
+              { icon: "💻", title: "Remote Work Default", stat: "80%", desc: "White-collar staff work hybrid/remote, severing income from geography" },
+              { icon: "🏠", title: "Affordability Crisis", stat: "8× Income", desc: "Median home prices vs. household income—worst ratio in four decades" },
+              { icon: "🕰", title: "Delayed Homeownership", stat: "29 → 36", desc: "U.S. first-time-buyer age climbed 7 years in a decade" },
+              { icon: "💰", title: "Millennial Capital", stat: "$5T Liquid", desc: "Massive wealth, yet <50% own homes due to geographic constraints" },
+              { icon: "⚖", title: "Tokenized Real Estate", stat: "$310M → $1.4T", desc: "Market forecast to surge 4.5× by 2030" },
+              { icon: "🗺", title: "Visa Tailwinds", stat: "50+ Countries", desc: "Issue Digital-Nomad Visas (from just 6 in 2019)" },
+              { icon: "💳", title: "Cross-border Void", stat: "$250B", desc: "Capital nomads want but banks refuse to lend" }
+            ].map((trend) => (
+              <Card key={trend.title} className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-card transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="text-3xl mb-3">{trend.icon}</div>
+                  <div className="text-2xl font-bold text-primary mb-2">{trend.stat}</div>
+                  <h3 className="font-semibold mb-2">{trend.title}</h3>
+                  <p className="text-sm text-muted-foreground">{trend.desc}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <Card className="bg-gradient-accent/10 border-accent/20">
+            <CardContent className="p-8 text-center">
+              <h3 className="text-2xl font-bold mb-4">The Market Reality</h3>
+              <p className="text-lg text-muted-foreground mb-6 max-w-4xl mx-auto">
+                Millions of high-earning nomads burn nearly <strong className="text-accent">$1 trillion annually on rent</strong> because they cannot access global mortgages. 
+                We've built the only platform that converts that "dead spend" into fractional, on-chain deeds of dream properties.
+              </p>
+              <div className="text-xl font-medium text-accent">
+                Borders wrote the last chapter of property; code writes the next.
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* Business Model Hero */}
+      <section className="relative py-20 px-4 bg-gradient-subtle">
         <div className="max-w-7xl mx-auto text-center">
           <Badge variant="outline" className="mb-6 text-lg px-6 py-2">
             Development Flywheel Model
@@ -140,7 +223,7 @@ const BusinessModel = () => {
             6 Locations, 4 Flips, 9× ROI
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-12">
-            Strategic geographic sequencing turns $2.75M into $24.53M through coordinated international real estate development
+            Building mortgage infrastructure for 100M+ nomads through strategic real estate development flywheel
           </p>
           
           {/* Key Metrics */}
@@ -324,16 +407,17 @@ const BusinessModel = () => {
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Three Revenue Streams</h2>
+            <h2 className="text-4xl font-bold mb-4">Closing the $250B Financing Void</h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Multiple income sources create resilient, compound returns over the 10-year investment horizon
+              Three revenue streams that transform nomad rent-burn into investable real estate infrastructure
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             {revenueStreams.map((stream) => (
-              <Card key={stream.title} className="bg-card/80 backdrop-blur-sm border-border/50">
+              <Card key={stream.title} className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-luxury transition-all duration-300">
                 <CardContent className="p-8 text-center">
+                  <div className="text-4xl mb-4">{stream.icon}</div>
                   <div className="text-3xl font-bold text-primary mb-2">{stream.amount}</div>
                   <h3 className="text-xl font-semibold mb-3">{stream.title}</h3>
                   <p className="text-muted-foreground mb-4">{stream.description}</p>
@@ -450,20 +534,44 @@ const BusinessModel = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-20 px-4 text-center">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-4xl font-bold mb-4">Ready to Join the Flywheel?</h2>
-          <p className="text-xl text-muted-foreground mb-8">
-            Strategic international development with institutional-grade legal structures and proven economics
-          </p>
-          <Button 
-            size="lg" 
-            onClick={() => navigate('/investor-portal')}
-            className="text-lg px-8 py-6"
-          >
-            Access Investor Portal
-            <ArrowRight className="ml-2 w-5 h-5" />
-          </Button>
+      <section className="py-20 px-4 text-center bg-gradient-primary/5">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-8">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Join the Post-City Revolution
+            </h2>
+            <p className="text-xl text-muted-foreground mb-6 max-w-3xl mx-auto">
+              Ancient isn't another booking app—it's the mortgage rail, the deed registry, and the town square 
+              for a post-city civilization.
+            </p>
+            <div className="text-lg font-medium text-accent mb-8">
+              🌍 Borderless Mortgages, Regenerative Villages
+            </div>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button 
+              size="lg" 
+              onClick={() => navigate('/investor-portal')}
+              className="text-lg px-8 py-6"
+            >
+              Access Investor Portal
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+            <Button 
+              variant="outline" 
+              size="lg" 
+              onClick={() => navigate('/portfolio')}
+              className="text-lg px-8 py-6"
+            >
+              Explore Properties
+              <Globe className="ml-2 w-5 h-5" />
+            </Button>
+          </div>
+          
+          <div className="mt-8 text-sm text-muted-foreground">
+            Building infrastructure for 100M+ digital nomads, one village at a time
+          </div>
         </div>
       </section>
     </div>
