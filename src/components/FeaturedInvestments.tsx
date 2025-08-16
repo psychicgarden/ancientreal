@@ -158,6 +158,12 @@ const FeaturedInvestments = () => {
                               11.3x total return
                             </div>
                           </div>
+                          <div className="flex flex-col items-end">
+                            <div className="text-sm text-muted-foreground uppercase tracking-wide mb-1">10-Year Village Value</div>
+                            <div className="text-2xl font-bold bg-gradient-to-r from-primary via-primary/80 to-accent bg-clip-text text-transparent">
+                              ${property.networkValue.toLocaleString()}
+                            </div>
+                          </div>
                           <div className="flex justify-between items-start pt-2">
                             <span className="text-sm text-muted-foreground">Access:</span>
                             <div className="text-right">
