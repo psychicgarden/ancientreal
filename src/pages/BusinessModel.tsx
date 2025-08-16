@@ -158,44 +158,45 @@ const BusinessModel = () => {
           </div>
           
           {/* Main Headlines */}
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-foreground">
+            Building Infrastructure for a <span className="text-primary">Borderless World</span>
+          </h1>
           
-          
-          {/* Market Reality Section */}
-          <div className="max-w-4xl mx-auto mb-12">
-            <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-primary/90">
-              The Market Reality
-            </h2>
-            <div className="space-y-4 text-lg md:text-xl text-foreground/80 leading-relaxed">
-              <p>
-                50 million high-earning nomads burn nearly <strong className="text-primary font-bold">$900B annually on rent</strong> because they cannot access global mortgages. We've built the only platform that converts that "dead spend" into fractional, on-chain deeds of dream properties.
-              </p>
-            </div>
+          {/* Problem Statement */}
+          <div className="max-w-5xl mx-auto mb-12 space-y-6">
+            <p className="text-xl md:text-2xl text-foreground/90 leading-relaxed">
+              50 million high-earning nomads burn <strong className="text-primary font-bold">$900B annually on rent</strong>, 
+              trapped in a cycle of paying for places they'll never own.
+            </p>
+            <p className="text-lg md:text-xl text-foreground/80">
+              We've built the only platform that converts that "dead spend" into fractional, on-chain deeds of dream properties.
+            </p>
             
             {/* Closing Statement */}
-            <div className="mt-8 p-6 bg-background/30 backdrop-blur-sm rounded-2xl border border-border/20">
-              <blockquote className="text-xl md:text-2xl font-medium text-foreground/90 italic">
+            <div className="mt-8 p-6 bg-background/20 backdrop-blur-md rounded-2xl border border-border/30 shadow-luxury">
+              <blockquote className="text-xl md:text-2xl font-medium text-foreground italic">
                 "Borders wrote the last chapter of property; code writes the next."
               </blockquote>
             </div>
           </div>
 
-          {/* Elegant Metrics Row */}
-          <div className="grid md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-            <div className="text-center">
-              <div className="text-4xl font-bold text-foreground mb-2">$24.53M</div>
-              <div className="text-muted-foreground text-sm uppercase tracking-wider">Total Returns</div>
+          {/* Story Metrics Row */}
+          <div className="grid md:grid-cols-4 gap-8 max-w-5xl mx-auto">
+            <div className="text-center group">
+              <div className="text-4xl md:text-5xl font-bold text-primary mb-2 group-hover:scale-105 transition-transform">50M+</div>
+              <div className="text-muted-foreground text-sm uppercase tracking-wider">Digital Nomads</div>
             </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-foreground mb-2">112</div>
-              <div className="text-muted-foreground text-sm uppercase tracking-wider">Units Built</div>
+            <div className="text-center group">
+              <div className="text-4xl md:text-5xl font-bold text-accent mb-2 group-hover:scale-105 transition-transform">$900B</div>
+              <div className="text-muted-foreground text-sm uppercase tracking-wider">Dead Spend</div>
             </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-foreground mb-2">6</div>
+            <div className="text-center group">
+              <div className="text-4xl md:text-5xl font-bold text-gold mb-2 group-hover:scale-105 transition-transform">6</div>
               <div className="text-muted-foreground text-sm uppercase tracking-wider">Countries</div>
             </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-foreground mb-2">$250B</div>
-              <div className="text-muted-foreground text-sm uppercase tracking-wider">Market Void</div>
+            <div className="text-center group">
+              <div className="text-4xl md:text-5xl font-bold text-destructive mb-2 group-hover:scale-105 transition-transform">Zero</div>
+              <div className="text-muted-foreground text-sm uppercase tracking-wider">Cross-Border Mortgages</div>
             </div>
           </div>
         </div>
@@ -275,13 +276,13 @@ const BusinessModel = () => {
 
           <Card className="bg-gradient-accent/10 border-accent/20">
             <CardContent className="p-8 text-center">
-              <h3 className="text-2xl font-bold mb-4">The Market Reality</h3>
+              <h3 className="text-2xl font-bold mb-4">The Solution</h3>
               <p className="text-lg text-muted-foreground mb-6 max-w-4xl mx-auto">
-                Millions of high-earning nomads burn nearly <strong className="text-accent">$1 trillion annually on rent</strong> because they cannot access global mortgages. 
-                We've built the only platform that converts that "dead spend" into fractional, on-chain deeds of dream properties.
+                Ancient provides the missing infrastructure: <strong className="text-accent">cross-border mortgages for nomads</strong>, 
+                converting rent payments into property equity through tokenized real estate and DeFi lending.
               </p>
               <div className="text-xl font-medium text-accent">
-                Borders wrote the last chapter of property; code writes the next.
+                Finally, a way to build wealth while living everywhere.
               </div>
             </CardContent>
           </Card>
