@@ -12,127 +12,133 @@ import villaEriceira from "@/assets/villa-ericeira-portugal.jpg";
 import villaGreece from "@/assets/villa-greece.jpg";
 import villaBali from "@/assets/villa-bali.jpg";
 import penthouseMexico from "@/assets/penthouse-mexico.jpg";
-
-const flywheelData = [
-  {
-    flip: "Flip 1",
-    location: "Mazunte, Mexico",
-    flag: "🇲🇽",
-    units: 15,
-    buildCost: 1.125,
-    salesPrice: 2.025,
-    cashIn: 0.81,
-    remaining: 2.435,
-    platformFee: 60.75,
-    image: villaTulum,
-    structure: "Mexican SAPI + Fideicomiso"
-  },
-  {
-    flip: "Flip 2",
-    location: "Bahia, Brazil",
-    flag: "🇧🇷",
-    units: 21,
-    buildCost: 1.575,
-    salesPrice: 2.835,
-    cashIn: 1.107,
-    remaining: 1.967,
-    platformFee: 85.05,
-    image: beachChalet,
-    structure: "Brazilian LTDA"
-  },
-  {
-    flip: "Flip 3A",
-    location: "Corfu, Greece",
-    flag: "🇬🇷",
-    units: 16,
-    buildCost: 1.2,
-    salesPrice: 2.16,
-    cashIn: 0.864,
-    remaining: 1.631,
-    platformFee: 64.8,
-    image: villaGreece,
-    structure: "Greek IKE SPV"
-  },
-  {
-    flip: "Flip 3B",
-    location: "Mallorca, Spain",
-    flag: "🇪🇸",
-    units: 15,
-    buildCost: 1.125,
-    salesPrice: 2.025,
-    cashIn: 0.837,
-    remaining: 1.343,
-    platformFee: 60.75,
-    image: villaEriceira,
-    structure: "Spanish SL"
-  },
-  {
-    flip: "Flip 4A",
-    location: "Koh Phangan, Thailand",
-    flag: "🇹🇭",
-    units: 25,
-    buildCost: 1.875,
-    salesPrice: 3.375,
-    cashIn: 1.323,
-    remaining: 0.923,
-    platformFee: 101.25,
-    image: villaBali,
-    structure: "30+30 Leasehold"
-  },
-  {
-    flip: "Flip 4B",
-    location: "Antalya, Turkey",
-    flag: "🇹🇷",
-    units: 20,
-    buildCost: 1.5,
-    salesPrice: 2.7,
-    cashIn: 1.08,
-    remaining: 0.371,
-    platformFee: 81,
-    image: penthouseMexico,
-    structure: "Turkish SPV"
-  }
-];
-
-const revenueStreams = [
-  {
-    title: "Platform Fees",
-    amount: "$453.6K",
-    description: "Infrastructure revenue for serving nomad economy",
-    timeline: "Immediate capture",
-    icon: "🏛"
-  },
-  {
-    title: "Mortgage Interest",
-    amount: "$7.46M",
-    description: "8% yield serving the $250B cross-border lending void",
-    timeline: "10-year stream",
-    icon: "🌐"
-  },
-  {
-    title: "ARW Appreciation",
-    amount: "$16.62M",
-    description: "Capturing nomad wealth lost to rent into property equity",
-    timeline: "10-year capture",
-    icon: "🚀"
-  }
-];
-
-const landAcquisition = [
-  { country: "Mexico", budget: "$270K", structure: "Bank Fideicomiso via SAPI", risk: "Ejido exclusion critical" },
-  { country: "Brazil", budget: "$230K", structure: "Brazilian LTDA", risk: "Environmental approvals" },
-  { country: "Greece", budget: "$360K", structure: "Greek IKE SPV", risk: "Coastal restrictions" },
-  { country: "Spain", budget: "$400K", structure: "Spanish SL", risk: "8-10% transfer costs" },
-  { country: "Thailand", budget: "$280K", structure: "30+30 Leasehold", risk: "Foreign ownership limits" },
-  { country: "Turkey", budget: "$260K", structure: "Turkish SPV", risk: "Military zone clearance" }
-];
-
+const flywheelData = [{
+  flip: "Flip 1",
+  location: "Mazunte, Mexico",
+  flag: "🇲🇽",
+  units: 15,
+  buildCost: 1.125,
+  salesPrice: 2.025,
+  cashIn: 0.81,
+  remaining: 2.435,
+  platformFee: 60.75,
+  image: villaTulum,
+  structure: "Mexican SAPI + Fideicomiso"
+}, {
+  flip: "Flip 2",
+  location: "Bahia, Brazil",
+  flag: "🇧🇷",
+  units: 21,
+  buildCost: 1.575,
+  salesPrice: 2.835,
+  cashIn: 1.107,
+  remaining: 1.967,
+  platformFee: 85.05,
+  image: beachChalet,
+  structure: "Brazilian LTDA"
+}, {
+  flip: "Flip 3A",
+  location: "Corfu, Greece",
+  flag: "🇬🇷",
+  units: 16,
+  buildCost: 1.2,
+  salesPrice: 2.16,
+  cashIn: 0.864,
+  remaining: 1.631,
+  platformFee: 64.8,
+  image: villaGreece,
+  structure: "Greek IKE SPV"
+}, {
+  flip: "Flip 3B",
+  location: "Mallorca, Spain",
+  flag: "🇪🇸",
+  units: 15,
+  buildCost: 1.125,
+  salesPrice: 2.025,
+  cashIn: 0.837,
+  remaining: 1.343,
+  platformFee: 60.75,
+  image: villaEriceira,
+  structure: "Spanish SL"
+}, {
+  flip: "Flip 4A",
+  location: "Koh Phangan, Thailand",
+  flag: "🇹🇭",
+  units: 25,
+  buildCost: 1.875,
+  salesPrice: 3.375,
+  cashIn: 1.323,
+  remaining: 0.923,
+  platformFee: 101.25,
+  image: villaBali,
+  structure: "30+30 Leasehold"
+}, {
+  flip: "Flip 4B",
+  location: "Antalya, Turkey",
+  flag: "🇹🇷",
+  units: 20,
+  buildCost: 1.5,
+  salesPrice: 2.7,
+  cashIn: 1.08,
+  remaining: 0.371,
+  platformFee: 81,
+  image: penthouseMexico,
+  structure: "Turkish SPV"
+}];
+const revenueStreams = [{
+  title: "Platform Fees",
+  amount: "$453.6K",
+  description: "Infrastructure revenue for serving nomad economy",
+  timeline: "Immediate capture",
+  icon: "🏛"
+}, {
+  title: "Mortgage Interest",
+  amount: "$7.46M",
+  description: "8% yield serving the $250B cross-border lending void",
+  timeline: "10-year stream",
+  icon: "🌐"
+}, {
+  title: "ARW Appreciation",
+  amount: "$16.62M",
+  description: "Capturing nomad wealth lost to rent into property equity",
+  timeline: "10-year capture",
+  icon: "🚀"
+}];
+const landAcquisition = [{
+  country: "Mexico",
+  budget: "$270K",
+  structure: "Bank Fideicomiso via SAPI",
+  risk: "Ejido exclusion critical"
+}, {
+  country: "Brazil",
+  budget: "$230K",
+  structure: "Brazilian LTDA",
+  risk: "Environmental approvals"
+}, {
+  country: "Greece",
+  budget: "$360K",
+  structure: "Greek IKE SPV",
+  risk: "Coastal restrictions"
+}, {
+  country: "Spain",
+  budget: "$400K",
+  structure: "Spanish SL",
+  risk: "8-10% transfer costs"
+}, {
+  country: "Thailand",
+  budget: "$280K",
+  structure: "30+30 Leasehold",
+  risk: "Foreign ownership limits"
+}, {
+  country: "Turkey",
+  budget: "$260K",
+  structure: "Turkish SPV",
+  risk: "Military zone clearance"
+}];
 const BusinessModel = () => {
   const navigate = useNavigate();
   const totalPlatformFees = flywheelData.reduce((sum, flip) => sum + flip.platformFee, 0);
-
-  return (
-    <div className="min-h-screen bg-gradient-subtle">
+  return <div className="min-h-screen bg-gradient-subtle">
       {/* Manifesto Hero Section */}
       <section className="relative py-24 px-4 bg-gradient-hero">
         <div className="max-w-6xl mx-auto">
@@ -141,20 +147,12 @@ const BusinessModel = () => {
               <div className="text-2xl">🏛</div>
               <span className="font-medium text-lg">Ancient: The World's First Network State</span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-8 text-foreground leading-tight">
-              In a world where people travel freely<br />
-              <span className="bg-gradient-primary bg-clip-text text-transparent">but own nothing</span>,<br />
-              Ancient changes everything.
-            </h1>
+            
             <div className="max-w-4xl mx-auto text-lg text-muted-foreground space-y-6 leading-relaxed">
               <p>
                 <strong className="text-primary">🌎 100M+ Digital Nomads by 2030, Zero Mortgage Infrastructure</strong>
               </p>
-              <p>
-                The largest demographic migration in modern history is creating an entirely new asset class that Wall Street hasn't discovered yet. 
-                As 50+ million high-earning nomads abandon geographic constraints for location-independent lifestyles, they're ditching their $4k NYC studio flats 
-                for $1,600 art-deco lofts in Tulum, spending half as much and living a life their parents only dreamed of.
-              </p>
+              
               <p className="text-accent font-medium">
                 Since 2019 the number of digital nomads has exploded 6X — and is expected to surpass 100M by 2030.
               </p>
@@ -176,26 +174,59 @@ const BusinessModel = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {[
-              { icon: "📈", title: "Digital-Nomad Boom", stat: "50M → 100M+", desc: "6× growth since 2019, accelerating toward 100M+ by 2030" },
-              { icon: "🧳", title: "Massive Pipeline", stat: "35M+", desc: "North-American & European workers intend to go nomadic within two years" },
-              { icon: "💻", title: "Remote Work Default", stat: "80%", desc: "White-collar staff work hybrid/remote, severing income from geography" },
-              { icon: "🏠", title: "Affordability Crisis", stat: "8× Income", desc: "Median home prices vs. household income—worst ratio in four decades" },
-              { icon: "🕰", title: "Delayed Homeownership", stat: "29 → 36", desc: "U.S. first-time-buyer age climbed 7 years in a decade" },
-              { icon: "💰", title: "Millennial Capital", stat: "$5T Liquid", desc: "Massive wealth, yet <50% own homes due to geographic constraints" },
-              { icon: "⚖", title: "Tokenized Real Estate", stat: "$310M → $1.4T", desc: "Market forecast to surge 4.5× by 2030" },
-              { icon: "🗺", title: "Visa Tailwinds", stat: "50+ Countries", desc: "Issue Digital-Nomad Visas (from just 6 in 2019)" },
-              { icon: "💳", title: "Cross-border Void", stat: "$250B", desc: "Capital nomads want but banks refuse to lend" }
-            ].map((trend) => (
-              <Card key={trend.title} className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-card transition-all duration-300">
+            {[{
+            icon: "📈",
+            title: "Digital-Nomad Boom",
+            stat: "50M → 100M+",
+            desc: "6× growth since 2019, accelerating toward 100M+ by 2030"
+          }, {
+            icon: "🧳",
+            title: "Massive Pipeline",
+            stat: "35M+",
+            desc: "North-American & European workers intend to go nomadic within two years"
+          }, {
+            icon: "💻",
+            title: "Remote Work Default",
+            stat: "80%",
+            desc: "White-collar staff work hybrid/remote, severing income from geography"
+          }, {
+            icon: "🏠",
+            title: "Affordability Crisis",
+            stat: "8× Income",
+            desc: "Median home prices vs. household income—worst ratio in four decades"
+          }, {
+            icon: "🕰",
+            title: "Delayed Homeownership",
+            stat: "29 → 36",
+            desc: "U.S. first-time-buyer age climbed 7 years in a decade"
+          }, {
+            icon: "💰",
+            title: "Millennial Capital",
+            stat: "$5T Liquid",
+            desc: "Massive wealth, yet <50% own homes due to geographic constraints"
+          }, {
+            icon: "⚖",
+            title: "Tokenized Real Estate",
+            stat: "$310M → $1.4T",
+            desc: "Market forecast to surge 4.5× by 2030"
+          }, {
+            icon: "🗺",
+            title: "Visa Tailwinds",
+            stat: "50+ Countries",
+            desc: "Issue Digital-Nomad Visas (from just 6 in 2019)"
+          }, {
+            icon: "💳",
+            title: "Cross-border Void",
+            stat: "$250B",
+            desc: "Capital nomads want but banks refuse to lend"
+          }].map(trend => <Card key={trend.title} className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-card transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="text-3xl mb-3">{trend.icon}</div>
                   <div className="text-2xl font-bold text-primary mb-2">{trend.stat}</div>
                   <h3 className="font-semibold mb-2">{trend.title}</h3>
                   <p className="text-sm text-muted-foreground">{trend.desc}</p>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
 
           <Card className="bg-gradient-accent/10 border-accent/20">
@@ -271,17 +302,12 @@ const BusinessModel = () => {
           </div>
 
           <div className="space-y-8">
-            {flywheelData.map((flip, index) => (
-              <Card key={flip.flip} className="bg-card/80 backdrop-blur-sm border-border/50 overflow-hidden">
+            {flywheelData.map((flip, index) => <Card key={flip.flip} className="bg-card/80 backdrop-blur-sm border-border/50 overflow-hidden">
                 <CardContent className="p-0">
                   <div className="grid md:grid-cols-3 gap-0">
                     {/* Image */}
                     <div className="relative h-64 md:h-auto">
-                      <img 
-                        src={flip.image} 
-                        alt={flip.location}
-                        className="w-full h-full object-cover"
-                      />
+                      <img src={flip.image} alt={flip.location} className="w-full h-full object-cover" />
                       <div className="absolute inset-0 bg-gradient-to-r from-background/80 to-transparent md:hidden" />
                       <div className="absolute top-4 left-4">
                         <Badge variant="secondary" className="text-lg">
@@ -329,12 +355,11 @@ const BusinessModel = () => {
                         <div className="text-sm text-muted-foreground mb-3">Cash In Breakdown</div>
                         <div className="space-y-2 text-sm">
                           {(() => {
-                            const financedUnits = Math.floor(flip.units * 0.8); // 80% financed
-                            const cashUnits = flip.units - financedUnits;
-                            const financedCash = financedUnits * 135 * 0.2; // 20% down
-                            const cashPurchases = cashUnits * 135;
-                            return (
-                              <>
+                        const financedUnits = Math.floor(flip.units * 0.8); // 80% financed
+                        const cashUnits = flip.units - financedUnits;
+                        const financedCash = financedUnits * 135 * 0.2; // 20% down
+                        const cashPurchases = cashUnits * 135;
+                        return <>
                                 <div className="flex justify-between">
                                   <span>{financedUnits} financed (20% down):</span>
                                   <span className="font-medium">${(financedCash / 1000).toFixed(0)}K</span>
@@ -347,9 +372,8 @@ const BusinessModel = () => {
                                   <span>Total Cash In:</span>
                                   <span>${flip.cashIn}M</span>
                                 </div>
-                              </>
-                            );
-                          })()}
+                              </>;
+                      })()}
                         </div>
                       </div>
 
@@ -365,19 +389,14 @@ const BusinessModel = () => {
                         <div className="text-sm text-muted-foreground">Remaining Budget</div>
                         <div className="text-2xl font-bold">${flip.remaining}M</div>
                       </div>
-                      {index < flywheelData.length - 1 && (
-                        <ArrowRight className="w-6 h-6 text-primary" />
-                      )}
-                      {index === flywheelData.length - 1 && (
-                        <Badge variant="outline" className="text-primary border-primary">
+                      {index < flywheelData.length - 1 && <ArrowRight className="w-6 h-6 text-primary" />}
+                      {index === flywheelData.length - 1 && <Badge variant="outline" className="text-primary border-primary">
                           Final: $371K Surplus
-                        </Badge>
-                      )}
+                        </Badge>}
                     </div>
                   </div>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
 
           {/* Summary */}
@@ -414,8 +433,7 @@ const BusinessModel = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
-            {revenueStreams.map((stream) => (
-              <Card key={stream.title} className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-luxury transition-all duration-300">
+            {revenueStreams.map(stream => <Card key={stream.title} className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-luxury transition-all duration-300">
                 <CardContent className="p-8 text-center">
                   <div className="text-4xl mb-4">{stream.icon}</div>
                   <div className="text-3xl font-bold text-primary mb-2">{stream.amount}</div>
@@ -423,8 +441,7 @@ const BusinessModel = () => {
                   <p className="text-muted-foreground mb-4">{stream.description}</p>
                   <Badge variant="outline">{stream.timeline}</Badge>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
 
           <Card className="bg-gradient-secondary/10 border-secondary/20">
@@ -469,8 +486,7 @@ const BusinessModel = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {landAcquisition.map((country) => (
-              <Card key={country.country} className="bg-card/80 backdrop-blur-sm border-border/50">
+            {landAcquisition.map(country => <Card key={country.country} className="bg-card/80 backdrop-blur-sm border-border/50">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold">{country.country}</h3>
@@ -487,8 +503,7 @@ const BusinessModel = () => {
                     </div>
                   </div>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
 
           <Card className="bg-card/80 backdrop-blur-sm border-border/50">
@@ -550,20 +565,11 @@ const BusinessModel = () => {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button 
-              size="lg" 
-              onClick={() => navigate('/investor-portal')}
-              className="text-lg px-8 py-6"
-            >
+            <Button size="lg" onClick={() => navigate('/investor-portal')} className="text-lg px-8 py-6">
               Access Investor Portal
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
-            <Button 
-              variant="outline" 
-              size="lg" 
-              onClick={() => navigate('/portfolio')}
-              className="text-lg px-8 py-6"
-            >
+            <Button variant="outline" size="lg" onClick={() => navigate('/portfolio')} className="text-lg px-8 py-6">
               Explore Properties
               <Globe className="ml-2 w-5 h-5" />
             </Button>
@@ -574,8 +580,6 @@ const BusinessModel = () => {
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 };
-
 export default BusinessModel;
