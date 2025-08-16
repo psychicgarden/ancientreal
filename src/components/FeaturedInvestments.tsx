@@ -149,9 +149,14 @@ const FeaturedInvestments = () => {
                             <span className="text-sm text-muted-foreground">Monthly Network Yield:</span>
                             <span className="text-lg font-bold text-green-600">${property.monthlyProfit}</span>
                           </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-sm text-muted-foreground">10-Year Village Value:</span>
-                            <span className="text-lg font-bold">${property.networkValue.toLocaleString()}</span>
+                          <div className="flex flex-col items-end">
+                            <div className="text-sm text-muted-foreground uppercase tracking-wide mb-1">Total 10-Year Profit</div>
+                            <div className="text-2xl font-bold bg-gradient-to-r from-primary via-primary/80 to-accent bg-clip-text text-transparent">
+                              $355,010
+                            </div>
+                            <div className="text-sm font-semibold text-green-600 mt-1">
+                              11.3x total return
+                            </div>
                           </div>
                           <div className="flex justify-between items-start pt-2">
                             <span className="text-sm text-muted-foreground">Access:</span>
