@@ -114,13 +114,7 @@ const FeaturedInvestments = () => {
                     <div className="text-sm font-semibold">{property.propertiesSold}/{property.totalProperties} sold</div>
                   </div>
                   
-                  {/* Total Return Badge */}
-                  <div className="absolute top-4 right-4 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground backdrop-blur-sm rounded-lg px-3 py-1.5 shadow-lg">
-                    <div className="text-xs font-medium opacity-90 mb-0.5">Total Return</div>
-                    <div className="text-sm font-bold">{property.totalReturnMultiple}x</div>
-                  </div>
-                  
-                  {property.isBlockchain && isConnected && <Badge className="absolute bottom-4 right-4 bg-green-500/90 text-white backdrop-blur-sm">
+                  {property.isBlockchain && isConnected && <Badge className="absolute top-4 right-4 bg-green-500/90 text-white backdrop-blur-sm">
                       🔗 LIVE
                     </Badge>}
                 </div>
@@ -165,6 +159,10 @@ const FeaturedInvestments = () => {
                           <div className="flex justify-between items-center">
                             <span className="text-sm text-muted-foreground">10-Year Village Value:</span>
                             <span className="text-lg font-bold">${property.networkValue.toLocaleString()}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-muted-foreground">Total 10-Year Return:</span>
+                            <span className="text-lg font-bold text-primary">{property.totalReturnMultiple}x</span>
                           </div>
                           <div className="flex justify-between items-start pt-2">
                             <span className="text-sm text-muted-foreground">Access:</span>
