@@ -145,8 +145,8 @@ const BusinessModel = () => {
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img 
-            src="/lovable-uploads/5225db95-1cf5-4d8b-908e-7d497ff48029.png" 
-            alt="Ancient Network State Vision" 
+            src="/src/assets/eco-smart-city.jpg" 
+            alt="Eco Smart City Vision" 
             className="w-full h-full object-cover filter brightness-[0.4] contrast-[1.3] saturate-[1.2]" 
           />
           {/* Dramatic Gradient Overlays */}
@@ -154,24 +154,24 @@ const BusinessModel = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
         </div>
         
-        {/* Clean ANCIENT top-left */}
+        {/* ANCIENT branding top-left */}
         <div className="absolute top-8 left-8 z-20">
           <h3 className="text-2xl lg:text-4xl font-light text-white/95 tracking-[0.3em] uppercase">
             ANCIENT
           </h3>
+          <p className="text-sm lg:text-base font-light text-white/80 tracking-wide mt-2">
+            The World's First Decentralized State
+          </p>
         </div>
         
         {/* Centered Main Content */}
         <div className="relative z-10 w-full max-w-6xl mx-auto px-6 text-center">
-          {/* Main Hero Text - Centered and Wide */}
-          <div className="space-y-6 mb-12">
+          {/* Main Hero Text - Two Lines as Requested */}
+          <div className="space-y-4 mb-12">
             <h1 className="text-5xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight">
-              <span className="block text-white drop-shadow-2xl">Building</span>
-              <span className="block bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent drop-shadow-2xl">Infrastructure</span>
+              <span className="block text-white drop-shadow-2xl">Building Infrastructure</span>
+              <span className="block bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent drop-shadow-2xl">for a Borderless World</span>
             </h1>
-            <h2 className="text-3xl lg:text-4xl xl:text-5xl font-light text-white/95 leading-tight tracking-wide drop-shadow-lg">
-              for a Borderless World
-            </h2>
           </div>
           
           {/* Value Proposition - Clean and Centered */}
