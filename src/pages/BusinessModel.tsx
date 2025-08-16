@@ -139,23 +139,48 @@ const BusinessModel = () => {
   const navigate = useNavigate();
   const totalPlatformFees = flywheelData.reduce((sum, flip) => sum + flip.platformFee, 0);
   return <div className="min-h-screen bg-gradient-subtle">
-      {/* Manifesto Hero Section */}
-      <section className="relative py-24 px-4 bg-gradient-hero">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 bg-accent/10 text-accent px-6 py-3 rounded-full mb-8">
-              <div className="text-2xl">🏛</div>
-              <span className="font-medium text-lg">Ancient: The World's First Network State</span>
+      {/* Sexy Business Model Hero */}
+      <section className="relative py-32 px-4 bg-gradient-hero">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center">
+            <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-full mb-12 border border-white/20">
+              <div className="text-3xl">🏛</div>
+              <span className="font-semibold text-xl tracking-wide">Ancient Development Flywheel</span>
             </div>
             
-            <div className="max-w-4xl mx-auto text-lg text-muted-foreground space-y-6 leading-relaxed">
+            <h1 className="text-6xl md:text-8xl font-bold mb-8 bg-gradient-to-r from-white via-white/95 to-white/80 bg-clip-text text-transparent leading-tight">
+              Building Infrastructure<br />
+              <span className="text-accent">for a Borderless World</span>
+            </h1>
+            
+            <div className="max-w-5xl mx-auto text-xl text-white/80 space-y-4 leading-relaxed mb-16">
+              <p className="text-2xl font-medium text-white">
+                6 Locations × 4 Strategic Flips = 9× ROI
+              </p>
               <p>
-                <strong className="text-primary">🌎 100M+ Digital Nomads by 2030, Zero Mortgage Infrastructure</strong>
+                The first mortgage protocol designed for 100M+ digital nomads who spend $900B annually on rent
+                but are excluded from every traditional mortgage system on Earth.
               </p>
-              
-              <p className="text-accent font-medium">
-                Since 2019 the number of digital nomads has exploded 6X — and is expected to surpass 100M by 2030.
-              </p>
+            </div>
+
+            {/* Elegant Metrics Row */}
+            <div className="grid md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+              <div className="text-center">
+                <div className="text-4xl font-bold text-white mb-2">$24.53M</div>
+                <div className="text-white/70 text-sm uppercase tracking-wider">Total Returns</div>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl font-bold text-white mb-2">112</div>
+                <div className="text-white/70 text-sm uppercase tracking-wider">Units Built</div>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl font-bold text-white mb-2">6</div>
+                <div className="text-white/70 text-sm uppercase tracking-wider">Countries</div>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl font-bold text-white mb-2">$250B</div>
+                <div className="text-white/70 text-sm uppercase tracking-wider">Market Void</div>
+              </div>
             </div>
           </div>
         </div>
@@ -168,9 +193,20 @@ const BusinessModel = () => {
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
               🌪 Perfect Storm: <span className="text-primary">Why Now?</span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Nine macro trends converging to create the largest financing void in modern history
-            </p>
+            <div className="max-w-4xl mx-auto text-xl text-muted-foreground space-y-4">
+              <p>
+                <strong className="text-primary text-2xl">🌎 100M+ Digital Nomads by 2030, Zero Mortgage Infrastructure</strong>
+              </p>
+              <p className="text-lg">
+                Since 2019 the number of digital nomads has exploded 6X — and is expected to surpass 100M by 2030.
+                These aren't backpackers in coffee shops. They're senior engineers earning $150K from Tulum, 
+                founders building $500K businesses from Bali who've abandoned the fiction that cities determine opportunity.
+              </p>
+              <p className="text-lg font-medium text-accent">
+                Yet despite earning professional incomes, they are excluded from homeownership — 
+                spending $900B+ annually on rent with no path to building equity.
+              </p>
+            </div>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 mb-12">
