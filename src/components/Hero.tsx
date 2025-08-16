@@ -17,7 +17,7 @@ const Hero = () => {
         <div className="max-w-4xl mx-auto">
 
           {/* Main Headline */}
-          <h1 className="text-accent-foreground mb-6">
+          <h1 className="text-2xl md:text-5xl lg:text-6xl font-bold leading-relaxed text-accent-foreground mb-6">
             The World's First
             <br />
             <span className="bg-gradient-to-r from-gold to-gold/80 bg-clip-text text-transparent">
