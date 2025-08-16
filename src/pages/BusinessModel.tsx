@@ -144,11 +144,7 @@ const BusinessModel = () => {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Luxury Backdrop with Parallax Effect */}
         <div className="absolute inset-0 z-0 transform-gpu">
-          <img 
-            src={villaTulum} 
-            alt="Ancient Network State Vision" 
-            className="w-full h-full object-cover scale-105 transition-transform duration-700 ease-out" 
-          />
+          <img src={villaTulum} alt="Ancient Network State Vision" className="w-full h-full object-cover scale-105 transition-transform duration-700 ease-out" />
           {/* Sophisticated Multi-Layer Overlays */}
           <div className="absolute inset-0 bg-gradient-to-br from-background/95 via-background/60 to-background/30" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-background/10" />
@@ -184,9 +180,7 @@ const BusinessModel = () => {
               
               {/* Power Quote */}
               <div className="border-t border-border/20 pt-6">
-                <blockquote className="text-2xl md:text-3xl font-medium text-foreground/95 italic">
-                  "Borders wrote the last chapter of property;<br/>code writes the next."
-                </blockquote>
+                
               </div>
             </div>
           </div>
@@ -221,12 +215,7 @@ const BusinessModel = () => {
 
           {/* Elegant CTA */}
           <div className="mt-16">
-            <Button 
-              variant="luxury" 
-              size="lg" 
-              className="text-xl px-12 py-6 rounded-full font-medium"
-              onClick={() => navigate('/investors')}
-            >
+            <Button variant="luxury" size="lg" className="text-xl px-12 py-6 rounded-full font-medium" onClick={() => navigate('/investors')}>
               Join the Movement
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
