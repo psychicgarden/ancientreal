@@ -51,69 +51,24 @@ Deno.serve(async (req) => {
 
     const supabase = createClient(SUPABASE_URL!, SERVICE_ROLE_KEY!);
 
-    let deletedInvestments = 0;
-    let deletedProperties = 0;
-    let deletedTransactions = 0;
-    let updatedProperties = 0;
+    const { data, error } = await supabase.rpc("reset_fractional_portfolio", {
+      p_wallet: wallet,
+    });
 
-    try {
-      // Delete fractional investments
-      const { error: investError, count: invCount } = await supabase
-        .from("fractional_investments")
-        .delete({ count: 'exact' })
-        .eq("investor_wallet_address", wallet);
-      
-      if (investError) throw investError;
-      deletedInvestments = invCount || 0;
-
-      // Delete user properties  
-      const { error: propError, count: propCount } = await supabase
-        .from("user_properties")
-        .delete({ count: 'exact' })
-        .or(`user_wallet_address.eq.${wallet},user_address.eq.${wallet}`);
-      
-      if (propError) throw propError;
-      deletedProperties = propCount || 0;
-
-      // Delete user transactions
-      const { error: txError, count: txCount } = await supabase
-        .from("user_transactions")
-        .delete({ count: 'exact' })
-        .eq("user_wallet_address", wallet);
-      
-      if (txError) throw txError;
-      deletedTransactions = txCount || 0;
-
-      // Reset tokens_sold to 0 for all properties
-      const { error: updateError, count: updateCount } = await supabase
-        .from("property_fractionalization")
-        .update({ tokens_sold: 0, updated_at: new Date().toISOString() }, { count: 'exact' })
-        .neq("id", "00000000-0000-0000-0000-000000000000"); // Update all records
-      
-      if (updateError) throw updateError;
-      updatedProperties = updateCount || 0;
-
-      const data = {
-        wallet,
-        deleted_investments: deletedInvestments,
-        deleted_properties: deletedProperties,
-        deleted_transactions: deletedTransactions,
-        updated_properties: updatedProperties
-      };
-
-      console.log("[reset-portfolio] reset summary:", data);
-
-      return new Response(JSON.stringify({ ok: true, result: data }), {
-        status: 200,
-        headers: corsHeaders,
-      });
-    } catch (resetError) {
-      console.error("[reset-portfolio] reset error:", resetError);
-      return new Response(JSON.stringify({ error: resetError.message || "Reset operation failed" }), {
+    if (error) {
+      console.error("[reset-portfolio] RPC error:", error);
+      return new Response(JSON.stringify({ error: error.message }), {
         status: 500,
         headers: corsHeaders,
       });
     }
+
+    console.log("[reset-portfolio] reset summary:", data);
+
+    return new Response(JSON.stringify({ ok: true, result: data }), {
+      status: 200,
+      headers: corsHeaders,
+    });
   } catch (e) {
     console.error("[reset-portfolio] unexpected error:", e);
     return new Response(JSON.stringify({ error: "Unexpected error" }), {
