@@ -13,9 +13,6 @@ import villaGreece from "@/assets/villa-greece.jpg";
 import villaBali from "@/assets/villa-bali.jpg";
 import penthouseMexico from "@/assets/penthouse-mexico.jpg";
 import ecoSmartCity from "@/assets/eco-smart-city.jpg";
-import ecstaticDanceCommunity from "@/assets/ecstatic-dance-community.jpg";
-import liveMusic from "@/assets/live-music-community.jpg";
-import coworkingBoho from "@/assets/coworking-boho.jpg";
 const flywheelData = [{
   flip: "Flip 1",
   location: "Mazunte, Mexico",
@@ -143,85 +140,78 @@ const BusinessModel = () => {
   const navigate = useNavigate();
   const totalPlatformFees = flywheelData.reduce((sum, flip) => sum + flip.platformFee, 0);
   return <div className="min-h-screen bg-gradient-subtle">
-      {/* Ecovillage Banner - Wide & Beautiful */}
-      <section className="relative w-full h-[70vh] flex items-center justify-center overflow-hidden">
-        {/* Wide Ecovillage Backdrop */}
+      {/* Luxury Soho House Inspired Hero Banner */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Ultra Premium Backdrop */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src={ecstaticDanceCommunity} 
-            alt="Ecovillage Community Vision" 
-            className="w-full h-full object-cover object-center scale-105 filter brightness-[0.6] contrast-[1.2] saturate-[1.1]" 
-          />
-          {/* Sophisticated Gradient Overlays */}
-          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/30 to-background/80" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-background/40" />
-          <div className="absolute inset-0 bg-gradient-radial from-transparent via-primary/5 to-primary/10" />
+          <img src={villaTulum} alt="Ancient Network State Vision" className="w-full h-full object-cover scale-110 filter brightness-[0.7] contrast-[1.1] saturate-[1.2]" />
+          {/* Cinematic Gradient System */}
+          <div className="absolute inset-0 bg-gradient-to-br from-background/98 via-background/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/8 via-transparent to-accent/8" />
+          <div className="absolute inset-0 bg-radial-gradient from-transparent via-background/10 to-background/30" />
         </div>
         
-        {/* Content Container */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="text-center space-y-8">
+        {/* Content Grid System */}
+        <div className="relative z-10 w-full max-w-8xl mx-auto px-6 lg:px-8">
+          <div className="grid lg:grid-cols-12 gap-12 items-center min-h-screen py-20">
             
-            {/* Ancient Badge - Integrated Beautifully */}
-            <div className="inline-flex items-center space-x-4 bg-background/10 backdrop-blur-md rounded-full px-8 py-4 border border-border/20">
-              <div className="w-3 h-3 bg-gradient-primary rounded-full animate-pulse"></div>
-              <span className="text-foreground/90 font-light tracking-[0.15em] text-lg uppercase">Ancient</span>
-              <div className="w-px h-6 bg-border/30"></div>
-              <span className="text-foreground/70 font-light text-sm">Network State</span>
-            </div>
-            
-            {/* Main Headline */}
-            <div className="space-y-4">
-              <h1 className="text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-bold leading-[0.9] tracking-tight">
-                <span className="block text-foreground">Building</span>
-                <span className="block bg-gradient-primary bg-clip-text text-transparent">Ecovillage</span>
-                <span className="block text-foreground/90">Infrastructure</span>
-              </h1>
-              <p className="text-2xl md:text-3xl lg:text-4xl font-light text-foreground/80 tracking-wide">
-                for 100M+ Digital Nomads
-              </p>
+            {/* Left Column - Main Content */}
+            <div className="lg:col-span-8 space-y-12">
+              {/* Ancient Network State - Elegantly Integrated */}
+              <div className="relative">
+                <div className="absolute -top-4 -left-4 w-16 h-16 bg-gradient-primary rounded-full opacity-20 animate-pulse"></div>
+                <h3 className="text-2xl lg:text-3xl font-light text-foreground/80 tracking-[0.2em] uppercase mb-2">
+                  Ancient
+                </h3>
+                <div className="w-32 h-0.5 bg-gradient-primary mb-8"></div>
+                <p className="text-lg lg:text-xl text-foreground/60 font-light italic">
+                  The World's First Network State
+                </p>
+              </div>
+              
+              {/* Main Headlines */}
+              <div className="space-y-6">
+                <h1 className="text-7xl lg:text-9xl xl:text-[10rem] font-bold leading-[0.85] tracking-tight">
+                  <span className="block text-foreground">Building</span>
+                  <span className="block bg-gradient-primary bg-clip-text text-transparent">Infrastructure</span>
+                </h1>
+                <h2 className="text-4xl lg:text-6xl xl:text-7xl font-light text-foreground/90 leading-tight">
+                  for a Borderless World
+                </h2>
+              </div>
+
+              {/* Problem Statement */}
+              <div className="bg-background/5 backdrop-blur-2xl rounded-3xl border border-border/10 p-8 lg:p-12 shadow-2xl max-w-4xl">
+                <p className="text-2xl lg:text-3xl xl:text-4xl font-light leading-relaxed text-foreground/95 mb-8">
+                  50 million nomads burn <span className="font-bold text-accent">$900B annually</span> on dead rent.
+                </p>
+                <p className="text-xl lg:text-2xl text-foreground/75 leading-relaxed mb-8">
+                  We convert that waste into fractional, on-chain property deeds.
+                </p>
+                <div className="w-full h-px bg-gradient-to-r from-transparent via-border/30 to-transparent mb-6"></div>
+                <p className="text-lg lg:text-xl font-medium text-foreground/80 italic">
+                  "Borders wrote the last chapter of property; code writes the next"
+                </p>
+              </div>
+
+              {/* Call to Action */}
+              <div className="pt-8">
+                
+              </div>
             </div>
 
-            {/* Key Metrics Row */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 pt-8">
-              <div className="bg-background/10 backdrop-blur-md rounded-2xl p-6 border border-border/20">
-                <div className="text-3xl md:text-4xl font-bold text-primary mb-2">50M+</div>
-                <div className="text-sm md:text-base text-foreground/70 font-medium">Nomads</div>
-              </div>
-              <div className="bg-background/10 backdrop-blur-md rounded-2xl p-6 border border-border/20">
-                <div className="text-3xl md:text-4xl font-bold text-accent mb-2">$900B</div>
-                <div className="text-sm md:text-base text-foreground/70 font-medium">Dead Rent</div>
-              </div>
-              <div className="bg-background/10 backdrop-blur-md rounded-2xl p-6 border border-border/20">
-                <div className="text-3xl md:text-4xl font-bold text-primary mb-2">6</div>
-                <div className="text-sm md:text-base text-foreground/70 font-medium">Countries</div>
-              </div>
-              <div className="bg-background/10 backdrop-blur-md rounded-2xl p-6 border border-border/20">
-                <div className="text-3xl md:text-4xl font-bold text-accent mb-2">0</div>
-                <div className="text-sm md:text-base text-foreground/70 font-medium">Solutions</div>
-              </div>
-            </div>
-
-            {/* Value Proposition */}
-            <div className="max-w-4xl mx-auto pt-8">
-              <p className="text-xl md:text-2xl lg:text-3xl font-light leading-relaxed text-foreground/90 mb-6">
-                We convert nomad <span className="font-semibold text-accent">dead spend</span> into 
-                <span className="font-semibold text-primary"> fractional property equity</span>
-              </p>
-              <div className="w-32 h-px bg-gradient-primary mx-auto mb-4"></div>
-              <p className="text-lg md:text-xl font-medium text-foreground/75 italic">
-                "Borders wrote the last chapter of property; code writes the next"
-              </p>
-            </div>
+            {/* Right Column - Metrics Dashboard */}
+            
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+        {/* Refined Scroll Indicator */}
+        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2">
           <div className="flex flex-col items-center space-y-2 animate-fade-in">
-            <div className="w-px h-12 bg-gradient-to-b from-transparent via-foreground/40 to-transparent"></div>
-            <div className="w-5 h-8 border border-foreground/30 rounded-full flex justify-center animate-bounce">
-              <div className="w-0.5 h-2 bg-foreground/40 rounded-full mt-1.5 animate-pulse"></div>
+            <div className="w-px h-16 bg-gradient-to-b from-transparent via-foreground/30 to-transparent"></div>
+            <div className="w-6 h-10 border border-foreground/20 rounded-full flex justify-center animate-bounce">
+              <div className="w-1 h-3 bg-foreground/30 rounded-full mt-2 animate-pulse"></div>
             </div>
           </div>
         </div>
