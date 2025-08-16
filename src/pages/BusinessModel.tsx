@@ -140,92 +140,110 @@ const BusinessModel = () => {
   const navigate = useNavigate();
   const totalPlatformFees = flywheelData.reduce((sum, flip) => sum + flip.platformFee, 0);
   return <div className="min-h-screen bg-gradient-subtle">
-      {/* Stunning Soho House Inspired Hero Banner */}
+      {/* Luxury Soho House Inspired Hero Banner */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Luxury Backdrop with Parallax Effect */}
-        <div className="absolute inset-0 z-0 transform-gpu">
-          <img src={villaTulum} alt="Ancient Network State Vision" className="w-full h-full object-cover scale-105 transition-transform duration-700 ease-out" />
-          {/* Sophisticated Multi-Layer Overlays */}
-          <div className="absolute inset-0 bg-gradient-to-br from-background/95 via-background/60 to-background/30" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-background/10" />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5" />
+        {/* Ultra Premium Backdrop */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={villaTulum} 
+            alt="Ancient Network State Vision" 
+            className="w-full h-full object-cover scale-110 filter brightness-[0.7] contrast-[1.1] saturate-[1.2]" 
+          />
+          {/* Cinematic Gradient System */}
+          <div className="absolute inset-0 bg-gradient-to-br from-background/98 via-background/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/8 via-transparent to-accent/8" />
+          <div className="absolute inset-0 bg-radial-gradient from-transparent via-background/10 to-background/30" />
         </div>
         
-        {/* Floating Content with Glass Morphism */}
-        <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
-          {/* Premium Badge */}
-          <div className="inline-flex items-center gap-4 bg-background/15 backdrop-blur-xl text-foreground px-10 py-5 rounded-full mb-12 border border-border/20 shadow-luxury animate-fade-in">
-            <div className="w-3 h-3 rounded-full bg-gradient-primary animate-pulse"></div>
-            <span className="font-medium text-xl tracking-wide">Ancient: The World's First Network State</span>
-          </div>
-          
-          {/* Dramatic Headlines */}
-          <div className="space-y-8 mb-16">
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold leading-none tracking-tight">
-              <span className="block text-foreground mb-2">Building</span>
-              <span className="block bg-gradient-primary bg-clip-text text-transparent">Infrastructure</span>
-              <span className="block text-foreground/90 text-5xl md:text-6xl lg:text-7xl mt-4">for a Borderless World</span>
-            </h1>
-          </div>
-
-          {/* The Problem Narrative */}
-          <div className="max-w-5xl mx-auto mb-16">
-            <div className="bg-background/10 backdrop-blur-lg rounded-3xl border border-border/20 p-8 md:p-12 shadow-luxury">
-              <p className="text-2xl md:text-3xl font-light leading-relaxed text-foreground/90 mb-6">
-                50 million high-earning nomads burn <span className="font-bold text-accent">$900B annually</span> on dead rent because no bank offers global mortgages.
-              </p>
-              <p className="text-xl md:text-2xl text-foreground/80 mb-8">
-                We've built the only platform that converts that dead spend into fractional, on-chain deeds of dream properties.
-              </p>
+        {/* Content Grid System */}
+        <div className="relative z-10 w-full max-w-8xl mx-auto px-6 lg:px-8">
+          <div className="grid lg:grid-cols-12 gap-12 items-center min-h-screen py-20">
+            
+            {/* Left Column - Main Content */}
+            <div className="lg:col-span-8 space-y-12">
+              {/* Ancient Network State - Elegantly Integrated */}
+              <div className="relative">
+                <div className="absolute -top-4 -left-4 w-16 h-16 bg-gradient-primary rounded-full opacity-20 animate-pulse"></div>
+                <h3 className="text-2xl lg:text-3xl font-light text-foreground/80 tracking-[0.2em] uppercase mb-2">
+                  Ancient
+                </h3>
+                <div className="w-32 h-0.5 bg-gradient-primary mb-8"></div>
+                <p className="text-lg lg:text-xl text-foreground/60 font-light italic">
+                  The World's First Network State
+                </p>
+              </div>
               
-              {/* Power Quote */}
-              <div className="border-t border-border/20 pt-6">
-                
+              {/* Main Headlines */}
+              <div className="space-y-6">
+                <h1 className="text-7xl lg:text-9xl xl:text-[10rem] font-bold leading-[0.85] tracking-tight">
+                  <span className="block text-foreground">Building</span>
+                  <span className="block bg-gradient-primary bg-clip-text text-transparent">Infrastructure</span>
+                </h1>
+                <h2 className="text-4xl lg:text-6xl xl:text-7xl font-light text-foreground/90 leading-tight">
+                  for a Borderless World
+                </h2>
               </div>
-            </div>
-          </div>
 
-          {/* Impactful Metrics - Luxury Layout */}
-          <div className="grid md:grid-cols-4 gap-8 max-w-6xl mx-auto">
-            <div className="group">
-              <div className="bg-background/10 backdrop-blur-lg rounded-2xl border border-border/20 p-6 hover:bg-background/20 transition-all duration-300 hover:scale-105">
-                <div className="text-5xl md:text-6xl font-bold text-accent mb-3">50M+</div>
-                <div className="text-muted-foreground text-sm uppercase tracking-wider font-medium">Global Nomads</div>
+              {/* Problem Statement */}
+              <div className="bg-background/5 backdrop-blur-2xl rounded-3xl border border-border/10 p-8 lg:p-12 shadow-2xl max-w-4xl">
+                <p className="text-2xl lg:text-3xl xl:text-4xl font-light leading-relaxed text-foreground/95 mb-8">
+                  50 million nomads burn <span className="font-bold text-accent">$900B annually</span> on dead rent.
+                </p>
+                <p className="text-xl lg:text-2xl text-foreground/75 leading-relaxed mb-8">
+                  We convert that waste into fractional, on-chain property deeds.
+                </p>
+                <div className="w-full h-px bg-gradient-to-r from-transparent via-border/30 to-transparent mb-6"></div>
+                <p className="text-lg lg:text-xl font-medium text-foreground/80 italic">
+                  "Borders wrote the last chapter of property; code writes the next"
+                </p>
               </div>
-            </div>
-            <div className="group">
-              <div className="bg-background/10 backdrop-blur-lg rounded-2xl border border-border/20 p-6 hover:bg-background/20 transition-all duration-300 hover:scale-105">
-                <div className="text-5xl md:text-6xl font-bold text-accent mb-3">$900B</div>
-                <div className="text-muted-foreground text-sm uppercase tracking-wider font-medium">Dead Spend</div>
-              </div>
-            </div>
-            <div className="group">
-              <div className="bg-background/10 backdrop-blur-lg rounded-2xl border border-border/20 p-6 hover:bg-background/20 transition-all duration-300 hover:scale-105">
-                <div className="text-5xl md:text-6xl font-bold text-accent mb-3">6</div>
-                <div className="text-muted-foreground text-sm uppercase tracking-wider font-medium">Countries</div>
-              </div>
-            </div>
-            <div className="group">
-              <div className="bg-background/10 backdrop-blur-lg rounded-2xl border border-border/20 p-6 hover:bg-background/20 transition-all duration-300 hover:scale-105">
-                <div className="text-5xl md:text-6xl font-bold text-accent mb-3">Zero</div>
-                <div className="text-muted-foreground text-sm uppercase tracking-wider font-medium">Solutions</div>
-              </div>
-            </div>
-          </div>
 
-          {/* Elegant CTA */}
-          <div className="mt-16">
-            <Button variant="luxury" size="lg" className="text-xl px-12 py-6 rounded-full font-medium" onClick={() => navigate('/investors')}>
-              Join the Movement
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
+              {/* Call to Action */}
+              <div className="pt-8">
+                <Button 
+                  variant="default" 
+                  size="lg" 
+                  className="text-xl lg:text-2xl px-12 py-6 h-auto rounded-full font-medium bg-gradient-primary hover:opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl" 
+                  onClick={() => navigate('/investors')}
+                >
+                  Join the Movement
+                  <ArrowRight className="ml-3 w-6 h-6" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Right Column - Metrics Dashboard */}
+            <div className="lg:col-span-4 space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-background/5 backdrop-blur-2xl rounded-2xl border border-border/10 p-6 text-center hover:bg-background/10 transition-all duration-500 hover:scale-105 group">
+                  <div className="text-4xl lg:text-5xl font-bold text-accent mb-2 group-hover:scale-110 transition-transform duration-300">50M+</div>
+                  <div className="text-foreground/60 text-sm uppercase tracking-wider font-medium">Nomads</div>
+                </div>
+                <div className="bg-background/5 backdrop-blur-2xl rounded-2xl border border-border/10 p-6 text-center hover:bg-background/10 transition-all duration-500 hover:scale-105 group">
+                  <div className="text-4xl lg:text-5xl font-bold text-accent mb-2 group-hover:scale-110 transition-transform duration-300">$900B</div>
+                  <div className="text-foreground/60 text-sm uppercase tracking-wider font-medium">Dead Spend</div>
+                </div>
+                <div className="bg-background/5 backdrop-blur-2xl rounded-2xl border border-border/10 p-6 text-center hover:bg-background/10 transition-all duration-500 hover:scale-105 group">
+                  <div className="text-4xl lg:text-5xl font-bold text-accent mb-2 group-hover:scale-110 transition-transform duration-300">6</div>
+                  <div className="text-foreground/60 text-sm uppercase tracking-wider font-medium">Countries</div>
+                </div>
+                <div className="bg-background/5 backdrop-blur-2xl rounded-2xl border border-border/10 p-6 text-center hover:bg-background/10 transition-all duration-500 hover:scale-105 group">
+                  <div className="text-4xl lg:text-5xl font-bold text-accent mb-2 group-hover:scale-110 transition-transform duration-300">Zero</div>
+                  <div className="text-foreground/60 text-sm uppercase tracking-wider font-medium">Solutions</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-foreground/30 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-foreground/30 rounded-full mt-2 animate-pulse"></div>
+        {/* Refined Scroll Indicator */}
+        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2">
+          <div className="flex flex-col items-center space-y-2 animate-fade-in">
+            <div className="w-px h-16 bg-gradient-to-b from-transparent via-foreground/30 to-transparent"></div>
+            <div className="w-6 h-10 border border-foreground/20 rounded-full flex justify-center animate-bounce">
+              <div className="w-1 h-3 bg-foreground/30 rounded-full mt-2 animate-pulse"></div>
+            </div>
           </div>
         </div>
       </section>
