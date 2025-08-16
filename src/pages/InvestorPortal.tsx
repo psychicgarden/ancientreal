@@ -38,9 +38,9 @@ const InvestorPortal = () => {
                   <PieChart className="h-4 w-4" />
                   My Portfolio
                 </TabsTrigger>
-                <TabsTrigger value="defi" className="flex items-center gap-2">
+                <TabsTrigger value="trade" className="flex items-center gap-2">
                   <Zap className="h-4 w-4" />
-                  DeFi Trading Hub
+                  Trade Shares
                 </TabsTrigger>
               </TabsList>
             </div>
@@ -103,7 +103,7 @@ const InvestorPortal = () => {
             </TabsContent>
 
 
-            <TabsContent value="defi">
+            <TabsContent value="trade">
               <ErrorBoundary>
                 <LiquidityTradingHub />
               </ErrorBoundary>
