@@ -326,16 +326,18 @@ Answer user questions about the platform, investment process, calculations, and 
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-5-nano-2025-08-07', // Switch to fastest, cheapest GPT-5 model
+        model: 'gpt-4o-mini', // Stable, widely available model
         messages,
-        max_completion_tokens: 600, // Reduce token usage
+        max_tokens: 600, // Use max_tokens for legacy models
+        temperature: 0.2,
         stream: false
       }),
     });
 
     if (!response.ok) {
-      const error = await response.text();
-      console.error('OpenAI API error:', error);
+      const errorText = await response.text();
+      console.error('OpenAI API error status:', response.status);
+      console.error('OpenAI API error payload:', errorText);
       
       // Handle specific API quota errors gracefully
       if (response.status === 429) {
