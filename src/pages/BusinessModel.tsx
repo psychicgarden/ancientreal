@@ -261,7 +261,7 @@ const BusinessModel = () => {
       </section>
 
       {/* Business Model Hero */}
-      <section className="relative py-12 px-4 bg-gradient-subtle">
+      <section className="relative px-4 bg-gradient-subtle py-[4px]">
         <div className="max-w-7xl mx-auto text-center">
           <Badge variant="outline" className="mb-6 text-lg px-6 py-2">
             Development Flywheel Model
