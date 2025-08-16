@@ -1,516 +1,429 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import PropertyMap from "@/components/PropertyMap";
-import SectionHeader from "@/components/SectionHeader";
-import { TrendingUp, Globe, Building, MapPin, DollarSign, BarChart3, Shield, Clock, Home, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-// Business model data
-const locations = [
+// Import property images
+import villaTulum from "@/assets/villa-tulum.jpg";
+import beachChalet from "@/assets/beach-chalet.jpg";
+import villaEriceira from "@/assets/villa-ericeira-portugal.jpg";
+import villaGreece from "@/assets/villa-greece.jpg";
+import villaBali from "@/assets/villa-bali.jpg";
+import penthouseMexico from "@/assets/penthouse-mexico.jpg";
+
+const flywheelData = [
   {
-    id: "mazunte",
-    name: "Mazunte, Mexico",
-    country: "Mexico",
-    cost: "$460,000",
-    units: 4,
-    revenue: "$810,000",
-    legalStructure: "Mexican SAPI de CV",
-    image: "/src/assets/villa-mexico.jpg",
-    phase: "Flip 1 - Starting Point"
+    flip: "Flip 1",
+    location: "Mazunte, Mexico",
+    flag: "🇲🇽",
+    units: 15,
+    buildCost: 1.125,
+    salesPrice: 2.025,
+    cashIn: 0.81,
+    remaining: 2.435,
+    platformFee: 60.75,
+    image: villaTulum,
+    structure: "Mexican SAPI + Fideicomiso"
   },
   {
-    id: "bahia",
-    name: "Bahia, Brazil", 
-    country: "Brazil",
-    cost: "$575,000",
-    units: 5,
-    revenue: "$1,012,500",
-    legalStructure: "Brazilian LTDA",
-    image: "/src/assets/villa-bahia.jpg",
-    phase: "Flip 2A"
+    flip: "Flip 2",
+    location: "Bahia, Brazil",
+    flag: "🇧🇷",
+    units: 21,
+    buildCost: 1.575,
+    salesPrice: 2.835,
+    cashIn: 1.107,
+    remaining: 1.967,
+    platformFee: 85.05,
+    image: beachChalet,
+    structure: "Brazilian LTDA"
   },
   {
-    id: "corfu",
-    name: "Corfu, Greece",
-    country: "Greece", 
-    cost: "$690,000",
-    units: 6,
-    revenue: "$1,215,000",
-    legalStructure: "Greek IKE",
-    image: "/src/assets/villa-corfu-greece.jpg",
-    phase: "Flip 2B"
+    flip: "Flip 3A",
+    location: "Corfu, Greece",
+    flag: "🇬🇷",
+    units: 16,
+    buildCost: 1.2,
+    salesPrice: 2.16,
+    cashIn: 0.864,
+    remaining: 1.631,
+    platformFee: 64.8,
+    image: villaGreece,
+    structure: "Greek IKE SPV"
   },
   {
-    id: "mallorca",
-    name: "Mallorca, Spain",
-    country: "Spain",
-    cost: "$805,000", 
-    units: 7,
-    revenue: "$1,417,500",
-    legalStructure: "Spanish SL",
-    image: "/src/assets/coworking-mallorca.jpg",
-    phase: "Flip 3A"
+    flip: "Flip 3B",
+    location: "Mallorca, Spain",
+    flag: "🇪🇸",
+    units: 15,
+    buildCost: 1.125,
+    salesPrice: 2.025,
+    cashIn: 0.837,
+    remaining: 1.343,
+    platformFee: 60.75,
+    image: villaEriceira,
+    structure: "Spanish SL"
   },
   {
-    id: "thailand",
-    name: "Koh Phangan, Thailand",
-    country: "Thailand",
-    cost: "$632,500",
-    units: 5.5,
-    revenue: "$1,113,750",
-    legalStructure: "Thai Limited Company",
-    image: "/src/assets/bali-jungle-resort.jpg",
-    phase: "Flip 3B"
+    flip: "Flip 4A",
+    location: "Koh Phangan, Thailand",
+    flag: "🇹🇭",
+    units: 25,
+    buildCost: 1.875,
+    salesPrice: 3.375,
+    cashIn: 1.323,
+    remaining: 0.923,
+    platformFee: 101.25,
+    image: villaBali,
+    structure: "30+30 Leasehold"
   },
   {
-    id: "turkey",
-    name: "Cappadocia, Turkey", 
-    country: "Turkey",
-    cost: "$575,000",
-    units: 5,
-    revenue: "$1,012,500",
-    legalStructure: "Turkish Limited Company",
-    image: "/src/assets/desert-oasis-morocco.jpg",
-    phase: "Flip 4"
+    flip: "Flip 4B",
+    location: "Antalya, Turkey",
+    flag: "🇹🇷",
+    units: 20,
+    buildCost: 1.5,
+    salesPrice: 2.7,
+    cashIn: 1.08,
+    remaining: 0.371,
+    platformFee: 81,
+    image: penthouseMexico,
+    structure: "Turkish SPV"
   }
 ];
 
+const revenueStreams = [
+  {
+    title: "Platform Fees",
+    amount: "$453.6K",
+    description: "3% transaction fees from all property sales",
+    timeline: "Immediate capture"
+  },
+  {
+    title: "Mortgage Interest",
+    amount: "$7.46M",
+    description: "8% annual yield on $9.324M mortgage portfolio",
+    timeline: "10-year stream"
+  },
+  {
+    title: "ARW Appreciation",
+    amount: "$16.62M",
+    description: "50% share of $33.24M total property appreciation",
+    timeline: "10-year capture"
+  }
+];
+
+const landAcquisition = [
+  { country: "Mexico", budget: "$270K", structure: "Bank Fideicomiso via SAPI", risk: "Ejido exclusion critical" },
+  { country: "Brazil", budget: "$230K", structure: "Brazilian LTDA", risk: "Environmental approvals" },
+  { country: "Greece", budget: "$360K", structure: "Greek IKE SPV", risk: "Coastal restrictions" },
+  { country: "Spain", budget: "$400K", structure: "Spanish SL", risk: "8-10% transfer costs" },
+  { country: "Thailand", budget: "$280K", structure: "30+30 Leasehold", risk: "Foreign ownership limits" },
+  { country: "Turkey", budget: "$260K", structure: "Turkish SPV", risk: "Military zone clearance" }
+];
+
 const BusinessModel = () => {
+  const navigate = useNavigate();
+  const totalPlatformFees = flywheelData.reduce((sum, flip) => sum + flip.platformFee, 0);
+
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 bg-gradient-to-br from-background via-muted/20 to-accent/10">
-        <div className="container mx-auto px-4 text-center">
-          <Badge variant="outline" className="mb-6 bg-primary/10 text-primary border-primary/20">
-            <Globe className="w-4 h-4 mr-2" />
-            Global Development Strategy
+    <div className="min-h-screen bg-gradient-subtle">
+      {/* Hero Section - Investor Snapshot */}
+      <section className="relative py-20 px-4">
+        <div className="max-w-7xl mx-auto text-center">
+          <Badge variant="outline" className="mb-6 text-lg px-6 py-2">
+            Development Flywheel Model
           </Badge>
-          
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-primary bg-clip-text text-transparent">
-            Ancient Development Flywheel
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-primary bg-clip-text text-transparent">
+            6 Locations, 4 Flips, 9× ROI
           </h1>
-          
-          <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-4xl mx-auto leading-relaxed">
-            Self-funding construction across 6 strategic locations using a proven financial flywheel model
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-12">
+            Strategic geographic sequencing turns $2.75M into $24.53M through coordinated international real estate development
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-12">
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary mb-2">$2.75M</div>
-              <div className="text-sm text-muted-foreground">Initial Investment</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-green-600 mb-2">$24.53M</div>
-              <div className="text-sm text-muted-foreground">Total Revenue (10 years)</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-gold mb-2">9x ROI</div>
-              <div className="text-sm text-muted-foreground">Return Multiple</div>
-            </div>
-          </div>
-          
-          <Button size="lg" className="px-8 py-4 text-lg" asChild>
-            <a href="/investor-portal">
-              Explore Investment Opportunities
-            </a>
-          </Button>
-        </div>
-      </section>
-
-      {/* Interactive Global Map Section */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <SectionHeader
-            title="Global Development Locations"
-            subtitle="Six strategically chosen locations for maximum ROI and legal compliance"
-            className="mb-12"
-          />
-          
-          <div className="bg-card/50 backdrop-blur-sm border border-border/30 rounded-xl p-6 mb-8">
-            <PropertyMap />
-          </div>
-          
-          <div className="text-center">
-            <p className="text-muted-foreground max-w-3xl mx-auto">
-              Each location has been carefully selected for its legal framework, tourism potential, 
-              and construction cost efficiency. Click on any location above to see detailed investment metrics.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Financial Flow Animation */}
-      <section className="py-20 bg-gradient-to-br from-background to-muted/20">
-        <div className="container mx-auto px-4">
-          <SectionHeader
-            title="The Development Flywheel"
-            subtitle="How construction sales fund the next phase, creating exponential growth"
-            className="mb-12"
-          />
-          
-          <div className="relative max-w-6xl mx-auto">
-            {/* Flow Diagram */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-              <Card className="relative bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
-                <CardHeader className="text-center pb-4">
-                  <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
-                    <DollarSign className="w-6 h-6 text-primary-foreground" />
-                  </div>
-                  <CardTitle className="text-lg">Initial Capital</CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <div className="text-2xl font-bold text-primary mb-2">$2.75M</div>
-                  <p className="text-sm text-muted-foreground">Starting investment for first construction</p>
-                </CardContent>
-              </Card>
-
-              <Card className="relative bg-gradient-to-br from-blue-500/10 to-blue-500/5 border-blue-500/20">
-                <CardHeader className="text-center pb-4">
-                  <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Building className="w-6 h-6 text-white" />
-                  </div>
-                  <CardTitle className="text-lg">Construction</CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <div className="text-2xl font-bold text-blue-600 mb-2">4 Units</div>
-                  <p className="text-sm text-muted-foreground">Built in Mazunte, Mexico</p>
-                </CardContent>
-              </Card>
-
-              <Card className="relative bg-gradient-to-br from-green-500/10 to-green-500/5 border-green-500/20">
-                <CardHeader className="text-center pb-4">
-                  <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <TrendingUp className="w-6 h-6 text-white" />
-                  </div>
-                  <CardTitle className="text-lg">Sales Revenue</CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <div className="text-2xl font-bold text-green-600 mb-2">$810K</div>
-                  <p className="text-sm text-muted-foreground">Down payments received</p>
-                </CardContent>
-              </Card>
-
-              <Card className="relative bg-gradient-to-br from-purple-500/10 to-purple-500/5 border-purple-500/20">
-                <CardHeader className="text-center pb-4">
-                  <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <BarChart3 className="w-6 h-6 text-white" />
-                  </div>
-                  <CardTitle className="text-lg">Reinvestment</CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <div className="text-2xl font-bold text-purple-600 mb-2">$2.435M</div>
-                  <p className="text-sm text-muted-foreground">Available for next phases</p>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Flow arrows */}
-            <div className="hidden md:block absolute top-20 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
-            
-            {/* Final Results */}
-            <Card className="bg-gradient-to-r from-gold/10 to-gold/5 border-gold/30">
-              <CardHeader className="text-center">
-                <CardTitle className="text-2xl text-gold">Final Flywheel Results</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                  <div>
-                    <div className="text-xl font-bold text-green-600 mb-1">$371K</div>
-                    <div className="text-sm text-muted-foreground">Cash Surplus</div>
-                  </div>
-                  <div>
-                    <div className="text-xl font-bold text-primary mb-1">$453.6K</div>
-                    <div className="text-sm text-muted-foreground">Platform Fees</div>
-                  </div>
-                  <div>
-                    <div className="text-xl font-bold text-gold mb-1">32.5 Units</div>
-                    <div className="text-sm text-muted-foreground">Total Properties Built</div>
-                  </div>
-                </div>
+          {/* Key Metrics */}
+          <div className="grid md:grid-cols-4 gap-6 mb-12">
+            <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+              <CardContent className="p-6 text-center">
+                <TrendingUp className="w-8 h-8 text-primary mx-auto mb-3" />
+                <div className="text-2xl font-bold text-foreground">$2.75M</div>
+                <div className="text-sm text-muted-foreground">Initial Capital</div>
+              </CardContent>
+            </Card>
+            <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+              <CardContent className="p-6 text-center">
+                <Building className="w-8 h-8 text-primary mx-auto mb-3" />
+                <div className="text-2xl font-bold text-foreground">112</div>
+                <div className="text-sm text-muted-foreground">Total Units</div>
+              </CardContent>
+            </Card>
+            <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+              <CardContent className="p-6 text-center">
+                <Globe className="w-8 h-8 text-primary mx-auto mb-3" />
+                <div className="text-2xl font-bold text-foreground">6</div>
+                <div className="text-sm text-muted-foreground">Countries</div>
+              </CardContent>
+            </Card>
+            <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+              <CardContent className="p-6 text-center">
+                <DollarSign className="w-8 h-8 text-primary mx-auto mb-3" />
+                <div className="text-2xl font-bold text-foreground">$24.53M</div>
+                <div className="text-sm text-muted-foreground">10-Year Capture</div>
               </CardContent>
             </Card>
           </div>
         </div>
       </section>
 
-      {/* Location Showcase Grid */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <SectionHeader
-            title="Development Locations"
-            subtitle="Each location features unique advantages and proven legal frameworks"
-            className="mb-12"
-          />
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {locations.map((location, index) => (
-              <Card key={location.id} className="overflow-hidden bg-card/50 backdrop-blur-sm border border-border/30 hover:border-primary/30 transition-all duration-300 group">
-                <div className="relative h-48 bg-gradient-to-br from-muted to-muted/50">
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <Badge variant="outline" className="mb-2 bg-background/80 text-foreground">
-                      {location.phase}
-                    </Badge>
-                    <h3 className="text-xl font-bold text-white">{location.name}</h3>
-                  </div>
-                </div>
-                
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <div className="text-muted-foreground mb-1">Investment</div>
-                        <div className="font-semibold">{location.cost}</div>
+      {/* Flywheel Flow */}
+      <section className="py-20 px-4 bg-background/50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">The Development Flywheel</h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Each flip generates cash to fund the next, creating momentum through strategic geographic sequencing
+            </p>
+          </div>
+
+          <div className="space-y-8">
+            {flywheelData.map((flip, index) => (
+              <Card key={flip.flip} className="bg-card/80 backdrop-blur-sm border-border/50 overflow-hidden">
+                <CardContent className="p-0">
+                  <div className="grid md:grid-cols-3 gap-0">
+                    {/* Image */}
+                    <div className="relative h-64 md:h-auto">
+                      <img 
+                        src={flip.image} 
+                        alt={flip.location}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-r from-background/80 to-transparent md:hidden" />
+                      <div className="absolute top-4 left-4">
+                        <Badge variant="secondary" className="text-lg">
+                          {flip.flag} {flip.flip}
+                        </Badge>
                       </div>
+                    </div>
+
+                    {/* Financial Data */}
+                    <div className="p-8 space-y-4">
                       <div>
-                        <div className="text-muted-foreground mb-1">Units</div>
-                        <div className="font-semibold">{location.units}</div>
+                        <h3 className="text-2xl font-bold mb-2">{flip.location}</h3>
+                        <p className="text-muted-foreground">{flip.units} Units • {flip.structure}</p>
                       </div>
-                      <div>
-                        <div className="text-muted-foreground mb-1">Revenue</div>
-                        <div className="font-semibold text-green-600">{location.revenue}</div>
-                      </div>
-                      <div>
-                        <div className="text-muted-foreground mb-1">ROI</div>
-                        <div className="font-semibold text-primary">
-                          {Math.round((parseInt(location.revenue.replace(/[$,]/g, '')) / parseInt(location.cost.replace(/[$,]/g, '')) - 1) * 100)}%
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <div className="text-sm text-muted-foreground">Build Cost</div>
+                          <div className="text-lg font-semibold">${flip.buildCost}M</div>
+                        </div>
+                        <div>
+                          <div className="text-sm text-muted-foreground">Sales Price</div>
+                          <div className="text-lg font-semibold">${flip.salesPrice}M</div>
+                        </div>
+                        <div>
+                          <div className="text-sm text-muted-foreground">Cash In</div>
+                          <div className="text-lg font-semibold text-primary">${flip.cashIn}M</div>
+                        </div>
+                        <div>
+                          <div className="text-sm text-muted-foreground">Platform Fee</div>
+                          <div className="text-lg font-semibold text-accent">${flip.platformFee}K</div>
                         </div>
                       </div>
                     </div>
-                    
-                    <div className="pt-4 border-t border-border/30">
-                      <div className="text-sm">
-                        <div className="text-muted-foreground mb-1">Legal Structure</div>
-                        <div className="font-medium">{location.legalStructure}</div>
+
+                    {/* Flow Indicator */}
+                    <div className="p-8 flex flex-col justify-center items-center border-l border-border/50">
+                      <div className="text-center mb-4">
+                        <div className="text-sm text-muted-foreground">Remaining Budget</div>
+                        <div className="text-2xl font-bold">${flip.remaining}M</div>
                       </div>
+                      {index < flywheelData.length - 1 && (
+                        <ArrowRight className="w-6 h-6 text-primary" />
+                      )}
+                      {index === flywheelData.length - 1 && (
+                        <Badge variant="outline" className="text-primary border-primary">
+                          Final: $371K Surplus
+                        </Badge>
+                      )}
                     </div>
                   </div>
                 </CardContent>
               </Card>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* Legal Framework Section */}
-      <section className="py-20 bg-gradient-to-br from-background to-muted/20">
-        <div className="container mx-auto px-4">
-          <SectionHeader
-            title="Legal Compliance Framework"
-            subtitle="Comprehensive due diligence and regulatory compliance across all jurisdictions"
-            className="mb-12"
-          />
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            <Card className="bg-card/50 backdrop-blur-sm border border-border/30">
-              <CardHeader>
-                <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mb-4">
-                  <Shield className="w-6 h-6 text-white" />
+          {/* Summary */}
+          <Card className="mt-12 bg-gradient-primary/10 border-primary/20">
+            <CardContent className="p-8 text-center">
+              <h3 className="text-2xl font-bold mb-4">Flywheel Summary</h3>
+              <div className="grid md:grid-cols-3 gap-6">
+                <div>
+                  <div className="text-3xl font-bold text-primary">${totalPlatformFees}K</div>
+                  <div className="text-sm text-muted-foreground">Total Platform Fees</div>
                 </div>
-                <CardTitle>SPV Structure</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Each location operates through its own Special Purpose Vehicle, ensuring legal compliance and investor protection.
-                </p>
-                <ul className="text-sm space-y-2">
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-primary rounded-full mr-2"></div>
-                    Local incorporation per country
-                  </li>
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-primary rounded-full mr-2"></div>
-                    Nevis holding company structure
-                  </li>
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-primary rounded-full mr-2"></div>
-                    Clear ownership through NFTs
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card/50 backdrop-blur-sm border border-border/30">
-              <CardHeader>
-                <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mb-4">
-                  <Home className="w-6 h-6 text-white" />
+                <div>
+                  <div className="text-3xl font-bold text-primary">$371K</div>
+                  <div className="text-sm text-muted-foreground">Cash Surplus</div>
                 </div>
-                <CardTitle>Land Acquisition</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Strategic land purchases with full title verification and construction permits secured upfront.
-                </p>
-                <ul className="text-sm space-y-2">
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-primary rounded-full mr-2"></div>
-                    Due diligence completed
-                  </li>
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-primary rounded-full mr-2"></div>
-                    Construction permits ready
-                  </li>
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-primary rounded-full mr-2"></div>
-                    Tourism zone compliance
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card/50 backdrop-blur-sm border border-border/30">
-              <CardHeader>
-                <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mb-4">
-                  <Users className="w-6 h-6 text-white" />
+                <div>
+                  <div className="text-3xl font-bold text-primary">112</div>
+                  <div className="text-sm text-muted-foreground">Units Built</div>
                 </div>
-                <CardTitle>Regulatory Research</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  Extensive research into local regulations, foreign ownership laws, and tourism development requirements.
-                </p>
-                <ul className="text-sm space-y-2">
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-primary rounded-full mr-2"></div>
-                    Foreign ownership verified
-                  </li>
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-primary rounded-full mr-2"></div>
-                    Local legal counsel retained
-                  </li>
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-primary rounded-full mr-2"></div>
-                    Tourism licensing secured
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="bg-card/30 backdrop-blur-sm border border-border/30 rounded-xl p-8">
-            <h3 className="text-2xl font-bold mb-6 text-center">Country-Specific Compliance</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {locations.map((location) => (
-                <div key={location.id} className="text-center">
-                  <div className="text-lg font-semibold mb-2">{location.country}</div>
-                  <div className="text-sm text-muted-foreground mb-3">{location.legalStructure}</div>
-                  <Badge variant="outline" className="bg-green-500/10 text-green-600 border-green-500/20">
-                    ✓ Compliant
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Revenue Streams Breakdown */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <SectionHeader
-            title="Revenue Streams"
-            subtitle="Multiple income sources creating sustainable long-term returns"
-            className="mb-12"
-          />
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-            <Card className="bg-gradient-to-br from-green-500/10 to-green-500/5 border-green-500/20">
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <DollarSign className="w-8 h-8 text-white" />
-                </div>
-                <CardTitle>Platform Fees</CardTitle>
-                <div className="text-2xl font-bold text-green-600">$453.6K</div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground text-center mb-4">
-                  Immediate revenue from construction and sales platform fees
-                </p>
-                <Progress value={100} className="mb-2" />
-                <div className="text-xs text-center text-muted-foreground">Immediate liquidity</div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-blue-500/10 to-blue-500/5 border-blue-500/20">
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Clock className="w-8 h-8 text-white" />
-                </div>
-                <CardTitle>Mortgage Interest</CardTitle>
-                <div className="text-2xl font-bold text-blue-600">$7.46M</div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground text-center mb-4">
-                  Steady income from property financing over 10 years
-                </p>
-                <Progress value={75} className="mb-2" />
-                <div className="text-xs text-center text-muted-foreground">10-year stream</div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-gold/10 to-gold/5 border-gold/30">
-              <CardHeader className="text-center">
-                <div className="w-16 h-16 bg-gold rounded-full flex items-center justify-center mx-auto mb-4">
-                  <TrendingUp className="w-8 h-8 text-white" />
-                </div>
-                <CardTitle>ARW Appreciation</CardTitle>
-                <div className="text-2xl font-bold text-gold">$16.62M</div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground text-center mb-4">
-                  Long-term appreciation from Ancient Real World token
-                </p>
-                <Progress value={60} className="mb-2" />
-                <div className="text-xs text-center text-muted-foreground">Long-term growth</div>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="text-center">
-            <div className="bg-gradient-to-r from-primary/10 to-gold/10 border border-primary/20 rounded-xl p-8 max-w-2xl mx-auto">
-              <h3 className="text-2xl font-bold mb-4">Total Value Creation</h3>
-              <div className="text-5xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-4">
-                $24.53M
               </div>
-              <p className="text-muted-foreground">
-                From $2.75M initial investment over 10 years, representing a 9x return multiple 
-                and demonstrating the power of the development flywheel model.
-              </p>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="py-20 bg-gradient-to-br from-primary/10 to-accent/10">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Join the Flywheel?</h2>
-          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-            Become part of the Ancient development strategy and benefit from our proven global expansion model.
+      {/* Revenue Model Deep Dive */}
+      <section className="py-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">Three Revenue Streams</h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Multiple income sources create resilient, compound returns over the 10-year investment horizon
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            {revenueStreams.map((stream) => (
+              <Card key={stream.title} className="bg-card/80 backdrop-blur-sm border-border/50">
+                <CardContent className="p-8 text-center">
+                  <div className="text-3xl font-bold text-primary mb-2">{stream.amount}</div>
+                  <h3 className="text-xl font-semibold mb-3">{stream.title}</h3>
+                  <p className="text-muted-foreground mb-4">{stream.description}</p>
+                  <Badge variant="outline">{stream.timeline}</Badge>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <Card className="bg-gradient-secondary/10 border-secondary/20">
+            <CardContent className="p-8">
+              <h3 className="text-2xl font-bold mb-6 text-center">Total System Economics</h3>
+              <div className="grid md:grid-cols-2 gap-8">
+                <div>
+                  <h4 className="text-lg font-semibold mb-4">Mortgage Portfolio</h4>
+                  <ul className="space-y-2 text-muted-foreground">
+                    <li>• Total mortgages originated: $9.324M</li>
+                    <li>• Annual yield at 8%: $746K/year</li>
+                    <li>• 10-year interest income: $7.46M</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-lg font-semibold mb-4">ARW Appreciation Model</h4>
+                  <ul className="space-y-2 text-muted-foreground">
+                    <li>• Each $135K unit → $380K (2.81× over 10 years)</li>
+                    <li>• Total appreciation: $33.24M</li>
+                    <li>• Ancient's 50% share: $16.62M</li>
+                  </ul>
+                </div>
+              </div>
+              <div className="mt-8 p-6 bg-primary/10 rounded-lg text-center">
+                <div className="text-4xl font-bold text-primary mb-2">$24.53M</div>
+                <div className="text-lg">Total 10-Year System Capture</div>
+                <div className="text-sm text-muted-foreground mt-2">9× ROI vs. $2.75M initial allocation</div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* Land Acquisition Playbook */}
+      <section className="py-20 px-4 bg-background/50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">Land Acquisition Framework</h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Coordinated international land purchases with proper legal structures and risk mitigation
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {landAcquisition.map((country) => (
+              <Card key={country.country} className="bg-card/80 backdrop-blur-sm border-border/50">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold">{country.country}</h3>
+                    <Badge variant="secondary">{country.budget}</Badge>
+                  </div>
+                  <div className="space-y-3">
+                    <div>
+                      <div className="text-sm text-muted-foreground">Legal Structure</div>
+                      <div className="text-sm font-medium">{country.structure}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm text-muted-foreground">Key Risk</div>
+                      <div className="text-sm font-medium">{country.risk}</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <Card className="bg-card/80 backdrop-blur-sm border-border/50">
+            <CardContent className="p-8">
+              <h3 className="text-xl font-bold mb-6">Universal Safeguards</h3>
+              <div className="grid md:grid-cols-2 gap-6">
+                <ul className="space-y-3">
+                  <li className="flex items-center gap-3">
+                    <Shield className="w-5 h-5 text-primary" />
+                    <span>SPV per site for clean balance sheets</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Shield className="w-5 h-5 text-primary" />
+                    <span>Option contracts with minimum cash exposure</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Shield className="w-5 h-5 text-primary" />
+                    <span>Permit-contingent closings</span>
+                  </li>
+                </ul>
+                <ul className="space-y-3">
+                  <li className="flex items-center gap-3">
+                    <Shield className="w-5 h-5 text-primary" />
+                    <span>Escrow for all deposits</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Shield className="w-5 h-5 text-primary" />
+                    <span>Title insurance where available</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Shield className="w-5 h-5 text-primary" />
+                    <span>7-10% contingency buffer</span>
+                  </li>
+                </ul>
+              </div>
+              <div className="mt-6 p-4 bg-primary/10 rounded-lg text-center">
+                <div className="text-2xl font-bold text-primary">≈$2.0M</div>
+                <div className="text-sm text-muted-foreground">Total Land Acquisition Budget (All 6 Sites)</div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-20 px-4 text-center">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-4xl font-bold mb-4">Ready to Join the Flywheel?</h2>
+          <p className="text-xl text-muted-foreground mb-8">
+            Strategic international development with institutional-grade legal structures and proven economics
           </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="px-8 py-4 text-lg" asChild>
-              <a href="/investor-portal">
-                Start Investing
-              </a>
-            </Button>
-            <Button size="lg" variant="outline" className="px-8 py-4 text-lg" asChild>
-              <a href="/legal-portal">
-                View Legal Documents
-              </a>
-            </Button>
-          </div>
+          <Button 
+            size="lg" 
+            onClick={() => navigate('/investor-portal')}
+            className="text-lg px-8 py-6"
+          >
+            Access Investor Portal
+            <ArrowRight className="ml-2 w-5 h-5" />
+          </Button>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 };
