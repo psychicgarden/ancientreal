@@ -18,9 +18,9 @@ import {
   Clock,
   Target
 } from "lucide-react";
-import { supabase } from '@/integrations/supabase/client';
 import { useWallet } from '@/contexts/WalletContext';
 import { toast } from 'sonner';
+import { useMortgageProperties } from '@/hooks/useMortgageProperties';
 
 interface MortgageGroupProperty {
   id: string;
@@ -49,63 +49,47 @@ interface GroupMember {
 
 export const MortgageGroupsInterface = () => {
   const { isConnected, account } = useWallet();
+  const { properties: mortgageProps, loading } = useMortgageProperties();
   const [properties, setProperties] = useState<MortgageGroupProperty[]>([]);
   const [selectedProperty, setSelectedProperty] = useState<MortgageGroupProperty | null>(null);
   const [groupMembers, setGroupMembers] = useState<GroupMember[]>([]);
   const [investmentAmount, setInvestmentAmount] = useState<string>('');
-  const [loading, setLoading] = useState(true);
   const [purchasing, setPurchasing] = useState(false);
 
-  // Fetch mortgage group properties
+  // Transform mortgage properties to match component interface
   useEffect(() => {
-    const fetchMortgageGroups = async () => {
-      try {
-        setLoading(true);
-        const { data, error } = await supabase
-          .from('property_fractionalization')
-          .select('*')
-          .eq('investment_type', 'mortgage_group')
-          .eq('is_active', true)
-          .order('listing_date', { ascending: false });
-
-        if (error) throw error;
-        
-        setProperties(data || []);
-        if (data && data.length > 0) {
-          setSelectedProperty(data[0]);
-        }
-      } catch (error) {
-        console.error('Error fetching mortgage groups:', error);
-        toast.error('Failed to load mortgage group properties');
-      } finally {
-        setLoading(false);
+    if (mortgageProps.length > 0) {
+      const transformedProperties: MortgageGroupProperty[] = mortgageProps.map(prop => ({
+        id: prop.id,
+        property_name: prop.name,
+        property_location: prop.location,
+        property_image_url: prop.image,
+        current_speculation_price: prop.totalValue,
+        monthly_base_rent: prop.monthlyRent,
+        group_size_limit: 6, // Fixed group size for all properties
+        down_payment_per_person: prop.downPayment / 6, // Divide 40% down payment by 6 people
+        mortgage_down_payment_total: prop.downPayment,
+        bedrooms: 3, // Default values for display
+        bathrooms: 2,
+        square_feet: 1200,
+        property_description: `Beautiful ${prop.name} available for shared ownership`,
+        tokens_sold: 0, // Start fresh
+        total_tokens_available: 1000000 // Standard token amount
+      }));
+      
+      setProperties(transformedProperties);
+      if (transformedProperties.length > 0) {
+        setSelectedProperty(transformedProperties[0]);
       }
-    };
+    }
+  }, [mortgageProps]);
 
-    fetchMortgageGroups();
-  }, []);
-
-  // Fetch group members when property is selected
+  // Mock group members for demo (no database interaction)
   useEffect(() => {
-    const fetchGroupMembers = async () => {
-      if (!selectedProperty) return;
-
-      try {
-        const { data, error } = await supabase
-          .from('fractional_investments')
-          .select('investor_wallet_address, investment_amount, ownership_percentage, investment_date')
-          .eq('property_id', selectedProperty.id)
-          .eq('status', 'active')
-          .order('investment_date', { ascending: true });
-
-        if (error) throw error;
-        setGroupMembers(data || []);
-      } catch (error) {
-        console.error('Error fetching group members:', error);
-      }
-    };
-
-    fetchGroupMembers();
+    if (selectedProperty) {
+      // Start with empty group members for demo
+      setGroupMembers([]);
+    }
   }, [selectedProperty]);
 
   const handleJoinGroup = async () => {
@@ -130,55 +114,26 @@ export const MortgageGroupsInterface = () => {
 
       // Calculate ownership percentage
       const ownershipPercentage = (amount / selectedProperty.mortgage_down_payment_total) * 100;
-      
-      // Calculate equivalent token amount for compatibility
-      const tokenAmount = (amount / selectedProperty.current_speculation_price) * selectedProperty.total_tokens_available;
 
-      // Insert investment
-      const { error: investmentError } = await supabase
-        .from('fractional_investments')
-        .insert({
+      // Simulate successful investment (demo mode - no database)
+      setTimeout(() => {
+        toast.success(`Successfully joined mortgage group! You now own ${ownershipPercentage.toFixed(1)}% of the property.`);
+        setInvestmentAmount('');
+        
+        // Add member to local state for demo
+        const newMember: GroupMember = {
           investor_wallet_address: account.toLowerCase(),
-          property_id: selectedProperty.id,
           investment_amount: amount,
-          token_amount: tokenAmount,
           ownership_percentage: ownershipPercentage,
-          original_property_price: selectedProperty.current_speculation_price,
-          status: 'active'
-        });
-
-      if (investmentError) throw investmentError;
-
-      // Update tokens sold for tracking
-      const { error: updateError } = await supabase
-        .from('property_fractionalization')
-        .update({
-          tokens_sold: selectedProperty.tokens_sold + tokenAmount
-        })
-        .eq('id', selectedProperty.id);
-
-      if (updateError) throw updateError;
-
-      toast.success(`Successfully joined mortgage group! You now own ${ownershipPercentage.toFixed(1)}% of the property.`);
-      setInvestmentAmount('');
-      
-      // Refresh data
-      const updatedProperty = { ...selectedProperty, tokens_sold: selectedProperty.tokens_sold + tokenAmount };
-      setSelectedProperty(updatedProperty);
-      
-      // Refresh group members
-      const newMember: GroupMember = {
-        investor_wallet_address: account.toLowerCase(),
-        investment_amount: amount,
-        ownership_percentage: ownershipPercentage,
-        investment_date: new Date().toISOString()
-      };
-      setGroupMembers([...groupMembers, newMember]);
+          investment_date: new Date().toISOString()
+        };
+        setGroupMembers([...groupMembers, newMember]);
+        setPurchasing(false);
+      }, 1500);
 
     } catch (error) {
       console.error('Error joining mortgage group:', error);
       toast.error('Failed to join mortgage group. Please try again.');
-    } finally {
       setPurchasing(false);
     }
   };
