@@ -52,16 +52,10 @@ const PlatformAssessment = () => {
     }
   ];
 
-  const budgetOptimization = {
-    original: {
-      "Platform & Tech": 250000,
-      "Contingency": 565000
-    },
-    optimized: {
-      "Platform & Tech": 350000,
-      "Contingency": 465000,
-      "Audit Ring-fence": 50000
-    }
+  const currentBudgetAllocation = {
+    "Platform & Tech": 350000,
+    "Contingency": 465000,
+    "Audit Ring-fence": 50000
   };
 
   const enhancementPriorities = [
@@ -153,68 +147,35 @@ const PlatformAssessment = () => {
         </CardContent>
       </Card>
 
-      {/* Budget Optimization */}
+      {/* Current Budget Allocation */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <TrendingUp className="w-6 h-6 text-primary" />
-            Proposed Budget Optimization
+            Current Budget Allocation
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <h4 className="font-semibold mb-4">Original Allocation</h4>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                  <span>Platform & Tech</span>
-                  <span className="font-mono">${budgetOptimization.original["Platform & Tech"].toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                  <span>Contingency</span>
-                  <span className="font-mono">${budgetOptimization.original["Contingency"].toLocaleString()}</span>
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  Total Tech Budget: <span className="font-semibold">3.8%</span> of total cap
-                </div>
+          <div className="space-y-4">
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="flex justify-between items-center p-4 bg-primary/5 rounded-lg border border-primary/20">
+                <span className="font-medium">Platform & Tech</span>
+                <span className="font-mono text-primary font-semibold">
+                  ${currentBudgetAllocation["Platform & Tech"].toLocaleString()}
+                </span>
+              </div>
+              <div className="flex justify-between items-center p-4 bg-muted/50 rounded-lg">
+                <span className="font-medium">Contingency</span>
+                <span className="font-mono">${currentBudgetAllocation["Contingency"].toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between items-center p-4 bg-amber-50 rounded-lg border border-amber-200">
+                <span className="font-medium">Audit Ring-fence</span>
+                <span className="font-mono text-amber-700">${currentBudgetAllocation["Audit Ring-fence"].toLocaleString()}</span>
               </div>
             </div>
-            
-            <div>
-              <h4 className="font-semibold mb-4">Optimized Allocation</h4>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center p-3 bg-primary/5 rounded-lg border border-primary/20">
-                  <span>Platform & Tech</span>
-                  <span className="font-mono text-primary font-semibold">
-                    ${budgetOptimization.optimized["Platform & Tech"].toLocaleString()}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                  <span>Contingency</span>
-                  <span className="font-mono">${budgetOptimization.optimized["Contingency"].toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between items-center p-3 bg-amber-50 rounded-lg border border-amber-200">
-                  <span>Audit Ring-fence</span>
-                  <span className="font-mono text-amber-700">${budgetOptimization.optimized["Audit Ring-fence"].toLocaleString()}</span>
-                </div>
-                <div className="text-sm text-primary">
-                  Enhanced Tech Budget: <span className="font-semibold">5.4%</span> of total cap (+$100K)
-                </div>
-              </div>
+            <div className="text-center text-sm text-primary">
+              Total Tech Budget: <span className="font-semibold">5.4%</span> of total cap ($400K total)
             </div>
-          </div>
-          
-          <div className="mt-6 p-4 bg-green-50 rounded-lg border border-green-200">
-            <div className="flex items-center gap-2 mb-2">
-              <CheckCircle className="w-4 h-4 text-green-600" />
-              <span className="font-semibold text-green-800">Optimization Benefits</span>
-            </div>
-            <ul className="text-sm text-green-700 space-y-1">
-              <li>• Ring-fenced audit budget ensures security compliance</li>
-              <li>• Additional $100K provides buffer for multi-jurisdiction development</li>
-              <li>• Maintains strong contingency for land/legal risks</li>
-              <li>• Positions platform for Series A scaling after Flip 2</li>
-            </ul>
           </div>
         </CardContent>
       </Card>
