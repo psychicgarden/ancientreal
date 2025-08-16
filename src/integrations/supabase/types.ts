@@ -610,6 +610,51 @@ export type Database = {
           },
         ]
       }
+      platform_fees_archive: {
+        Row: {
+          archived_at: string | null
+          created_at: string
+          fee_amount_base: number
+          fee_amount_usd: number
+          fee_percentage: number
+          id: string
+          payment_status: string
+          property_id: string | null
+          property_value_usd: number
+          transaction_hash: string | null
+          updated_at: string
+          user_wallet_address: string
+        }
+        Insert: {
+          archived_at?: string | null
+          created_at?: string
+          fee_amount_base: number
+          fee_amount_usd: number
+          fee_percentage?: number
+          id?: string
+          payment_status?: string
+          property_id?: string | null
+          property_value_usd: number
+          transaction_hash?: string | null
+          updated_at?: string
+          user_wallet_address: string
+        }
+        Update: {
+          archived_at?: string | null
+          created_at?: string
+          fee_amount_base?: number
+          fee_amount_usd?: number
+          fee_percentage?: number
+          id?: string
+          payment_status?: string
+          property_id?: string | null
+          property_value_usd?: number
+          transaction_hash?: string | null
+          updated_at?: string
+          user_wallet_address?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -1270,6 +1315,102 @@ export type Database = {
         }
         Relationships: []
       }
+      user_properties_archive: {
+        Row: {
+          apr_bps: number | null
+          archived_at: string | null
+          created_at: string
+          currency: string
+          current_value: number
+          down_payment: number
+          down_payment_base: number | null
+          equity_percentage: number
+          id: string
+          image_url: string | null
+          interest_paid_base: number
+          is_active: boolean
+          loan_amount_base: number | null
+          monthly_payment: number
+          mortgage_id: string | null
+          principal_paid_base: number
+          property_id: number | null
+          property_location: string
+          property_name: string
+          purchase_date: string
+          purchase_price: number
+          purchase_price_base: number | null
+          remaining_balance: number
+          remaining_balance_base: number | null
+          term_months: number | null
+          unique_purchase_key: string | null
+          updated_at: string
+          user_address: string | null
+          user_wallet_address: string
+        }
+        Insert: {
+          apr_bps?: number | null
+          archived_at?: string | null
+          created_at?: string
+          currency?: string
+          current_value?: number
+          down_payment: number
+          down_payment_base?: number | null
+          equity_percentage?: number
+          id?: string
+          image_url?: string | null
+          interest_paid_base?: number
+          is_active?: boolean
+          loan_amount_base?: number | null
+          monthly_payment?: number
+          mortgage_id?: string | null
+          principal_paid_base?: number
+          property_id?: number | null
+          property_location: string
+          property_name: string
+          purchase_date?: string
+          purchase_price: number
+          purchase_price_base?: number | null
+          remaining_balance?: number
+          remaining_balance_base?: number | null
+          term_months?: number | null
+          unique_purchase_key?: string | null
+          updated_at?: string
+          user_address?: string | null
+          user_wallet_address: string
+        }
+        Update: {
+          apr_bps?: number | null
+          archived_at?: string | null
+          created_at?: string
+          currency?: string
+          current_value?: number
+          down_payment?: number
+          down_payment_base?: number | null
+          equity_percentage?: number
+          id?: string
+          image_url?: string | null
+          interest_paid_base?: number
+          is_active?: boolean
+          loan_amount_base?: number | null
+          monthly_payment?: number
+          mortgage_id?: string | null
+          principal_paid_base?: number
+          property_id?: number | null
+          property_location?: string
+          property_name?: string
+          purchase_date?: string
+          purchase_price?: number
+          purchase_price_base?: number | null
+          remaining_balance?: number
+          remaining_balance_base?: number | null
+          term_months?: number | null
+          unique_purchase_key?: string | null
+          updated_at?: string
+          user_address?: string | null
+          user_wallet_address?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -1357,6 +1498,57 @@ export type Database = {
         }
         Update: {
           amount?: number
+          block_number?: number | null
+          created_at?: string
+          currency?: string
+          gas_price?: number | null
+          gas_used?: number | null
+          id?: string
+          metadata?: Json | null
+          status?: string
+          transaction_hash?: string
+          transaction_type?: string
+          updated_at?: string
+          user_wallet_address?: string
+        }
+        Relationships: []
+      }
+      user_transactions_archive: {
+        Row: {
+          amount: number
+          archived_at: string | null
+          block_number: number | null
+          created_at: string
+          currency: string
+          gas_price: number | null
+          gas_used: number | null
+          id: string
+          metadata: Json | null
+          status: string
+          transaction_hash: string
+          transaction_type: string
+          updated_at: string
+          user_wallet_address: string
+        }
+        Insert: {
+          amount: number
+          archived_at?: string | null
+          block_number?: number | null
+          created_at?: string
+          currency?: string
+          gas_price?: number | null
+          gas_used?: number | null
+          id?: string
+          metadata?: Json | null
+          status?: string
+          transaction_hash: string
+          transaction_type: string
+          updated_at?: string
+          user_wallet_address: string
+        }
+        Update: {
+          amount?: number
+          archived_at?: string | null
           block_number?: number | null
           created_at?: string
           currency?: string
