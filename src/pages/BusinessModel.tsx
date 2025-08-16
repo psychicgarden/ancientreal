@@ -144,11 +144,7 @@ const BusinessModel = () => {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Backdrop Image */}
         <div className="absolute inset-0 z-0">
-          <img 
-            src={ecoSmartCity} 
-            alt="Luxury eco village" 
-            className="w-full h-full object-cover"
-          />
+          <img src={ecoSmartCity} alt="Luxury eco village" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/75 to-background/60" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-background/20" />
         </div>
@@ -162,10 +158,7 @@ const BusinessModel = () => {
           </div>
           
           {/* Main Headlines */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 bg-gradient-to-r from-foreground via-foreground/95 to-foreground/80 bg-clip-text text-transparent leading-tight">
-            Building Infrastructure<br />
-            <span className="text-primary">for a Borderless World</span>
-          </h1>
+          
           
           {/* Market Reality Section */}
           <div className="max-w-4xl mx-auto mb-12">
