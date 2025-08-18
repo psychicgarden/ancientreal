@@ -682,6 +682,295 @@ const BusinessModel = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Infrastructure Investment Overview */}
+              <div className="mb-16 mt-16">
+                <div className="text-center mb-12">
+                  <h2 className="text-4xl font-bold mb-4">Infrastructure Investment Overview</h2>
+                  <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    The foundation for building a $827M revenue platform by year 10
+                  </p>
+                </div>
+
+                {/* Big Picture Stats */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16 max-w-6xl mx-auto">
+                  <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+                    <CardContent className="p-6 text-center">
+                      <DollarSign className="w-8 h-8 text-primary mx-auto mb-3" />
+                      <div className="text-2xl font-bold text-foreground">$7M</div>
+                      <div className="text-sm text-muted-foreground">Total Infrastructure Investment</div>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+                    <CardContent className="p-6 text-center">
+                      <Building className="w-8 h-8 text-primary mx-auto mb-3" />
+                      <div className="text-2xl font-bold text-foreground">7,500</div>
+                      <div className="text-sm text-muted-foreground">Year 10 Target Homes</div>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+                    <CardContent className="p-6 text-center">
+                      <Globe className="w-8 h-8 text-primary mx-auto mb-3" />
+                      <div className="text-2xl font-bold text-foreground">2M</div>
+                      <div className="text-sm text-muted-foreground">Target Community Members</div>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+                    <CardContent className="p-6 text-center">
+                      <TrendingUp className="w-8 h-8 text-primary mx-auto mb-3" />
+                      <div className="text-2xl font-bold text-foreground">$827M</div>
+                      <div className="text-sm text-muted-foreground">Year 10 Annual Revenue</div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Infrastructure Investment Breakdown */}
+                <div className="max-w-4xl mx-auto">
+                  <h3 className="text-2xl font-bold text-center mb-8">Why $7M Infrastructure Investment</h3>
+                  <div className="grid md:grid-cols-3 gap-8">
+                    
+                    {/* Legal & Compliance */}
+                    <Card className="bg-card/50 backdrop-blur-sm border border-border/30">
+                      <CardContent className="p-8">
+                        <div className="text-center mb-6">
+                          <Shield className="w-12 h-12 text-primary mx-auto mb-4" />
+                          <h4 className="text-xl font-bold mb-2">Legal & Compliance Foundation</h4>
+                          <div className="text-2xl font-bold text-primary">$2.45M</div>
+                        </div>
+                        <div className="space-y-3 text-sm">
+                          <div className="flex justify-between">
+                            <span>Multi-jurisdiction incorporation</span>
+                            <span className="text-muted-foreground">$850K</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Regulatory compliance framework</span>
+                            <span className="text-muted-foreground">$650K</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Insurance & risk management</span>
+                            <span className="text-muted-foreground">$450K</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Legal documentation & templates</span>
+                            <span className="text-muted-foreground">$500K</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Platform Technology */}
+                    <Card className="bg-card/50 backdrop-blur-sm border border-border/30">
+                      <CardContent className="p-8">
+                        <div className="text-center mb-6">
+                          <Building2 className="w-12 h-12 text-primary mx-auto mb-4" />
+                          <h4 className="text-xl font-bold mb-2">Platform Technology</h4>
+                          <div className="text-2xl font-bold text-primary">$1.8M</div>
+                        </div>
+                        <div className="space-y-3 text-sm">
+                          <div className="flex justify-between">
+                            <span>Smart contract development</span>
+                            <span className="text-muted-foreground">$750K</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Platform development & UI/UX</span>
+                            <span className="text-muted-foreground">$600K</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Security audits & testing</span>
+                            <span className="text-muted-foreground">$250K</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Infrastructure & hosting</span>
+                            <span className="text-muted-foreground">$200K</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Market & Operations */}
+                    <Card className="bg-card/50 backdrop-blur-sm border border-border/30">
+                      <CardContent className="p-8">
+                        <div className="text-center mb-6">
+                          <Target className="w-12 h-12 text-primary mx-auto mb-4" />
+                          <h4 className="text-xl font-bold mb-2">Market & Operations</h4>
+                          <div className="text-2xl font-bold text-primary">$2.75M</div>
+                        </div>
+                        <div className="space-y-3 text-sm">
+                          <div className="flex justify-between">
+                            <span>Property acquisition & development</span>
+                            <span className="text-muted-foreground">$1.2M</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Marketing & community building</span>
+                            <span className="text-muted-foreground">$800K</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Operations & management</span>
+                            <span className="text-muted-foreground">$450K</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Partnership development</span>
+                            <span className="text-muted-foreground">$300K</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              </div>
+
+              {/* Three-Phase Evolution */}
+              <div className="mb-16">
+                <div className="text-center mb-12">
+                  <h2 className="text-4xl font-bold mb-4">From Engine → Ecosystem: 3-Phase Evolution</h2>
+                  <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    Strategic roadmap from proof of concept to network state
+                  </p>
+                </div>
+                
+                <div className="max-w-6xl mx-auto">
+                  {/* Evolution Flow */}
+                  <div className="flex items-center justify-center mb-16">
+                    <div className="flex items-center space-x-4">
+                      <div className="bg-gradient-to-r from-primary to-purple-600 text-white px-4 py-2 rounded-lg font-semibold">
+                        Proof Engine
+                      </div>
+                      <ArrowRight className="w-6 h-6 text-muted-foreground" />
+                      <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-lg font-semibold">
+                        Developer Platform
+                      </div>
+                      <ArrowRight className="w-6 h-6 text-muted-foreground" />
+                      <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-lg font-semibold">
+                        Network State
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Phase Cards */}
+                  <div className="grid lg:grid-cols-3 gap-8">
+                    
+                    {/* Phase 1: Proof Engine */}
+                    <Card className="bg-card/50 backdrop-blur-sm border border-border/30 hover:border-primary/50 transition-all duration-300">
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <Badge className="bg-primary/10 text-primary">Phase 1</Badge>
+                          <div className="text-sm text-muted-foreground">Years 0-3</div>
+                        </div>
+                        <h3 className="text-xl font-bold mb-2">Proof Engine</h3>
+                        <p className="text-muted-foreground mb-4">Validate the model with strategic property flips</p>
+                        
+                        <div className="space-y-3 mb-4">
+                          <div className="flex items-start space-x-3">
+                            <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                            <div className="text-sm">4 strategic property flips demonstrating model viability</div>
+                          </div>
+                          <div className="flex items-start space-x-3">
+                            <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                            <div className="text-sm">$7M infrastructure investment deployed</div>
+                          </div>
+                          <div className="flex items-start space-x-3">
+                            <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                            <div className="text-sm">Legal framework established across 3 jurisdictions</div>
+                          </div>
+                          <div className="flex items-start space-x-3">
+                            <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                            <div className="text-sm">Core platform and smart contracts launched</div>
+                          </div>
+                        </div>
+                        
+                        <div className="pt-4 border-t border-border/30">
+                          <div className="text-sm font-medium mb-2">Key Metrics</div>
+                          <div className="space-y-1 text-sm text-muted-foreground">
+                            <div>• 100+ early investors</div>
+                            <div>• $2M+ in property transactions</div>
+                            <div>• Regulatory approval in key markets</div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Phase 2: Platform Scale */}
+                    <Card className="bg-card/50 backdrop-blur-sm border border-border/30 hover:border-green-500/50 transition-all duration-300">
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <Badge className="bg-green-500/10 text-green-600">Phase 2</Badge>
+                          <div className="text-sm text-muted-foreground">Years 3-7</div>
+                        </div>
+                        <h3 className="text-xl font-bold mb-2">Platform Scale</h3>
+                        <p className="text-muted-foreground mb-4">Open platform to developers and scale operations</p>
+                        
+                        <div className="space-y-3 mb-4">
+                          <div className="flex items-start space-x-3">
+                            <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                            <div className="text-sm">Developer platform launch with API access</div>
+                          </div>
+                          <div className="flex items-start space-x-3">
+                            <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                            <div className="text-sm">Mortgage platform for community members</div>
+                          </div>
+                          <div className="flex items-start space-x-3">
+                            <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                            <div className="text-sm">50+ developer partnerships established</div>
+                          </div>
+                          <div className="flex items-start space-x-3">
+                            <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                            <div className="text-sm">Expansion to 5+ countries</div>
+                          </div>
+                        </div>
+                        
+                        <div className="pt-4 border-t border-border/30">
+                          <div className="text-sm font-medium mb-2">Key Metrics</div>
+                          <div className="space-y-1 text-sm text-muted-foreground">
+                            <div>• 10,000+ community members</div>
+                            <div>• $50M+ in property transactions</div>
+                            <div>• 500+ properties in network</div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Phase 3: Network State */}
+                    <Card className="bg-card/50 backdrop-blur-sm border border-border/30 hover:border-blue-500/50 transition-all duration-300">
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <Badge className="bg-blue-500/10 text-blue-600">Phase 3</Badge>
+                          <div className="text-sm text-muted-foreground">Years 7-10</div>
+                        </div>
+                        <h3 className="text-xl font-bold mb-2">Network State</h3>
+                        <p className="text-muted-foreground mb-4">Achieve network state status with global reach</p>
+                        
+                        <div className="space-y-3 mb-4">
+                          <div className="flex items-start space-x-3">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                            <div className="text-sm">7,500 homes across 6+ countries</div>
+                          </div>
+                          <div className="flex items-start space-x-3">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                            <div className="text-sm">2M+ community members globally</div>
+                          </div>
+                          <div className="flex items-start space-x-3">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                            <div className="text-sm">$827M annual revenue achieved</div>
+                          </div>
+                          <div className="flex items-start space-x-3">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                            <div className="text-sm">Self-governing community protocols</div>
+                          </div>
+                        </div>
+                        
+                        <div className="pt-4 border-t border-border/30">
+                          <div className="text-sm font-medium mb-2">Key Metrics</div>
+                          <div className="space-y-1 text-sm text-muted-foreground">
+                            <div>• Network state recognition</div>
+                            <div>• $5B+ in managed assets</div>
+                            <div>• Global governance model</div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              </div>
             </TabsContent>
 
             <TabsContent value="platform-assessment">
