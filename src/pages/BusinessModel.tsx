@@ -1944,6 +1944,178 @@ const BusinessModel = () => {
                 </div>
               </Card>
 
+              {/* How The Money Actually Moves */}
+              <Card className="p-8 bg-gradient-card border-none shadow-luxury">
+                <div className="space-y-8">
+                  <div className="text-center space-y-4">
+                    <h3 className="text-2xl font-bold">How The Money Actually Moves</h3>
+                    <p className="text-muted-foreground">Here's the month-by-month walkthrough so you can see how $7.0M gets used, recycled, and ends with $2.94M treasury while peak capital at risk is only $4.06M.</p>
+                  </div>
+
+                  {/* Treasury Ledger */}
+                  <div className="space-y-6">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-6 h-6 bg-red-500 rounded flex items-center justify-center">
+                        <span className="text-white text-sm font-bold">📊</span>
+                      </div>
+                      <h4 className="text-xl font-bold">The Treasury Ledger (Key Milestones)</h4>
+                    </div>
+
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse bg-background/50 rounded-lg overflow-hidden">
+                        <thead>
+                          <tr className="bg-muted">
+                            <th className="p-4 text-left font-semibold">Month</th>
+                            <th className="p-4 text-left font-semibold">Milestone</th>
+                            <th className="p-4 text-left font-semibold">Cash Change</th>
+                            <th className="p-4 text-left font-semibold">Treasury After</th>
+                            <th className="p-4 text-left font-semibold">Capital at Risk</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr className="border-b border-muted/50">
+                            <td className="p-4">Start</td>
+                            <td className="p-4">Initial Investment</td>
+                            <td className="p-4">—</td>
+                            <td className="p-4 font-bold text-orange-600">$7.00M</td>
+                            <td className="p-4">$0.00M</td>
+                          </tr>
+                          <tr className="border-b border-muted/50">
+                            <td className="p-4">M1-M11</td>
+                            <td className="p-4">Legal, Platform, Mexico Setup</td>
+                            <td className="p-4 text-red-600">-$1.21M</td>
+                            <td className="p-4">$5.79M</td>
+                            <td className="p-4">$1.21M</td>
+                          </tr>
+                          <tr className="border-b border-muted/50">
+                            <td className="p-4">M12-M14</td>
+                            <td className="p-4">First Presales Begin (Mazunte)</td>
+                            <td className="p-4 text-green-600">+$0.257M</td>
+                            <td className="p-4">$5.78M</td>
+                            <td className="p-4">$1.22M</td>
+                          </tr>
+                          <tr className="border-b border-muted/50">
+                            <td className="p-4">M15-M21</td>
+                            <td className="p-4">Brazil Build + Bahia Presales</td>
+                            <td className="p-4 text-green-600">+$0.442M</td>
+                            <td className="p-4">$5.39M</td>
+                            <td className="p-4">$1.61M</td>
+                          </tr>
+                          <tr className="border-b border-muted/50">
+                            <td className="p-4">M21-M30</td>
+                            <td className="p-4">Spain Entry + More Presales</td>
+                            <td className="p-4 text-green-600">+$0.67M</td>
+                            <td className="p-4">$4.06M</td>
+                            <td className="p-4">$2.94M</td>
+                          </tr>
+                          <tr className="border-b border-muted/50 bg-red-50 dark:bg-red-950/20">
+                            <td className="p-4 font-bold">M36</td>
+                            <td className="p-4 font-bold">Peak Capital at Risk</td>
+                            <td className="p-4 text-red-600 font-bold">-$0.827M</td>
+                            <td className="p-4 font-bold">$2.94M</td>
+                            <td className="p-4 font-bold text-red-600">$4.06M</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* Cash Recycling Details */}
+                  <div className="space-y-6">
+                    <h4 className="text-xl font-bold">Where The $2.76M Recycled Comes From</h4>
+                    <p className="text-muted-foreground">Cash flows back into the treasury from presales and closings throughout the 36 months:</p>
+                    
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                      <div className="space-y-1">
+                        <div className="font-medium">M12: Mazunte presales start</div>
+                        <div className="text-green-600">+$128K</div>
+                      </div>
+                      <div className="space-y-1">
+                        <div className="font-medium">M18: Mazunte cash closings</div>
+                        <div className="text-green-600">+$534K</div>
+                      </div>
+                      <div className="space-y-1">
+                        <div className="font-medium">M19-21: Bahia presales 2-4</div>
+                        <div className="text-green-600">+$388K</div>
+                      </div>
+                      <div className="space-y-1">
+                        <div className="font-medium">M30: Bahia cash closings</div>
+                        <div className="text-green-600">+$675K</div>
+                      </div>
+                      <div className="space-y-1">
+                        <div className="font-medium">M34-35: EU presales 2-3</div>
+                        <div className="text-green-600">+$387K</div>
+                      </div>
+                      <div className="space-y-1">
+                        <div className="font-medium">M36: EU presales 4</div>
+                        <div className="text-green-600">+$193K</div>
+                      </div>
+                    </div>
+
+                    <div className="bg-green-50 dark:bg-green-950/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
+                      <div className="text-xl font-bold text-green-700 dark:text-green-400">
+                        Total Inflows (Capital Recycled): <span className="text-green-600">$2.76M</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Peak Risk Calculation */}
+                  <div className="bg-red-50 dark:bg-red-950/20 p-6 rounded-lg border border-red-200 dark:border-red-800">
+                    <h4 className="text-xl font-bold text-red-700 dark:text-red-400 mb-4">Peak Risk Calculation Made Simple</h4>
+                    
+                    <div className="text-center space-y-2 mb-4">
+                      <div className="text-3xl font-bold">
+                        <span className="text-slate-700 dark:text-slate-300">$7.0M</span>
+                        <span className="mx-2">–</span>
+                        <span className="text-red-600">$2.94M</span>
+                        <span className="mx-2">=</span>
+                        <span className="text-red-700 dark:text-red-400">$4.06M</span>
+                      </div>
+                      <div className="text-muted-foreground">
+                        Starting Capital minus Lowest Treasury Balance equals Peak Capital at Risk
+                      </div>
+                      <div className="text-red-600 font-medium">
+                        This happens at Month 36, not Month 30
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        We never have all $7M exposed at once
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Plain English Takeaway */}
+                  <div className="bg-amber-50 dark:bg-amber-950/20 p-6 rounded-lg border border-amber-200 dark:border-amber-800">
+                    <h4 className="text-xl font-bold text-amber-800 dark:text-amber-400 mb-4">Plain English Takeaway</h4>
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-start space-x-3">
+                        <div className="w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-white text-sm">✓</span>
+                        </div>
+                        <div>
+                          We put the $7M to work across land, builds, legal, platform, and marketing—but as soon as presales and closings hit, cash flows back into the fund and gets reused.
+                        </div>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <div className="w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-white text-sm">✓</span>
+                        </div>
+                        <div>
+                          Because of that recycling, the most we ever have exposed at one time is $4.06M, not the full $7M.
+                        </div>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <div className="w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-white text-sm">✓</span>
+                        </div>
+                        <div>
+                          By Month 36 we still have $2.94M cash in treasury, plus multiple markets completed or underway, and we roll that cash into Thailand/Turkey without needing a new raise.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Card>
 
               {/* Conclusion */}
               <Card className="p-8 bg-gradient-card border-none shadow-luxury">
