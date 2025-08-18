@@ -1641,6 +1641,43 @@ const BusinessModel = () => {
                 </Tabs>
               </Card>
 
+              {/* Revenue Model Validation */}
+              <Card className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200 dark:border-green-800">
+                <CardContent className="p-8">
+                  <h3 className="text-2xl font-bold mb-6 text-green-800 dark:text-green-400">🚀 Revenue Model Validation</h3>
+                  <div className="text-xl font-bold mb-4">10-Year Projected Returns: $24.53M Total</div>
+                  
+                  <div className="grid md:grid-cols-3 gap-6">
+                    <div className="bg-white dark:bg-background/50 rounded-lg p-4 border border-green-200 dark:border-green-800">
+                      <div className="text-lg font-semibold text-green-800 dark:text-green-400 mb-2">Platform Fees (Immediate): $453.6K</div>
+                      <div className="space-y-1 text-sm text-muted-foreground">
+                        <div>• 3% transaction fee on all sales</div>
+                        <div>• Competitive with traditional real estate commissions (6%)</div>
+                        <div>• Lower than Reental's 4-5% fee structure</div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white dark:bg-background/50 rounded-lg p-4 border border-green-200 dark:border-green-800">
+                      <div className="text-lg font-semibold text-green-800 dark:text-green-400 mb-2">Mortgage Interest (10-Year Stream): $7.46M</div>
+                      <div className="space-y-1 text-sm text-muted-foreground">
+                        <div>• 8% yield on financed properties</div>
+                        <div>• Addresses $250B cross-border lending gap</div>
+                        <div>• Higher returns than traditional banking (2-4%)</div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white dark:bg-background/50 rounded-lg p-4 border border-green-200 dark:border-green-800">
+                      <div className="text-lg font-semibold text-green-800 dark:text-green-400 mb-2">Property Appreciation (10-Year Capture): $16.62M</div>
+                      <div className="space-y-1 text-sm text-muted-foreground">
+                        <div>• Based on historical emerging market performance</div>
+                        <div>• Conservative compared to Tulum's 300%+ appreciation</div>
+                        <div>• Captures nomad wealth typically lost to rent</div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* 36-Month Summary & Analysis */}
               <Card className="p-8 bg-gradient-card border-none shadow-luxury">
                 <div className="space-y-6">
@@ -2216,42 +2253,6 @@ const BusinessModel = () => {
                   </Card>
                 </div>
 
-                {/* Revenue Model Validation */}
-                <Card className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200 dark:border-green-800">
-                  <CardContent className="p-8">
-                    <h3 className="text-2xl font-bold mb-6 text-green-800 dark:text-green-400">🚀 Revenue Model Validation</h3>
-                    <div className="text-xl font-bold mb-4">10-Year Projected Returns: $24.53M Total</div>
-                    
-                    <div className="grid md:grid-cols-3 gap-6">
-                      <div className="bg-white dark:bg-background/50 rounded-lg p-4 border border-green-200 dark:border-green-800">
-                        <div className="text-lg font-semibold text-green-800 dark:text-green-400 mb-2">Platform Fees (Immediate): $453.6K</div>
-                        <div className="space-y-1 text-sm text-muted-foreground">
-                          <div>• 3% transaction fee on all sales</div>
-                          <div>• Competitive with traditional real estate commissions (6%)</div>
-                          <div>• Lower than Reental's 4-5% fee structure</div>
-                        </div>
-                      </div>
-                      
-                      <div className="bg-white dark:bg-background/50 rounded-lg p-4 border border-green-200 dark:border-green-800">
-                        <div className="text-lg font-semibold text-green-800 dark:text-green-400 mb-2">Mortgage Interest (10-Year Stream): $7.46M</div>
-                        <div className="space-y-1 text-sm text-muted-foreground">
-                          <div>• 8% yield on financed properties</div>
-                          <div>• Addresses $250B cross-border lending gap</div>
-                          <div>• Higher returns than traditional banking (2-4%)</div>
-                        </div>
-                      </div>
-                      
-                      <div className="bg-white dark:bg-background/50 rounded-lg p-4 border border-green-200 dark:border-green-800">
-                        <div className="text-lg font-semibold text-green-800 dark:text-green-400 mb-2">Property Appreciation (10-Year Capture): $16.62M</div>
-                        <div className="space-y-1 text-sm text-muted-foreground">
-                          <div>• Based on historical emerging market performance</div>
-                          <div>• Conservative compared to Tulum's 300%+ appreciation</div>
-                          <div>• Captures nomad wealth typically lost to rent</div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
 
                 {/* Bottom Line */}
                 <Card className="bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/20">
