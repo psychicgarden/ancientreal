@@ -321,6 +321,38 @@ const BusinessModel = () => {
 
             <TabsContent value="revenue-model">
 
+              {/* Stats Overview */}
+              <div className="grid grid-cols-4 gap-6 mb-16">
+                <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+                  <CardContent className="p-6 text-center">
+                    <TrendingUp className="w-8 h-8 text-primary mx-auto mb-3" />
+                    <div className="text-2xl font-bold text-foreground">$2.75M</div>
+                    <div className="text-sm text-muted-foreground">Initial Capital</div>
+                  </CardContent>
+                </Card>
+                <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+                  <CardContent className="p-6 text-center">
+                    <Building className="w-8 h-8 text-primary mx-auto mb-3" />
+                    <div className="text-2xl font-bold text-foreground">112</div>
+                    <div className="text-sm text-muted-foreground">Total Units</div>
+                  </CardContent>
+                </Card>
+                <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+                  <CardContent className="p-6 text-center">
+                    <Target className="w-8 h-8 text-primary mx-auto mb-3" />
+                    <div className="text-2xl font-bold text-foreground">6</div>
+                    <div className="text-sm text-muted-foreground">Countries</div>
+                  </CardContent>
+                </Card>
+                <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+                  <CardContent className="p-6 text-center">
+                    <DollarSign className="w-8 h-8 text-primary mx-auto mb-3" />
+                    <div className="text-2xl font-bold text-foreground">$24.53M</div>
+                    <div className="text-sm text-muted-foreground">10-Year Capture</div>
+                  </CardContent>
+                </Card>
+              </div>
+
               {/* Flywheel Flow */}
               <div>
                 <div className="text-center mb-16">
