@@ -1948,77 +1948,242 @@ const BusinessModel = () => {
               <Card className="p-8 bg-gradient-card border-none shadow-luxury">
                 <div className="space-y-8">
                   <div className="text-center space-y-4">
-                    <h3 className="text-2xl font-bold">How The Money Actually Moves</h3>
-                    <p className="text-muted-foreground">Here's the month-by-month walkthrough so you can see how $7.0M gets used, recycled, and ends with $2.94M treasury while peak capital at risk is only $4.06M.</p>
+                    <div className="inline-flex items-center gap-2 bg-gradient-to-r from-red-500 to-orange-500 text-white px-6 py-3 rounded-full font-semibold text-lg mb-6">
+                      📊 The Treasury Ledger (Key Milestones)
+                    </div>
+                    <p className="text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+                      Here's the month-by-month walkthrough so you can see how $7.0M gets used, recycled, and ends with $2.94M treasury while peak capital at risk is only $4.06M.
+                    </p>
                   </div>
 
-                  {/* Treasury Ledger */}
+                  {/* Sophisticated Treasury Cards Layout */}
                   <div className="space-y-6">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-6 h-6 bg-red-500 rounded flex items-center justify-center">
-                        <span className="text-white text-sm font-bold">📊</span>
-                      </div>
-                      <h4 className="text-xl font-bold">The Treasury Ledger (Key Milestones)</h4>
-                    </div>
+                    {/* Header Card */}
+                    <Card className="bg-gradient-to-r from-slate-900 to-zinc-900 text-white border-slate-700 overflow-hidden">
+                      <CardContent className="p-0">
+                        <div className="grid grid-cols-5 gap-0">
+                          <div className="p-4 bg-gradient-to-br from-slate-800 to-slate-900 border-r border-slate-700">
+                            <div className="text-xs font-medium text-slate-300 uppercase tracking-wider">Timeline</div>
+                            <div className="text-sm font-bold mt-1">Month</div>
+                          </div>
+                          <div className="p-4 bg-gradient-to-br from-blue-900/50 to-indigo-900/50 border-r border-slate-700">
+                            <div className="text-xs font-medium text-blue-200 uppercase tracking-wider">Milestone</div>
+                            <div className="text-sm font-bold mt-1 text-blue-100">Key Achievement</div>
+                          </div>
+                          <div className="p-4 bg-gradient-to-br from-emerald-900/50 to-teal-900/50 border-r border-slate-700">
+                            <div className="text-xs font-medium text-emerald-200 uppercase tracking-wider">Cash Flow</div>
+                            <div className="text-sm font-bold mt-1 text-emerald-100">Change</div>
+                          </div>
+                          <div className="p-4 bg-gradient-to-br from-amber-900/50 to-orange-900/50 border-r border-slate-700">
+                            <div className="text-xs font-medium text-amber-200 uppercase tracking-wider">Treasury</div>
+                            <div className="text-sm font-bold mt-1 text-amber-100">Balance After</div>
+                          </div>
+                          <div className="p-4 bg-gradient-to-br from-red-900/50 to-pink-900/50">
+                            <div className="text-xs font-medium text-red-200 uppercase tracking-wider">Risk Exposure</div>
+                            <div className="text-sm font-bold mt-1 text-red-100">Capital at Risk</div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
 
-                    <div className="overflow-x-auto">
-                      <table className="w-full border-collapse bg-background/50 rounded-lg overflow-hidden">
-                        <thead>
-                          <tr className="bg-muted">
-                            <th className="p-4 text-left font-semibold">Month</th>
-                            <th className="p-4 text-left font-semibold">Milestone</th>
-                            <th className="p-4 text-left font-semibold">Cash Change</th>
-                            <th className="p-4 text-left font-semibold">Treasury After</th>
-                            <th className="p-4 text-left font-semibold">Capital at Risk</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr className="border-b border-muted/50">
-                            <td className="p-4">Start</td>
-                            <td className="p-4">Initial Investment</td>
-                            <td className="p-4">—</td>
-                            <td className="p-4 font-bold text-orange-600">$7.00M</td>
-                            <td className="p-4">$0.00M</td>
-                          </tr>
-                          <tr className="border-b border-muted/50">
-                            <td className="p-4">M1-M11</td>
-                            <td className="p-4">Legal, Platform, Mexico Setup</td>
-                            <td className="p-4 text-red-600">-$1.21M</td>
-                            <td className="p-4">$5.79M</td>
-                            <td className="p-4">$1.21M</td>
-                          </tr>
-                          <tr className="border-b border-muted/50">
-                            <td className="p-4">M12-M14</td>
-                            <td className="p-4">First Presales Begin (Mazunte)</td>
-                            <td className="p-4 text-green-600">+$0.257M</td>
-                            <td className="p-4">$5.78M</td>
-                            <td className="p-4">$1.22M</td>
-                          </tr>
-                          <tr className="border-b border-muted/50">
-                            <td className="p-4">M15-M21</td>
-                            <td className="p-4">Brazil Build + Bahia Presales</td>
-                            <td className="p-4 text-green-600">+$0.442M</td>
-                            <td className="p-4">$5.39M</td>
-                            <td className="p-4">$1.61M</td>
-                          </tr>
-                          <tr className="border-b border-muted/50">
-                            <td className="p-4">M21-M30</td>
-                            <td className="p-4">Spain Entry + More Presales</td>
-                            <td className="p-4 text-green-600">+$0.67M</td>
-                            <td className="p-4">$4.06M</td>
-                            <td className="p-4">$2.94M</td>
-                          </tr>
-                          <tr className="border-b border-muted/50 bg-red-50 dark:bg-red-950/20">
-                            <td className="p-4 font-bold">M36</td>
-                            <td className="p-4 font-bold">Peak Capital at Risk</td>
-                            <td className="p-4 text-red-600 font-bold">-$0.827M</td>
-                            <td className="p-4 font-bold">$2.94M</td>
-                            <td className="p-4 font-bold text-red-600">$4.06M</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+                    {/* Treasury Data Cards */}
+                    {[
+                      {
+                        month: "Start",
+                        milestone: "Initial Investment",
+                        cashChange: "—",
+                        treasuryAfter: "$7.00M",
+                        capitalAtRisk: "$0.00M",
+                        isPositive: null,
+                        isStart: true
+                      },
+                      {
+                        month: "M1-M11",
+                        milestone: "Legal, Platform, Mexico Setup",
+                        cashChange: "-$1.21M",
+                        treasuryAfter: "$5.79M", 
+                        capitalAtRisk: "$1.21M",
+                        isPositive: false
+                      },
+                      {
+                        month: "M12-M14",
+                        milestone: "First Presales Begin (Mazunte)",
+                        cashChange: "+$0.257M",
+                        treasuryAfter: "$5.78M",
+                        capitalAtRisk: "$1.22M", 
+                        isPositive: true
+                      },
+                      {
+                        month: "M15-M21",
+                        milestone: "Brazil Build + Bahia Presales",
+                        cashChange: "+$0.442M",
+                        treasuryAfter: "$5.39M",
+                        capitalAtRisk: "$1.61M",
+                        isPositive: true
+                      },
+                      {
+                        month: "M21-M30",
+                        milestone: "Spain Entry + More Presales",
+                        cashChange: "+$0.67M",
+                        treasuryAfter: "$4.06M",
+                        capitalAtRisk: "$2.94M",
+                        isPositive: true
+                      },
+                      {
+                        month: "M36",
+                        milestone: "Peak Capital at Risk",
+                        cashChange: "-$0.827M",
+                        treasuryAfter: "$2.94M",
+                        capitalAtRisk: "$4.06M",
+                        isPositive: false,
+                        isPeak: true
+                      }
+                    ].map((row, index) => (
+                      <Card key={index} className={`transition-all duration-300 hover:shadow-xl overflow-hidden ${
+                        row.isStart ? 'bg-gradient-to-r from-slate-900 to-zinc-900 border-slate-700 text-white' :
+                        row.isPeak ? 'bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-950/20 dark:to-pink-950/20 border-red-200 dark:border-red-800' :
+                        'bg-white dark:bg-slate-900/50 border-slate-200 dark:border-slate-700'
+                      }`}>
+                        <CardContent className="p-0">
+                          <div className="grid grid-cols-5 gap-0">
+                            {/* Month */}
+                            <div className={`p-4 border-r ${
+                              row.isStart ? 'border-slate-600' : 
+                              row.isPeak ? 'border-red-200 dark:border-red-800' : 
+                              'border-slate-200 dark:border-slate-700'
+                            }`}>
+                              <div className={`text-xs font-medium uppercase tracking-wider mb-1 ${
+                                row.isStart ? 'text-slate-300' : 'text-muted-foreground'
+                              }`}>
+                                Timeline
+                              </div>
+                              <div className={`text-sm font-bold ${
+                                row.isStart ? 'text-white' : 
+                                row.isPeak ? 'text-red-700 dark:text-red-300' : 
+                                'text-foreground'
+                              }`}>
+                                {row.month}
+                              </div>
+                            </div>
+
+                            {/* Milestone */}
+                            <div className={`p-4 border-r ${
+                              row.isStart ? 'border-slate-600' : 
+                              row.isPeak ? 'border-red-200 dark:border-red-800' : 
+                              'border-slate-200 dark:border-slate-700'
+                            }`}>
+                              <div className={`text-xs font-medium uppercase tracking-wider mb-1 ${
+                                row.isStart ? 'text-blue-200' : 'text-blue-600 dark:text-blue-400'
+                              }`}>
+                                Milestone
+                              </div>
+                              <div className={`text-sm font-semibold leading-tight ${
+                                row.isStart ? 'text-blue-100' : 
+                                row.isPeak ? 'text-red-700 dark:text-red-300' : 
+                                'text-blue-700 dark:text-blue-300'
+                              }`}>
+                                {row.milestone}
+                              </div>
+                            </div>
+
+                            {/* Cash Change */}
+                            <div className={`p-4 border-r ${
+                              row.isStart ? 'border-slate-600' : 
+                              row.isPeak ? 'border-red-200 dark:border-red-800' : 
+                              'border-slate-200 dark:border-slate-700'
+                            }`}>
+                              <div className={`text-xs font-medium uppercase tracking-wider mb-1 ${
+                                row.isStart ? 'text-emerald-200' : 'text-emerald-600 dark:text-emerald-400'
+                              }`}>
+                                Cash Flow
+                              </div>
+                              <div className={`text-lg font-bold font-mono ${
+                                row.isStart ? 'text-emerald-100' :
+                                row.isPositive === true ? 'text-emerald-600 dark:text-emerald-400' :
+                                row.isPositive === false ? 'text-red-600 dark:text-red-400' :
+                                'text-slate-600 dark:text-slate-400'
+                              }`}>
+                                {row.cashChange}
+                              </div>
+                            </div>
+
+                            {/* Treasury After */}
+                            <div className={`p-4 border-r ${
+                              row.isStart ? 'border-slate-600' : 
+                              row.isPeak ? 'border-red-200 dark:border-red-800' : 
+                              'border-slate-200 dark:border-slate-700'
+                            }`}>
+                              <div className={`text-xs font-medium uppercase tracking-wider mb-1 ${
+                                row.isStart ? 'text-amber-200' : 'text-amber-600 dark:text-amber-400'
+                              }`}>
+                                Treasury
+                              </div>
+                              <div className={`text-lg font-bold font-mono ${
+                                row.isStart ? 'text-amber-100' : 
+                                row.treasuryAfter === '$7.00M' ? 'text-amber-600 dark:text-amber-400' :
+                                'text-orange-600 dark:text-orange-400'
+                              }`}>
+                                {row.treasuryAfter}
+                              </div>
+                            </div>
+
+                            {/* Capital at Risk */}
+                            <div className="p-4">
+                              <div className={`text-xs font-medium uppercase tracking-wider mb-1 ${
+                                row.isStart ? 'text-red-200' : 'text-red-600 dark:text-red-400'
+                              }`}>
+                                Risk Exposure
+                              </div>
+                              <div className={`text-lg font-bold font-mono ${
+                                row.isStart ? 'text-red-100' :
+                                row.capitalAtRisk === '$4.06M' ? 'text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-950/50 px-2 py-1 rounded' :
+                                'text-red-600 dark:text-red-400'
+                              }`}>
+                                {row.capitalAtRisk}
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
                   </div>
+
+                  {/* Summary Insights */}
+                  <div className="mt-12 grid md:grid-cols-3 gap-6">
+                    <Card className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 border-emerald-200 dark:border-emerald-800">
+                      <CardContent className="p-6 text-center">
+                        <div className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <DollarSign className="w-6 h-6 text-white" />
+                        </div>
+                        <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-300 mb-2">$2.94M</div>
+                        <div className="text-sm text-emerald-600 dark:text-emerald-400 font-medium">Final Treasury Balance</div>
+                        <div className="text-xs text-muted-foreground mt-1">42% capital preservation</div>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 border-orange-200 dark:border-orange-800">
+                      <CardContent className="p-6 text-center">
+                        <div className="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <TrendingUp className="w-6 h-6 text-white" />
+                        </div>
+                        <div className="text-2xl font-bold text-orange-700 dark:text-orange-300 mb-2">$4.06M</div>
+                        <div className="text-sm text-orange-600 dark:text-orange-400 font-medium">Peak Risk Exposure</div>
+                        <div className="text-xs text-muted-foreground mt-1">Only 58% of initial capital</div>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border-blue-200 dark:border-blue-800">
+                      <CardContent className="p-6 text-center">
+                        <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <Rocket className="w-6 h-6 text-white" />
+                        </div>
+                        <div className="text-2xl font-bold text-blue-700 dark:text-blue-300 mb-2">36 Months</div>
+                        <div className="text-sm text-blue-600 dark:text-blue-400 font-medium">Capital Recycling Period</div>
+                        <div className="text-xs text-muted-foreground mt-1">Self-sustaining model</div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
 
                   {/* Cash Recycling Details */}
                   <div className="space-y-6">
@@ -2111,13 +2276,12 @@ const BusinessModel = () => {
                         <div>
                           By Month 36 we still have $2.94M cash in treasury, plus multiple markets completed or underway, and we roll that cash into Thailand/Turkey without needing a new raise.
                         </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </Card>
+            </TabsContent>
 
-              {/* Conclusion */}
+            <TabsContent value="legal-structuring">
               <Card className="p-8 bg-gradient-card border-none shadow-luxury">
                 <div className="space-y-6">
                   <h3 className="text-2xl font-bold">Conclusion</h3>
@@ -2426,6 +2590,11 @@ const BusinessModel = () => {
           </Tabs>
         </div>
       </section>
+    </div>
+  );
+};
+
+export default BusinessModel;
 
       {/* CTA */}
       <section className="py-20 px-4 text-center bg-gradient-primary/5">
