@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Code, Users, Home } from "lucide-react";
+import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PlatformAssessment from "@/components/PlatformAssessment";
 
@@ -325,159 +325,39 @@ const BusinessModel = () => {
                 <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                   <CardContent className="p-6 text-center">
                     <TrendingUp className="w-8 h-8 text-primary mx-auto mb-3" />
-                    <div className="text-2xl font-bold text-foreground">$7M</div>
-                    <div className="text-sm text-muted-foreground">Total Infrastructure Investment</div>
+                    <div className="text-2xl font-bold text-foreground">$2.75M</div>
+                    <div className="text-sm text-muted-foreground">Initial Capital</div>
                   </CardContent>
                 </Card>
                 <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                   <CardContent className="p-6 text-center">
                     <Building className="w-8 h-8 text-primary mx-auto mb-3" />
-                    <div className="text-2xl font-bold text-foreground">7,500</div>
-                    <div className="text-sm text-muted-foreground">Year 10 Target Homes</div>
+                    <div className="text-2xl font-bold text-foreground">112</div>
+                    <div className="text-sm text-muted-foreground">Total Units</div>
                   </CardContent>
                 </Card>
                 <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                   <CardContent className="p-6 text-center">
                     <Globe className="w-8 h-8 text-primary mx-auto mb-3" />
-                    <div className="text-2xl font-bold text-foreground">2M</div>
-                    <div className="text-sm text-muted-foreground">Target Community Members</div>
+                    <div className="text-2xl font-bold text-foreground">6</div>
+                    <div className="text-sm text-muted-foreground">Countries</div>
                   </CardContent>
                 </Card>
                 <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                   <CardContent className="p-6 text-center">
                     <DollarSign className="w-8 h-8 text-primary mx-auto mb-3" />
-                    <div className="text-2xl font-bold text-foreground">$827M</div>
-                    <div className="text-sm text-muted-foreground">Year 10 Annual Revenue</div>
+                    <div className="text-2xl font-bold text-foreground">$24.53M</div>
+                    <div className="text-sm text-muted-foreground">10-Year Capture</div>
                   </CardContent>
                 </Card>
-              </div>
-
-              {/* Infrastructure Requirements */}
-              <div className="mb-16">
-                <div className="text-center mb-8">
-                  <h2 className="text-3xl font-bold mb-4">Why $7M Infrastructure Investment</h2>
-                  <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                    Building scalable platform requires all systems simultaneously - legal, tech, compliance, operations
-                  </p>
-                </div>
-                
-                <div className="grid md:grid-cols-3 gap-6">
-                  <Card className="bg-card/80 backdrop-blur-sm border-border/50">
-                    <CardContent className="p-6">
-                      <Shield className="w-8 h-8 text-primary mb-4" />
-                      <h3 className="font-semibold text-lg mb-3">Legal & Compliance Foundation</h3>
-                      <p className="text-sm text-muted-foreground mb-4">$2.45M across all markets</p>
-                      <ul className="text-sm space-y-1">
-                        <li>• Securities compliance (6 countries)</li>
-                        <li>• Property ownership structures</li>
-                        <li>• Cross-border regulatory framework</li>
-                        <li>• Insurance & risk management</li>
-                      </ul>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="bg-card/80 backdrop-blur-sm border-border/50">
-                    <CardContent className="p-6">
-                      <Code className="w-8 h-8 text-primary mb-4" />
-                      <h3 className="font-semibold text-lg mb-3">Platform Technology</h3>
-                      <p className="text-sm text-muted-foreground mb-4">$1.8M development + operations</p>
-                      <ul className="text-sm space-y-1">
-                        <li>• Smart contract infrastructure</li>
-                        <li>• Fractional ownership platform</li>
-                        <li>• Secondary marketplace</li>
-                        <li>• Mobile-first experience</li>
-                      </ul>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="bg-card/80 backdrop-blur-sm border-border/50">
-                    <CardContent className="p-6">
-                      <Users className="w-8 h-8 text-primary mb-4" />
-                      <h3 className="font-semibold text-lg mb-3">Market & Operations</h3>
-                      <p className="text-sm text-muted-foreground mb-4">$2.75M land + marketing</p>
-                      <ul className="text-sm space-y-1">
-                        <li>• Land acquisition (6 markets)</li>
-                        <li>• Community building & marketing</li>
-                        <li>• Operations team & infrastructure</li>
-                        <li>• Strategic partnerships</li>
-                      </ul>
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-
-              {/* Three-Phase Timeline */}
-              <div className="mb-16">
-                <div className="text-center mb-8">
-                  <h2 className="text-3xl font-bold mb-4">From Engine → Ecosystem: 3-Phase Evolution</h2>
-                  <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                    $7M infrastructure enables proof engine → developer platform → network state
-                  </p>
-                </div>
-                
-                <div className="grid md:grid-cols-3 gap-6 mb-16">
-                  <Card className="bg-primary/5 border-primary/20">
-                    <CardContent className="p-6">
-                      <div className="text-center">
-                        <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <span className="text-2xl font-bold text-primary">1</span>
-                        </div>
-                        <h3 className="font-semibold text-lg mb-2">Phase 1: Proof Engine</h3>
-                        <p className="text-sm text-muted-foreground mb-4">Years 0-3</p>
-                        <ul className="text-sm space-y-1 text-left">
-                          <li>• 4 strategic property flips</li>
-                          <li>• $7M infrastructure deployed</li>
-                          <li>• Legal + tech foundation built</li>
-                          <li>• Model validation complete</li>
-                        </ul>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="bg-secondary/5 border-secondary/20">
-                    <CardContent className="p-6">
-                      <div className="text-center">
-                        <div className="w-16 h-16 bg-secondary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <span className="text-2xl font-bold text-secondary">2</span>
-                        </div>
-                        <h3 className="font-semibold text-lg mb-2">Phase 2: Platform Scale</h3>
-                        <p className="text-sm text-muted-foreground mb-4">Years 3-7</p>
-                        <ul className="text-sm space-y-1 text-left">
-                          <li>• Developer onboarding program</li>
-                          <li>• Mortgage platform launch</li>
-                          <li>• 50 developer partnerships</li>
-                          <li>• 2,500 homes under management</li>
-                        </ul>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="bg-accent/5 border-accent/20">
-                    <CardContent className="p-6">
-                      <div className="text-center">
-                        <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <span className="text-2xl font-bold text-accent">3</span>
-                        </div>
-                        <h3 className="font-semibold text-lg mb-2">Phase 3: Network State</h3>
-                        <p className="text-sm text-muted-foreground mb-4">Years 7-10</p>
-                        <ul className="text-sm space-y-1 text-left">
-                          <li>• 7,500 homes across 6+ countries</li>
-                          <li>• 2M community members</li>
-                          <li>• $827M annual revenue</li>
-                          <li>• Self-sustaining ecosystem</li>
-                        </ul>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
               </div>
 
               {/* Flywheel Flow */}
               <div>
                 <div className="text-center mb-16">
-                  <h2 className="text-4xl font-bold mb-4">Phase 1: Development Flywheel</h2>
+                  <h2 className="text-4xl font-bold mb-4">The Development Flywheel</h2>
                   <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                    Proof engine enabled by $7M infrastructure - each flip validates model for platform scale
+                    Each flip generates cash to fund the next, creating momentum through strategic geographic sequencing
                   </p>
                 </div>
 
@@ -585,158 +465,26 @@ const BusinessModel = () => {
                   ))}
                 </div>
 
-                {/* 10-Year Vision & Scenarios */}
-                <div className="mt-16">
-                  <div className="text-center mb-12">
-                    <h3 className="text-3xl font-bold mb-4">10-Year Platform Vision</h3>
-                    <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                      Bear/Base/Bull scenarios for the platform ecosystem at full scale
-                    </p>
-                  </div>
-                  
-                  {/* Scenarios Table */}
-                  <div className="mb-12">
-                    <Card className="bg-card/80 backdrop-blur-sm border-border/50 overflow-hidden">
-                      <CardContent className="p-0">
-                        <div className="overflow-x-auto">
-                          <table className="w-full">
-                            <thead className="bg-muted/50">
-                              <tr>
-                                <th className="text-left p-4 font-semibold">Scenario</th>
-                                <th className="text-right p-4 font-semibold">Homes</th>
-                                <th className="text-right p-4 font-semibold">Community</th>
-                                <th className="text-right p-4 font-semibold">Annual Revenue</th>
-                                <th className="text-right p-4 font-semibold">Enterprise Value</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr className="border-t border-border/50">
-                                <td className="p-4">
-                                  <div className="flex items-center gap-2">
-                                    <div className="w-3 h-3 bg-destructive rounded-full"></div>
-                                    <span className="font-medium">Bear Case</span>
-                                  </div>
-                                </td>
-                                <td className="text-right p-4 font-mono">3,000</td>
-                                <td className="text-right p-4 font-mono">800K</td>
-                                <td className="text-right p-4 font-mono">$400M</td>
-                                <td className="text-right p-4 font-mono font-bold">$4B</td>
-                              </tr>
-                              <tr className="border-t border-border/50 bg-primary/5">
-                                <td className="p-4">
-                                  <div className="flex items-center gap-2">
-                                    <div className="w-3 h-3 bg-primary rounded-full"></div>
-                                    <span className="font-medium">Base Case</span>
-                                  </div>
-                                </td>
-                                <td className="text-right p-4 font-mono">7,500</td>
-                                <td className="text-right p-4 font-mono">2M</td>
-                                <td className="text-right p-4 font-mono">$827M</td>
-                                <td className="text-right p-4 font-mono font-bold">$10B</td>
-                              </tr>
-                              <tr className="border-t border-border/50">
-                                <td className="p-4">
-                                  <div className="flex items-center gap-2">
-                                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                                    <span className="font-medium">Bull Case</span>
-                                  </div>
-                                </td>
-                                <td className="text-right p-4 font-mono">15,000</td>
-                                <td className="text-right p-4 font-mono">4M</td>
-                                <td className="text-right p-4 font-mono">$1.6B</td>
-                                <td className="text-right p-4 font-mono font-bold">$20B</td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-
-                  {/* Revenue Composition - Base Case Year 10 */}
-                  <div className="text-center mb-8">
-                    <h4 className="text-2xl font-bold mb-6">Base Case Revenue Composition (Year 10)</h4>
-                    <div className="grid md:grid-cols-3 gap-6">
-                      <Card className="bg-gradient-primary/10 border-primary/20">
+                {/* Revenue Summary */}
+                <div className="mt-16 text-center">
+                  <h3 className="text-3xl font-bold mb-8">10-Year Revenue Capture</h3>
+                  <div className="grid md:grid-cols-3 gap-6">
+                    {revenueStreams.map((stream, index) => (
+                      <Card key={index} className="bg-card/50 backdrop-blur-sm border-border/50">
                         <CardContent className="p-6 text-center">
-                          <Home className="w-12 h-12 text-primary mx-auto mb-4" />
-                          <h5 className="font-semibold text-lg mb-2">Mortgage Spread</h5>
-                          <div className="text-3xl font-bold text-primary mb-2">$320M</div>
-                          <p className="text-sm text-muted-foreground">7,500 homes × $3,500/month avg spread</p>
+                          <div className="text-3xl mb-3">{stream.icon}</div>
+                          <h4 className="font-semibold text-lg mb-2">{stream.title}</h4>
+                          <div className="text-2xl font-bold text-primary mb-2">{stream.amount}</div>
+                          <p className="text-sm text-muted-foreground mb-1">{stream.description}</p>
+                          <p className="text-xs text-muted-foreground">{stream.timeline}</p>
                         </CardContent>
                       </Card>
-                      
-                      <Card className="bg-gradient-secondary/10 border-secondary/20">
-                        <CardContent className="p-6 text-center">
-                          <TrendingUp className="w-12 h-12 text-secondary mx-auto mb-4" />
-                          <h5 className="font-semibold text-lg mb-2">ARW Appreciation</h5>
-                          <div className="text-3xl font-bold text-secondary mb-2">$280M</div>
-                          <p className="text-sm text-muted-foreground">Annual realized wealth from property gains</p>
-                        </CardContent>
-                      </Card>
-                      
-                      <Card className="bg-gradient-accent/10 border-accent/20">
-                        <CardContent className="p-6 text-center">
-                          <DollarSign className="w-12 h-12 text-accent mx-auto mb-4" />
-                          <h5 className="font-semibold text-lg mb-2">Platform Fees</h5>
-                          <div className="text-3xl font-bold text-accent mb-2">$227M</div>
-                          <p className="text-sm text-muted-foreground">Developer SaaS + transaction fees</p>
-                        </CardContent>
-                      </Card>
-                    </div>
+                    ))}
                   </div>
-
-                  {/* Platform Fees Breakdown */}
-                  <Card className="bg-muted/20 border-border/50">
-                    <CardContent className="p-6">
-                      <h5 className="font-semibold text-lg mb-4 text-center">Platform Fees Derivation ($227M)</h5>
-                      <div className="grid md:grid-cols-2 gap-6">
-                        <div className="space-y-3">
-                          <h6 className="font-medium">Developer SaaS Revenue</h6>
-                          <div className="space-y-1 text-sm">
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Active developers:</span>
-                              <span className="font-mono">50</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Average annual fee:</span>
-                              <span className="font-mono">$250K</span>
-                            </div>
-                            <div className="flex justify-between border-t pt-1">
-                              <span className="font-medium">Annual SaaS:</span>
-                              <span className="font-mono font-bold">$12.5M</span>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div className="space-y-3">
-                          <h6 className="font-medium">Transaction Fees (10-year)</h6>
-                          <div className="space-y-1 text-sm">
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Total homes sold:</span>
-                              <span className="font-mono">7,500</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Average sale price:</span>
-                              <span className="font-mono">$135K</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-muted-foreground">Platform fee (3%):</span>
-                              <span className="font-mono">$4,050</span>
-                            </div>
-                            <div className="flex justify-between border-t pt-1">
-                              <span className="font-medium">Total fees:</span>
-                              <span className="font-mono font-bold">$30M</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="mt-4 p-3 bg-primary/10 rounded-lg text-center">
-                        <div className="text-lg font-bold text-primary">$227M Total Platform Revenue</div>
-                        <div className="text-sm text-muted-foreground">($12.5M × 10 years SaaS) + ($197M secondary market fees)</div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <div className="mt-8 p-6 bg-primary/10 rounded-lg">
+                    <div className="text-3xl font-bold text-primary">$24.53M</div>
+                    <div className="text-sm text-muted-foreground">Total 10-Year Revenue Capture</div>
+                  </div>
                 </div>
               </div>
             </TabsContent>
