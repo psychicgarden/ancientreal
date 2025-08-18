@@ -659,6 +659,19 @@ const BusinessModel = () => {
                   <div className="space-y-6">
                     {[
                       {
+                        country: "🇲🇽 Mexico (Mazunte Project)",
+                        structure: "Mexican SPV (Sociedad Anónima de Capital Variable - S.A. de C.V.)",
+                        regulations: [
+                          "CNBV (National Banking and Securities Commission): S.A. de C.V. shares are regulated securities",
+                          "Property Registry: Company holds registered title at Registro Público de la Propiedad",
+                          "Foreign Investment: Compliant with Foreign Investment Law (Ley de Inversión Extranjera)",
+                          "AMIB Compliance: Mexican Securities Market Association standards",
+                          "Golden Visa Alternative: Path to permanent residency through investment",
+                          "Tax Optimization: Favorable corporate tax structure for international investors"
+                        ],
+                        comparable: "Multiple international real estate platforms operate successfully in Mexico using identical SPV structures, with Tulum real estate appreciation of 300%+ over recent years"
+                      },
+                      {
                         country: "🇧🇷 Brazil (Bahia Project)",
                         structure: "Brazilian LTDA (Limited Liability Company)",
                         regulations: [
