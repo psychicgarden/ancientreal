@@ -784,18 +784,154 @@ const BusinessModel = () => {
             </TabsContent>
 
             <TabsContent value="budget-breakdown" className="space-y-8">
-              {/* Executive Summary */}
+              {/* New Header - Investor Protection Focused */}
+              <div className="text-center space-y-4 mb-8">
+                <h2 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  Low-Risk, Milestone-Gated Deployment
+                </h2>
+                <h3 className="text-2xl text-muted-foreground">
+                  Only $150K Needed to Launch Mexico
+                </h3>
+                <p className="text-lg text-muted-foreground max-w-4xl mx-auto">
+                  Progressive capital deployment with investor protection gates at every phase
+                </p>
+              </div>
+
+              {/* Capital Protection Shield */}
+              <Card className="p-6 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/30 shadow-lg">
+                <div className="flex items-center justify-center space-x-4">
+                  <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
+                    <Shield className="w-6 h-6 text-green-500" />
+                  </div>
+                  <div className="text-center">
+                    <h3 className="text-xl font-bold text-green-600 mb-2">CAPITAL PROTECTION ACTIVATED</h3>
+                    <p className="text-lg text-foreground">
+                      <span className="font-bold">42% of capital is retained in treasury</span> — investor funds are recycled, not burned
+                    </p>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Three-Phase Funnel Overview */}
+              <Card className="p-8 bg-gradient-card border-none shadow-luxury">
+                <div className="text-center mb-8">
+                  <h3 className="text-2xl font-bold mb-4">Progressive Capital Deployment — Investor Risk Minimized</h3>
+                  <p className="text-muted-foreground">Start small, scale smart — each phase unlocks only after milestone gates are achieved</p>
+                </div>
+
+                {/* Funnel Visual */}
+                <div className="space-y-6 max-w-4xl mx-auto">
+                  {/* Phase 1 - Foundation */}
+                  <Card className="p-6 bg-gradient-to-r from-green-500/10 to-green-600/10 border-green-500/30">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold text-sm">1</div>
+                        <h4 className="text-xl font-bold text-green-600">Phase 1 — Foundation</h4>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-green-600">$150K (2%)</div>
+                        <div className="text-sm text-green-600 font-medium">Max Risk: $150K</div>
+                      </div>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <div className="text-sm font-medium mb-2">Deployment Focus:</div>
+                        <ul className="text-sm text-muted-foreground space-y-1">
+                          <li>• Legal, banking, compliance setup</li>
+                          <li>• ParentCo + Mexico SPV formed</li>
+                          <li>• Platform audit + onboarding</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <div className="text-sm font-medium mb-2">Milestone Gates:</div>
+                        <ul className="text-sm text-green-600 space-y-1">
+                          <li>✅ ParentCo live</li>
+                          <li>✅ Nevis banking established</li>
+                          <li>✅ Legal counsel retained</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </Card>
+
+                  {/* Phase 2 - Market Entry */}
+                  <Card className="p-6 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border-yellow-500/30">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-yellow-500 text-white rounded-full flex items-center justify-center font-bold text-sm">2</div>
+                        <h4 className="text-xl font-bold text-yellow-600">Phase 2 — Market Entry</h4>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-yellow-600">$470K (7%)</div>
+                        <div className="text-sm text-yellow-600 font-medium">Max Risk: $620K total</div>
+                      </div>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <div className="text-sm font-medium mb-2">Deployment Focus:</div>
+                        <ul className="text-sm text-muted-foreground space-y-1">
+                          <li>• Mexico land deposits</li>
+                          <li>• Marketing + presales campaigns</li>
+                          <li>• Operations runway</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <div className="text-sm font-medium mb-2">Milestone Gates:</div>
+                        <ul className="text-sm text-yellow-600 space-y-1">
+                          <li>✅ Mexico SPV formed</li>
+                          <li>✅ Presales system live</li>
+                          <li>✅ Community validated</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </Card>
+
+                  {/* Phase 3 - Multi-Market Rollout */}
+                  <Card className="p-6 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-blue-500/30">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm">3</div>
+                        <h4 className="text-xl font-bold text-blue-600">Phase 3 — Multi-Market Rollout</h4>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-blue-600">$6.38M (91%)</div>
+                        <div className="text-sm text-blue-600 font-medium">Max Risk: $4.06M (protected by recycling)</div>
+                      </div>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <div className="text-sm font-medium mb-2">Deployment Focus:</div>
+                        <ul className="text-sm text-muted-foreground space-y-1">
+                          <li>• Brazil, Spain, Greece expansion</li>
+                          <li>• Construction & builds</li>
+                          <li>• Multi-market scaling</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <div className="text-sm font-medium mb-2">Milestone Gates:</div>
+                        <ul className="text-sm text-blue-600 space-y-1">
+                          <li>✅ Treasury recycling active</li>
+                          <li>✅ Multi-market validation</li>
+                          <li>✅ Regulatory cleared</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+              </Card>
+
+              {/* Enhanced Financial Overview - Reordered for Protection */}
               <Card className="p-8 bg-gradient-card border-none shadow-luxury">
                 <div className="text-center space-y-4 mb-8">
-                  <h2 className="text-3xl font-bold">Real Estate Investment Fund - Use of Funds Walkthrough</h2>
-                  <h3 className="text-2xl text-primary">36-Month Capital Deployment & Recycling Strategy</h3>
+                  <h3 className="text-2xl font-bold">Capital Efficiency & Protection Metrics</h3>
+                  <p className="text-muted-foreground">Every dollar protected through milestone gates and treasury recycling</p>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                  <Card className="p-4 bg-gradient-primary text-primary-foreground border-none">
+                  <Card className="p-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white border-none">
                     <div className="space-y-2">
-                      <p className="text-sm opacity-90">Initial Investment</p>
-                      <p className="text-2xl font-bold">$7.00M</p>
+                      <p className="text-sm opacity-90">Phase 1 Start</p>
+                      <p className="text-2xl font-bold">$150K</p>
+                      <p className="text-xs opacity-75">Low-risk entry</p>
                     </div>
                   </Card>
                   <Card className="p-4 bg-gradient-secondary text-secondary-foreground border-none">
@@ -814,16 +950,16 @@ const BusinessModel = () => {
                   </Card>
                   <Card className="p-4 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] border-none">
                     <div className="space-y-2">
-                      <p className="text-sm opacity-90">Final Treasury Balance</p>
+                      <p className="text-sm opacity-90">Treasury Protected</p>
                       <p className="text-2xl font-bold">$2.94M</p>
-                      <p className="text-xs opacity-75">42% retained</p>
+                      <p className="text-xs opacity-75">42% retained safely</p>
                     </div>
                   </Card>
-                  <Card className="p-4 bg-destructive text-destructive-foreground border-none">
+                  <Card className="p-4 bg-gradient-primary text-primary-foreground border-none">
                     <div className="space-y-2">
-                      <p className="text-sm opacity-90">Peak Capital at Risk</p>
-                      <p className="text-2xl font-bold">$4.06M</p>
-                      <p className="text-xs opacity-75">58% of original</p>
+                      <p className="text-sm opacity-90">Total Fund Size</p>
+                      <p className="text-2xl font-bold">$7.00M</p>
+                      <p className="text-xs opacity-75">full deployment</p>
                     </div>
                   </Card>
                 </div>
