@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Code, Target, Rocket, Building2 } from "lucide-react";
+import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Code, Target, Rocket, Building2, BarChart3 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PlatformAssessment from "@/components/PlatformAssessment";
 
@@ -797,18 +797,23 @@ const BusinessModel = () => {
                 </p>
               </div>
 
-              {/* Capital Protection Shield */}
+              {/* Maximum Capital at Risk Display */}
               <Card className="p-6 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/30 shadow-lg">
-                <div className="flex items-center justify-center space-x-4">
-                  <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
-                    <Shield className="w-6 h-6 text-green-500" />
+                <div className="text-center space-y-4">
+                  <div className="flex items-center justify-center space-x-4">
+                    <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
+                      <Shield className="w-6 h-6 text-green-500" />
+                    </div>
+                    <h3 className="text-xl font-bold text-green-600">MAXIMUM CAPITAL AT RISK</h3>
                   </div>
-                  <div className="text-center">
-                    <h3 className="text-xl font-bold text-green-600 mb-2">CAPITAL PROTECTION ACTIVATED</h3>
-                    <p className="text-lg text-foreground">
-                      <span className="font-bold">42% of capital is retained in treasury</span> — investor funds are recycled, not burned
-                    </p>
+                  <div className="flex justify-center items-center space-x-6 text-lg">
+                    <span className="bg-green-500/20 px-4 py-2 rounded-lg font-bold text-green-600">Phase 1: $150K</span>
+                    <span className="text-muted-foreground">→</span>
+                    <span className="bg-yellow-500/20 px-4 py-2 rounded-lg font-bold text-yellow-600">Phase 2: $620K</span>
+                    <span className="text-muted-foreground">→</span>
+                    <span className="bg-orange-500/20 px-4 py-2 rounded-lg font-bold text-orange-600">Peak: $4.06M</span>
                   </div>
+                  <p className="text-sm text-muted-foreground">Each phase unlocks only after proven milestones • Progressive protection at every gate</p>
                 </div>
               </Card>
 
@@ -919,47 +924,55 @@ const BusinessModel = () => {
                 </div>
               </Card>
 
-              {/* Enhanced Financial Overview - Reordered for Protection */}
+              {/* Capital Protection System */}
               <Card className="p-8 bg-gradient-card border-none shadow-luxury">
                 <div className="text-center space-y-4 mb-8">
-                  <h3 className="text-2xl font-bold">Capital Efficiency & Protection Metrics</h3>
-                  <p className="text-muted-foreground">Every dollar protected through milestone gates and treasury recycling</p>
+                  <h3 className="text-2xl font-bold">Capital Protection System</h3>
+                  <p className="text-muted-foreground">14 milestone gates • Progressive risk management • Exit liquidity guaranteed</p>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                  <Card className="p-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white border-none">
-                    <div className="space-y-2">
-                      <p className="text-sm opacity-90">Phase 1 Start</p>
-                      <p className="text-2xl font-bold">$150K</p>
-                      <p className="text-xs opacity-75">Low-risk entry</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <Card className="p-6 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/30">
+                    <div className="space-y-3">
+                      <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
+                        <Shield className="w-5 h-5 text-green-500" />
+                      </div>
+                      <p className="text-sm font-medium text-green-600">14 Milestone Gates</p>
+                      <p className="text-2xl font-bold">Protected</p>
+                      <p className="text-xs text-muted-foreground">Each phase requires proven milestones before unlocking next tranche</p>
                     </div>
                   </Card>
-                  <Card className="p-4 bg-gradient-secondary text-secondary-foreground border-none">
-                    <div className="space-y-2">
-                      <p className="text-sm opacity-90">Total Capital Deployed</p>
-                      <p className="text-2xl font-bold">$6.93M</p>
-                      <p className="text-xs opacity-75">over 36 months</p>
-                    </div>
-                  </Card>
-                  <Card className="p-4 bg-gradient-accent text-accent-foreground border-none">
-                    <div className="space-y-2">
-                      <p className="text-sm opacity-90">Capital Recycled</p>
+                  
+                  <Card className="p-6 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/30">
+                    <div className="space-y-3">
+                      <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">
+                        <TrendingUp className="w-5 h-5 text-blue-500" />
+                      </div>
+                      <p className="text-sm font-medium text-blue-600">39% Capital Recovery</p>
                       <p className="text-2xl font-bold">$2.76M</p>
-                      <p className="text-xs opacity-75">from presales & closings</p>
+                      <p className="text-xs text-muted-foreground">From presales and exit strategies by Month 36</p>
                     </div>
                   </Card>
-                  <Card className="p-4 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] border-none">
-                    <div className="space-y-2">
-                      <p className="text-sm opacity-90">Treasury Protected</p>
-                      <p className="text-2xl font-bold">$2.94M</p>
-                      <p className="text-xs opacity-75">42% retained safely</p>
+
+                  <Card className="p-6 bg-gradient-to-r from-purple-500/10 to-violet-500/10 border-purple-500/30">
+                    <div className="space-y-3">
+                      <div className="w-10 h-10 bg-purple-500/20 rounded-full flex items-center justify-center">
+                        <DollarSign className="w-5 h-5 text-purple-500" />
+                      </div>
+                      <p className="text-sm font-medium text-purple-600">Exit Liquidity</p>
+                      <p className="text-2xl font-bold">$945K</p>
+                      <p className="text-xs text-muted-foreground">Available for immediate investor exits by Month 36</p>
                     </div>
                   </Card>
-                  <Card className="p-4 bg-gradient-primary text-primary-foreground border-none">
-                    <div className="space-y-2">
-                      <p className="text-sm opacity-90">Total Fund Size</p>
-                      <p className="text-2xl font-bold">$7.00M</p>
-                      <p className="text-xs opacity-75">full deployment</p>
+
+                  <Card className="p-6 bg-gradient-to-r from-orange-500/10 to-amber-500/10 border-orange-500/30">
+                    <div className="space-y-3">
+                      <div className="w-10 h-10 bg-orange-500/20 rounded-full flex items-center justify-center">
+                        <BarChart3 className="w-5 h-5 text-orange-500" />
+                      </div>
+                      <p className="text-sm font-medium text-orange-600">Self-Sustaining</p>
+                      <p className="text-2xl font-bold">Month 36</p>
+                      <p className="text-xs text-muted-foreground">Operations become cash-flow positive without new investor funds</p>
                     </div>
                   </Card>
                 </div>
