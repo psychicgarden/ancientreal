@@ -1892,32 +1892,66 @@ const BusinessModel = () => {
                     </div>
                   </div>
 
-                  {/* Capital Efficiency Metrics */}
+                  {/* Capital Protection System */}
                   <div className="space-y-4">
-                    <h4 className="text-xl font-semibold">Capital Efficiency Metrics</h4>
+                    <h4 className="text-xl font-semibold">Capital Protection System</h4>
+                    
+                    {/* Maximum Capital at Risk */}
+                    <Card className="p-6 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 border border-orange-200/50 dark:border-orange-800/50">
+                      <div className="space-y-4">
+                        <h5 className="text-lg font-semibold text-orange-700 dark:text-orange-300">Maximum Capital at Risk</h5>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <Card className="p-4 text-center bg-gradient-primary text-primary-foreground border-none">
+                            <div className="space-y-2">
+                              <p className="text-2xl font-bold">$150K</p>
+                              <p className="text-sm opacity-90">Month 1 Initial</p>
+                            </div>
+                          </Card>
+                          <Card className="p-4 text-center bg-gradient-secondary text-secondary-foreground border-none">
+                            <div className="space-y-2">
+                              <p className="text-2xl font-bold">$620K</p>
+                              <p className="text-sm opacity-90">Month 9 Platform</p>
+                            </div>
+                          </Card>
+                          <Card className="p-4 text-center bg-gradient-accent text-accent-foreground border-none">
+                            <div className="space-y-2">
+                              <p className="text-2xl font-bold">$2.94M</p>
+                              <p className="text-sm opacity-90">Month 24 Peak</p>
+                            </div>
+                          </Card>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-sm text-orange-600 dark:text-orange-400 font-medium">
+                            Capital at risk increases gradually as milestones are achieved, not all at once
+                          </p>
+                        </div>
+                      </div>
+                    </Card>
+
+                    {/* Protection Mechanisms */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <Card className="p-4 text-center bg-gradient-primary text-primary-foreground border-none">
+                      <Card className="p-4 text-center bg-[hsl(var(--gold))]/10 border border-[hsl(var(--gold))]/20">
                         <div className="space-y-2">
-                          <p className="text-2xl font-bold">39%</p>
-                          <p className="text-sm opacity-90">Capital Recycling Rate</p>
+                          <p className="text-2xl font-bold text-[hsl(var(--gold))]">14 Gates</p>
+                          <p className="text-sm text-muted-foreground">Milestone Protection</p>
                         </div>
                       </Card>
-                      <Card className="p-4 text-center bg-gradient-secondary text-secondary-foreground border-none">
+                      <Card className="p-4 text-center bg-green-50 dark:bg-green-900/20 border border-green-500/20">
                         <div className="space-y-2">
-                          <p className="text-2xl font-bold">58%</p>
-                          <p className="text-sm opacity-90">Peak Capital Utilization</p>
+                          <p className="text-2xl font-bold text-green-600">39%</p>
+                          <p className="text-sm text-muted-foreground">Capital Recovery</p>
                         </div>
                       </Card>
-                      <Card className="p-4 text-center bg-gradient-accent text-accent-foreground border-none">
+                      <Card className="p-4 text-center bg-blue-50 dark:bg-blue-900/20 border border-blue-500/20">
                         <div className="space-y-2">
-                          <p className="text-2xl font-bold">42%</p>
-                          <p className="text-sm opacity-90">Treasury Preservation</p>
+                          <p className="text-2xl font-bold text-blue-600">$945K</p>
+                          <p className="text-sm text-muted-foreground">Exit Liquidity</p>
                         </div>
                       </Card>
-                      <Card className="p-4 text-center bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] border-none">
+                      <Card className="p-4 text-center bg-purple-50 dark:bg-purple-900/20 border border-purple-500/20">
                         <div className="space-y-2">
-                          <p className="text-2xl font-bold">Month 36</p>
-                          <p className="text-sm opacity-90">Self-Funding Achievement</p>
+                          <p className="text-2xl font-bold text-purple-600">Month 36</p>
+                          <p className="text-sm text-muted-foreground">Self-Sustaining</p>
                         </div>
                       </Card>
                     </div>
