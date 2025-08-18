@@ -753,18 +753,33 @@ const BusinessModel = () => {
                 </p>
               </div>
 
-              {/* Capital Protection Shield */}
+              {/* Maximum Capital at Risk */}
               <Card className="p-6 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/30 shadow-lg">
-                <div className="flex items-center justify-center space-x-4">
-                  <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
-                    <Shield className="w-6 h-6 text-green-500" />
+                <div className="text-center space-y-6">
+                  <div className="flex items-center justify-center space-x-4 mb-4">
+                    <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
+                      <Shield className="w-6 h-6 text-green-500" />
+                    </div>
+                    <h3 className="text-xl font-bold text-green-600">MAXIMUM CAPITAL AT RISK</h3>
                   </div>
-                  <div className="text-center">
-                    <h3 className="text-xl font-bold text-green-600 mb-2">CAPITAL PROTECTION ACTIVATED</h3>
-                    <p className="text-lg text-foreground">
-                      <span className="font-bold">42% of capital is retained in treasury</span> — investor funds are recycled, not burned
-                    </p>
+                  
+                  <div className="flex items-center justify-center space-x-6">
+                    <div className="bg-green-100 text-green-800 px-4 py-2 rounded-lg font-semibold">
+                      Phase 1: $150K
+                    </div>
+                    <div className="text-gray-400">→</div>
+                    <div className="bg-orange-100 text-orange-800 px-4 py-2 rounded-lg font-semibold">
+                      Phase 2: $620K
+                    </div>
+                    <div className="text-gray-400">→</div>
+                    <div className="bg-red-100 text-red-800 px-4 py-2 rounded-lg font-semibold">
+                      Peak: $4.06M
+                    </div>
                   </div>
+                  
+                  <p className="text-gray-600 text-sm">
+                    Each phase unlocks only after proven milestones • Progressive protection at every gate
+                  </p>
                 </div>
               </Card>
 
