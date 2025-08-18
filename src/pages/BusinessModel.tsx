@@ -857,15 +857,6 @@ const BusinessModel = () => {
                 </div>
               </Card>
 
-              {/* Enhanced Financial Overview - Reordered for Protection */}
-              <Card className="p-8 bg-gradient-card border-none shadow-luxury">
-                <div className="text-center space-y-4 mb-8">
-                  <h3 className="text-2xl font-bold">Capital Efficiency & Protection Metrics</h3>
-                  <p className="text-muted-foreground">Every dollar protected through milestone gates and treasury recycling</p>
-                </div>
-                
-                
-              </Card>
 
               {/* Year-based Sub-Tabs for Complete 36-Month Timeline */}
               <Card className="p-8 bg-gradient-card border-none shadow-luxury">
