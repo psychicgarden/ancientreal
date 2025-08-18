@@ -32,7 +32,7 @@ function App() {
   }), []);
 
   return (
-    <React.Fragment>
+    <div className="min-h-screen">
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <WalletProvider>
@@ -61,7 +61,7 @@ function App() {
           </WalletProvider>
         </TooltipProvider>
       </QueryClientProvider>
-    </React.Fragment>
+    </div>
   );
 }
 
