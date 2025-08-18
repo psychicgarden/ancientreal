@@ -1824,36 +1824,6 @@ const BusinessModel = () => {
                     </div>
                   </div>
 
-                  {/* Capital Efficiency Metrics */}
-                  <div className="space-y-4">
-                    <h4 className="text-xl font-semibold">Capital Efficiency Metrics</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <Card className="p-4 text-center bg-gradient-primary text-primary-foreground border-none">
-                        <div className="space-y-2">
-                          <p className="text-2xl font-bold">39%</p>
-                          <p className="text-sm opacity-90">Capital Recycling Rate</p>
-                        </div>
-                      </Card>
-                      <Card className="p-4 text-center bg-gradient-secondary text-secondary-foreground border-none">
-                        <div className="space-y-2">
-                          <p className="text-2xl font-bold">58%</p>
-                          <p className="text-sm opacity-90">Peak Capital Utilization</p>
-                        </div>
-                      </Card>
-                      <Card className="p-4 text-center bg-gradient-accent text-accent-foreground border-none">
-                        <div className="space-y-2">
-                          <p className="text-2xl font-bold">42%</p>
-                          <p className="text-sm opacity-90">Treasury Preservation</p>
-                        </div>
-                      </Card>
-                      <Card className="p-4 text-center bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] border-none">
-                        <div className="space-y-2">
-                          <p className="text-2xl font-bold">Month 36</p>
-                          <p className="text-sm opacity-90">Self-Funding Achievement</p>
-                        </div>
-                      </Card>
-                    </div>
-                  </div>
                 </div>
               </Card>
 
