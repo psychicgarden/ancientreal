@@ -753,20 +753,6 @@ const BusinessModel = () => {
                 </p>
               </div>
 
-              {/* Capital Protection Shield */}
-              <Card className="p-6 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/30 shadow-lg">
-                <div className="flex items-center justify-center space-x-4">
-                  <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
-                    <Shield className="w-6 h-6 text-green-500" />
-                  </div>
-                  <div className="text-center">
-                    <h3 className="text-xl font-bold text-green-600 mb-2">CAPITAL PROTECTION ACTIVATED</h3>
-                    <p className="text-lg text-foreground">
-                      <span className="font-bold">42% of capital is retained in treasury</span> — investor funds are recycled, not burned
-                    </p>
-                  </div>
-                </div>
-              </Card>
 
               {/* Three-Phase Funnel Overview */}
               <Card className="p-8 bg-gradient-card border-none shadow-luxury">
