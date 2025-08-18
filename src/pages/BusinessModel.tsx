@@ -316,7 +316,7 @@ const BusinessModel = () => {
               <TabsTrigger value="revenue-model">Revenue Model</TabsTrigger>
               <TabsTrigger value="platform-assessment">Platform Assessment</TabsTrigger>
               <TabsTrigger value="budget-breakdown">Budget Breakdown</TabsTrigger>
-              <TabsTrigger value="land-strategy">Land Strategy</TabsTrigger>
+              <TabsTrigger value="legal-structuring">Legal Structuring</TabsTrigger>
             </TabsList>
 
             <TabsContent value="revenue-model">
@@ -525,59 +525,335 @@ const BusinessModel = () => {
               </div>
             </TabsContent>
 
-            <TabsContent value="land-strategy">
-              {/* Land Strategy Content */}
+            <TabsContent value="legal-structuring">
               <div className="space-y-8">
-                <div className="text-center">
-                  <h3 className="text-3xl font-bold mb-4">Strategic Land Acquisition</h3>
-                  <p className="text-lg text-muted-foreground">Diversified across six high-growth nomad destinations</p>
-                </div>
-                
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {landAcquisition.map((land, index) => (
-                    <Card key={index} className="bg-card/50 backdrop-blur-sm border-border/50">
-                      <CardContent className="p-6">
-                        <h4 className="font-semibold text-lg mb-2">{land.country}</h4>
-                        <div className="text-2xl font-bold text-primary mb-3">{land.budget}</div>
-                        <div className="space-y-2 text-sm">
-                          <div>
-                            <span className="text-muted-foreground">Structure:</span>
-                            <span className="ml-2">{land.structure}</span>
+                {/* Executive Summary */}
+                <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
+                  <CardContent className="p-8">
+                    <div className="flex items-center gap-3 mb-6">
+                      <Shield className="w-8 h-8 text-primary" />
+                      <h3 className="text-3xl font-bold">Legal & Regulatory Proofing</h3>
+                    </div>
+                    <h4 className="text-xl font-semibold mb-4 text-primary">Global Real Estate Tokenization Structure</h4>
+                    <div className="bg-background/80 rounded-xl p-6 backdrop-blur-sm">
+                      <h5 className="font-semibold mb-3">Executive Summary: Proven Legal Framework</h5>
+                      <p className="text-muted-foreground leading-relaxed">
+                        Ancient Real Estate operates using the same battle-tested legal structure as $500M+ Tether Gold (XAUT) and leading tokenized real estate platforms globally. 
+                        Our model doesn't replace property law—it modernizes ownership records, cash flow distribution, and governance through blockchain technology while maintaining full legal compliance.
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Industry Leaders */}
+                <div>
+                  <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                    🏛️ Core Legal Structure: The SPV Model
+                  </h3>
+                  <p className="text-muted-foreground mb-6">How Industry Leaders Structure Tokenization</p>
+                  
+                  <div className="grid md:grid-cols-3 gap-6 mb-8">
+                    {[
+                      {
+                        name: "Tether Gold (XAUT)",
+                        aum: "$500M+ AUM",
+                        structure: [
+                          "Physical gold stored in Swiss vaults",
+                          "Tether International Limited (SPV) holds legal title", 
+                          "XAUT tokens represent beneficial ownership claims",
+                          "Switzerland doesn't recognize blockchain tokens as legal gold title"
+                        ],
+                        result: "Fully functional, legally compliant, institutionally trusted"
+                      },
+                      {
+                        name: "RealT",
+                        aum: "$100M+ U.S. Properties",
+                        structure: [
+                          "Properties owned by individual LLCs (SPVs)",
+                          "Token holders own membership interests in LLCs",
+                          "No direct deed tokenization"
+                        ],
+                        result: "Regulatory compliant across all U.S. states"
+                      },
+                      {
+                        name: "Reental",
+                        aum: "€32.5M European Assets",
+                        structure: [
+                          "Spanish properties held by SPV entities",
+                          "Tokens represent economic rights, not deeds",
+                          "Over 22,500 verified investors"
+                        ],
+                        result: "Operating successfully across Spain, Mexico, U.S., and LatAm"
+                      }
+                    ].map((platform, index) => (
+                      <Card key={index} className="bg-card/50 border-border/50">
+                        <CardContent className="p-6">
+                          <div className="text-lg font-bold text-primary mb-2">{platform.name}</div>
+                          <Badge variant="outline" className="mb-4">{platform.aum}</Badge>
+                          <div className="space-y-2 mb-4">
+                            {platform.structure.map((item, i) => (
+                              <div key={i} className="text-sm text-muted-foreground flex items-start gap-2">
+                                <span className="text-primary">•</span>
+                                <span>{item}</span>
+                              </div>
+                            ))}
                           </div>
-                          <div>
-                            <span className="text-muted-foreground">Key Risk:</span>
-                            <span className="ml-2">{land.risk}</span>
+                          <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg p-3">
+                            <div className="text-sm font-medium text-green-800 dark:text-green-400">
+                              Result: {platform.result}
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+
+                  {/* Ancient's Structure */}
+                  <Card className="bg-gradient-to-br from-primary/5 to-secondary/5 border-primary/20">
+                    <CardContent className="p-6">
+                      <h4 className="text-xl font-bold mb-4">Ancient's Enhanced Structure</h4>
+                      <div className="text-center">
+                        <div className="space-y-4">
+                          <div className="bg-primary/10 rounded-lg p-4">
+                            <div className="font-semibold">Nevis Holding Company (Master Entity)</div>
+                          </div>
+                          <div className="text-2xl text-primary">↓</div>
+                          <div className="bg-secondary/10 rounded-lg p-4">
+                            <div className="font-semibold">Country-Specific SPVs (Property Holders)</div>
+                          </div>
+                          <div className="text-2xl text-primary">↓</div>
+                          <div className="bg-accent/10 rounded-lg p-4">
+                            <div className="font-semibold">Tokenized Beneficial Ownership (ERC-20/ERC-3643)</div>
+                          </div>
+                          <div className="text-2xl text-primary">↓</div>
+                          <div className="bg-muted/50 rounded-lg p-4">
+                            <div className="font-semibold">Smart Contract Automation (Cash Flow, Governance, Exits)</div>
                           </div>
                         </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                      </div>
+                      
+                      <div className="mt-6 grid md:grid-cols-2 gap-4">
+                        {[
+                          "Bulletproof Legal Chain: Nevis → Local SPV → Property Title",
+                          "Regulatory Arbitrage: Optimal jurisdiction selection per market",
+                          "Institutional Grade: Same structure used by billion-dollar assets",
+                          "Full Transparency: On-chain ownership records and cash flows",
+                          "Automated Compliance: Smart contracts handle distributions and governance"
+                        ].map((advantage, i) => (
+                          <div key={i} className="flex items-start gap-2 text-sm">
+                            <span className="text-green-500">✅</span>
+                            <span>{advantage}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
-                
-                <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+
+                {/* Country-Specific Compliance */}
+                <div>
+                  <h3 className="text-2xl font-bold mb-6 flex items-center gap-2">
+                    🌍 Country-Specific Regulatory Compliance
+                  </h3>
+                  
+                  <div className="space-y-6">
+                    {[
+                      {
+                        country: "🇧🇷 Brazil (Bahia Project)",
+                        structure: "Brazilian LTDA (Limited Liability Company)",
+                        regulations: [
+                          "CVM (Securities Commission): LTDA quotas qualify as securities under Brazilian law",
+                          "Property Law: LTDA holds registered property title at local cartório",
+                          "Foreign Investment: Compliant with Lei 4.131/62 for foreign capital",
+                          "Token Classification: Represents LTDA quotas, not direct property rights",
+                          "Tax Optimization: LTDA structure provides favorable corporate tax treatment"
+                        ],
+                        comparable: "Terram tokenized R$50M+ Brazilian real estate using identical SPV structures"
+                      },
+                      {
+                        country: "🇬🇷 Greece (Corfu Project)",
+                        structure: "Greek IKE (Private Company)",
+                        regulations: [
+                          "HCMC (Hellenic Capital Market Commission): IKE shares are recognized securities",
+                          "Property Registry: IKE registered as legal property owner",
+                          "Golden Visa Compliance: Structure supports Greece's €250K residency program",
+                          "EU MiCA Preparation: Forward-compatible with upcoming EU token regulations",
+                          "Tax Benefits: Greek IKE enjoys competitive corporate tax rates (24%)"
+                        ],
+                        comparable: "Greece actively promotes blockchain innovation through regulatory sandbox programs"
+                      },
+                      {
+                        country: "🇪🇸 Spain (Mallorca Project)",
+                        structure: "Spanish SL (Sociedad Limitada)",
+                        regulations: [
+                          "CNMV (Securities Market Commission): SL participaciones are established securities",
+                          "Property Registration: SL holds registered title at Registro de la Propiedad",
+                          "EU Passporting: Structure enables future EU-wide token distribution",
+                          "MiCA Compliance: Spain leads EU's Markets in Crypto-Assets regulation",
+                          "Golden Visa Alignment: €500K investment threshold compatibility"
+                        ],
+                        comparable: "Reental operates identical SL structures across Spain with €32.5M in assets"
+                      },
+                      {
+                        country: "🇹🇭 Thailand (Koh Phangan Project)",
+                        structure: "30+30 Year Leasehold via Thai SPV",
+                        regulations: [
+                          "SEC Thailand: Company shares classified as securities under Thai law",
+                          "Land Department: Thai company holds registered leasehold rights",
+                          "Foreign Ownership: Compliant with 49% foreign ownership limits via nominee structure",
+                          "BOI Benefits: Potential Board of Investment incentives for tech innovation",
+                          "Renewable Structure: 30+30 year leases provide 60-year economic rights"
+                        ],
+                        comparable: "Multiple international developers use identical leasehold SPV structures in Thailand"
+                      },
+                      {
+                        country: "🇹🇷 Turkey (Antalya Project)",
+                        structure: "Turkish SPV (Limited Şirket)",
+                        regulations: [
+                          "CMB (Capital Markets Board): Company shares are regulated securities",
+                          "Land Registry: Turkish company holds tapu (property title)",
+                          "Citizenship Program: €400K investment qualifies for Turkish citizenship",
+                          "Strategic Location: Bridge between European and Asian markets",
+                          "Currency Hedge: Turkish lira depreciation benefits foreign investors"
+                        ],
+                        comparable: "Turkey's citizenship-by-investment program adds significant value proposition"
+                      }
+                    ].map((jurisdiction, index) => (
+                      <Card key={index} className="bg-card/50 border-border/50">
+                        <CardContent className="p-6">
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="text-2xl font-bold text-primary">{jurisdiction.country}</div>
+                          </div>
+                          <div className="mb-4">
+                            <div className="text-sm text-muted-foreground">Legal Structure</div>
+                            <div className="font-semibold">{jurisdiction.structure}</div>
+                          </div>
+                          <div className="mb-4">
+                            <div className="text-sm text-muted-foreground mb-2">Regulatory Framework</div>
+                            <div className="space-y-2">
+                              {jurisdiction.regulations.map((reg, i) => (
+                                <div key={i} className="text-sm flex items-start gap-2">
+                                  <span className="text-primary">•</span>
+                                  <span>{reg}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                            <div className="text-sm text-blue-800 dark:text-blue-400">
+                              <strong>Market Precedent:</strong> {jurisdiction.comparable}
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Competitive Advantage Matrix */}
+                <div>
+                  <h3 className="text-2xl font-bold mb-6">📊 Competitive Advantage Matrix</h3>
+                  <Card className="bg-card/50 border-border/50">
+                    <CardContent className="p-6">
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-sm">
+                          <thead>
+                            <tr className="border-b border-border">
+                              <th className="text-left p-3">Platform</th>
+                              <th className="text-left p-3">AUM/Market Cap</th>
+                              <th className="text-left p-3">Legal Structure</th>
+                              <th className="text-left p-3">Token Standard</th>
+                              <th className="text-left p-3">Regulatory Status</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {[
+                              { platform: "Tether Gold", aum: "$500M+", structure: "Swiss SPV", token: "ERC-20", status: "Fully Compliant" },
+                              { platform: "RealT", aum: "$100M+", structure: "U.S. LLCs", token: "ERC-20", status: "SEC Compliant" },
+                              { platform: "Reental", aum: "€32.5M", structure: "Spanish SPVs", token: "Proprietary", status: "EU Compliant" },
+                              { platform: "Ancient", aum: "$24.5M Projected", structure: "Multi-Jurisdiction SPVs", token: "ERC-20/ERC-3643", status: "Enhanced Compliance" }
+                            ].map((row, i) => (
+                              <tr key={i} className={`border-b border-border/50 ${row.platform === "Ancient" ? "bg-primary/5" : ""}`}>
+                                <td className="p-3 font-semibold">{row.platform}</td>
+                                <td className="p-3">{row.aum}</td>
+                                <td className="p-3">{row.structure}</td>
+                                <td className="p-3">{row.token}</td>
+                                <td className="p-3">{row.status}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Revenue Model Validation */}
+                <Card className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200 dark:border-green-800">
                   <CardContent className="p-8">
-                    <h4 className="text-xl font-semibold mb-4">Risk Mitigation Strategy</h4>
-                    <ul className="space-y-2">
-                      <li className="flex items-center gap-3">
-                        <Shield className="w-5 h-5 text-primary" />
-                        <span>Local legal counsel for each jurisdiction</span>
-                      </li>
-                      <li className="flex items-center gap-3">
-                        <Shield className="w-5 h-5 text-primary" />
-                        <span>Staged payment tranches tied to milestones</span>
-                      </li>
-                      <li className="flex items-center gap-3">
-                        <Shield className="w-5 h-5 text-primary" />
-                        <span>Title insurance where available</span>
-                      </li>
-                      <li className="flex items-center gap-3">
-                        <Shield className="w-5 h-5 text-primary" />
-                        <span>7-10% contingency buffer</span>
-                      </li>
-                    </ul>
-                    <div className="mt-6 p-4 bg-primary/10 rounded-lg text-center">
-                      <div className="text-2xl font-bold text-primary">≈$2.0M</div>
-                      <div className="text-sm text-muted-foreground">Total Land Acquisition Budget (All 6 Sites)</div>
+                    <h3 className="text-2xl font-bold mb-6 text-green-800 dark:text-green-400">🚀 Revenue Model Validation</h3>
+                    <div className="text-xl font-bold mb-4">10-Year Projected Returns: $24.53M Total</div>
+                    
+                    <div className="grid md:grid-cols-3 gap-6">
+                      <div className="bg-white dark:bg-background/50 rounded-lg p-4 border border-green-200 dark:border-green-800">
+                        <div className="text-lg font-semibold text-green-800 dark:text-green-400 mb-2">Platform Fees (Immediate): $453.6K</div>
+                        <div className="space-y-1 text-sm text-muted-foreground">
+                          <div>• 3% transaction fee on all sales</div>
+                          <div>• Competitive with traditional real estate commissions (6%)</div>
+                          <div>• Lower than Reental's 4-5% fee structure</div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-white dark:bg-background/50 rounded-lg p-4 border border-green-200 dark:border-green-800">
+                        <div className="text-lg font-semibold text-green-800 dark:text-green-400 mb-2">Mortgage Interest (10-Year Stream): $7.46M</div>
+                        <div className="space-y-1 text-sm text-muted-foreground">
+                          <div>• 8% yield on financed properties</div>
+                          <div>• Addresses $250B cross-border lending gap</div>
+                          <div>• Higher returns than traditional banking (2-4%)</div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-white dark:bg-background/50 rounded-lg p-4 border border-green-200 dark:border-green-800">
+                        <div className="text-lg font-semibold text-green-800 dark:text-green-400 mb-2">Property Appreciation (10-Year Capture): $16.62M</div>
+                        <div className="space-y-1 text-sm text-muted-foreground">
+                          <div>• Based on historical emerging market performance</div>
+                          <div>• Conservative compared to Tulum's 300%+ appreciation</div>
+                          <div>• Captures nomad wealth typically lost to rent</div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Bottom Line */}
+                <Card className="bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/20">
+                  <CardContent className="p-8">
+                    <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                      🔒 Bottom Line: Battle-Tested Legal Innovation
+                    </h3>
+                    <p className="text-lg mb-6">
+                      Ancient Real Estate doesn't reinvent property law—we modernize it. Our legal structure mirrors billion-dollar assets like Tether Gold while providing enhanced investor protections through:
+                    </p>
+                    
+                    <div className="grid md:grid-cols-2 gap-4 mb-6">
+                      {[
+                        "Proven SPV Framework: Same structure as industry leaders",
+                        "Multi-Jurisdiction Optimization: Legal arbitrage for maximum protection", 
+                        "Institutional Compliance: Ready for traditional finance integration",
+                        "Transparent Operations: Blockchain eliminates opacity and manual errors",
+                        "Automated Governance: Smart contracts reduce counterparty risk"
+                      ].map((point, i) => (
+                        <div key={i} className="flex items-start gap-2">
+                          <span className="text-primary">✅</span>
+                          <span className="font-medium">{point}</span>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <div className="bg-background/80 rounded-lg p-6 backdrop-blur-sm">
+                      <p className="text-center font-medium text-lg">
+                        We're not early-stage experimenters—we're applying proven legal frameworks to high-growth emerging markets with institutional-grade execution.
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
