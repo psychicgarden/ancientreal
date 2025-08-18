@@ -539,205 +539,788 @@ const BusinessModel = () => {
                 </div>
               </Card>
 
-              {/* Investment Structure & Property Portfolio */}
+              {/* Year-based Sub-Tabs for Complete 36-Month Timeline */}
               <Card className="p-8 bg-gradient-card border-none shadow-luxury">
-                <div className="space-y-6">
-                  <h3 className="text-2xl font-bold">Investment Structure & Property Portfolio</h3>
-                  <h4 className="text-xl font-semibold text-primary">Property Mix (6 Developments, 112 Total Units)</h4>
-                  
-                  <div className="overflow-x-auto">
-                    <table className="w-full border-collapse bg-background/50 rounded-lg overflow-hidden">
-                      <thead>
-                        <tr className="bg-primary text-primary-foreground">
-                          <th className="text-left p-4 font-semibold">Property</th>
-                          <th className="text-left p-4 font-semibold">Units</th>
-                          <th className="text-left p-4 font-semibold">Cash Buyers</th>
-                          <th className="text-left p-4 font-semibold">Financed</th>
-                          <th className="text-left p-4 font-semibold">Unit Price</th>
-                          <th className="text-left p-4 font-semibold">Build Cost</th>
-                          <th className="text-left p-4 font-semibold">Total Revenue</th>
-                          <th className="text-left p-4 font-semibold">Immediate Cash-In*</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {[
-                          ['Mazunte (MX)', '15', '3', '12', '$135K', '$75K', '$2.025M', '$789.75K'],
-                          ['Bahia (BR)', '21', '5', '16', '$135K', '$75K', '$2.835M', '$1,192.05K'],
-                          ['Mallorca (ES)', '15', '3', '12', '$135K', '$75K', '$2.025M', '$789.75K'],
-                          ['Corfu (GR)', '16', '4', '12', '$135K', '$75K', '$2.160M', '$928.80K'],
-                          ['Thailand', '25', '5', '20', '$135K', '$75K', '$3.375M', '$1,316.25K'],
-                          ['Turkey', '20', '4', '16', '$135K', '$75K', '$2.700M', '$1,053.00K']
-                        ].map((row, i) => (
-                          <tr key={i} className={`border-b border-border/50 ${i % 2 === 0 ? 'bg-muted/30' : 'bg-background/50'}`}>
-                            {row.map((cell, j) => (
-                              <td key={j} className="p-4 text-sm">{cell}</td>
-                            ))}
-                          </tr>
-                        ))}
-                        <tr className="bg-accent text-accent-foreground border-t-2 border-primary">
-                          <td className="p-4 font-bold">TOTALS</td>
-                          <td className="p-4 font-bold">112</td>
-                          <td className="p-4 font-bold">24</td>
-                          <td className="p-4 font-bold">88</td>
-                          <td className="p-4">-</td>
-                          <td className="p-4">-</td>
-                          <td className="p-4 font-bold">$15.12M</td>
-                          <td className="p-4 font-bold">$6.07M</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <p className="text-sm text-muted-foreground">*Immediate Cash-In = Cash closings + Down payments + Platform fees (3%)</p>
-                </div>
+                <Tabs defaultValue="year-1" className="w-full">
+                  <TabsList className="grid w-full grid-cols-3 mb-8">
+                    <TabsTrigger value="year-1">Year 1: Foundation & Mexico</TabsTrigger>
+                    <TabsTrigger value="year-2">Year 2: Brazil & Spain Entry</TabsTrigger>
+                    <TabsTrigger value="year-3">Year 3: Multi-Market Expansion</TabsTrigger>
+                  </TabsList>
+
+                  {/* Year 1 Tab */}
+                  <TabsContent value="year-1" className="space-y-8">
+                    <div className="space-y-6">
+                      <h3 className="text-2xl font-bold text-primary">Year 1: Foundation & Mexico Launch</h3>
+                      
+                      {/* Q1 - Infrastructure & Legal Framework */}
+                      <div className="space-y-4">
+                        <h4 className="text-xl font-semibold">Q1 - Infrastructure & Legal Framework</h4>
+                        <p className="text-lg font-medium text-accent">Tranche A-C: $620K Total Outflow</p>
+                        
+                        {/* Month 1 - Tranche A */}
+                        <Card className="p-6 bg-background/50 border border-primary/20">
+                          <div className="space-y-4">
+                            <div className="flex justify-between items-center">
+                              <h5 className="text-lg font-semibold">Month 1 - Tranche A ($150K)</h5>
+                              <div className="px-3 py-1 bg-primary text-primary-foreground rounded-full text-sm font-medium">
+                                INVESTOR PROTECTION ACTIVATED
+                              </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground font-medium">Gate Requirements: ParentCo live, Nevis banking established, legal counsel retained</p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Use of Funds</h6>
+                                <div className="space-y-1 text-sm">
+                                  <div className="flex justify-between"><span>Nevis ParentCo Setup</span><span>$4K</span></div>
+                                  <div className="flex justify-between"><span>US Securities Counsel</span><span>$35K</span></div>
+                                  <div className="flex justify-between"><span>Audit & Portal Onboarding</span><span>$20K</span></div>
+                                  <div className="flex justify-between"><span>Mexico SAPI SPV</span><span>$10K</span></div>
+                                  <div className="flex justify-between"><span>Banking Infrastructure</span><span>$8K</span></div>
+                                  <div className="flex justify-between"><span>Smart Contract Development</span><span>$50K</span></div>
+                                  <div className="flex justify-between"><span>Security Audit</span><span>$8K</span></div>
+                                  <div className="flex justify-between"><span>SaaS/Operations</span><span>$5K</span></div>
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Purpose & Protection</h6>
+                                <div className="space-y-1 text-sm text-muted-foreground">
+                                  <div>Corporate structure & KYC</div>
+                                  <div>Reg CF/D compliance</div>
+                                  <div>Funding platform setup</div>
+                                  <div>Legal entity formation</div>
+                                  <div>Multi-currency accounts</div>
+                                  <div>Mortgage + ARW + multisig</div>
+                                  <div>Contract security review</div>
+                                  <div>Dataroom, e-sign, compliance</div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="flex justify-between items-center pt-4 border-t border-border">
+                              <span className="font-medium">Running Balance:</span>
+                              <span className="text-lg font-bold text-accent">$7.00M - $140K = $6.86M</span>
+                            </div>
+                          </div>
+                        </Card>
+
+                        {/* Month 2 - Tranche B */}
+                        <Card className="p-6 bg-background/50 border border-primary/20">
+                          <div className="space-y-4">
+                            <div className="flex justify-between items-center">
+                              <h5 className="text-lg font-semibold">Month 2 - Tranche B ($120K)</h5>
+                              <div className="px-3 py-1 bg-primary text-primary-foreground rounded-full text-sm font-medium">
+                                ESCROW PROTECTION
+                              </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground font-medium">Gate Requirements: Mexico counsel engaged, Mazunte shortlisted</p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Use of Funds</h6>
+                                <div className="space-y-1 text-sm">
+                                  <div className="flex justify-between"><span>Oaxaca Site Scouting</span><span>$8K</span></div>
+                                  <div className="flex justify-between"><span>Mazunte LOI Escrow</span><span>$25K</span></div>
+                                  <div className="flex justify-between"><span>Due Diligence</span><span>$7K</span></div>
+                                  <div className="flex justify-between"><span>Fideicomiso Application</span><span>$6K</span></div>
+                                  <div className="flex justify-between"><span>Platform Development</span><span>$45K</span></div>
+                                  <div className="flex justify-between"><span>Legal & Admin</span><span>$19K</span></div>
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Purpose & Protection</h6>
+                                <div className="space-y-1 text-sm text-muted-foreground">
+                                  <div>Soil/utilities/drone survey</div>
+                                  <div>10% deposit on $250K land</div>
+                                  <div>Title/zoning/environmental</div>
+                                  <div>Foreign ownership structure</div>
+                                  <div>KYC/AML + payment systems</div>
+                                  <div>Translations, filings, buffer</div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="flex justify-between items-center pt-4 border-t border-border">
+                              <span className="font-medium">Running Balance:</span>
+                              <span className="text-lg font-bold text-accent">$6.86M - $110K = $6.75M</span>
+                            </div>
+                          </div>
+                        </Card>
+
+                        {/* Month 4 - Tranche C */}
+                        <Card className="p-6 bg-background/50 border border-primary/20">
+                          <div className="space-y-4">
+                            <div className="flex justify-between items-center">
+                              <h5 className="text-lg font-semibold">Month 4 - Tranche C ($350K)</h5>
+                              <div className="px-3 py-1 bg-accent text-accent-foreground rounded-full text-sm font-medium">
+                                MILESTONE GATE
+                              </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground font-medium">Gate Requirements: Mazunte DD cleared, permits in process</p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Use of Funds</h6>
+                                <div className="space-y-1 text-sm">
+                                  <div className="flex justify-between"><span>Mazunte Land Final</span><span>$225K</span></div>
+                                  <div className="flex justify-between"><span>Closing Costs</span><span>$15K</span></div>
+                                  <div className="flex justify-between"><span>Architecture & Engineering</span><span>$10K</span></div>
+                                  <div className="flex justify-between"><span>Local Team Setup</span><span>$15K</span></div>
+                                  <div className="flex justify-between"><span>Marketing Preparation</span><span>$20K</span></div>
+                                  <div className="flex justify-between"><span>Operations & Buffer</span><span>$45K</span></div>
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Purpose & Protection</h6>
+                                <div className="space-y-1 text-sm text-muted-foreground">
+                                  <div>Property acquisition</div>
+                                  <div>Notary and legal fees</div>
+                                  <div>Schematic design</div>
+                                  <div>Community liaison, first hires</div>
+                                  <div>Presale materials</div>
+                                  <div>Travel, admin, contingency</div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="flex justify-between items-center pt-4 border-t border-border">
+                              <span className="font-medium">Running Balance:</span>
+                              <span className="text-lg font-bold text-accent">$6.75M - $330K = $6.42M</span>
+                            </div>
+                          </div>
+                        </Card>
+                      </div>
+
+                      {/* Q2 - Mazunte Construction Launch */}
+                      <div className="space-y-4">
+                        <h4 className="text-xl font-semibold">Q2 - Mazunte Construction Launch</h4>
+                        <p className="text-lg font-medium text-accent">Tranche D-E: $650K Total Outflow</p>
+
+                        {/* Month 6 - Tranche D */}
+                        <Card className="p-6 bg-background/50 border border-primary/20">
+                          <div className="space-y-4">
+                            <div className="flex justify-between items-center">
+                              <h5 className="text-lg font-semibold">Month 6 - Tranche D ($400K)</h5>
+                              <div className="px-3 py-1 bg-primary text-primary-foreground rounded-full text-sm font-medium">
+                                CONSTRUCTION GATE
+                              </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground font-medium">Gate Requirements: Mazunte permits issued, construction license obtained</p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Use of Funds</h6>
+                                <div className="space-y-1 text-sm">
+                                  <div className="flex justify-between"><span>Site Preparation</span><span>$150K</span></div>
+                                  <div className="flex justify-between"><span>Structural Frame Deposit</span><span>$100K</span></div>
+                                  <div className="flex justify-between"><span>Detailed Engineering</span><span>$15K</span></div>
+                                  <div className="flex justify-between"><span>Project Management</span><span>$20K</span></div>
+                                  <div className="flex justify-between"><span>Marketing Launch</span><span>$30K</span></div>
+                                  <div className="flex justify-between"><span>Insurance & Compliance</span><span>$10K</span></div>
+                                  <div className="flex justify-between"><span>Operations Buffer</span><span>$45K</span></div>
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Purpose & Protection</h6>
+                                <div className="space-y-1 text-sm text-muted-foreground">
+                                  <div>Foundations and infrastructure</div>
+                                  <div>Construction milestone payment</div>
+                                  <div>Final drawings and permits</div>
+                                  <div>PM and engineer onboarding</div>
+                                  <div>Content creation and campaigns</div>
+                                  <div>Project insurance and legal</div>
+                                  <div>Admin, travel, contingency</div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="flex justify-between items-center pt-4 border-t border-border">
+                              <span className="font-medium">Running Balance:</span>
+                              <span className="text-lg font-bold text-accent">$6.42M - $390K = $6.03M</span>
+                            </div>
+                          </div>
+                        </Card>
+
+                        {/* Month 9 - Tranche E */}
+                        <Card className="p-6 bg-background/50 border border-primary/20">
+                          <div className="space-y-4">
+                            <div className="flex justify-between items-center">
+                              <h5 className="text-lg font-semibold">Month 9 - Tranche E ($250K)</h5>
+                              <div className="px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm font-medium">
+                                EXPANSION GATE
+                              </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground font-medium">Gate Requirements: Bahia LOI executed, Mazunte 30% complete</p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Use of Funds</h6>
+                                <div className="space-y-1 text-sm">
+                                  <div className="flex justify-between"><span>Bahia LOI Escrow</span><span>$25K</span></div>
+                                  <div className="flex justify-between"><span>Bahia Due Diligence</span><span>$10K</span></div>
+                                  <div className="flex justify-between"><span>Brazil LTDA Formation</span><span>$7K</span></div>
+                                  <div className="flex justify-between"><span>Mazunte Build Phase 2</span><span>$150K</span></div>
+                                  <div className="flex justify-between"><span>Brazil Marketing Setup</span><span>$10K</span></div>
+                                  <div className="flex justify-between"><span>Legal & Operations</span><span>$38K</span></div>
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Purpose & Protection</h6>
+                                <div className="space-y-1 text-sm text-muted-foreground">
+                                  <div>Brazil property deposit</div>
+                                  <div>Title, environmental, survey</div>
+                                  <div>Legal entity setup</div>
+                                  <div>Walls and utilities installation</div>
+                                  <div>Market preparation</div>
+                                  <div>Filings, travel, buffer</div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="flex justify-between items-center pt-4 border-t border-border">
+                              <span className="font-medium">Running Balance:</span>
+                              <span className="text-lg font-bold text-accent">$6.03M - $240K = $5.79M</span>
+                            </div>
+                          </div>
+                        </Card>
+                      </div>
+
+                      {/* Q3-Q4 - Mazunte Presales & Bahia Acquisition */}
+                      <div className="space-y-4">
+                        <h4 className="text-xl font-semibold">Q3-Q4 - Mazunte Presales & Bahia Acquisition</h4>
+                        <p className="text-lg font-medium text-accent">Tranche F: $400K Outflow | First Inflows: $385K</p>
+
+                        {/* Month 12 - Tranche F */}
+                        <Card className="p-6 bg-background/50 border border-green-500/20">
+                          <div className="space-y-4">
+                            <div className="flex justify-between items-center">
+                              <h5 className="text-lg font-semibold">Month 12 - Tranche F ($400K)</h5>
+                              <div className="px-3 py-1 bg-green-600 text-white rounded-full text-sm font-medium">
+                                FIRST CASH INFLOWS
+                              </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground font-medium">Gate Requirements: Mazunte presales launched, Bahia DD cleared</p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Use of Funds</h6>
+                                <div className="space-y-1 text-sm">
+                                  <div className="flex justify-between"><span>Bahia Land Acquisition</span><span>$225K</span></div>
+                                  <div className="flex justify-between"><span>Brazil Closing Costs</span><span>$15K</span></div>
+                                  <div className="flex justify-between"><span>Bahia Architecture</span><span>$20K</span></div>
+                                  <div className="flex justify-between"><span>Mazunte Build Phase 3</span><span>$100K</span></div>
+                                  <div className="flex justify-between"><span>Mazunte Marketing</span><span>$20K</span></div>
+                                  <div className="flex justify-between"><span>Staffing</span><span>$10K</span></div>
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Major Inflows - Mazunte Presales Begin</h6>
+                                <div className="space-y-1 text-sm text-green-600">
+                                  <div className="flex justify-between"><span>Down payments (12 financed units)</span><span>+$108K</span></div>
+                                  <div className="flex justify-between"><span>Platform fees (15 units)</span><span>+$20.25K</span></div>
+                                  <div className="flex justify-between font-medium"><span>Total Inflow</span><span>+$128.25K</span></div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="flex justify-between items-center pt-4 border-t border-border">
+                              <span className="font-medium">Net Cash Flow:</span>
+                              <span className="text-lg font-bold text-green-600">-$390K + $128.25K = -$261.75K</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="font-medium">Running Balance:</span>
+                              <span className="text-lg font-bold text-accent">$5.79M - $261.75K = $5.53M</span>
+                            </div>
+                          </div>
+                        </Card>
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  {/* Year 2 Tab */}
+                  <TabsContent value="year-2" className="space-y-8">
+                    <div className="space-y-6">
+                      <h3 className="text-2xl font-bold text-primary">Year 2: Brazil Development & Spain Entry</h3>
+                      
+                      {/* Continued Mazunte Inflows */}
+                      <div className="space-y-4">
+                        <h4 className="text-xl font-semibold">Continued Mazunte Inflows (Months 13-14)</h4>
+                        <p className="text-lg font-medium text-green-600">Inflow Only: $256.5K Total</p>
+                        
+                        <Card className="p-6 bg-green-50 dark:bg-green-900/20 border border-green-500/20">
+                          <div className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Month 13 Inflows</h6>
+                                <div className="text-sm text-green-600">$128.25K (Mazunte presales tranche 2)</div>
+                              </div>
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Month 14 Inflows</h6>
+                                <div className="text-sm text-green-600">$128.25K (Mazunte presales tranche 3)</div>
+                              </div>
+                            </div>
+                            <div className="flex justify-between items-center pt-4 border-t border-green-200 dark:border-green-800">
+                              <span className="font-medium">Running Balance After Month 14:</span>
+                              <span className="text-lg font-bold text-accent">$5.53M + $256.5K = $5.78M</span>
+                            </div>
+                          </div>
+                        </Card>
+                      </div>
+
+                      {/* Q1 Year 2 - Bahia Construction Launch */}
+                      <div className="space-y-4">
+                        <h4 className="text-xl font-semibold">Q1 Year 2 - Bahia Construction Launch</h4>
+                        <p className="text-lg font-medium text-accent">Tranche G: $450K Outflow</p>
+
+                        {/* Month 15 - Tranche G */}
+                        <Card className="p-6 bg-background/50 border border-primary/20">
+                          <div className="space-y-4">
+                            <div className="flex justify-between items-center">
+                              <h5 className="text-lg font-semibold">Month 15 - Tranche G ($450K)</h5>
+                              <div className="px-3 py-1 bg-primary text-primary-foreground rounded-full text-sm font-medium">
+                                BAHIA CONSTRUCTION
+                              </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground font-medium">Gate Requirements: Bahia permits approved</p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Use of Funds</h6>
+                                <div className="space-y-1 text-sm">
+                                  <div className="flex justify-between"><span>Bahia Site Preparation</span><span>$150K</span></div>
+                                  <div className="flex justify-between"><span>Bahia Frame Deposit</span><span>$100K</span></div>
+                                  <div className="flex justify-between"><span>Mazunte Finishes Phase 1</span><span>$150K</span></div>
+                                  <div className="flex justify-between"><span>Brazil Marketing</span><span>$20K</span></div>
+                                  <div className="flex justify-between"><span>Operations</span><span>$10K</span></div>
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Purpose & Protection</h6>
+                                <div className="space-y-1 text-sm text-muted-foreground">
+                                  <div>Foundation and infrastructure</div>
+                                  <div>Construction milestone</div>
+                                  <div>Interior completion</div>
+                                  <div>Presale preparation</div>
+                                  <div>Admin and management</div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="flex justify-between items-center pt-4 border-t border-border">
+                              <span className="font-medium">Running Balance:</span>
+                              <span className="text-lg font-bold text-accent">$5.78M - $430K = $5.35M</span>
+                            </div>
+                          </div>
+                        </Card>
+                      </div>
+
+                      {/* Q2 Year 2 - First Property Completion */}
+                      <div className="space-y-4">
+                        <h4 className="text-xl font-semibold">Q2 Year 2 - First Property Completion</h4>
+                        <p className="text-lg font-medium text-accent">Tranche H: $500K Outflow | Major Inflows: $534K</p>
+
+                        {/* Month 18 - Tranche H */}
+                        <Card className="p-6 bg-background/50 border border-green-500/20">
+                          <div className="space-y-4">
+                            <div className="flex justify-between items-center">
+                              <h5 className="text-lg font-semibold">Month 18 - Tranche H ($500K)</h5>
+                              <div className="px-3 py-1 bg-green-600 text-white rounded-full text-sm font-medium">
+                                MAZUNTE COMPLETION
+                              </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground font-medium">Gate Requirements: Bahia 30% built, Mazunte handovers begin</p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Use of Funds</h6>
+                                <div className="space-y-1 text-sm">
+                                  <div className="flex justify-between"><span>Bahia Phase 2 Construction</span><span>$200K</span></div>
+                                  <div className="flex justify-between"><span>Mazunte Final Fit-Out</span><span>$150K</span></div>
+                                  <div className="flex justify-between"><span>Spain Market Entry</span><span>$70K</span></div>
+                                  <div className="flex justify-between"><span>Marketing & Operations</span><span>$60K</span></div>
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Major Inflows - Mazunte Completion</h6>
+                                <div className="space-y-1 text-sm text-green-600">
+                                  <div className="flex justify-between"><span>Cash buyer closings (3 units)</span><span>+$405K</span></div>
+                                  <div className="flex justify-between"><span>Bahia presales begin</span><span>+$129.26K</span></div>
+                                  <div className="flex justify-between font-medium"><span>Total Inflow</span><span>+$534.26K</span></div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="flex justify-between items-center pt-4 border-t border-border">
+                              <span className="font-medium">Net Cash Flow:</span>
+                              <span className="text-lg font-bold text-green-600">-$480K + $534.26K = +$54.26K</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="font-medium">Running Balance:</span>
+                              <span className="text-lg font-bold text-accent">$5.35M + $54.26K = $5.40M</span>
+                            </div>
+                          </div>
+                        </Card>
+                      </div>
+
+                      {/* Bahia Presales Momentum */}
+                      <div className="space-y-4">
+                        <h4 className="text-xl font-semibold">Bahia Presales Momentum (Months 19-21)</h4>
+                        <p className="text-lg font-medium text-green-600">Inflow Only: $387.79K Total</p>
+                        
+                        <Card className="p-6 bg-green-50 dark:bg-green-900/20 border border-green-500/20">
+                          <div className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Month 19</h6>
+                                <div className="text-sm text-green-600">$129.26K (Bahia tranche 2)</div>
+                              </div>
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Month 20</h6>
+                                <div className="text-sm text-green-600">$129.26K (Bahia tranche 3)</div>
+                              </div>
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Month 21</h6>
+                                <div className="text-sm text-green-600">$129.26K (Bahia tranche 4)</div>
+                              </div>
+                            </div>
+                            <div className="flex justify-between items-center pt-4 border-t border-green-200 dark:border-green-800">
+                              <span className="font-medium">Running Balance After Month 21:</span>
+                              <span className="text-lg font-bold text-accent">$5.40M + $387.79K = $5.79M</span>
+                            </div>
+                          </div>
+                        </Card>
+                      </div>
+
+                      {/* Q3 Year 2 - Spain Market Entry */}
+                      <div className="space-y-4">
+                        <h4 className="text-xl font-semibold">Q3 Year 2 - Spain Market Entry</h4>
+                        <p className="text-lg font-medium text-accent">Tranche I: $550K Outflow</p>
+
+                        {/* Month 21 - Tranche I */}
+                        <Card className="p-6 bg-background/50 border border-primary/20">
+                          <div className="space-y-4">
+                            <div className="flex justify-between items-center">
+                              <h5 className="text-lg font-semibold">Month 21 - Tranche I ($550K)</h5>
+                              <div className="px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm font-medium">
+                                SPAIN ENTRY
+                              </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground font-medium">Gate Requirements: Spain LOIs signed, Bahia presales launched</p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Use of Funds</h6>
+                                <div className="space-y-1 text-sm">
+                                  <div className="flex justify-between"><span>Spain LOI Deposits</span><span>$65K</span></div>
+                                  <div className="flex justify-between"><span>Bahia Roof & Interiors</span><span>$200K</span></div>
+                                  <div className="flex justify-between"><span>Spain SPV Formation</span><span>$40K</span></div>
+                                  <div className="flex justify-between"><span>Platform Upgrade</span><span>$150K</span></div>
+                                  <div className="flex justify-between"><span>Operations Buffer</span><span>$75K</span></div>
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Purpose & Protection</h6>
+                                <div className="space-y-1 text-sm text-muted-foreground">
+                                  <div>2 property deposits</div>
+                                  <div>Construction progress</div>
+                                  <div>Legal entity setup</div>
+                                  <div>Secondary market + ARW resale</div>
+                                  <div>Multi-market management</div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="flex justify-between items-center pt-4 border-t border-border">
+                              <span className="font-medium">Running Balance:</span>
+                              <span className="text-lg font-bold text-accent">$5.79M - $530K = $5.39M</span>
+                            </div>
+                          </div>
+                        </Card>
+                      </div>
+
+                      {/* Q4 Year 2 - Spain Land Acquisition */}
+                      <div className="space-y-4">
+                        <h4 className="text-xl font-semibold">Q4 Year 2 - Spain Land Acquisition</h4>
+                        <p className="text-lg font-medium text-accent">Tranche J: $600K Outflow</p>
+
+                        {/* Month 24 - Tranche J */}
+                        <Card className="p-6 bg-background/50 border border-primary/20">
+                          <div className="space-y-4">
+                            <div className="flex justify-between items-center">
+                              <h5 className="text-lg font-semibold">Month 24 - Tranche J ($600K)</h5>
+                              <div className="px-3 py-1 bg-accent text-accent-foreground rounded-full text-sm font-medium">
+                                SPAIN ACQUISITION
+                              </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground font-medium">Gate Requirements: Bahia 60% built, Spain DD cleared</p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Use of Funds</h6>
+                                <div className="space-y-1 text-sm">
+                                  <div className="flex justify-between"><span>Spain Land Acquisitions</span><span>$500K</span></div>
+                                  <div className="flex justify-between"><span>Spain Closing Costs</span><span>$25K</span></div>
+                                  <div className="flex justify-between"><span>Bahia Interior Work</span><span>$20K</span></div>
+                                  <div className="flex justify-between"><span>Spain Design & Permits</span><span>$25K</span></div>
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Purpose & Protection</h6>
+                                <div className="space-y-1 text-sm text-muted-foreground">
+                                  <div>2 property purchases</div>
+                                  <div>Notary and legal fees</div>
+                                  <div>Finishing touches</div>
+                                  <div>Schematic and licensing</div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="flex justify-between items-center pt-4 border-t border-border">
+                              <span className="font-medium">Running Balance:</span>
+                              <span className="text-lg font-bold text-accent">$5.39M - $570K = $4.82M</span>
+                            </div>
+                          </div>
+                        </Card>
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  {/* Year 3 Tab */}
+                  <TabsContent value="year-3" className="space-y-8">
+                    <div className="space-y-6">
+                      <h3 className="text-2xl font-bold text-primary">Year 3: Multi-Market Expansion</h3>
+                      
+                      {/* Q1 Year 3 - Spain Construction Launch */}
+                      <div className="space-y-4">
+                        <h4 className="text-xl font-semibold">Q1 Year 3 - Spain Construction Launch</h4>
+                        <p className="text-lg font-medium text-accent">Tranche K: $700K Outflow</p>
+
+                        {/* Month 27 - Tranche K */}
+                        <Card className="p-6 bg-background/50 border border-primary/20">
+                          <div className="space-y-4">
+                            <div className="flex justify-between items-center">
+                              <h5 className="text-lg font-semibold">Month 27 - Tranche K ($700K)</h5>
+                              <div className="px-3 py-1 bg-primary text-primary-foreground rounded-full text-sm font-medium">
+                                SPAIN CONSTRUCTION
+                              </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground font-medium">Gate Requirements: Spain permits issued</p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Use of Funds</h6>
+                                <div className="space-y-1 text-sm">
+                                  <div className="flex justify-between"><span>Spain Site Preparation</span><span>$250K</span></div>
+                                  <div className="flex justify-between"><span>Spain Frame Deposits</span><span>$200K</span></div>
+                                  <div className="flex justify-between"><span>Bahia Finishes Phase 2</span><span>$150K</span></div>
+                                  <div className="flex justify-between"><span>Spain Marketing</span><span>$50K</span></div>
+                                  <div className="flex justify-between"><span>Operations</span><span>$20K</span></div>
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Purpose & Protection</h6>
+                                <div className="space-y-1 text-sm text-muted-foreground">
+                                  <div>Foundations across 2 sites</div>
+                                  <div>Construction milestones</div>
+                                  <div>Completion preparation</div>
+                                  <div>Presale launch</div>
+                                  <div>Multi-market coordination</div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="flex justify-between items-center pt-4 border-t border-border">
+                              <span className="font-medium">Running Balance:</span>
+                              <span className="text-lg font-bold text-accent">$4.82M - $670K = $4.15M</span>
+                            </div>
+                          </div>
+                        </Card>
+                      </div>
+
+                      {/* Q2 Year 3 - Second Property Completion */}
+                      <div className="space-y-4">
+                        <h4 className="text-xl font-semibold">Q2 Year 3 - Second Property Completion</h4>
+                        <p className="text-lg font-medium text-accent">Tranche L: $800K Outflow | Major Inflows: $675K</p>
+
+                        {/* Month 30 - Tranche L */}
+                        <Card className="p-6 bg-background/50 border border-orange-500/20">
+                          <div className="space-y-4">
+                            <div className="flex justify-between items-center">
+                              <h5 className="text-lg font-semibold">Month 30 - Tranche L ($800K)</h5>
+                              <div className="px-3 py-1 bg-orange-600 text-white rounded-full text-sm font-medium">
+                                PEAK CAPITAL AT RISK
+                              </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground font-medium">Gate Requirements: Spain 30% built, Greece scouting underway</p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Use of Funds</h6>
+                                <div className="space-y-1 text-sm">
+                                  <div className="flex justify-between"><span>Spain Construction Phase 2</span><span>$350K</span></div>
+                                  <div className="flex justify-between"><span>Spain Interiors Phase 1</span><span>$150K</span></div>
+                                  <div className="flex justify-between"><span>Greece Market Entry</span><span>$60K</span></div>
+                                  <div className="flex justify-between"><span>Platform DAO Tools</span><span>$100K</span></div>
+                                  <div className="flex justify-between"><span>Operations Scale-Up</span><span>$100K</span></div>
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Major Inflows - Bahia Completion</h6>
+                                <div className="space-y-1 text-sm text-green-600">
+                                  <div className="flex justify-between"><span>Cash buyer closings (5 units)</span><span>+$675K</span></div>
+                                  <div className="flex justify-between font-medium"><span>Total Inflow</span><span>+$675K</span></div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="flex justify-between items-center pt-4 border-t border-border">
+                              <span className="font-medium">Net Cash Flow:</span>
+                              <span className="text-lg font-bold text-orange-600">-$760K + $675K = -$85K</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="font-medium">Running Balance:</span>
+                              <span className="text-lg font-bold text-orange-600">$4.15M - $85K = $4.06M</span>
+                            </div>
+                            <div className="bg-orange-100 dark:bg-orange-900/20 p-3 rounded-lg">
+                              <p className="text-sm font-medium text-orange-700 dark:text-orange-300">
+                                ⚠️ This represents the peak capital at risk: $7.00M - $4.06M = $2.94M net deployment
+                              </p>
+                            </div>
+                          </div>
+                        </Card>
+                      </div>
+
+                      {/* Q3 Year 3 - Greece Entry & EU Presales */}
+                      <div className="space-y-4">
+                        <h4 className="text-xl font-semibold">Q3 Year 3 - Greece Entry & EU Presales</h4>
+                        <p className="text-lg font-medium text-accent">Tranche M: $900K Outflow | EU Presales Begin: $193K</p>
+
+                        {/* Month 33 - Tranche M */}
+                        <Card className="p-6 bg-background/50 border border-green-500/20">
+                          <div className="space-y-4">
+                            <div className="flex justify-between items-center">
+                              <h5 className="text-lg font-semibold">Month 33 - Tranche M ($900K)</h5>
+                              <div className="px-3 py-1 bg-green-600 text-white rounded-full text-sm font-medium">
+                                EU PRESALES START
+                              </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground font-medium">Gate Requirements: Corfu & Mallorca presales launched</p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Use of Funds</h6>
+                                <div className="space-y-1 text-sm">
+                                  <div className="flex justify-between"><span>Greece LOI Deposits & SPV</span><span>$80K</span></div>
+                                  <div className="flex justify-between"><span>Spain Roof & Interiors</span><span>$400K</span></div>
+                                  <div className="flex justify-between"><span>Global Marketing Push</span><span>$150K</span></div>
+                                  <div className="flex justify-between"><span>Operations Scale</span><span>$240K</span></div>
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <h6 className="font-medium">EU Presales Launch</h6>
+                                <div className="space-y-1 text-sm text-green-600">
+                                  <div className="flex justify-between"><span>Corfu down payments + fees</span><span>+$97.2K</span></div>
+                                  <div className="flex justify-between"><span>Mallorca down payments + fees</span><span>+$96.19K</span></div>
+                                  <div className="flex justify-between font-medium"><span>Total EU Presales (Tranche 1)</span><span>+$193.39K</span></div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="flex justify-between items-center pt-4 border-t border-border">
+                              <span className="font-medium">Net Cash Flow:</span>
+                              <span className="text-lg font-bold text-red-600">-$870K + $193.39K = -$676.61K</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="font-medium">Running Balance:</span>
+                              <span className="text-lg font-bold text-accent">$4.06M - $676.61K = $3.38M</span>
+                            </div>
+                          </div>
+                        </Card>
+                      </div>
+
+                      {/* EU Presales Momentum */}
+                      <div className="space-y-4">
+                        <h4 className="text-xl font-semibold">EU Presales Momentum (Months 34-35)</h4>
+                        <p className="text-lg font-medium text-green-600">Inflows Only: $386.78K Total</p>
+                        
+                        <Card className="p-6 bg-green-50 dark:bg-green-900/20 border border-green-500/20">
+                          <div className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Month 34</h6>
+                                <div className="text-sm text-green-600">$193.39K (EU presales tranche 2)</div>
+                              </div>
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Month 35</h6>
+                                <div className="text-sm text-green-600">$193.39K (EU presales tranche 3)</div>
+                              </div>
+                            </div>
+                            <div className="flex justify-between items-center pt-4 border-t border-green-200 dark:border-green-800">
+                              <span className="font-medium">Running Balance After Month 35:</span>
+                              <span className="text-lg font-bold text-accent">$3.38M + $386.78K = $3.77M</span>
+                            </div>
+                          </div>
+                        </Card>
+                      </div>
+
+                      {/* Q4 Year 3 - Greece Land Acquisition */}
+                      <div className="space-y-4">
+                        <h4 className="text-xl font-semibold">Q4 Year 3 - Greece Land Acquisition</h4>
+                        <p className="text-lg font-medium text-accent">Final Tranche N: $1.05M Outflow | EU Presales Complete: $193K</p>
+
+                        {/* Month 36 - Tranche N */}
+                        <Card className="p-6 bg-background/50 border border-gold/20">
+                          <div className="space-y-4">
+                            <div className="flex justify-between items-center">
+                              <h5 className="text-lg font-semibold">Month 36 - Tranche N ($1.05M)</h5>
+                              <div className="px-3 py-1 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full text-sm font-medium">
+                                36-MONTH COMPLETION
+                              </div>
+                            </div>
+                            <p className="text-sm text-muted-foreground font-medium">Gate Requirements: Spain 60% built, Greece DD cleared</p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Use of Funds</h6>
+                                <div className="space-y-1 text-sm">
+                                  <div className="flex justify-between"><span>Greece Land Acquisitions</span><span>$500K</span></div>
+                                  <div className="flex justify-between"><span>Spain Final Interiors</span><span>$300K</span></div>
+                                  <div className="flex justify-between"><span>Greece Licensing</span><span>$40K</span></div>
+                                  <div className="flex justify-between"><span>Operations Reserve</span><span>$180K</span></div>
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <h6 className="font-medium">Final EU Presales</h6>
+                                <div className="space-y-1 text-sm text-green-600">
+                                  <div className="flex justify-between"><span>EU presales tranche 4</span><span>+$193.39K</span></div>
+                                  <div className="flex justify-between font-medium"><span>Total Final Inflow</span><span>+$193.39K</span></div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="flex justify-between items-center pt-4 border-t border-border">
+                              <span className="font-medium">Net Cash Flow:</span>
+                              <span className="text-lg font-bold text-red-600">-$1,020K + $193.39K = -$826.61K</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="font-medium">Final Running Balance:</span>
+                              <span className="text-lg font-bold text-[hsl(var(--gold))]">$3.77M - $826.61K = $2.94M</span>
+                            </div>
+                            <div className="bg-[hsl(var(--gold))]/10 p-3 rounded-lg border border-[hsl(var(--gold))]/20">
+                              <p className="text-sm font-medium text-[hsl(var(--gold))]">
+                                🎯 36-Month Goal Achieved: $2.94M final treasury balance (42% of original investment preserved)
+                              </p>
+                            </div>
+                          </div>
+                        </Card>
+                      </div>
+                    </div>
+                  </TabsContent>
+                </Tabs>
               </Card>
 
-              {/* Year 1: Foundation & Mexico Launch */}
-              <Card className="p-8 bg-gradient-card border-none shadow-luxury">
-                <div className="space-y-6">
-                  <h3 className="text-2xl font-bold text-primary">Year 1: Foundation & Mexico Launch</h3>
-                  
-                  {/* Q1 - Infrastructure & Legal Framework */}
-                  <div className="space-y-4">
-                    <h4 className="text-xl font-semibold">Q1 - Infrastructure & Legal Framework</h4>
-                    <p className="text-lg font-medium text-accent">Tranche A-C: $620K Total Outflow</p>
-                    
-                    {/* Month 1 - Tranche A */}
-                    <Card className="p-6 bg-background/50 border border-primary/20">
-                      <div className="space-y-4">
-                        <div className="flex justify-between items-center">
-                          <h5 className="text-lg font-semibold">Month 1 - Tranche A ($150K)</h5>
-                          <div className="px-3 py-1 bg-primary text-primary-foreground rounded-full text-sm font-medium">
-                            INVESTOR PROTECTION ACTIVATED
-                          </div>
-                        </div>
-                        <p className="text-sm text-muted-foreground font-medium">Gate Requirements: ParentCo live, Nevis banking established, legal counsel retained</p>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <h6 className="font-medium">Use of Funds</h6>
-                            <div className="space-y-1 text-sm">
-                              <div className="flex justify-between"><span>Nevis ParentCo Setup</span><span>$4K</span></div>
-                              <div className="flex justify-between"><span>US Securities Counsel</span><span>$35K</span></div>
-                              <div className="flex justify-between"><span>Audit & Portal Onboarding</span><span>$20K</span></div>
-                              <div className="flex justify-between"><span>Mexico SAPI SPV</span><span>$10K</span></div>
-                              <div className="flex justify-between"><span>Banking Infrastructure</span><span>$8K</span></div>
-                              <div className="flex justify-between"><span>Smart Contract Development</span><span>$50K</span></div>
-                              <div className="flex justify-between"><span>Security Audit</span><span>$8K</span></div>
-                              <div className="flex justify-between"><span>SaaS/Operations</span><span>$5K</span></div>
-                            </div>
-                          </div>
-                          <div className="space-y-2">
-                            <h6 className="font-medium">Purpose & Protection</h6>
-                            <div className="space-y-1 text-sm text-muted-foreground">
-                              <div>Corporate structure & KYC</div>
-                              <div>Reg CF/D compliance</div>
-                              <div>Funding platform setup</div>
-                              <div>Legal entity formation</div>
-                              <div>Multi-currency accounts</div>
-                              <div>Mortgage + ARW + multisig</div>
-                              <div>Contract security review</div>
-                              <div>Dataroom, e-sign, compliance</div>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div className="flex justify-between items-center pt-4 border-t border-border">
-                          <span className="font-medium">Running Balance:</span>
-                          <span className="text-lg font-bold text-accent">$7.00M - $140K = $6.86M</span>
-                        </div>
-                      </div>
-                    </Card>
-
-                    {/* Month 2 - Tranche B */}
-                    <Card className="p-6 bg-background/50 border border-primary/20">
-                      <div className="space-y-4">
-                        <div className="flex justify-between items-center">
-                          <h5 className="text-lg font-semibold">Month 2 - Tranche B ($120K)</h5>
-                          <div className="px-3 py-1 bg-primary text-primary-foreground rounded-full text-sm font-medium">
-                            ESCROW PROTECTION
-                          </div>
-                        </div>
-                        <p className="text-sm text-muted-foreground font-medium">Gate Requirements: Mexico counsel engaged, Mazunte shortlisted</p>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <h6 className="font-medium">Use of Funds</h6>
-                            <div className="space-y-1 text-sm">
-                              <div className="flex justify-between"><span>Oaxaca Site Scouting</span><span>$8K</span></div>
-                              <div className="flex justify-between"><span>Mazunte LOI Escrow</span><span>$25K</span></div>
-                              <div className="flex justify-between"><span>Due Diligence</span><span>$7K</span></div>
-                              <div className="flex justify-between"><span>Fideicomiso Application</span><span>$6K</span></div>
-                              <div className="flex justify-between"><span>Platform Development</span><span>$45K</span></div>
-                              <div className="flex justify-between"><span>Legal & Admin</span><span>$19K</span></div>
-                            </div>
-                          </div>
-                          <div className="space-y-2">
-                            <h6 className="font-medium">Purpose & Protection</h6>
-                            <div className="space-y-1 text-sm text-muted-foreground">
-                              <div>Soil/utilities/drone survey</div>
-                              <div>10% deposit on $250K land</div>
-                              <div>Title/zoning/environmental</div>
-                              <div>Foreign ownership structure</div>
-                              <div>KYC/AML + payment systems</div>
-                              <div>Translations, filings, buffer</div>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div className="flex justify-between items-center pt-4 border-t border-border">
-                          <span className="font-medium">Running Balance:</span>
-                          <span className="text-lg font-bold text-accent">$6.86M - $110K = $6.75M</span>
-                        </div>
-                      </div>
-                    </Card>
-
-                    {/* Month 4 - Tranche C */}
-                    <Card className="p-6 bg-background/50 border border-primary/20">
-                      <div className="space-y-4">
-                        <div className="flex justify-between items-center">
-                          <h5 className="text-lg font-semibold">Month 4 - Tranche C ($350K)</h5>
-                          <div className="px-3 py-1 bg-accent text-accent-foreground rounded-full text-sm font-medium">
-                            MILESTONE GATE
-                          </div>
-                        </div>
-                        <p className="text-sm text-muted-foreground font-medium">Gate Requirements: Mazunte DD cleared, permits in process</p>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <h6 className="font-medium">Use of Funds</h6>
-                            <div className="space-y-1 text-sm">
-                              <div className="flex justify-between"><span>Mazunte Land Final</span><span>$225K</span></div>
-                              <div className="flex justify-between"><span>Closing Costs</span><span>$15K</span></div>
-                              <div className="flex justify-between"><span>Architecture & Engineering</span><span>$10K</span></div>
-                              <div className="flex justify-between"><span>Local Team Setup</span><span>$15K</span></div>
-                              <div className="flex justify-between"><span>Marketing Preparation</span><span>$20K</span></div>
-                              <div className="flex justify-between"><span>Operations & Buffer</span><span>$45K</span></div>
-                            </div>
-                          </div>
-                          <div className="space-y-2">
-                            <h6 className="font-medium">Purpose & Protection</h6>
-                            <div className="space-y-1 text-sm text-muted-foreground">
-                              <div>Property acquisition</div>
-                              <div>Notary and legal fees</div>
-                              <div>Schematic design</div>
-                              <div>Community liaison, first hires</div>
-                              <div>Presale materials</div>
-                              <div>Travel, admin, contingency</div>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div className="flex justify-between items-center pt-4 border-t border-border">
-                          <span className="font-medium">Running Balance:</span>
-                          <span className="text-lg font-bold text-accent">$6.75M - $330K = $6.42M</span>
-                        </div>
-                      </div>
-                    </Card>
-                  </div>
-                </div>
-              </Card>
-
-              {/* 36-Month Summary & Capital Recycling Analysis */}
+              {/* 36-Month Summary & Analysis */}
               <Card className="p-8 bg-gradient-card border-none shadow-luxury">
                 <div className="space-y-6">
                   <h3 className="text-2xl font-bold">36-Month Summary & Capital Recycling Analysis</h3>
@@ -774,11 +1357,11 @@ const BusinessModel = () => {
                             <tr className="border-b border-border/50 bg-background/50">
                               <td className="p-4 font-bold">Final Treasury</td>
                               <td className="p-4 text-[hsl(var(--gold))] font-bold">$2.94M</td>
-                              <td className="p-4 font-bold">42%</td>
+                              <td className="p-4">42%</td>
                             </tr>
-                            <tr className="bg-muted/30">
-                              <td className="p-4">Net Capital Deployed</td>
-                              <td className="p-4">$4.06M</td>
+                            <tr className="bg-accent/20">
+                              <td className="p-4 font-bold">Net Capital Deployed</td>
+                              <td className="p-4 font-bold">$4.06M</td>
                               <td className="p-4">58%</td>
                             </tr>
                           </tbody>
@@ -789,41 +1372,127 @@ const BusinessModel = () => {
                     {/* Property-by-Property Capital Recycling */}
                     <div className="space-y-4">
                       <h4 className="text-xl font-semibold">Property-by-Property Capital Recycling</h4>
+                      <div className="space-y-3">
+                        <Card className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-500/20">
+                          <div className="space-y-2">
+                            <h6 className="font-semibold text-green-700 dark:text-green-300">Mazunte (Mexico) - COMPLETED & FULLY REALIZED</h6>
+                            <div className="grid grid-cols-2 gap-2 text-sm">
+                              <div>Total Investment: $1.365M</div>
+                              <div className="text-green-600 font-medium">Total Returns: $789.75K</div>
+                            </div>
+                            <p className="text-xs text-green-600">100% built, handed over, all cash flows realized</p>
+                          </div>
+                        </Card>
+                        
+                        <Card className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-500/20">
+                          <div className="space-y-2">
+                            <h6 className="font-semibold text-green-700 dark:text-green-300">Bahia (Brazil) - COMPLETED & FULLY REALIZED</h6>
+                            <div className="grid grid-cols-2 gap-2 text-sm">
+                              <div>Total Investment: $1.815M</div>
+                              <div className="text-green-600 font-medium">Total Returns: $1,192.05K</div>
+                            </div>
+                            <p className="text-xs text-green-600">100% built, handed over, all cash flows realized</p>
+                          </div>
+                        </Card>
+                        
+                        <Card className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-500/20">
+                          <div className="space-y-2">
+                            <h6 className="font-semibold text-blue-700 dark:text-blue-300">Spain (Mallorca) - 60% COMPLETE, PRESALES LIVE</h6>
+                            <div className="grid grid-cols-2 gap-2 text-sm">
+                              <div>Investment: $1.200M</div>
+                              <div className="text-blue-600 font-medium">Returns Captured: $789.75K</div>
+                            </div>
+                            <p className="text-xs text-blue-600">Pending Returns: $405K (cash closings post-36 months)</p>
+                          </div>
+                        </Card>
+                        
+                        <Card className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-500/20">
+                          <div className="space-y-2">
+                            <h6 className="font-semibold text-yellow-700 dark:text-yellow-300">Greece (Corfu) - PRESALES LIVE, CONSTRUCTION READY</h6>
+                            <div className="grid grid-cols-2 gap-2 text-sm">
+                              <div>Investment: $580K</div>
+                              <div className="text-yellow-600 font-medium">Returns Captured: $928.80K</div>
+                            </div>
+                            <p className="text-xs text-yellow-600">Pending Returns: $540K (cash closings post-36 months)</p>
+                          </div>
+                        </Card>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Post-36 Month Sustainability Model */}
+                  <div className="space-y-4">
+                    <h4 className="text-xl font-semibold">Post-36 Month Sustainability Model</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <Card className="p-6 bg-[hsl(var(--gold))]/10 border border-[hsl(var(--gold))]/20">
+                        <div className="space-y-4">
+                          <h5 className="font-semibold text-[hsl(var(--gold))]">Immediate Pipeline (Months 37-60)</h5>
+                          <div className="space-y-2 text-sm">
+                            <div className="flex justify-between">
+                              <span>Available Capital:</span>
+                              <span className="font-medium">$2.94M treasury</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Pending EU Cash Closings:</span>
+                              <span className="font-medium">+$945K</span>
+                            </div>
+                            <div className="flex justify-between font-semibold border-t pt-2">
+                              <span>Total Available:</span>
+                              <span className="text-[hsl(var(--gold))]">$3.89M</span>
+                            </div>
+                          </div>
+                        </div>
+                      </Card>
                       
-                      <Card className="p-4 bg-accent/10 border border-accent/20">
-                        <h5 className="font-semibold text-accent">Mazunte (Mexico) - COMPLETED & FULLY REALIZED</h5>
-                        <div className="grid grid-cols-2 gap-4 mt-2 text-sm">
-                          <div>Total Investment: $1.365M</div>
-                          <div>Total Returns: $789.75K</div>
+                      <Card className="p-6 bg-accent/10 border border-accent/20">
+                        <div className="space-y-4">
+                          <h5 className="font-semibold text-accent">Thailand & Turkey Launch (Self-Funded)</h5>
+                          <div className="space-y-2 text-sm">
+                            <div className="flex justify-between">
+                              <span>Thailand Investment Required:</span>
+                              <span>~$2.0M</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Turkey Investment Required:</span>
+                              <span>~$1.5M</span>
+                            </div>
+                            <div className="flex justify-between font-semibold border-t pt-2">
+                              <span>Total Need vs. Available:</span>
+                              <span className="text-green-600">$390K buffer</span>
+                            </div>
+                          </div>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">100% built, handed over, all cash flows realized</p>
                       </Card>
+                    </div>
+                  </div>
 
-                      <Card className="p-4 bg-accent/10 border border-accent/20">
-                        <h5 className="font-semibold text-accent">Bahia (Brazil) - COMPLETED & FULLY REALIZED</h5>
-                        <div className="grid grid-cols-2 gap-4 mt-2 text-sm">
-                          <div>Total Investment: $1.815M</div>
-                          <div>Total Returns: $1,192.05K</div>
+                  {/* Capital Efficiency Metrics */}
+                  <div className="space-y-4">
+                    <h4 className="text-xl font-semibold">Capital Efficiency Metrics</h4>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <Card className="p-4 text-center bg-gradient-primary text-primary-foreground border-none">
+                        <div className="space-y-2">
+                          <p className="text-2xl font-bold">39%</p>
+                          <p className="text-sm opacity-90">Capital Recycling Rate</p>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">100% built, handed over, all cash flows realized</p>
                       </Card>
-
-                      <Card className="p-4 bg-primary/10 border border-primary/20">
-                        <h5 className="font-semibold text-primary">Spain (Mallorca) - 60% COMPLETE, PRESALES LIVE</h5>
-                        <div className="grid grid-cols-2 gap-4 mt-2 text-sm">
-                          <div>Investment: $1.200M</div>
-                          <div>Returns Captured: $789.75K</div>
+                      <Card className="p-4 text-center bg-gradient-secondary text-secondary-foreground border-none">
+                        <div className="space-y-2">
+                          <p className="text-2xl font-bold">58%</p>
+                          <p className="text-sm opacity-90">Peak Capital Utilization</p>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">60% built, presales complete, $405K pending</p>
                       </Card>
-
-                      <Card className="p-4 bg-secondary/20 border border-secondary/30">
-                        <h5 className="font-semibold text-secondary-foreground">Greece (Corfu) - PRESALES LIVE</h5>
-                        <div className="grid grid-cols-2 gap-4 mt-2 text-sm">
-                          <div>Investment: $580K</div>
-                          <div>Returns Captured: $928.80K</div>
+                      <Card className="p-4 text-center bg-gradient-accent text-accent-foreground border-none">
+                        <div className="space-y-2">
+                          <p className="text-2xl font-bold">42%</p>
+                          <p className="text-sm opacity-90">Treasury Preservation</p>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">Land acquired, permits ready, $540K pending</p>
+                      </Card>
+                      <Card className="p-4 text-center bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] border-none">
+                        <div className="space-y-2">
+                          <p className="text-2xl font-bold">Month 36</p>
+                          <p className="text-sm opacity-90">Self-Funding Achievement</p>
+                        </div>
                       </Card>
                     </div>
                   </div>
@@ -835,140 +1504,176 @@ const BusinessModel = () => {
                 <div className="space-y-6">
                   <h3 className="text-2xl font-bold">Risk Mitigation & Controls</h3>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Card className="p-6 bg-primary/5 border border-primary/20">
-                      <h4 className="text-lg font-semibold text-primary mb-4">Gated Capital Release System</h4>
-                      <ul className="space-y-2 text-sm">
-                        <li className="flex items-start gap-2">
-                          <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                          <span><strong>Milestone-Based Tranches:</strong> Capital only released upon verified completion of gates</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                          <span><strong>Third-Party Verification:</strong> Bank statements and documentation required for each gate</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                          <span><strong>Multisig Controls:</strong> ParentCo + investor representative approval for greater than $100K tranches</span>
-                        </li>
-                      </ul>
-                    </Card>
-
-                    <Card className="p-6 bg-accent/5 border border-accent/20">
-                      <h4 className="text-lg font-semibold text-accent mb-4">Presale Risk Management</h4>
-                      <ul className="space-y-2 text-sm">
-                        <li className="flex items-start gap-2">
-                          <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0"></div>
-                          <span><strong>Escrowed LOIs:</strong> Permit-contingent closings prevent stranded deposits</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0"></div>
-                          <span><strong>Conservative Timing:</strong> 3-4 month presale windows built into projections</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0"></div>
-                          <span><strong>Platform Fee Acceleration:</strong> 3% fees captured immediately at contract signing</span>
-                        </li>
-                      </ul>
-                    </Card>
-
-                    <Card className="p-6 bg-[hsl(var(--gold))]/10 border border-[hsl(var(--gold))]/20">
-                      <h4 className="text-lg font-semibold text-[hsl(var(--gold-foreground))] mb-4">Cash Flow Protection</h4>
-                      <ul className="space-y-2 text-sm">
-                        <li className="flex items-start gap-2">
-                          <div className="w-2 h-2 bg-[hsl(var(--gold))] rounded-full mt-2 flex-shrink-0"></div>
-                          <span><strong>Treasury Centralization:</strong> All inflows route through ParentCo (not individual SPVs)</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <div className="w-2 h-2 bg-[hsl(var(--gold))] rounded-full mt-2 flex-shrink-0"></div>
-                          <span><strong>Waterfall Structure:</strong> Systematic upstream of cash from SPVs to fund next developments</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <div className="w-2 h-2 bg-[hsl(var(--gold))] rounded-full mt-2 flex-shrink-0"></div>
-                          <span><strong>Operations Buffer:</strong> 6-month runway maintained at completion of 36-month period</span>
-                        </li>
-                      </ul>
-                    </Card>
-
-                    <Card className="p-6 bg-secondary/10 border border-secondary/20">
-                      <h4 className="text-lg font-semibold text-secondary-foreground mb-4">Market Diversification</h4>
-                      <ul className="space-y-2 text-sm">
-                        <li className="flex items-start gap-2">
-                          <div className="w-2 h-2 bg-secondary rounded-full mt-2 flex-shrink-0"></div>
-                          <span><strong>Geographic Spread:</strong> 6 countries across 3 continents</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <div className="w-2 h-2 bg-secondary rounded-full mt-2 flex-shrink-0"></div>
-                          <span><strong>Construction Staging:</strong> Never more than 2 major builds simultaneously</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <div className="w-2 h-2 bg-secondary rounded-full mt-2 flex-shrink-0"></div>
-                          <span><strong>Currency Hedging:</strong> Multi-currency banking infrastructure established</span>
-                        </li>
-                      </ul>
-                    </Card>
-                  </div>
-                </div>
-              </Card>
-
-              {/* Conclusion */}
-              <Card className="p-8 bg-gradient-primary text-primary-foreground border-none shadow-luxury">
-                <div className="space-y-6">
-                  <h3 className="text-2xl font-bold">Conclusion</h3>
-                  <p className="text-lg leading-relaxed opacity-95">
-                    The $7.0M investment creates a self-sustaining real estate development platform that:
-                  </p>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-4">
-                      <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 bg-primary-foreground text-primary rounded-full flex items-center justify-center font-bold text-sm">1</div>
-                        <div>
-                          <h4 className="font-semibold">Preserves Capital</h4>
-                          <p className="text-sm opacity-90">Only deploys 58% of initial investment at peak utilization</p>
+                      <h4 className="text-xl font-semibold">Gated Capital Release System</h4>
+                      <div className="space-y-3">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-primary rounded-full mt-2"></div>
+                          <div>
+                            <p className="font-medium">Milestone-Based Tranches</p>
+                            <p className="text-sm text-muted-foreground">Capital only released upon verified completion of gates</p>
+                          </div>
                         </div>
-                      </div>
-                      
-                      <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 bg-primary-foreground text-primary rounded-full flex items-center justify-center font-bold text-sm">2</div>
-                        <div>
-                          <h4 className="font-semibold">Generates Returns</h4>
-                          <p className="text-sm opacity-90">$2.76M in recycled capital within 36 months</p>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-primary rounded-full mt-2"></div>
+                          <div>
+                            <p className="font-medium">Third-Party Verification</p>
+                            <p className="text-sm text-muted-foreground">Bank statements and documentation required for each gate</p>
+                          </div>
                         </div>
-                      </div>
-                      
-                      <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 bg-primary-foreground text-primary rounded-full flex items-center justify-center font-bold text-sm">3</div>
-                        <div>
-                          <h4 className="font-semibold">Achieves Scale</h4>
-                          <p className="text-sm opacity-90">112 units across 6 countries with $15.12M total revenue potential</p>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-primary rounded-full mt-2"></div>
+                          <div>
+                            <p className="font-medium">Multisig Controls</p>
+                            <p className="text-sm text-muted-foreground">ParentCo + investor representative approval for >$100K tranches</p>
+                          </div>
                         </div>
                       </div>
                     </div>
                     
                     <div className="space-y-4">
-                      <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 bg-primary-foreground text-primary rounded-full flex items-center justify-center font-bold text-sm">4</div>
-                        <div>
-                          <h4 className="font-semibold">Enables Growth</h4>
-                          <p className="text-sm opacity-90">Self-funding model for subsequent developments (Thailand/Turkey)</p>
+                      <h4 className="text-xl font-semibold">Presale Risk Management</h4>
+                      <div className="space-y-3">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-accent rounded-full mt-2"></div>
+                          <div>
+                            <p className="font-medium">Escrowed LOIs</p>
+                            <p className="text-sm text-muted-foreground">Permit-contingent closings prevent stranded deposits</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-accent rounded-full mt-2"></div>
+                          <div>
+                            <p className="font-medium">Conservative Timing</p>
+                            <p className="text-sm text-muted-foreground">3-4 month presale windows built into cash flow projections</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-accent rounded-full mt-2"></div>
+                          <div>
+                            <p className="font-medium">Platform Fee Acceleration</p>
+                            <p className="text-sm text-muted-foreground">3% fees captured immediately at contract signing</p>
+                          </div>
                         </div>
                       </div>
-                      
-                      <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 bg-primary-foreground text-primary rounded-full flex items-center justify-center font-bold text-sm">5</div>
-                        <div>
-                          <h4 className="font-semibold">Maintains Liquidity</h4>
-                          <p className="text-sm opacity-90">$2.94M treasury balance at 36-month completion</p>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <h4 className="text-xl font-semibold">Cash Flow Protection</h4>
+                      <div className="space-y-3">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-secondary rounded-full mt-2"></div>
+                          <div>
+                            <p className="font-medium">Treasury Centralization</p>
+                            <p className="text-sm text-muted-foreground">All inflows route through ParentCo (not individual SPVs)</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-secondary rounded-full mt-2"></div>
+                          <div>
+                            <p className="font-medium">Waterfall Structure</p>
+                            <p className="text-sm text-muted-foreground">Systematic upstream of cash from SPVs to fund next developments</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-secondary rounded-full mt-2"></div>
+                          <div>
+                            <p className="font-medium">Operations Buffer</p>
+                            <p className="text-sm text-muted-foreground">6-month runway maintained at completion of 36-month period</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <h4 className="text-xl font-semibold">Market Diversification</h4>
+                      <div className="space-y-3">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-[hsl(var(--gold))] rounded-full mt-2"></div>
+                          <div>
+                            <p className="font-medium">Geographic Spread</p>
+                            <p className="text-sm text-muted-foreground">6 countries across 3 continents</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-[hsl(var(--gold))] rounded-full mt-2"></div>
+                          <div>
+                            <p className="font-medium">Construction Staging</p>
+                            <p className="text-sm text-muted-foreground">Never more than 2 major builds simultaneously</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-[hsl(var(--gold))] rounded-full mt-2"></div>
+                          <div>
+                            <p className="font-medium">Currency Hedging</p>
+                            <p className="text-sm text-muted-foreground">Multi-currency banking infrastructure established</p>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
+                </div>
+              </Card>
+
+              {/* Conclusion */}
+              <Card className="p-8 bg-gradient-card border-none shadow-luxury">
+                <div className="space-y-6">
+                  <h3 className="text-2xl font-bold">Conclusion</h3>
                   
-                  <div className="mt-8 p-6 bg-primary-foreground/10 rounded-lg">
-                    <p className="text-base leading-relaxed opacity-95">
-                      The sequential funding model, supported by aggressive presale strategies and platform fee capture, demonstrates that a relatively modest initial investment can support a global real estate development portfolio through disciplined capital recycling and milestone-gated deployment.
+                  <div className="bg-[hsl(var(--gold))]/10 border border-[hsl(var(--gold))]/20 p-6 rounded-lg">
+                    <p className="text-lg mb-4">
+                      The $7.0M investment creates a self-sustaining real estate development platform that:
                     </p>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-3">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                          <div>
+                            <p className="font-semibold">Preserves Capital</p>
+                            <p className="text-sm text-muted-foreground">Only deploys 58% of initial investment at peak utilization</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                          <div>
+                            <p className="font-semibold">Generates Returns</p>
+                            <p className="text-sm text-muted-foreground">$2.76M in recycled capital within 36 months</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                          <div>
+                            <p className="font-semibold">Achieves Scale</p>
+                            <p className="text-sm text-muted-foreground">112 units across 6 countries with $15.12M total revenue potential</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold">4</div>
+                          <div>
+                            <p className="font-semibold">Enables Growth</p>
+                            <p className="text-sm text-muted-foreground">Self-funding model for subsequent developments (Thailand/Turkey)</p>
+                          </div>
+                        </div>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold">5</div>
+                          <div>
+                            <p className="font-semibold">Maintains Liquidity</p>
+                            <p className="text-sm text-muted-foreground">$2.94M treasury balance at 36-month completion</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-6 p-4 bg-[hsl(var(--gold))]/20 rounded-lg border border-[hsl(var(--gold))]/30">
+                      <p className="text-sm font-medium text-center">
+                        The sequential funding model, supported by aggressive presale strategies and platform fee capture, demonstrates that a relatively modest initial investment can support a global real estate development portfolio through disciplined capital recycling and milestone-gated deployment.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </Card>
