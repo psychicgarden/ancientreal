@@ -1006,7 +1006,6 @@ const BusinessModel = () => {
                                   <div className="flex justify-between"><span>Banking Infrastructure</span><span>$8K</span></div>
                                   <div className="flex justify-between"><span>Smart Contract Development</span><span>$50K</span></div>
                                   <div className="flex justify-between"><span>Security Audit</span><span>$8K</span></div>
-                                  <div className="flex justify-between"><span>Executive Travel & Setup</span><span>$10K</span></div>
                                   <div className="flex justify-between"><span>SaaS/Operations</span><span>$5K</span></div>
                                 </div>
                               </div>
@@ -1020,7 +1019,6 @@ const BusinessModel = () => {
                                   <div>Multi-currency accounts</div>
                                   <div>Mortgage + ARW + multisig</div>
                                   <div>Contract security review</div>
-                                  <div>On-ground setup & relationship building</div>
                                   <div>Dataroom, e-sign, compliance</div>
                                 </div>
                               </div>
@@ -1028,7 +1026,7 @@ const BusinessModel = () => {
                             
                             <div className="flex justify-between items-center pt-4 border-t border-border">
                               <span className="font-medium">Running Balance:</span>
-                              <span className="text-lg font-bold text-accent">$7.00M - $150K = $6.85M</span>
+                              <span className="text-lg font-bold text-accent">$7.00M - $140K = $6.86M</span>
                             </div>
                           </div>
                         </Card>
