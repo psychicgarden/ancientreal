@@ -15,133 +15,157 @@ import villaGreece from "@/assets/villa-greece.jpg";
 import villaBali from "@/assets/villa-bali.jpg";
 import penthouseMexico from "@/assets/penthouse-mexico.jpg";
 import ecoSmartCity from "@/assets/eco-smart-city.jpg";
-const flywheelData = [{
-  flip: "Flip 1",
-  location: "Mazunte, Mexico",
-  flag: "🇲🇽",
-  units: 15,
-  buildCost: 1.125,
-  salesPrice: 2.025,
-  cashIn: 0.81,
-  remaining: 2.435,
-  platformFee: 60.75,
-  image: villaTulum,
-  structure: "Mexican SAPI + Fideicomiso"
-}, {
-  flip: "Flip 2",
-  location: "Bahia, Brazil",
-  flag: "🇧🇷",
-  units: 21,
-  buildCost: 1.575,
-  salesPrice: 2.835,
-  cashIn: 1.107,
-  remaining: 1.967,
-  platformFee: 85.05,
-  image: beachChalet,
-  structure: "Brazilian LTDA"
-}, {
-  flip: "Flip 3A",
-  location: "Corfu, Greece",
-  flag: "🇬🇷",
-  units: 16,
-  buildCost: 1.2,
-  salesPrice: 2.16,
-  cashIn: 0.864,
-  remaining: 1.631,
-  platformFee: 64.8,
-  image: villaGreece,
-  structure: "Greek IKE SPV"
-}, {
-  flip: "Flip 3B",
-  location: "Mallorca, Spain",
-  flag: "🇪🇸",
-  units: 15,
-  buildCost: 1.125,
-  salesPrice: 2.025,
-  cashIn: 0.837,
-  remaining: 1.343,
-  platformFee: 60.75,
-  image: villaEriceira,
-  structure: "Spanish SL"
-}, {
-  flip: "Flip 4A",
-  location: "Koh Phangan, Thailand",
-  flag: "🇹🇭",
-  units: 25,
-  buildCost: 1.875,
-  salesPrice: 3.375,
-  cashIn: 1.323,
-  remaining: 0.923,
-  platformFee: 101.25,
-  image: villaBali,
-  structure: "30+30 Leasehold"
-}, {
-  flip: "Flip 4B",
-  location: "Antalya, Turkey",
-  flag: "🇹🇷",
-  units: 20,
-  buildCost: 1.5,
-  salesPrice: 2.7,
-  cashIn: 1.08,
-  remaining: 0.371,
-  platformFee: 81,
-  image: penthouseMexico,
-  structure: "Turkish SPV"
-}];
-const revenueStreams = [{
-  title: "Platform Fees",
-  amount: "$453.6K",
-  description: "Infrastructure revenue for serving nomad economy",
-  timeline: "Immediate capture",
-  icon: "🏛"
-}, {
-  title: "Mortgage Interest",
-  amount: "$7.46M",
-  description: "8% yield serving the $250B cross-border lending void",
-  timeline: "10-year stream",
-  icon: "🌐"
-}, {
-  title: "ARW Appreciation",
-  amount: "$16.62M",
-  description: "Capturing nomad wealth lost to rent into property equity",
-  timeline: "10-year capture",
-  icon: "🚀"
-}];
-const landAcquisition = [{
-  country: "Mexico",
-  budget: "$270K",
-  structure: "Bank Fideicomiso via SAPI",
-  risk: "Ejido exclusion critical"
-}, {
-  country: "Brazil",
-  budget: "$230K",
-  structure: "Brazilian LTDA",
-  risk: "Environmental approvals"
-}, {
-  country: "Greece",
-  budget: "$360K",
-  structure: "Greek IKE SPV",
-  risk: "Coastal restrictions"
-}, {
-  country: "Spain",
-  budget: "$400K",
-  structure: "Spanish SL",
-  risk: "8-10% transfer costs"
-}, {
-  country: "Thailand",
-  budget: "$280K",
-  structure: "30+30 Leasehold",
-  risk: "Foreign ownership limits"
-}, {
-  country: "Turkey",
-  budget: "$260K",
-  structure: "Turkish SPV",
-  risk: "Military zone clearance"
-}];
+
+const flywheelData = [
+  {
+    flip: "Flip 1",
+    location: "Mazunte, Mexico",
+    flag: "🇲🇽",
+    units: 15,
+    buildCost: 1.125,
+    salesPrice: 2.025,
+    cashIn: 0.81,
+    remaining: 2.435,
+    platformFee: 60.75,
+    image: villaTulum,
+    structure: "Mexican SAPI + Fideicomiso"
+  },
+  {
+    flip: "Flip 2",
+    location: "Bahia, Brazil",
+    flag: "🇧🇷",
+    units: 21,
+    buildCost: 1.575,
+    salesPrice: 2.835,
+    cashIn: 1.107,
+    remaining: 1.967,
+    platformFee: 85.05,
+    image: beachChalet,
+    structure: "Brazilian LTDA"
+  },
+  {
+    flip: "Flip 3A",
+    location: "Corfu, Greece",
+    flag: "🇬🇷",
+    units: 16,
+    buildCost: 1.2,
+    salesPrice: 2.16,
+    cashIn: 0.864,
+    remaining: 1.631,
+    platformFee: 64.8,
+    image: villaGreece,
+    structure: "Greek IKE SPV"
+  },
+  {
+    flip: "Flip 3B",
+    location: "Mallorca, Spain",
+    flag: "🇪🇸",
+    units: 15,
+    buildCost: 1.125,
+    salesPrice: 2.025,
+    cashIn: 0.837,
+    remaining: 1.343,
+    platformFee: 60.75,
+    image: villaEriceira,
+    structure: "Spanish SL"
+  },
+  {
+    flip: "Flip 4A",
+    location: "Koh Phangan, Thailand",
+    flag: "🇹🇭",
+    units: 25,
+    buildCost: 1.875,
+    salesPrice: 3.375,
+    cashIn: 1.323,
+    remaining: 0.923,
+    platformFee: 101.25,
+    image: villaBali,
+    structure: "30+30 Leasehold"
+  },
+  {
+    flip: "Flip 4B",
+    location: "Antalya, Turkey",
+    flag: "🇹🇷",
+    units: 20,
+    buildCost: 1.5,
+    salesPrice: 2.7,
+    cashIn: 1.08,
+    remaining: 0.371,
+    platformFee: 81,
+    image: penthouseMexico,
+    structure: "Turkish SPV"
+  }
+];
+
+const revenueStreams = [
+  {
+    title: "Platform Fees",
+    amount: "$453.6K",
+    description: "Infrastructure revenue for serving nomad economy",
+    timeline: "Immediate capture",
+    icon: "🏛"
+  },
+  {
+    title: "Mortgage Interest",
+    amount: "$7.46M",
+    description: "8% yield serving the $250B cross-border lending void",
+    timeline: "10-year stream",
+    icon: "🌐"
+  },
+  {
+    title: "ARW Appreciation",
+    amount: "$16.62M",
+    description: "Capturing nomad wealth lost to rent into property equity",
+    timeline: "10-year capture",
+    icon: "🚀"
+  }
+];
+
+const landAcquisition = [
+  {
+    country: "Mexico",
+    budget: "$270K",
+    structure: "Bank Fideicomiso via SAPI",
+    risk: "Ejido exclusion critical"
+  },
+  {
+    country: "Brazil",
+    budget: "$230K",
+    structure: "Brazilian LTDA",
+    risk: "Environmental approvals"
+  },
+  {
+    country: "Greece",
+    budget: "$360K",
+    structure: "Greek IKE SPV",
+    risk: "Coastal restrictions"
+  },
+  {
+    country: "Spain",
+    budget: "$400K",
+    structure: "Spanish SL",
+    risk: "8-10% transfer costs"
+  },
+  {
+    country: "Thailand",
+    budget: "$280K",
+    structure: "30+30 Leasehold",
+    risk: "Foreign ownership limits"
+  },
+  {
+    country: "Turkey",
+    budget: "$260K",
+    structure: "Turkish SPV",
+    risk: "Military zone clearance"
+  }
+];
+
 const BusinessModel = () => {
   const navigate = useNavigate();
   const totalPlatformFees = flywheelData.reduce((sum, flip) => sum + flip.platformFee, 0);
-  return <div className="min-h-screen bg-gradient-subtle">
+
+  return (
+    <div className="min-h-screen bg-gradient-subtle">
       {/* Wide Banner Hero Section */}
       <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
         {/* Background Image */}
@@ -202,59 +226,71 @@ const BusinessModel = () => {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {[{
-            icon: "📈",
-            title: "Digital-Nomad Boom",
-            stat: "50M → 100M+",
-            desc: "6× growth since 2019, accelerating toward 100M+ by 2030"
-          }, {
-            icon: "🧳",
-            title: "Massive Pipeline",
-            stat: "35M+",
-            desc: "North-American & European workers intend to go nomadic within two years"
-          }, {
-            icon: "💻",
-            title: "Remote Work Default",
-            stat: "80%",
-            desc: "White-collar staff work hybrid/remote, severing income from geography"
-          }, {
-            icon: "🏠",
-            title: "Affordability Crisis",
-            stat: "8× Income",
-            desc: "Median home prices vs. household income—worst ratio in four decades"
-          }, {
-            icon: "🕰",
-            title: "Delayed Homeownership",
-            stat: "29 → 36",
-            desc: "U.S. first-time-buyer age climbed 7 years in a decade"
-          }, {
-            icon: "💰",
-            title: "Millennial Capital",
-            stat: "$5T Liquid",
-            desc: "Massive wealth, yet <50% own homes due to geographic constraints"
-          }, {
-            icon: "⚖",
-            title: "Tokenized Real Estate",
-            stat: "$310M → $1.4T",
-            desc: "Market forecast to surge 4.5× by 2030"
-          }, {
-            icon: "🗺",
-            title: "Visa Tailwinds",
-            stat: "50+ Countries",
-            desc: "Issue Digital-Nomad Visas (from just 6 in 2019)"
-          }, {
-            icon: "💳",
-            title: "Cross-border Void",
-            stat: "$250B",
-            desc: "Capital nomads want but banks refuse to lend"
-          }].map(trend => <Card key={trend.title} className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-card transition-all duration-300">
+            {[
+              {
+                icon: "📈",
+                title: "Digital-Nomad Boom",
+                stat: "50M → 100M+",
+                desc: "6× growth since 2019, accelerating toward 100M+ by 2030"
+              },
+              {
+                icon: "🧳",
+                title: "Massive Pipeline",
+                stat: "35M+",
+                desc: "North-American & European workers intend to go nomadic within two years"
+              },
+              {
+                icon: "💻",
+                title: "Remote Work Default",
+                stat: "80%",
+                desc: "White-collar staff work hybrid/remote, severing income from geography"
+              },
+              {
+                icon: "🏠",
+                title: "Affordability Crisis",
+                stat: "8× Income",
+                desc: "Median home prices vs. household income—worst ratio in four decades"
+              },
+              {
+                icon: "🕰",
+                title: "Delayed Homeownership",
+                stat: "29 → 36",
+                desc: "U.S. first-time-buyer age climbed 7 years in a decade"
+              },
+              {
+                icon: "💰",
+                title: "Millennial Capital",
+                stat: "$5T Liquid",
+                desc: "Massive wealth, yet <50% own homes due to geographic constraints"
+              },
+              {
+                icon: "⚖",
+                title: "Tokenized Real Estate",
+                stat: "$310M → $1.4T",
+                desc: "Market forecast to surge 4.5× by 2030"
+              },
+              {
+                icon: "🗺",
+                title: "Visa Tailwinds",
+                stat: "50+ Countries",
+                desc: "Issue Digital-Nomad Visas (from just 6 in 2019)"
+              },
+              {
+                icon: "💳",
+                title: "Cross-border Void",
+                stat: "$250B",
+                desc: "Capital nomads want but banks refuse to lend"
+              }
+            ].map(trend => (
+              <Card key={trend.title} className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-card transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="text-3xl mb-3">{trend.icon}</div>
                   <div className="text-2xl font-bold text-primary mb-2">{trend.stat}</div>
                   <h3 className="font-semibold mb-2">{trend.title}</h3>
                   <p className="text-sm text-muted-foreground">{trend.desc}</p>
                 </CardContent>
-              </Card>)}
+              </Card>
+            ))}
           </div>
         </div>
       </section>
@@ -327,7 +363,8 @@ const BusinessModel = () => {
                 </div>
 
                 <div className="space-y-8">
-                  {flywheelData.map((flip, index) => <Card key={flip.flip} className="bg-card/80 backdrop-blur-sm border-border/50 overflow-hidden">
+                  {flywheelData.map((flip, index) => (
+                    <Card key={flip.flip} className="bg-card/80 backdrop-blur-sm border-border/50 overflow-hidden">
                       <CardContent className="p-0">
                         <div className="grid md:grid-cols-3 gap-0">
                           {/* Image */}
@@ -380,11 +417,12 @@ const BusinessModel = () => {
                               <div className="text-sm font-medium text-foreground mb-2">Cash In Breakdown</div>
                               <div className="space-y-1 text-sm">
                                 {(() => {
-                              const financedUnits = Math.floor(flip.units * 0.8); // 80% financed
-                              const cashUnits = flip.units - financedUnits;
-                              const financedCash = financedUnits * 135 * 0.2; // 20% down payments
-                              const cashPurchases = cashUnits * 135; // full cash purchases
-                              return <>
+                                  const financedUnits = Math.floor(flip.units * 0.8); // 80% financed
+                                  const cashUnits = flip.units - financedUnits;
+                                  const financedCash = financedUnits * 135 * 0.2; // 20% down payments
+                                  const cashPurchases = cashUnits * 135; // full cash purchases
+                                  return (
+                                    <>
                                       <div className="flex justify-between items-center">
                                         <span className="text-muted-foreground">{financedUnits} financed (20% down):</span>
                                         <span className="font-mono font-semibold">${financedCash.toFixed(0)}K</span>
@@ -401,8 +439,9 @@ const BusinessModel = () => {
                                         <span className="font-semibold text-foreground">Total Cash In:</span>
                                         <span className="font-mono text-lg font-bold text-primary">${flip.cashIn}M</span>
                                       </div>
-                                    </>;
-                            })()}
+                                    </>
+                                  );
+                                })()}
                               </div>
                             </div>
                           </div>
@@ -414,21 +453,25 @@ const BusinessModel = () => {
                               <div className="text-2xl font-bold">${flip.remaining}M</div>
                             </div>
                             
-                            {index < flywheelData.length - 1 && <div className="flex flex-col items-center">
+                            {index < flywheelData.length - 1 && (
+                              <div className="flex flex-col items-center">
                                 <div className="text-sm text-muted-foreground mb-2">Funds Next Flip</div>
                                 <ArrowRight className="w-8 h-8 text-primary rotate-90 md:rotate-0" />
-                              </div>}
+                              </div>
+                            )}
                           </div>
                         </div>
                       </CardContent>
-                    </Card>)}
+                    </Card>
+                  ))}
                 </div>
 
                 {/* Revenue Summary */}
                 <div className="mt-16 text-center">
                   <h3 className="text-3xl font-bold mb-8">10-Year Revenue Capture</h3>
                   <div className="grid md:grid-cols-3 gap-6">
-                    {revenueStreams.map((stream, index) => <Card key={index} className="bg-card/50 backdrop-blur-sm border-border/50">
+                    {revenueStreams.map((stream, index) => (
+                      <Card key={index} className="bg-card/50 backdrop-blur-sm border-border/50">
                         <CardContent className="p-6 text-center">
                           <div className="text-3xl mb-3">{stream.icon}</div>
                           <h4 className="font-semibold text-lg mb-2">{stream.title}</h4>
@@ -436,7 +479,8 @@ const BusinessModel = () => {
                           <p className="text-sm text-muted-foreground mb-1">{stream.description}</p>
                           <p className="text-xs text-muted-foreground">{stream.timeline}</p>
                         </CardContent>
-                      </Card>)}
+                      </Card>
+                    ))}
                   </div>
                   <div className="mt-8 p-6 bg-primary/10 rounded-lg">
                     <div className="text-3xl font-bold text-primary">$24.53M</div>
@@ -753,18 +797,23 @@ const BusinessModel = () => {
                 </p>
               </div>
 
-              {/* Capital Protection Shield */}
+              {/* Maximum Capital at Risk Display */}
               <Card className="p-6 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/30 shadow-lg">
-                <div className="flex items-center justify-center space-x-4">
-                  <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
-                    <Shield className="w-6 h-6 text-green-500" />
+                <div className="text-center space-y-4">
+                  <div className="flex items-center justify-center space-x-4">
+                    <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
+                      <Shield className="w-6 h-6 text-green-500" />
+                    </div>
+                    <h3 className="text-xl font-bold text-green-600">MAXIMUM CAPITAL AT RISK</h3>
                   </div>
-                  <div className="text-center">
-                    <h3 className="text-xl font-bold text-green-600 mb-2">CAPITAL PROTECTION ACTIVATED</h3>
-                    <p className="text-lg text-foreground">
-                      <span className="font-bold">42% of capital is retained in treasury</span> — investor funds are recycled, not burned
-                    </p>
+                  <div className="flex justify-center items-center space-x-6 text-lg">
+                    <span className="bg-green-500/20 px-4 py-2 rounded-lg font-bold text-green-600">Phase 1: $150K</span>
+                    <span className="text-muted-foreground">→</span>
+                    <span className="bg-yellow-500/20 px-4 py-2 rounded-lg font-bold text-yellow-600">Phase 2: $620K</span>
+                    <span className="text-muted-foreground">→</span>
+                    <span className="bg-orange-500/20 px-4 py-2 rounded-lg font-bold text-orange-600">Peak: $4.06M</span>
                   </div>
+                  <p className="text-sm text-muted-foreground">Each phase unlocks only after proven milestones • Progressive protection at every gate</p>
                 </div>
               </Card>
 
@@ -875,14 +924,58 @@ const BusinessModel = () => {
                 </div>
               </Card>
 
-              {/* Enhanced Financial Overview - Reordered for Protection */}
+              {/* Capital Protection System */}
               <Card className="p-8 bg-gradient-card border-none shadow-luxury">
                 <div className="text-center space-y-4 mb-8">
-                  <h3 className="text-2xl font-bold">Capital Efficiency & Protection Metrics</h3>
-                  <p className="text-muted-foreground">Every dollar protected through milestone gates and treasury recycling</p>
+                  <h3 className="text-2xl font-bold">Capital Protection System</h3>
+                  <p className="text-muted-foreground">14 milestone gates • Progressive risk management • Exit liquidity guaranteed</p>
                 </div>
                 
-                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <Card className="p-6 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/30">
+                    <div className="space-y-3">
+                      <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
+                        <Shield className="w-5 h-5 text-green-500" />
+                      </div>
+                      <p className="text-sm font-medium text-green-600">14 Milestone Gates</p>
+                      <p className="text-2xl font-bold">Protected</p>
+                      <p className="text-xs text-muted-foreground">Each phase requires proven milestones before unlocking next tranche</p>
+                    </div>
+                  </Card>
+                  
+                  <Card className="p-6 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border-blue-500/30">
+                    <div className="space-y-3">
+                      <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">
+                        <TrendingUp className="w-5 h-5 text-blue-500" />
+                      </div>
+                      <p className="text-sm font-medium text-blue-600">39% Capital Recovery</p>
+                      <p className="text-2xl font-bold">$2.76M</p>
+                      <p className="text-xs text-muted-foreground">From presales and exit strategies by Month 36</p>
+                    </div>
+                  </Card>
+
+                  <Card className="p-6 bg-gradient-to-r from-purple-500/10 to-violet-500/10 border-purple-500/30">
+                    <div className="space-y-3">
+                      <div className="w-10 h-10 bg-purple-500/20 rounded-full flex items-center justify-center">
+                        <DollarSign className="w-5 h-5 text-purple-500" />
+                      </div>
+                      <p className="text-sm font-medium text-purple-600">Exit Liquidity</p>
+                      <p className="text-2xl font-bold">$945K</p>
+                      <p className="text-xs text-muted-foreground">Available for immediate investor exits by Month 36</p>
+                    </div>
+                  </Card>
+
+                  <Card className="p-6 bg-gradient-to-r from-orange-500/10 to-amber-500/10 border-orange-500/30">
+                    <div className="space-y-3">
+                      <div className="w-10 h-10 bg-orange-500/20 rounded-full flex items-center justify-center">
+                        <BarChart3 className="w-5 h-5 text-orange-500" />
+                      </div>
+                      <p className="text-sm font-medium text-orange-600">Self-Sustaining</p>
+                      <p className="text-2xl font-bold">Month 36</p>
+                      <p className="text-xs text-muted-foreground">Operations become cash-flow positive without new investor funds</p>
+                    </div>
+                  </Card>
+                </div>
               </Card>
 
               {/* Year-based Sub-Tabs for Complete 36-Month Timeline */}
@@ -926,7 +1019,6 @@ const BusinessModel = () => {
                                   <div className="flex justify-between"><span>Banking Infrastructure</span><span>$8K</span></div>
                                   <div className="flex justify-between"><span>Smart Contract Development</span><span>$50K</span></div>
                                   <div className="flex justify-between"><span>Security Audit</span><span>$8K</span></div>
-                                  <div className="flex justify-between"><span>Executive Travel & Setup</span><span>$10K</span></div>
                                   <div className="flex justify-between"><span>SaaS/Operations</span><span>$5K</span></div>
                                 </div>
                               </div>
@@ -940,7 +1032,6 @@ const BusinessModel = () => {
                                   <div>Multi-currency accounts</div>
                                   <div>Mortgage + ARW + multisig</div>
                                   <div>Contract security review</div>
-                                  <div>On-ground setup & relationship building</div>
                                   <div>Dataroom, e-sign, compliance</div>
                                 </div>
                               </div>
@@ -948,7 +1039,7 @@ const BusinessModel = () => {
                             
                             <div className="flex justify-between items-center pt-4 border-t border-border">
                               <span className="font-medium">Running Balance:</span>
-                              <span className="text-lg font-bold text-accent">$7.00M - $150K = $6.85M</span>
+                              <span className="text-lg font-bold text-accent">$7.00M - $140K = $6.86M</span>
                             </div>
                           </div>
                         </Card>
@@ -1814,32 +1905,66 @@ const BusinessModel = () => {
                     </div>
                   </div>
 
-                  {/* Capital Efficiency Metrics */}
+                  {/* Capital Protection System */}
                   <div className="space-y-4">
-                    <h4 className="text-xl font-semibold">Capital Efficiency Metrics</h4>
+                    <h4 className="text-xl font-semibold">Capital Protection System</h4>
+                    
+                    {/* Maximum Capital at Risk */}
+                    <Card className="p-6 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 border border-orange-200/50 dark:border-orange-800/50">
+                      <div className="space-y-4">
+                        <h5 className="text-lg font-semibold text-orange-700 dark:text-orange-300">Maximum Capital at Risk</h5>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <Card className="p-4 text-center bg-gradient-primary text-primary-foreground border-none">
+                            <div className="space-y-2">
+                              <p className="text-2xl font-bold">$150K</p>
+                              <p className="text-sm opacity-90">Month 1 Initial</p>
+                            </div>
+                          </Card>
+                          <Card className="p-4 text-center bg-gradient-secondary text-secondary-foreground border-none">
+                            <div className="space-y-2">
+                              <p className="text-2xl font-bold">$620K</p>
+                              <p className="text-sm opacity-90">Month 9 Platform</p>
+                            </div>
+                          </Card>
+                          <Card className="p-4 text-center bg-gradient-accent text-accent-foreground border-none">
+                            <div className="space-y-2">
+                              <p className="text-2xl font-bold">$2.94M</p>
+                              <p className="text-sm opacity-90">Month 24 Peak</p>
+                            </div>
+                          </Card>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-sm text-orange-600 dark:text-orange-400 font-medium">
+                            Capital at risk increases gradually as milestones are achieved, not all at once
+                          </p>
+                        </div>
+                      </div>
+                    </Card>
+
+                    {/* Protection Mechanisms */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <Card className="p-4 text-center bg-gradient-primary text-primary-foreground border-none">
+                      <Card className="p-4 text-center bg-[hsl(var(--gold))]/10 border border-[hsl(var(--gold))]/20">
                         <div className="space-y-2">
-                          <p className="text-2xl font-bold">39%</p>
-                          <p className="text-sm opacity-90">Capital Recycling Rate</p>
+                          <p className="text-2xl font-bold text-[hsl(var(--gold))]">14 Gates</p>
+                          <p className="text-sm text-muted-foreground">Milestone Protection</p>
                         </div>
                       </Card>
-                      <Card className="p-4 text-center bg-gradient-secondary text-secondary-foreground border-none">
+                      <Card className="p-4 text-center bg-green-50 dark:bg-green-900/20 border border-green-500/20">
                         <div className="space-y-2">
-                          <p className="text-2xl font-bold">58%</p>
-                          <p className="text-sm opacity-90">Peak Capital Utilization</p>
+                          <p className="text-2xl font-bold text-green-600">39%</p>
+                          <p className="text-sm text-muted-foreground">Capital Recovery</p>
                         </div>
                       </Card>
-                      <Card className="p-4 text-center bg-gradient-accent text-accent-foreground border-none">
+                      <Card className="p-4 text-center bg-blue-50 dark:bg-blue-900/20 border border-blue-500/20">
                         <div className="space-y-2">
-                          <p className="text-2xl font-bold">42%</p>
-                          <p className="text-sm opacity-90">Treasury Preservation</p>
+                          <p className="text-2xl font-bold text-blue-600">$945K</p>
+                          <p className="text-sm text-muted-foreground">Exit Liquidity</p>
                         </div>
                       </Card>
-                      <Card className="p-4 text-center bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] border-none">
+                      <Card className="p-4 text-center bg-purple-50 dark:bg-purple-900/20 border border-purple-500/20">
                         <div className="space-y-2">
-                          <p className="text-2xl font-bold">Month 36</p>
-                          <p className="text-sm opacity-90">Self-Funding Achievement</p>
+                          <p className="text-2xl font-bold text-purple-600">Month 36</p>
+                          <p className="text-sm text-muted-foreground">Self-Sustaining</p>
                         </div>
                       </Card>
                     </div>
@@ -1964,169 +2089,63 @@ const BusinessModel = () => {
                 </div>
               </Card>
 
-              {/* How The Money Actually Moves */}
+              {/* Conclusion */}
               <Card className="p-8 bg-gradient-card border-none shadow-luxury">
-                <div className="space-y-8">
-                  <div className="text-center">
-                    <h3 className="text-3xl font-bold mb-4">How The Money Actually Moves</h3>
-                    <p className="text-lg text-muted-foreground">
-                      Here's the month-by-month walkthrough so you can see how $7.0M gets used, recycled, and ends with $2.94M treasury while peak capital at risk is only $4.06M.
-                    </p>
-                  </div>
-
-                  {/* Ledger View */}
-                  <div className="space-y-6">
-                    <h4 className="text-xl font-semibold flex items-center gap-3">
-                      <BarChart3 className="w-6 h-6 text-primary" />
-                      The Treasury Ledger (Key Milestones)
-                    </h4>
-                    
-                    <div className="overflow-x-auto">
-                      <table className="w-full border-collapse border border-border rounded-lg">
-                        <thead>
-                          <tr className="bg-muted/50">
-                            <th className="border border-border p-4 text-left font-semibold">Month</th>
-                            <th className="border border-border p-4 text-left font-semibold">Milestone</th>
-                            <th className="border border-border p-4 text-right font-semibold">Cash Change</th>
-                            <th className="border border-border p-4 text-right font-semibold">Treasury After</th>
-                            <th className="border border-border p-4 text-right font-semibold">Capital at Risk</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td className="border border-border p-4">Start</td>
-                            <td className="border border-border p-4">Initial Investment</td>
-                            <td className="border border-border p-4 text-right">—</td>
-                            <td className="border border-border p-4 text-right font-bold text-primary">$7.00M</td>
-                            <td className="border border-border p-4 text-right">$0.00M</td>
-                          </tr>
-                          <tr className="bg-muted/20">
-                            <td className="border border-border p-4">M1-M11</td>
-                            <td className="border border-border p-4">Legal, Platform, Mexico Setup</td>
-                            <td className="border border-border p-4 text-right text-red-600">-$1.21M</td>
-                            <td className="border border-border p-4 text-right">$5.79M</td>
-                            <td className="border border-border p-4 text-right">$1.21M</td>
-                          </tr>
-                          <tr>
-                            <td className="border border-border p-4">M12-M14</td>
-                            <td className="border border-border p-4">First Presales Begin (Mazunte)</td>
-                            <td className="border border-border p-4 text-right text-green-600">+$0.257M</td>
-                            <td className="border border-border p-4 text-right">$5.78M</td>
-                            <td className="border border-border p-4 text-right">$1.22M</td>
-                          </tr>
-                          <tr className="bg-muted/20">
-                            <td className="border border-border p-4">M15-M21</td>
-                            <td className="border border-border p-4">Brazil Build + Bahia Presales</td>
-                            <td className="border border-border p-4 text-right text-green-600">+$0.442M</td>
-                            <td className="border border-border p-4 text-right">$5.39M</td>
-                            <td className="border border-border p-4 text-right">$1.61M</td>
-                          </tr>
-                          <tr>
-                            <td className="border border-border p-4">M21-M30</td>
-                            <td className="border border-border p-4">Spain Entry + More Presales</td>
-                            <td className="border border-border p-4 text-right text-green-600">+$0.67M</td>
-                            <td className="border border-border p-4 text-right">$4.06M</td>
-                            <td className="border border-border p-4 text-right">$2.94M</td>
-                          </tr>
-                          <tr className="bg-red-50 border-red-200">
-                            <td className="border border-border p-4 font-bold">M36</td>
-                            <td className="border border-border p-4 font-bold">Peak Capital at Risk</td>
-                            <td className="border border-border p-4 text-right text-red-600 font-bold">-$0.827M</td>
-                            <td className="border border-border p-4 text-right font-bold">$2.94M</td>
-                            <td className="border border-border p-4 text-right font-bold text-red-600">$4.06M</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-
-                  {/* Recycling Explanation */}
+                <div className="space-y-6">
+                  <h3 className="text-2xl font-bold">Conclusion</h3>
+                  
                   <div className="bg-[hsl(var(--gold))]/10 border border-[hsl(var(--gold))]/20 p-6 rounded-lg">
-                    <h4 className="text-xl font-semibold mb-4">Where The $2.76M Recycled Comes From</h4>
-                    <p className="mb-4">Cash flows back into the treasury from presales and closings throughout the 36 months:</p>
+                    <p className="text-lg mb-4">
+                      The $7.0M investment creates a self-sustaining real estate development platform that:
+                    </p>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span>M12: Mazunte presales start</span>
-                          <span className="font-mono text-green-600">+$128K</span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-3">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                          <div>
+                            <p className="font-semibold">Preserves Capital</p>
+                            <p className="text-sm text-muted-foreground">Only deploys 58% of initial investment at peak utilization</p>
+                          </div>
                         </div>
-                        <div className="flex justify-between">
-                          <span>M13-14: Mazunte presales 2-3</span>
-                          <span className="font-mono text-green-600">+$257K</span>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                          <div>
+                            <p className="font-semibold">Generates Returns</p>
+                            <p className="text-sm text-muted-foreground">$2.76M in recycled capital within 36 months</p>
+                          </div>
                         </div>
-                        <div className="flex justify-between">
-                          <span>M18: Mazunte cash closings</span>
-                          <span className="font-mono text-green-600">+$534K</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>M19-21: Bahia presales 2-4</span>
-                          <span className="font-mono text-green-600">+$388K</span>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                          <div>
+                            <p className="font-semibold">Achieves Scale</p>
+                            <p className="text-sm text-muted-foreground">112 units across 6 countries with $15.12M total revenue potential</p>
+                          </div>
                         </div>
                       </div>
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span>M30: Bahia cash closings</span>
-                          <span className="font-mono text-green-600">+$675K</span>
+                      
+                      <div className="space-y-3">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold">4</div>
+                          <div>
+                            <p className="font-semibold">Enables Growth</p>
+                            <p className="text-sm text-muted-foreground">Self-funding model for subsequent developments (Thailand/Turkey)</p>
+                          </div>
                         </div>
-                        <div className="flex justify-between">
-                          <span>M33: EU presales 1</span>
-                          <span className="font-mono text-green-600">+$193K</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>M34-35: EU presales 2-3</span>
-                          <span className="font-mono text-green-600">+$387K</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>M36: EU presales 4</span>
-                          <span className="font-mono text-green-600">+$193K</span>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold">5</div>
+                          <div>
+                            <p className="font-semibold">Maintains Liquidity</p>
+                            <p className="text-sm text-muted-foreground">$2.94M treasury balance at 36-month completion</p>
+                          </div>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="border-t border-[hsl(var(--gold))]/30 pt-4">
-                      <div className="flex justify-between text-lg font-bold">
-                        <span>Total Inflows (Capital Recycled):</span>
-                        <span className="text-green-600">$2.76M</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Peak Risk Calculation */}
-                  <div className="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 p-6 rounded-lg">
-                    <h4 className="text-xl font-semibold mb-4 text-red-700">Peak Risk Calculation Made Simple</h4>
-                    <div className="text-center space-y-4">
-                      <div className="text-3xl font-bold">
-                        <span className="text-gray-700">$7.0M</span>
-                        <span className="mx-4">−</span>
-                        <span className="text-red-600">$2.94M</span>
-                        <span className="mx-4">=</span>
-                        <span className="text-red-700">$4.06M</span>
-                      </div>
-                      <div className="text-sm space-y-1">
-                        <p><span className="font-semibold">Starting Capital</span> minus <span className="font-semibold">Lowest Treasury Balance</span> equals <span className="font-semibold">Peak Capital at Risk</span></p>
-                        <p className="text-red-600 font-medium">This happens at Month 36, not Month 30</p>
-                        <p className="text-gray-600">We never have all $7M exposed at once</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Plain English Takeaway */}
-                  <div className="bg-[hsl(var(--gold))]/20 border border-[hsl(var(--gold))]/30 p-6 rounded-lg">
-                    <h4 className="text-xl font-semibold mb-4">Plain English Takeaway</h4>
-                    <div className="space-y-4">
-                      <div className="flex items-start space-x-3">
-                        <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">✓</div>
-                        <p><strong>We put the $7M to work</strong> across land, builds, legal, platform, and marketing—but as soon as presales and closings hit, cash flows back into the fund and gets reused.</p>
-                      </div>
-                      <div className="flex items-start space-x-3">
-                        <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">✓</div>
-                        <p><strong>Because of that recycling</strong>, the most we ever have exposed at one time is $4.06M, not the full $7M.</p>
-                      </div>
-                      <div className="flex items-start space-x-3">
-                        <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">✓</div>
-                        <p><strong>By Month 36</strong> we still have $2.94M cash in treasury, plus multiple markets completed or underway, and we roll that cash into Thailand/Turkey without needing a new raise.</p>
-                      </div>
+                    <div className="mt-6 p-4 bg-[hsl(var(--gold))]/20 rounded-lg border border-[hsl(var(--gold))]/30">
+                      <p className="text-sm font-medium text-center">
+                        The sequential funding model, supported by aggressive presale strategies and platform fee capture, demonstrates that a relatively modest initial investment can support a global real estate development portfolio through disciplined capital recycling and milestone-gated deployment.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -2161,30 +2180,50 @@ const BusinessModel = () => {
                   <p className="text-muted-foreground mb-6">How Industry Leaders Structure Tokenization</p>
                   
                   <div className="grid md:grid-cols-3 gap-6 mb-8">
-                    {[{
-                    name: "Tether Gold (XAUT)",
-                    aum: "$500M+ AUM",
-                    structure: ["Physical gold stored in Swiss vaults", "Tether International Limited (SPV) holds legal title", "XAUT tokens represent beneficial ownership claims", "Switzerland doesn't recognize blockchain tokens as legal gold title"],
-                    result: "Fully functional, legally compliant, institutionally trusted"
-                  }, {
-                    name: "RealT",
-                    aum: "$100M+ U.S. Properties",
-                    structure: ["Properties owned by individual LLCs (SPVs)", "Token holders own membership interests in LLCs", "No direct deed tokenization"],
-                    result: "Regulatory compliant across all U.S. states"
-                  }, {
-                    name: "Reental",
-                    aum: "€32.5M European Assets",
-                    structure: ["Spanish properties held by SPV entities", "Tokens represent economic rights, not deeds", "Over 22,500 verified investors"],
-                    result: "Operating successfully across Spain, Mexico, U.S., and LatAm"
-                  }].map((platform, index) => <Card key={index} className="bg-card/50 border-border/50">
+                    {[
+                      {
+                        name: "Tether Gold (XAUT)",
+                        aum: "$500M+ AUM",
+                        structure: [
+                          "Physical gold stored in Swiss vaults",
+                          "Tether International Limited (SPV) holds legal title", 
+                          "XAUT tokens represent beneficial ownership claims",
+                          "Switzerland doesn't recognize blockchain tokens as legal gold title"
+                        ],
+                        result: "Fully functional, legally compliant, institutionally trusted"
+                      },
+                      {
+                        name: "RealT",
+                        aum: "$100M+ U.S. Properties",
+                        structure: [
+                          "Properties owned by individual LLCs (SPVs)",
+                          "Token holders own membership interests in LLCs",
+                          "No direct deed tokenization"
+                        ],
+                        result: "Regulatory compliant across all U.S. states"
+                      },
+                      {
+                        name: "Reental",
+                        aum: "€32.5M European Assets",
+                        structure: [
+                          "Spanish properties held by SPV entities",
+                          "Tokens represent economic rights, not deeds",
+                          "Over 22,500 verified investors"
+                        ],
+                        result: "Operating successfully across Spain, Mexico, U.S., and LatAm"
+                      }
+                    ].map((platform, index) => (
+                      <Card key={index} className="bg-card/50 border-border/50">
                         <CardContent className="p-6">
                           <div className="text-lg font-bold text-primary mb-2">{platform.name}</div>
                           <Badge variant="outline" className="mb-4">{platform.aum}</Badge>
                           <div className="space-y-2 mb-4">
-                            {platform.structure.map((item, i) => <div key={i} className="text-sm text-muted-foreground flex items-start gap-2">
+                            {platform.structure.map((item, i) => (
+                              <div key={i} className="text-sm text-muted-foreground flex items-start gap-2">
                                 <span className="text-primary">•</span>
                                 <span>{item}</span>
-                              </div>)}
+                              </div>
+                            ))}
                           </div>
                           <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg p-3">
                             <div className="text-sm font-medium text-green-800 dark:text-green-400">
@@ -2192,7 +2231,8 @@ const BusinessModel = () => {
                             </div>
                           </div>
                         </CardContent>
-                      </Card>)}
+                      </Card>
+                    ))}
                   </div>
 
                   {/* Ancient's Structure */}
@@ -2220,10 +2260,18 @@ const BusinessModel = () => {
                       </div>
                       
                       <div className="mt-6 grid md:grid-cols-2 gap-4">
-                        {["Bulletproof Legal Chain: Nevis → Local SPV → Property Title", "Regulatory Arbitrage: Optimal jurisdiction selection per market", "Institutional Grade: Same structure used by billion-dollar assets", "Full Transparency: On-chain ownership records and cash flows", "Automated Compliance: Smart contracts handle distributions and governance"].map((advantage, i) => <div key={i} className="flex items-start gap-2 text-sm">
+                        {[
+                          "Bulletproof Legal Chain: Nevis → Local SPV → Property Title",
+                          "Regulatory Arbitrage: Optimal jurisdiction selection per market",
+                          "Institutional Grade: Same structure used by billion-dollar assets",
+                          "Full Transparency: On-chain ownership records and cash flows",
+                          "Automated Compliance: Smart contracts handle distributions and governance"
+                        ].map((advantage, i) => (
+                          <div key={i} className="flex items-start gap-2 text-sm">
                             <span className="text-green-500">✅</span>
                             <span>{advantage}</span>
-                          </div>)}
+                          </div>
+                        ))}
                       </div>
                     </CardContent>
                   </Card>
@@ -2236,37 +2284,82 @@ const BusinessModel = () => {
                   </h3>
                   
                   <div className="space-y-6">
-                    {[{
-                    country: "🇲🇽 Mexico (Mazunte Project)",
-                    structure: "Mexican SPV (Sociedad Anónima de Capital Variable - S.A. de C.V.)",
-                    regulations: ["CNBV (National Banking and Securities Commission): S.A. de C.V. shares are regulated securities", "Property Registry: Company holds registered title at Registro Público de la Propiedad", "Foreign Investment: Compliant with Foreign Investment Law (Ley de Inversión Extranjera)", "AMIB Compliance: Mexican Securities Market Association standards", "Golden Visa Alternative: Path to permanent residency through investment", "Tax Optimization: Favorable corporate tax structure for international investors"],
-                    comparable: "Multiple international real estate platforms operate successfully in Mexico using identical SPV structures, with Tulum real estate appreciation of 300%+ over recent years"
-                  }, {
-                    country: "🇧🇷 Brazil (Bahia Project)",
-                    structure: "Brazilian LTDA (Limited Liability Company)",
-                    regulations: ["CVM (Securities Commission): LTDA quotas qualify as securities under Brazilian law", "Property Law: LTDA holds registered property title at local cartório", "Foreign Investment: Compliant with Lei 4.131/62 for foreign capital", "Token Classification: Represents LTDA quotas, not direct property rights", "Tax Optimization: LTDA structure provides favorable corporate tax treatment"],
-                    comparable: "Terram tokenized R$50M+ Brazilian real estate using identical SPV structures"
-                  }, {
-                    country: "🇬🇷 Greece (Corfu Project)",
-                    structure: "Greek IKE (Private Company)",
-                    regulations: ["HCMC (Hellenic Capital Market Commission): IKE shares are recognized securities", "Property Registry: IKE registered as legal property owner", "Golden Visa Compliance: Structure supports Greece's €250K residency program", "EU MiCA Preparation: Forward-compatible with upcoming EU token regulations", "Tax Benefits: Greek IKE enjoys competitive corporate tax rates (24%)"],
-                    comparable: "Greece actively promotes blockchain innovation through regulatory sandbox programs"
-                  }, {
-                    country: "🇪🇸 Spain (Mallorca Project)",
-                    structure: "Spanish SL (Sociedad Limitada)",
-                    regulations: ["CNMV (Securities Market Commission): SL participaciones are established securities", "Property Registration: SL holds registered title at Registro de la Propiedad", "EU Passporting: Structure enables future EU-wide token distribution", "MiCA Compliance: Spain leads EU's Markets in Crypto-Assets regulation", "Golden Visa Alignment: €500K investment threshold compatibility"],
-                    comparable: "Reental operates identical SL structures across Spain with €32.5M in assets"
-                  }, {
-                    country: "🇹🇭 Thailand (Koh Phangan Project)",
-                    structure: "30+30 Year Leasehold via Thai SPV",
-                    regulations: ["SEC Thailand: Company shares classified as securities under Thai law", "Land Department: Thai company holds registered leasehold rights", "Foreign Ownership: Compliant with 49% foreign ownership limits via nominee structure", "BOI Benefits: Potential Board of Investment incentives for tech innovation", "Renewable Structure: 30+30 year leases provide 60-year economic rights"],
-                    comparable: "Multiple international developers use identical leasehold SPV structures in Thailand"
-                  }, {
-                    country: "🇹🇷 Turkey (Antalya Project)",
-                    structure: "Turkish SPV (Limited Şirket)",
-                    regulations: ["CMB (Capital Markets Board): Company shares are regulated securities", "Land Registry: Turkish company holds tapu (property title)", "Citizenship Program: €400K investment qualifies for Turkish citizenship", "Strategic Location: Bridge between European and Asian markets", "Currency Hedge: Turkish lira depreciation benefits foreign investors"],
-                    comparable: "Turkey's citizenship-by-investment program adds significant value proposition"
-                  }].map((jurisdiction, index) => <Card key={index} className="bg-card/50 border-border/50">
+                    {[
+                      {
+                        country: "🇲🇽 Mexico (Mazunte Project)",
+                        structure: "Mexican SPV (Sociedad Anónima de Capital Variable - S.A. de C.V.)",
+                        regulations: [
+                          "CNBV (National Banking and Securities Commission): S.A. de C.V. shares are regulated securities",
+                          "Property Registry: Company holds registered title at Registro Público de la Propiedad",
+                          "Foreign Investment: Compliant with Foreign Investment Law (Ley de Inversión Extranjera)",
+                          "AMIB Compliance: Mexican Securities Market Association standards",
+                          "Golden Visa Alternative: Path to permanent residency through investment",
+                          "Tax Optimization: Favorable corporate tax structure for international investors"
+                        ],
+                        comparable: "Multiple international real estate platforms operate successfully in Mexico using identical SPV structures, with Tulum real estate appreciation of 300%+ over recent years"
+                      },
+                      {
+                        country: "🇧🇷 Brazil (Bahia Project)",
+                        structure: "Brazilian LTDA (Limited Liability Company)",
+                        regulations: [
+                          "CVM (Securities Commission): LTDA quotas qualify as securities under Brazilian law",
+                          "Property Law: LTDA holds registered property title at local cartório",
+                          "Foreign Investment: Compliant with Lei 4.131/62 for foreign capital",
+                          "Token Classification: Represents LTDA quotas, not direct property rights",
+                          "Tax Optimization: LTDA structure provides favorable corporate tax treatment"
+                        ],
+                        comparable: "Terram tokenized R$50M+ Brazilian real estate using identical SPV structures"
+                      },
+                      {
+                        country: "🇬🇷 Greece (Corfu Project)",
+                        structure: "Greek IKE (Private Company)",
+                        regulations: [
+                          "HCMC (Hellenic Capital Market Commission): IKE shares are recognized securities",
+                          "Property Registry: IKE registered as legal property owner",
+                          "Golden Visa Compliance: Structure supports Greece's €250K residency program",
+                          "EU MiCA Preparation: Forward-compatible with upcoming EU token regulations",
+                          "Tax Benefits: Greek IKE enjoys competitive corporate tax rates (24%)"
+                        ],
+                        comparable: "Greece actively promotes blockchain innovation through regulatory sandbox programs"
+                      },
+                      {
+                        country: "🇪🇸 Spain (Mallorca Project)",
+                        structure: "Spanish SL (Sociedad Limitada)",
+                        regulations: [
+                          "CNMV (Securities Market Commission): SL participaciones are established securities",
+                          "Property Registration: SL holds registered title at Registro de la Propiedad",
+                          "EU Passporting: Structure enables future EU-wide token distribution",
+                          "MiCA Compliance: Spain leads EU's Markets in Crypto-Assets regulation",
+                          "Golden Visa Alignment: €500K investment threshold compatibility"
+                        ],
+                        comparable: "Reental operates identical SL structures across Spain with €32.5M in assets"
+                      },
+                      {
+                        country: "🇹🇭 Thailand (Koh Phangan Project)",
+                        structure: "30+30 Year Leasehold via Thai SPV",
+                        regulations: [
+                          "SEC Thailand: Company shares classified as securities under Thai law",
+                          "Land Department: Thai company holds registered leasehold rights",
+                          "Foreign Ownership: Compliant with 49% foreign ownership limits via nominee structure",
+                          "BOI Benefits: Potential Board of Investment incentives for tech innovation",
+                          "Renewable Structure: 30+30 year leases provide 60-year economic rights"
+                        ],
+                        comparable: "Multiple international developers use identical leasehold SPV structures in Thailand"
+                      },
+                      {
+                        country: "🇹🇷 Turkey (Antalya Project)",
+                        structure: "Turkish SPV (Limited Şirket)",
+                        regulations: [
+                          "CMB (Capital Markets Board): Company shares are regulated securities",
+                          "Land Registry: Turkish company holds tapu (property title)",
+                          "Citizenship Program: €400K investment qualifies for Turkish citizenship",
+                          "Strategic Location: Bridge between European and Asian markets",
+                          "Currency Hedge: Turkish lira depreciation benefits foreign investors"
+                        ],
+                        comparable: "Turkey's citizenship-by-investment program adds significant value proposition"
+                      }
+                    ].map((jurisdiction, index) => (
+                      <Card key={index} className="bg-card/50 border-border/50">
                         <CardContent className="p-6">
                           <div className="flex items-center gap-3 mb-4">
                             <div className="text-2xl font-bold text-primary">{jurisdiction.country}</div>
@@ -2278,10 +2371,12 @@ const BusinessModel = () => {
                           <div className="mb-4">
                             <div className="text-sm text-muted-foreground mb-2">Regulatory Framework</div>
                             <div className="space-y-2">
-                              {jurisdiction.regulations.map((reg, i) => <div key={i} className="text-sm flex items-start gap-2">
+                              {jurisdiction.regulations.map((reg, i) => (
+                                <div key={i} className="text-sm flex items-start gap-2">
                                   <span className="text-primary">•</span>
                                   <span>{reg}</span>
-                                </div>)}
+                                </div>
+                              ))}
                             </div>
                           </div>
                           <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
@@ -2290,7 +2385,8 @@ const BusinessModel = () => {
                             </div>
                           </div>
                         </CardContent>
-                      </Card>)}
+                      </Card>
+                    ))}
                   </div>
                 </div>
 
@@ -2311,37 +2407,20 @@ const BusinessModel = () => {
                             </tr>
                           </thead>
                           <tbody>
-                            {[{
-                            platform: "Tether Gold",
-                            aum: "$500M+",
-                            structure: "Swiss SPV",
-                            token: "ERC-20",
-                            status: "Fully Compliant"
-                          }, {
-                            platform: "RealT",
-                            aum: "$100M+",
-                            structure: "U.S. LLCs",
-                            token: "ERC-20",
-                            status: "SEC Compliant"
-                          }, {
-                            platform: "Reental",
-                            aum: "€32.5M",
-                            structure: "Spanish SPVs",
-                            token: "Proprietary",
-                            status: "EU Compliant"
-                          }, {
-                            platform: "Ancient",
-                            aum: "$24.5M Projected",
-                            structure: "Multi-Jurisdiction SPVs",
-                            token: "ERC-20/ERC-3643",
-                            status: "Enhanced Compliance"
-                          }].map((row, i) => <tr key={i} className={`border-b border-border/50 ${row.platform === "Ancient" ? "bg-primary/5" : ""}`}>
+                            {[
+                              { platform: "Tether Gold", aum: "$500M+", structure: "Swiss SPV", token: "ERC-20", status: "Fully Compliant" },
+                              { platform: "RealT", aum: "$100M+", structure: "U.S. LLCs", token: "ERC-20", status: "SEC Compliant" },
+                              { platform: "Reental", aum: "€32.5M", structure: "Spanish SPVs", token: "Proprietary", status: "EU Compliant" },
+                              { platform: "Ancient", aum: "$24.5M Projected", structure: "Multi-Jurisdiction SPVs", token: "ERC-20/ERC-3643", status: "Enhanced Compliance" }
+                            ].map((row, i) => (
+                              <tr key={i} className={`border-b border-border/50 ${row.platform === "Ancient" ? "bg-primary/5" : ""}`}>
                                 <td className="p-3 font-semibold">{row.platform}</td>
                                 <td className="p-3">{row.aum}</td>
                                 <td className="p-3">{row.structure}</td>
                                 <td className="p-3">{row.token}</td>
                                 <td className="p-3">{row.status}</td>
-                              </tr>)}
+                              </tr>
+                            ))}
                           </tbody>
                         </table>
                       </div>
@@ -2397,10 +2476,18 @@ const BusinessModel = () => {
                     </p>
                     
                     <div className="grid md:grid-cols-2 gap-4 mb-6">
-                      {["Proven SPV Framework: Same structure as industry leaders", "Multi-Jurisdiction Optimization: Legal arbitrage for maximum protection", "Institutional Compliance: Ready for traditional finance integration", "Transparent Operations: Blockchain eliminates opacity and manual errors", "Automated Governance: Smart contracts reduce counterparty risk"].map((point, i) => <div key={i} className="flex items-start gap-2">
+                      {[
+                        "Proven SPV Framework: Same structure as industry leaders",
+                        "Multi-Jurisdiction Optimization: Legal arbitrage for maximum protection", 
+                        "Institutional Compliance: Ready for traditional finance integration",
+                        "Transparent Operations: Blockchain eliminates opacity and manual errors",
+                        "Automated Governance: Smart contracts reduce counterparty risk"
+                      ].map((point, i) => (
+                        <div key={i} className="flex items-start gap-2">
                           <span className="text-primary">✅</span>
                           <span className="font-medium">{point}</span>
-                        </div>)}
+                        </div>
+                      ))}
                     </div>
                     
                     <div className="bg-background/80 rounded-lg p-6 backdrop-blur-sm">
@@ -2448,6 +2535,8 @@ const BusinessModel = () => {
           </div>
         </div>
       </section>
-    </div>;
+    </div>
+  );
 };
+
 export default BusinessModel;
