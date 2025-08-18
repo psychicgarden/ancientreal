@@ -493,36 +493,316 @@ const BusinessModel = () => {
               <PlatformAssessment />
             </TabsContent>
 
-            <TabsContent value="budget-breakdown">
-              {/* Budget Breakdown Content */}
-              <div className="space-y-8">
-                <div className="text-center">
-                  <h3 className="text-3xl font-bold mb-4">Refined Budget (Cap: $6.50M)</h3>
-                  <p className="text-lg text-muted-foreground">Optimized allocation across all critical areas</p>
-                </div>
-                
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <TabsContent value="budget-breakdown" className="space-y-8">
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold text-foreground mb-4">36-Month Capital Deployment & Recycling Strategy</h2>
+                <p className="text-lg text-muted-foreground max-w-4xl mx-auto">
+                  Comprehensive use of funds walkthrough demonstrating disciplined capital deployment and recycling across our global real estate development portfolio
+                </p>
+              </div>
+
+              {/* Executive Summary */}
+              <Card className="p-8 bg-gradient-subtle border-gold/20">
+                <h3 className="text-2xl font-bold text-foreground mb-6 text-center">Executive Summary</h3>
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
                   {[
-                    { title: "Land Acquisitions", amount: "$2.00M", desc: "Four sites (~$500K each). Paid in staged tranches to mitigate FX and title risk." },
-                    { title: "Construction (Flips 1–4)", amount: "$2.75M", desc: "~$75K/unit baseline. Includes $250K construction overrun buffer baked in." },
-                    { title: "Soft Costs", amount: "$0.65M", desc: "Legal & Compliance: $300K (multi-jurisdiction). Permits/Admin/Architecture: $350K." },
-                    { title: "Platform & Tech", amount: "$0.35M", desc: "Core mortgage engine + secondary marketplace. $50K ring-fenced for audits." },
-                    { title: "Marketing & Brand", amount: "$0.30M", desc: "$200K marketing and brand partnerships. $100K brand + storytelling." },
-                    { title: "Onsite Staff & Reporting", amount: "$0.30M", desc: "Local liaisons + digital reporting. Covers overlap in Flips 3 & 4." },
-                    { title: "Core Team (3-Year Runway)", amount: "$0.46M", desc: "Founder: $60K/yr → $180K. CTO: $100K/yr → $300K. Fractional CFO: $80K total." },
-                    { title: "Ecological Projects", amount: "$0.125M", desc: "~$30K per site. ESG-positive; supports grants & narrative." },
-                    { title: "Contingency (Land + Legal)", amount: "$0.565M", desc: "Covers FX, title risks, and delays." }
-                  ].map((item, index) => (
-                    <Card key={index} className="bg-card/50 backdrop-blur-sm border-border/50">
-                      <CardContent className="p-6">
-                        <h4 className="font-semibold text-lg mb-2">{item.title}</h4>
-                        <div className="text-2xl font-bold text-primary mb-3">{item.amount}</div>
-                        <p className="text-sm text-muted-foreground">{item.desc}</p>
-                      </CardContent>
-                    </Card>
+                    { label: "Initial Investment", value: "$7.00M", description: "Starting capital" },
+                    { label: "Capital Deployed", value: "$6.93M", description: "Over 36 months" },
+                    { label: "Capital Recycled", value: "$2.76M", description: "From presales & closings" },
+                    { label: "Final Treasury", value: "$2.94M", description: "42% retained" },
+                    { label: "Peak Capital at Risk", value: "$4.06M", description: "58% max deployment" }
+                  ].map((metric, index) => (
+                    <div key={index} className="text-center p-4 rounded-lg bg-card border border-border">
+                      <div className="text-2xl font-bold text-primary mb-2">{metric.value}</div>
+                      <div className="font-semibold text-foreground text-sm mb-1">{metric.label}</div>
+                      <div className="text-xs text-muted-foreground">{metric.description}</div>
+                    </div>
                   ))}
                 </div>
+              </Card>
+
+              {/* Property Portfolio Matrix */}
+              <Card className="p-6">
+                <h3 className="text-2xl font-bold text-foreground mb-6">Property Portfolio Matrix (6 Developments, 112 Total Units)</h3>
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="border-b border-border">
+                        <th className="text-left p-3 font-semibold">Property</th>
+                        <th className="text-center p-3 font-semibold">Units</th>
+                        <th className="text-center p-3 font-semibold">Cash Buyers</th>
+                        <th className="text-center p-3 font-semibold">Financed</th>
+                        <th className="text-center p-3 font-semibold">Unit Price</th>
+                        <th className="text-center p-3 font-semibold">Build Cost</th>
+                        <th className="text-center p-3 font-semibold">Total Revenue</th>
+                        <th className="text-center p-3 font-semibold">Immediate Cash-In*</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[
+                        { property: "🇲🇽 Mazunte (MX)", units: 15, cash: 3, financed: 12, unitPrice: "$135K", buildCost: "$75K", totalRevenue: "$2.025M", cashIn: "$789.75K" },
+                        { property: "🇧🇷 Bahia (BR)", units: 21, cash: 5, financed: 16, unitPrice: "$135K", buildCost: "$75K", totalRevenue: "$2.835M", cashIn: "$1,192.05K" },
+                        { property: "🇪🇸 Mallorca (ES)", units: 15, cash: 3, financed: 12, unitPrice: "$135K", buildCost: "$75K", totalRevenue: "$2.025M", cashIn: "$789.75K" },
+                        { property: "🇬🇷 Corfu (GR)", units: 16, cash: 4, financed: 12, unitPrice: "$135K", buildCost: "$75K", totalRevenue: "$2.160M", cashIn: "$928.80K" },
+                        { property: "🇹🇭 Thailand", units: 25, cash: 5, financed: 20, unitPrice: "$135K", buildCost: "$75K", totalRevenue: "$3.375M", cashIn: "$1,316.25K" },
+                        { property: "🇹🇷 Turkey", units: 20, cash: 4, financed: 16, unitPrice: "$135K", buildCost: "$75K", totalRevenue: "$2.700M", cashIn: "$1,053.00K" }
+                      ].map((row, index) => (
+                        <tr key={index} className="border-b border-border/50 hover:bg-muted/30">
+                          <td className="p-3 font-medium">{row.property}</td>
+                          <td className="p-3 text-center">{row.units}</td>
+                          <td className="p-3 text-center">{row.cash}</td>
+                          <td className="p-3 text-center">{row.financed}</td>
+                          <td className="p-3 text-center">{row.unitPrice}</td>
+                          <td className="p-3 text-center">{row.buildCost}</td>
+                          <td className="p-3 text-center font-semibold">{row.totalRevenue}</td>
+                          <td className="p-3 text-center font-semibold text-primary">{row.cashIn}</td>
+                        </tr>
+                      ))}
+                      <tr className="border-t-2 border-primary bg-primary/5">
+                        <td className="p-3 font-bold">TOTALS</td>
+                        <td className="p-3 text-center font-bold">112</td>
+                        <td className="p-3 text-center font-bold">24</td>
+                        <td className="p-3 text-center font-bold">88</td>
+                        <td className="p-3 text-center">-</td>
+                        <td className="p-3 text-center">-</td>
+                        <td className="p-3 text-center font-bold text-lg">$15.12M</td>
+                        <td className="p-3 text-center font-bold text-lg text-primary">$6.07M</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <p className="text-sm text-muted-foreground mt-2">*Immediate Cash-In = Cash closings + Down payments + Platform fees (3%)</p>
+                </div>
+              </Card>
+
+              {/* Three-Year Timeline */}
+              <div className="space-y-6">
+                <h3 className="text-2xl font-bold text-foreground text-center">Three-Year Capital Deployment Timeline</h3>
+                
+                {/* Year 1 */}
+                <Card className="p-6 border-l-4 border-l-primary">
+                  <h4 className="text-xl font-bold text-primary mb-4">Year 1: Foundation & Mexico Launch</h4>
+                  <div className="grid gap-4 md:grid-cols-3">
+                    <div className="p-4 rounded-lg bg-muted/30">
+                      <h5 className="font-semibold mb-2">Q1 - Infrastructure & Legal Framework</h5>
+                      <div className="text-sm text-muted-foreground space-y-1">
+                        <p><strong>Tranche A-C: $620K Total</strong></p>
+                        <p>• Month 1: ParentCo setup, legal counsel ($150K)</p>
+                        <p>• Month 2: Mexico scouting, LOI escrow ($120K)</p>
+                        <p>• Month 4: Land acquisition, permits ($350K)</p>
+                      </div>
+                    </div>
+                    <div className="p-4 rounded-lg bg-muted/30">
+                      <h5 className="font-semibold mb-2">Q2 - Mazunte Construction Launch</h5>
+                      <div className="text-sm text-muted-foreground space-y-1">
+                        <p><strong>Tranche D-E: $650K Total</strong></p>
+                        <p>• Month 6: Site prep, structural frame ($400K)</p>
+                        <p>• Month 9: Bahia LOI, Mazunte Phase 2 ($250K)</p>
+                      </div>
+                    </div>
+                    <div className="p-4 rounded-lg bg-muted/30">
+                      <h5 className="font-semibold mb-2">Q3-Q4 - Presales & Bahia</h5>
+                      <div className="text-sm text-muted-foreground space-y-1">
+                        <p><strong>Tranche F: $400K Out | $385K In</strong></p>
+                        <p>• Month 12: Bahia acquisition ($400K)</p>
+                        <p>• First presales begin: $128.25K inflow</p>
+                        <p><strong>Running Balance: $5.53M</strong></p>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+
+                {/* Year 2 */}
+                <Card className="p-6 border-l-4 border-l-secondary">
+                  <h4 className="text-xl font-bold text-secondary mb-4">Year 2: Brazil Development & Spain Entry</h4>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-3">
+                      <div className="p-4 rounded-lg bg-muted/30">
+                        <h5 className="font-semibold mb-2">Q1-Q2 - Bahia Construction & First Completion</h5>
+                        <div className="text-sm text-muted-foreground space-y-1">
+                          <p><strong>Tranche G-H: $950K Out | $534K In</strong></p>
+                          <p>• Bahia construction launch ($450K)</p>
+                          <p>• Mazunte completion and handovers</p>
+                          <p>• Cash buyer closings: $405K</p>
+                          <p>• Bahia presales begin</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="p-4 rounded-lg bg-muted/30">
+                        <h5 className="font-semibold mb-2">Q3-Q4 - Spain Market Entry</h5>
+                        <div className="text-sm text-muted-foreground space-y-1">
+                          <p><strong>Tranche I-J: $1.15M Total</strong></p>
+                          <p>• Spain LOIs and land acquisition</p>
+                          <p>• Platform upgrades for secondary market</p>
+                          <p>• Bahia presales momentum: $387.79K</p>
+                          <p><strong>Running Balance: $4.82M</strong></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+
+                {/* Year 3 */}
+                <Card className="p-6 border-l-4 border-l-accent">
+                  <h4 className="text-xl font-bold text-accent mb-4">Year 3: Multi-Market Expansion</h4>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-3">
+                      <div className="p-4 rounded-lg bg-muted/30">
+                        <h5 className="font-semibold mb-2">Q1-Q2 - Spain Construction & Bahia Completion</h5>
+                        <div className="text-sm text-muted-foreground space-y-1">
+                          <p><strong>Tranche K-L: $1.5M Out | $675K In</strong></p>
+                          <p>• Spain construction across 2 sites</p>
+                          <p>• Bahia cash buyer closings: $675K</p>
+                          <p>• Greece market entry preparation</p>
+                          <p><strong>Peak Capital at Risk: $4.06M</strong></p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="p-4 rounded-lg bg-muted/30">
+                        <h5 className="font-semibold mb-2">Q3-Q4 - Greece Entry & EU Presales</h5>
+                        <div className="text-sm text-muted-foreground space-y-1">
+                          <p><strong>Tranche M-N: $1.95M Out | $773K In</strong></p>
+                          <p>• Greece land acquisition ($500K)</p>
+                          <p>• EU presales launch (Corfu & Mallorca)</p>
+                          <p>• Operations scale-up and reserves</p>
+                          <p><strong>Final Balance: $2.94M</strong></p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
               </div>
+
+              {/* Capital Recycling Analysis */}
+              <Card className="p-6">
+                <h3 className="text-2xl font-bold text-foreground mb-6">36-Month Capital Recycling Analysis</h3>
+                <div className="grid gap-6 md:grid-cols-2">
+                  <div>
+                    <h4 className="text-lg font-semibold mb-4">Total Capital Flows</h4>
+                    <div className="space-y-3">
+                      {[
+                        { category: "Initial Investment", amount: "$7.00M", percentage: "100%" },
+                        { category: "Total Outflows", amount: "$6.93M", percentage: "99%" },
+                        { category: "Total Inflows", amount: "$2.76M", percentage: "39%" },
+                        { category: "Final Treasury", amount: "$2.94M", percentage: "42%" },
+                        { category: "Net Capital Deployed", amount: "$4.06M", percentage: "58%" }
+                      ].map((item, index) => (
+                        <div key={index} className="flex justify-between items-center p-3 rounded bg-muted/30">
+                          <span className="font-medium">{item.category}</span>
+                          <div className="text-right">
+                            <div className="font-bold">{item.amount}</div>
+                            <div className="text-sm text-muted-foreground">{item.percentage}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-semibold mb-4">Property-by-Property Status</h4>
+                    <div className="space-y-3">
+                      {[
+                        { property: "Mazunte (Mexico)", status: "COMPLETED & FULLY REALIZED", investment: "$1.365M", returns: "$789.75K" },
+                        { property: "Bahia (Brazil)", status: "COMPLETED & FULLY REALIZED", investment: "$1.815M", returns: "$1,192.05K" },
+                        { property: "Spain (Mallorca)", status: "60% COMPLETE, PRESALES LIVE", investment: "$1.200M", returns: "$789.75K" },
+                        { property: "Greece (Corfu)", status: "PRESALES LIVE, CONSTRUCTION READY", investment: "$580K", returns: "$928.80K" }
+                      ].map((item, index) => (
+                        <div key={index} className="p-3 rounded bg-muted/30 border-l-4 border-l-primary">
+                          <div className="font-semibold text-sm">{item.property}</div>
+                          <div className="text-xs text-muted-foreground mb-1">{item.status}</div>
+                          <div className="flex justify-between text-xs">
+                            <span>Investment: {item.investment}</span>
+                            <span className="text-primary">Returns: {item.returns}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Risk Mitigation & Financial Metrics */}
+              <div className="grid gap-6 md:grid-cols-2">
+                <Card className="p-6">
+                  <h3 className="text-xl font-bold text-foreground mb-4">Risk Mitigation & Controls</h3>
+                  <div className="space-y-4">
+                    <div className="p-4 rounded-lg bg-muted/30">
+                      <h4 className="font-semibold mb-2 text-primary">Gated Capital Release System</h4>
+                      <ul className="text-sm text-muted-foreground space-y-1">
+                        <li>• Milestone-based tranches with verification</li>
+                        <li>• Multisig controls for {'>'}$100K tranches</li>
+                        <li>• Third-party documentation required</li>
+                      </ul>
+                    </div>
+                    <div className="p-4 rounded-lg bg-muted/30">
+                      <h4 className="font-semibold mb-2 text-secondary">Presale Risk Management</h4>
+                      <ul className="text-sm text-muted-foreground space-y-1">
+                        <li>• Escrowed LOIs with permit contingencies</li>
+                        <li>• Conservative 3-4 month presale windows</li>
+                        <li>• Platform fees captured immediately</li>
+                      </ul>
+                    </div>
+                    <div className="p-4 rounded-lg bg-muted/30">
+                      <h4 className="font-semibold mb-2 text-accent">Market Diversification</h4>
+                      <ul className="text-sm text-muted-foreground space-y-1">
+                        <li>• 6 countries across 3 continents</li>
+                        <li>• Never {'>'}2 major builds simultaneously</li>
+                        <li>• Multi-currency banking infrastructure</li>
+                      </ul>
+                    </div>
+                  </div>
+                </Card>
+
+                <Card className="p-6">
+                  <h3 className="text-xl font-bold text-foreground mb-4">Capital Efficiency Metrics</h3>
+                  <div className="space-y-4">
+                    {[
+                      { metric: "Capital Recycling Rate", value: "39%", description: "Inflows/outflows within 36 months" },
+                      { metric: "Peak Capital Utilization", value: "58%", description: "Maximum deployment of initial investment" },
+                      { metric: "Treasury Preservation", value: "42%", description: "Original capital retained at completion" },
+                      { metric: "Self-Funding Achievement", value: "Month 36", description: "Platform becomes self-sustaining" }
+                    ].map((item, index) => (
+                      <div key={index} className="p-4 rounded-lg bg-gradient-subtle border border-gold/20">
+                        <div className="flex justify-between items-start mb-2">
+                          <h4 className="font-semibold text-sm">{item.metric}</h4>
+                          <div className="text-2xl font-bold text-primary">{item.value}</div>
+                        </div>
+                        <p className="text-xs text-muted-foreground">{item.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+              </div>
+
+              {/* Conclusion */}
+              <Card className="p-8 bg-gradient-primary text-white text-center">
+                <h3 className="text-2xl font-bold mb-4">Investment Conclusion</h3>
+                <p className="text-lg mb-6 opacity-90">
+                  The $7.0M investment creates a self-sustaining real estate development platform achieving scale across 112 units in 6 countries with $15.12M total revenue potential, while preserving 42% of original capital through disciplined recycling.
+                </p>
+                <div className="grid gap-4 md:grid-cols-5 text-sm">
+                  <div className="p-3 rounded bg-white/10">
+                    <div className="font-bold">Preserves Capital</div>
+                    <div className="opacity-80">58% peak deployment</div>
+                  </div>
+                  <div className="p-3 rounded bg-white/10">
+                    <div className="font-bold">Generates Returns</div>
+                    <div className="opacity-80">$2.76M recycled</div>
+                  </div>
+                  <div className="p-3 rounded bg-white/10">
+                    <div className="font-bold">Achieves Scale</div>
+                    <div className="opacity-80">112 units globally</div>
+                  </div>
+                  <div className="p-3 rounded bg-white/10">
+                    <div className="font-bold">Enables Growth</div>
+                    <div className="opacity-80">Self-funding model</div>
+                  </div>
+                  <div className="p-3 rounded bg-white/10">
+                    <div className="font-bold">Maintains Liquidity</div>
+                    <div className="opacity-80">$2.94M treasury</div>
+                  </div>
+                </div>
+              </Card>
             </TabsContent>
 
             <TabsContent value="legal-structuring">
