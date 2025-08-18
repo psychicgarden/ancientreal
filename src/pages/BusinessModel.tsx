@@ -2117,67 +2117,6 @@ const BusinessModel = () => {
                 </div>
               </Card>
 
-              {/* Conclusion */}
-              <Card className="p-8 bg-gradient-card border-none shadow-luxury">
-                <div className="space-y-6">
-                  <h3 className="text-2xl font-bold">Conclusion</h3>
-                  
-                  <div className="bg-[hsl(var(--gold))]/10 border border-[hsl(var(--gold))]/20 p-6 rounded-lg">
-                    <p className="text-lg mb-4">
-                      The $7.0M investment creates a self-sustaining real estate development platform that:
-                    </p>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="space-y-3">
-                        <div className="flex items-start space-x-3">
-                          <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold">1</div>
-                          <div>
-                            <p className="font-semibold">Preserves Capital</p>
-                            <p className="text-sm text-muted-foreground">Only deploys 58% of initial investment at peak utilization</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start space-x-3">
-                          <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold">2</div>
-                          <div>
-                            <p className="font-semibold">Generates Returns</p>
-                            <p className="text-sm text-muted-foreground">$2.76M in recycled capital within 36 months</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start space-x-3">
-                          <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold">3</div>
-                          <div>
-                            <p className="font-semibold">Achieves Scale</p>
-                            <p className="text-sm text-muted-foreground">112 units across 6 countries with $15.12M total revenue potential</p>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-3">
-                        <div className="flex items-start space-x-3">
-                          <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold">4</div>
-                          <div>
-                            <p className="font-semibold">Enables Growth</p>
-                            <p className="text-sm text-muted-foreground">Self-funding model for subsequent developments (Thailand/Turkey)</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start space-x-3">
-                          <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold">5</div>
-                          <div>
-                            <p className="font-semibold">Maintains Liquidity</p>
-                            <p className="text-sm text-muted-foreground">$2.94M treasury balance at 36-month completion</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-6 p-4 bg-[hsl(var(--gold))]/20 rounded-lg border border-[hsl(var(--gold))]/30">
-                      <p className="text-sm font-medium text-center">
-                        The sequential funding model, supported by aggressive presale strategies and platform fee capture, demonstrates that a relatively modest initial investment can support a global real estate development portfolio through disciplined capital recycling and milestone-gated deployment.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </Card>
             </TabsContent>
 
             <TabsContent value="legal-structuring">
