@@ -754,55 +754,82 @@ const BusinessModel = () => {
               </div>
 
               {/* Maximum Capital at Risk */}
-              <Card className="p-8 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/30 shadow-lg">
-                <div className="text-center mb-6">
-                  <div className="flex items-center justify-center space-x-3 mb-4">
-                    <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
-                      <Shield className="w-6 h-6 text-green-500" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-green-600">MAXIMUM CAPITAL AT RISK</h3>
-                  </div>
-                  <p className="text-muted-foreground mb-6">
-                    Capital is unlocked only after milestone gates are achieved
-                  </p>
-                </div>
+              <div className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 dark:from-emerald-950/20 dark:via-green-950/20 dark:to-teal-950/20 rounded-2xl border border-emerald-200/50 dark:border-emerald-800/30 shadow-xl">
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-green-500/5 backdrop-blur-sm"></div>
                 
-                {/* Risk Progression */}
-                <div className="flex items-center justify-center space-x-4 md:space-x-8">
-                  {/* Phase 1 */}
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-2">
-                      <span className="text-green-600 font-bold">1</span>
+                <div className="relative p-6">
+                  {/* Header */}
+                  <div className="text-center mb-6">
+                    <div className="inline-flex items-center gap-3 mb-3">
+                      <div className="relative">
+                        <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-green-600 rounded-full flex items-center justify-center shadow-lg animate-pulse">
+                          <Shield className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="absolute -inset-1 bg-gradient-to-br from-emerald-400 to-green-500 rounded-full opacity-20 blur-sm"></div>
+                      </div>
+                      <h3 className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-green-700 dark:from-emerald-400 dark:to-green-500 bg-clip-text text-transparent">
+                        MAXIMUM CAPITAL AT RISK
+                      </h3>
                     </div>
-                    <div className="text-sm font-semibold text-green-600">Phase 1</div>
-                    <div className="text-lg font-bold">$150K</div>
+                    <p className="text-sm text-muted-foreground/80">
+                      Capital unlocked only after milestone gates are achieved
+                    </p>
                   </div>
                   
-                  {/* Arrow */}
-                  <div className="text-muted-foreground">→</div>
-                  
-                  {/* Phase 2 */}
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-orange-500/20 rounded-full flex items-center justify-center mb-2">
-                      <span className="text-orange-600 font-bold">2</span>
+                  {/* Risk Progression */}
+                  <div className="flex items-center justify-center gap-6">
+                    {/* Phase 1 */}
+                    <div className="group text-center animate-fade-in">
+                      <div className="relative mb-3">
+                        <div className="w-14 h-14 bg-gradient-to-br from-emerald-400 to-green-500 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                          <span className="text-white font-bold text-sm">1</span>
+                        </div>
+                        <div className="absolute -inset-1 bg-gradient-to-br from-emerald-300 to-green-400 rounded-full opacity-20 blur-sm group-hover:opacity-40 transition-opacity"></div>
+                      </div>
+                      <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1">Phase 1</div>
+                      <div className="text-lg font-bold text-foreground">$150K</div>
                     </div>
-                    <div className="text-sm font-semibold text-orange-600">Phase 2</div>
-                    <div className="text-lg font-bold">$620K</div>
-                  </div>
-                  
-                  {/* Arrow */}
-                  <div className="text-muted-foreground">→</div>
-                  
-                  {/* Peak */}
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mb-2">
-                      <span className="text-red-600 font-bold">3</span>
+                    
+                    {/* Arrow */}
+                    <div className="text-muted-foreground/60 animate-pulse">
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
                     </div>
-                    <div className="text-sm font-semibold text-red-600">Peak</div>
-                    <div className="text-lg font-bold">$4.06M</div>
+                    
+                    {/* Phase 2 */}
+                    <div className="group text-center animate-fade-in" style={{animationDelay: '0.1s'}}>
+                      <div className="relative mb-3">
+                        <div className="w-14 h-14 bg-gradient-to-br from-orange-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                          <span className="text-white font-bold text-sm">2</span>
+                        </div>
+                        <div className="absolute -inset-1 bg-gradient-to-br from-orange-300 to-orange-400 rounded-full opacity-20 blur-sm group-hover:opacity-40 transition-opacity"></div>
+                      </div>
+                      <div className="text-xs font-semibold text-orange-600 dark:text-orange-400 mb-1">Phase 2</div>
+                      <div className="text-lg font-bold text-foreground">$620K</div>
+                    </div>
+                    
+                    {/* Arrow */}
+                    <div className="text-muted-foreground/60 animate-pulse" style={{animationDelay: '0.1s'}}>
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </div>
+                    
+                    {/* Peak */}
+                    <div className="group text-center animate-fade-in" style={{animationDelay: '0.2s'}}>
+                      <div className="relative mb-3">
+                        <div className="w-14 h-14 bg-gradient-to-br from-red-400 to-red-500 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                          <span className="text-white font-bold text-sm">3</span>
+                        </div>
+                        <div className="absolute -inset-1 bg-gradient-to-br from-red-300 to-red-400 rounded-full opacity-20 blur-sm group-hover:opacity-40 transition-opacity"></div>
+                      </div>
+                      <div className="text-xs font-semibold text-red-600 dark:text-red-400 mb-1">Peak</div>
+                      <div className="text-lg font-bold text-foreground">$4.06M</div>
+                    </div>
                   </div>
                 </div>
-              </Card>
+              </div>
 
               {/* Three-Phase Funnel Overview */}
               <Card className="p-8 bg-gradient-card border-none shadow-luxury">
