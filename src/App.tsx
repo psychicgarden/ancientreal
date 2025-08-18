@@ -1,4 +1,3 @@
-import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -31,12 +30,11 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-
   return (
-    <div className="min-h-screen">
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <WalletProvider>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <WalletProvider>
+          <div className="min-h-screen">
             <Toaster />
             <BrowserRouter>
               <Routes>
@@ -59,10 +57,10 @@ function App() {
               </Routes>
               <ChatBot />
             </BrowserRouter>
-          </WalletProvider>
-        </TooltipProvider>
-      </QueryClientProvider>
-    </div>
+          </div>
+        </WalletProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
   );
 }
 
