@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Code, Target, Rocket, Building2 } from "lucide-react";
+import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Code, Target, Rocket, Building2, BarChart3 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PlatformAssessment from "@/components/PlatformAssessment";
 
@@ -1954,11 +1954,22 @@ const BusinessModel = () => {
 
                   {/* Treasury Ledger */}
                   <div className="space-y-6">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-6 h-6 bg-red-500 rounded flex items-center justify-center">
-                        <span className="text-white text-sm font-bold">📊</span>
+                    <div className="relative p-8 bg-gradient-to-br from-[hsl(var(--gold))]/10 via-[hsl(var(--accent))]/5 to-transparent border border-[hsl(var(--gold))]/20 rounded-xl shadow-luxury">
+                      <div className="absolute inset-0 bg-gradient-to-r from-[hsl(var(--gold))]/5 to-transparent rounded-xl"></div>
+                      <div className="relative flex items-center space-x-4">
+                        <div className="w-16 h-16 bg-gradient-to-br from-[hsl(var(--gold))] to-[hsl(var(--accent))] rounded-2xl flex items-center justify-center shadow-lg">
+                          <BarChart3 className="w-8 h-8 text-[hsl(var(--gold-foreground))]" />
+                        </div>
+                        <div className="space-y-2">
+                          <h4 className="text-3xl font-bold bg-gradient-to-r from-[hsl(var(--foreground))] to-[hsl(var(--muted-foreground))] bg-clip-text text-transparent">
+                            The Treasury Ledger
+                          </h4>
+                          <p className="text-lg text-[hsl(var(--gold))] font-medium tracking-wide">
+                            Key Milestones & Capital Flow
+                          </p>
+                        </div>
                       </div>
-                      <h4 className="text-xl font-bold">The Treasury Ledger (Key Milestones)</h4>
+                      <div className="absolute bottom-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-[hsl(var(--gold))]/40 to-transparent"></div>
                     </div>
 
                     <div className="overflow-x-auto">
