@@ -235,8 +235,8 @@ const BusinessModel = () => {
           }, {
             icon: "⚖",
             title: "Tokenized Real Estate",
-            stat: "$310M → $1.4T",
-            desc: "Market forecast to surge 4.5× by 2030"
+            stat: "$310M → $1.4T by 2030",
+            desc: "Real-estate RWAs have 4X'd in the past 18 months."
           }, {
             icon: "🗺",
             title: "Visa Tailwinds",
