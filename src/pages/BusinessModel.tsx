@@ -753,17 +753,53 @@ const BusinessModel = () => {
                 </p>
               </div>
 
-              {/* Capital Protection Shield */}
-              <Card className="p-6 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/30 shadow-lg">
-                <div className="flex items-center justify-center space-x-4">
-                  <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
-                    <Shield className="w-6 h-6 text-green-500" />
+              {/* Maximum Capital at Risk */}
+              <Card className="p-8 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/30 shadow-lg">
+                <div className="text-center mb-6">
+                  <div className="flex items-center justify-center space-x-3 mb-4">
+                    <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
+                      <Shield className="w-6 h-6 text-green-500" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-green-600">MAXIMUM CAPITAL AT RISK</h3>
                   </div>
+                  <p className="text-muted-foreground mb-6">
+                    Capital is unlocked only after milestone gates are achieved
+                  </p>
+                </div>
+                
+                {/* Risk Progression */}
+                <div className="flex items-center justify-center space-x-4 md:space-x-8">
+                  {/* Phase 1 */}
                   <div className="text-center">
-                    <h3 className="text-xl font-bold text-green-600 mb-2">CAPITAL PROTECTION ACTIVATED</h3>
-                    <p className="text-lg text-foreground">
-                      <span className="font-bold">42% of capital is retained in treasury</span> — investor funds are recycled, not burned
-                    </p>
+                    <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-2">
+                      <span className="text-green-600 font-bold">1</span>
+                    </div>
+                    <div className="text-sm font-semibold text-green-600">Phase 1</div>
+                    <div className="text-lg font-bold">$150K</div>
+                  </div>
+                  
+                  {/* Arrow */}
+                  <div className="text-muted-foreground">→</div>
+                  
+                  {/* Phase 2 */}
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-orange-500/20 rounded-full flex items-center justify-center mb-2">
+                      <span className="text-orange-600 font-bold">2</span>
+                    </div>
+                    <div className="text-sm font-semibold text-orange-600">Phase 2</div>
+                    <div className="text-lg font-bold">$620K</div>
+                  </div>
+                  
+                  {/* Arrow */}
+                  <div className="text-muted-foreground">→</div>
+                  
+                  {/* Peak */}
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mb-2">
+                      <span className="text-red-600 font-bold">3</span>
+                    </div>
+                    <div className="text-sm font-semibold text-red-600">Peak</div>
+                    <div className="text-lg font-bold">$4.06M</div>
                   </div>
                 </div>
               </Card>
