@@ -1526,7 +1526,7 @@ const BusinessModel = () => {
                           <div className="w-2 h-2 bg-primary rounded-full mt-2"></div>
                           <div>
                             <p className="font-medium">Multisig Controls</p>
-                            <p className="text-sm text-muted-foreground">ParentCo + investor representative approval for >$100K tranches</p>
+                            <p className="text-sm text-muted-foreground">ParentCo + investor representative approval for {'>'}$100K tranches</p>
                           </div>
                         </div>
                       </div>
