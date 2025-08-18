@@ -20,16 +20,17 @@ import { WalletProvider } from "@/contexts/WalletContext";
 import ChatBot from "@/components/ChatBot";
 import { Navigate } from "react-router-dom";
 
-function App() {
-  // Create query client inside component but with useMemo to prevent recreation
-  const queryClient = React.useMemo(() => new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 1000 * 60 * 5, // 5 minutes
-        retry: 1,
-      },
+// Create query client outside component to avoid hook issues
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      retry: 1,
     },
-  }), []);
+  },
+});
+
+function App() {
 
   return (
     <div className="min-h-screen">
