@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Code, Target, Rocket, Building2, BarChart3 } from "lucide-react";
+import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Code, Target, Rocket, Building2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PlatformAssessment from "@/components/PlatformAssessment";
 
@@ -753,33 +753,18 @@ const BusinessModel = () => {
                 </p>
               </div>
 
-              {/* Maximum Capital at Risk */}
+              {/* Capital Protection Shield */}
               <Card className="p-6 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/30 shadow-lg">
-                <div className="text-center space-y-6">
-                  <div className="flex items-center justify-center space-x-4 mb-4">
-                    <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
-                      <Shield className="w-6 h-6 text-green-500" />
-                    </div>
-                    <h3 className="text-xl font-bold text-green-600">MAXIMUM CAPITAL AT RISK</h3>
+                <div className="flex items-center justify-center space-x-4">
+                  <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
+                    <Shield className="w-6 h-6 text-green-500" />
                   </div>
-                  
-                  <div className="flex items-center justify-center space-x-6">
-                    <div className="bg-green-100 text-green-800 px-4 py-2 rounded-lg font-semibold">
-                      Phase 1: $150K
-                    </div>
-                    <div className="text-gray-400">→</div>
-                    <div className="bg-orange-100 text-orange-800 px-4 py-2 rounded-lg font-semibold">
-                      Phase 2: $620K
-                    </div>
-                    <div className="text-gray-400">→</div>
-                    <div className="bg-red-100 text-red-800 px-4 py-2 rounded-lg font-semibold">
-                      Peak: $4.06M
-                    </div>
+                  <div className="text-center">
+                    <h3 className="text-xl font-bold text-green-600 mb-2">CAPITAL PROTECTION ACTIVATED</h3>
+                    <p className="text-lg text-foreground">
+                      <span className="font-bold">42% of capital is retained in treasury</span> — investor funds are recycled, not burned
+                    </p>
                   </div>
-                  
-                  <p className="text-gray-600 text-sm">
-                    Each phase unlocks only after proven milestones • Progressive protection at every gate
-                  </p>
                 </div>
               </Card>
 
@@ -847,11 +832,7 @@ const BusinessModel = () => {
                       </div>
                       <div>
                         <div className="text-sm font-medium mb-2">Milestone Gates:</div>
-                        <ul className="text-sm text-yellow-600 space-y-1">
-                          <li>✅ Mexico SPV formed</li>
-                          <li>✅ Presales system live</li>
-                          <li>✅ Community validated</li>
-                        </ul>
+                        
                       </div>
                     </div>
                   </Card>
@@ -1979,169 +1960,63 @@ const BusinessModel = () => {
                 </div>
               </Card>
 
-              {/* How The Money Actually Moves */}
+              {/* Conclusion */}
               <Card className="p-8 bg-gradient-card border-none shadow-luxury">
-                <div className="space-y-8">
-                  <div className="text-center">
-                    <h3 className="text-3xl font-bold mb-4">How The Money Actually Moves</h3>
-                    <p className="text-lg text-muted-foreground">
-                      Here's the month-by-month walkthrough so you can see how $7.0M gets used, recycled, and ends with $2.94M treasury while peak capital at risk is only $4.06M.
-                    </p>
-                  </div>
-
-                  {/* Ledger View */}
-                  <div className="space-y-6">
-                    <h4 className="text-xl font-semibold flex items-center gap-3">
-                      <BarChart3 className="w-6 h-6 text-primary" />
-                      The Treasury Ledger (Key Milestones)
-                    </h4>
-                    
-                    <div className="overflow-x-auto">
-                      <table className="w-full border-collapse border border-border rounded-lg">
-                        <thead>
-                          <tr className="bg-muted/50">
-                            <th className="border border-border p-4 text-left font-semibold">Month</th>
-                            <th className="border border-border p-4 text-left font-semibold">Milestone</th>
-                            <th className="border border-border p-4 text-right font-semibold">Cash Change</th>
-                            <th className="border border-border p-4 text-right font-semibold">Treasury After</th>
-                            <th className="border border-border p-4 text-right font-semibold">Capital at Risk</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td className="border border-border p-4">Start</td>
-                            <td className="border border-border p-4">Initial Investment</td>
-                            <td className="border border-border p-4 text-right">—</td>
-                            <td className="border border-border p-4 text-right font-bold text-primary">$7.00M</td>
-                            <td className="border border-border p-4 text-right">$0.00M</td>
-                          </tr>
-                          <tr className="bg-muted/20">
-                            <td className="border border-border p-4">M1-M11</td>
-                            <td className="border border-border p-4">Legal, Platform, Mexico Setup</td>
-                            <td className="border border-border p-4 text-right text-red-600">-$1.21M</td>
-                            <td className="border border-border p-4 text-right">$5.79M</td>
-                            <td className="border border-border p-4 text-right">$1.21M</td>
-                          </tr>
-                          <tr>
-                            <td className="border border-border p-4">M12-M14</td>
-                            <td className="border border-border p-4">First Presales Begin (Mazunte)</td>
-                            <td className="border border-border p-4 text-right text-green-600">+$0.257M</td>
-                            <td className="border border-border p-4 text-right">$5.78M</td>
-                            <td className="border border-border p-4 text-right">$1.22M</td>
-                          </tr>
-                          <tr className="bg-muted/20">
-                            <td className="border border-border p-4">M15-M21</td>
-                            <td className="border border-border p-4">Brazil Build + Bahia Presales</td>
-                            <td className="border border-border p-4 text-right text-green-600">+$0.442M</td>
-                            <td className="border border-border p-4 text-right">$5.39M</td>
-                            <td className="border border-border p-4 text-right">$1.61M</td>
-                          </tr>
-                          <tr>
-                            <td className="border border-border p-4">M21-M30</td>
-                            <td className="border border-border p-4">Spain Entry + More Presales</td>
-                            <td className="border border-border p-4 text-right text-green-600">+$0.67M</td>
-                            <td className="border border-border p-4 text-right">$4.06M</td>
-                            <td className="border border-border p-4 text-right">$2.94M</td>
-                          </tr>
-                          <tr className="bg-red-50 border-red-200">
-                            <td className="border border-border p-4 font-bold">M36</td>
-                            <td className="border border-border p-4 font-bold">Peak Capital at Risk</td>
-                            <td className="border border-border p-4 text-right text-red-600 font-bold">-$0.827M</td>
-                            <td className="border border-border p-4 text-right font-bold">$2.94M</td>
-                            <td className="border border-border p-4 text-right font-bold text-red-600">$4.06M</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-
-                  {/* Recycling Explanation */}
+                <div className="space-y-6">
+                  <h3 className="text-2xl font-bold">Conclusion</h3>
+                  
                   <div className="bg-[hsl(var(--gold))]/10 border border-[hsl(var(--gold))]/20 p-6 rounded-lg">
-                    <h4 className="text-xl font-semibold mb-4">Where The $2.76M Recycled Comes From</h4>
-                    <p className="mb-4">Cash flows back into the treasury from presales and closings throughout the 36 months:</p>
+                    <p className="text-lg mb-4">
+                      The $7.0M investment creates a self-sustaining real estate development platform that:
+                    </p>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span>M12: Mazunte presales start</span>
-                          <span className="font-mono text-green-600">+$128K</span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-3">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                          <div>
+                            <p className="font-semibold">Preserves Capital</p>
+                            <p className="text-sm text-muted-foreground">Only deploys 58% of initial investment at peak utilization</p>
+                          </div>
                         </div>
-                        <div className="flex justify-between">
-                          <span>M13-14: Mazunte presales 2-3</span>
-                          <span className="font-mono text-green-600">+$257K</span>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                          <div>
+                            <p className="font-semibold">Generates Returns</p>
+                            <p className="text-sm text-muted-foreground">$2.76M in recycled capital within 36 months</p>
+                          </div>
                         </div>
-                        <div className="flex justify-between">
-                          <span>M18: Mazunte cash closings</span>
-                          <span className="font-mono text-green-600">+$534K</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>M19-21: Bahia presales 2-4</span>
-                          <span className="font-mono text-green-600">+$388K</span>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold">3</div>
+                          <div>
+                            <p className="font-semibold">Achieves Scale</p>
+                            <p className="text-sm text-muted-foreground">112 units across 6 countries with $15.12M total revenue potential</p>
+                          </div>
                         </div>
                       </div>
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span>M30: Bahia cash closings</span>
-                          <span className="font-mono text-green-600">+$675K</span>
+                      
+                      <div className="space-y-3">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold">4</div>
+                          <div>
+                            <p className="font-semibold">Enables Growth</p>
+                            <p className="text-sm text-muted-foreground">Self-funding model for subsequent developments (Thailand/Turkey)</p>
+                          </div>
                         </div>
-                        <div className="flex justify-between">
-                          <span>M33: EU presales 1</span>
-                          <span className="font-mono text-green-600">+$193K</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>M34-35: EU presales 2-3</span>
-                          <span className="font-mono text-green-600">+$387K</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>M36: EU presales 4</span>
-                          <span className="font-mono text-green-600">+$193K</span>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold">5</div>
+                          <div>
+                            <p className="font-semibold">Maintains Liquidity</p>
+                            <p className="text-sm text-muted-foreground">$2.94M treasury balance at 36-month completion</p>
+                          </div>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="border-t border-[hsl(var(--gold))]/30 pt-4">
-                      <div className="flex justify-between text-lg font-bold">
-                        <span>Total Inflows (Capital Recycled):</span>
-                        <span className="text-green-600">$2.76M</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Peak Risk Calculation */}
-                  <div className="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 p-6 rounded-lg">
-                    <h4 className="text-xl font-semibold mb-4 text-red-700">Peak Risk Calculation Made Simple</h4>
-                    <div className="text-center space-y-4">
-                      <div className="text-3xl font-bold">
-                        <span className="text-gray-700">$7.0M</span>
-                        <span className="mx-4">−</span>
-                        <span className="text-red-600">$2.94M</span>
-                        <span className="mx-4">=</span>
-                        <span className="text-red-700">$4.06M</span>
-                      </div>
-                      <div className="text-sm space-y-1">
-                        <p><span className="font-semibold">Starting Capital</span> minus <span className="font-semibold">Lowest Treasury Balance</span> equals <span className="font-semibold">Peak Capital at Risk</span></p>
-                        <p className="text-red-600 font-medium">This happens at Month 36, not Month 30</p>
-                        <p className="text-gray-600">We never have all $7M exposed at once</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Plain English Takeaway */}
-                  <div className="bg-[hsl(var(--gold))]/20 border border-[hsl(var(--gold))]/30 p-6 rounded-lg">
-                    <h4 className="text-xl font-semibold mb-4">Plain English Takeaway</h4>
-                    <div className="space-y-4">
-                      <div className="flex items-start space-x-3">
-                        <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">✓</div>
-                        <p><strong>We put the $7M to work</strong> across land, builds, legal, platform, and marketing—but as soon as presales and closings hit, cash flows back into the fund and gets reused.</p>
-                      </div>
-                      <div className="flex items-start space-x-3">
-                        <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">✓</div>
-                        <p><strong>Because of that recycling</strong>, the most we ever have exposed at one time is $4.06M, not the full $7M.</p>
-                      </div>
-                      <div className="flex items-start space-x-3">
-                        <div className="w-6 h-6 bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">✓</div>
-                        <p><strong>By Month 36</strong> we still have $2.94M cash in treasury, plus multiple markets completed or underway, and we roll that cash into Thailand/Turkey without needing a new raise.</p>
-                      </div>
+                    <div className="mt-6 p-4 bg-[hsl(var(--gold))]/20 rounded-lg border border-[hsl(var(--gold))]/30">
+                      <p className="text-sm font-medium text-center">
+                        The sequential funding model, supported by aggressive presale strategies and platform fee capture, demonstrates that a relatively modest initial investment can support a global real estate development portfolio through disciplined capital recycling and milestone-gated deployment.
+                      </p>
                     </div>
                   </div>
                 </div>
