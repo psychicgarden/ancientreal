@@ -746,7 +746,7 @@ const BusinessModel = () => {
                   Low-Risk, Milestone-Gated Deployment
                 </h2>
                 <h3 className="text-2xl text-muted-foreground">
-                  Only $150K Needed to Launch Mexico
+                  Only $150K Needed to Launch
                 </h3>
                 <p className="text-lg text-muted-foreground max-w-4xl mx-auto">
                   Progressive capital deployment with investor protection gates at every phase
