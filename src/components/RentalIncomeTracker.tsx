@@ -65,8 +65,8 @@ const SAMPLE_RENTAL_DATA = {
   properties: [
     {
       id: "mazunte-mexico-villa",
-      name: "Mazunte Beach Villa",
-      location: "Mazunte, Mexico",
+      name: "Mallorca Beach Villa",
+      location: "Mallorca, Spain",
       image: PROPERTIES_CATALOG[0].image,
       monthlyRent: 2850,
       occupancyRate: 92,
@@ -81,8 +81,8 @@ const SAMPLE_RENTAL_DATA = {
     },
     {
       id: "bahia-brazil-villa", 
-      name: "Bahia Ocean Villa",
-      location: "Bahia, Brazil",
+      name: "Koh Phangan Ocean Villa",
+      location: "Koh Phangan, Thailand",
       image: PROPERTIES_CATALOG[1].image,
       monthlyRent: 2650,
       occupancyRate: 88,
@@ -97,8 +97,8 @@ const SAMPLE_RENTAL_DATA = {
     },
     {
       id: "ericeira-portugal-villa",
-      name: "Ericeira Coastal Villa", 
-      location: "Ericeira, Portugal",
+      name: "Corfu Coastal Villa", 
+      location: "Corfu, Greece",
       image: PROPERTIES_CATALOG[2].image,
       monthlyRent: 3200,
       occupancyRate: 95,

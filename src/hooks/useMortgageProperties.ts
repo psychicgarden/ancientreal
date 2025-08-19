@@ -21,8 +21,8 @@ import { computeMonthlyPaymentUSD } from '@/lib/finance';
 const MORTGAGE_PROPERTIES: MortgagePropertyData[] = [
   {
     id: "mazunte-mexico-villa",
-    name: "Mazunte Beach Villa",
-    location: "Mazunte, Mexico",
+    name: "Mallorca Beach Villa",
+    location: "Mallorca, Spain",
     image: "/src/assets/villa-tulum.jpg",
     totalValue: 129000,
     downPayment: 25800, // 20% down
@@ -34,8 +34,8 @@ const MORTGAGE_PROPERTIES: MortgagePropertyData[] = [
   },
   {
     id: "bahia-brazil-villa",
-    name: "Bahia Ocean Villa", 
-    location: "Bahia, Brazil",
+    name: "Koh Phangan Ocean Villa", 
+    location: "Koh Phangan, Thailand",
     image: "/src/assets/beach-chalet.jpg",
     totalValue: 120000,
     downPayment: 24000, // 20% down
@@ -47,8 +47,8 @@ const MORTGAGE_PROPERTIES: MortgagePropertyData[] = [
   },
   {
     id: "ericeira-portugal-villa",
-    name: "Ericeira Coastal Villa",
-    location: "Ericeira, Portugal", 
+    name: "Corfu Coastal Villa",
+    location: "Corfu, Greece",
     image: "/src/assets/villa-ericeira-portugal.jpg",
     totalValue: 150000,
     downPayment: 30000, // 20% down
