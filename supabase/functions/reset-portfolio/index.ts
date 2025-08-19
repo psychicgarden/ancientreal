@@ -54,7 +54,6 @@ Deno.serve(async (req) => {
     let deletedInvestments = 0;
     let deletedProperties = 0;
     let deletedTransactions = 0;
-    let deletedDeveloperInvestments = 0;
     let updatedProperties = 0;
 
     try {
@@ -66,15 +65,6 @@ Deno.serve(async (req) => {
       
       if (investError) throw investError;
       deletedInvestments = invCount || 0;
-
-      // Delete developer investments
-      const { error: devInvestError, count: devInvestCount } = await supabase
-        .from("developer_investments")
-        .delete({ count: 'exact' })
-        .eq("user_wallet_address", wallet);
-      
-      if (devInvestError) throw devInvestError;
-      deletedDeveloperInvestments = devInvestCount || 0;
 
       // Delete user properties  
       const { error: propError, count: propCount } = await supabase
@@ -106,7 +96,6 @@ Deno.serve(async (req) => {
       const data = {
         wallet,
         deleted_investments: deletedInvestments,
-        deleted_developer_investments: deletedDeveloperInvestments,
         deleted_properties: deletedProperties,
         deleted_transactions: deletedTransactions,
         updated_properties: updatedProperties

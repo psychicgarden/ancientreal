@@ -11,7 +11,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { DEMO_CONFIG } from '@/config/demo';
 import { Rocket, Users, DollarSign, Code, Shield, Star, Clock, TrendingUp, Award, Upload, Vote, Zap } from "lucide-react";
 
 // Import images
@@ -30,7 +29,7 @@ const Developers = () => {
   const [investmentModalOpen, setInvestmentModalOpen] = useState(false);
   const [submissionFormOpen, setSubmissionFormOpen] = useState(false);
 
-  // Fetch real projects from database with demo mode scaling
+  // Fetch real projects from database and merge with display data
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -49,18 +48,7 @@ const Developers = () => {
           });
           return;
         }
-        
-        // Apply demo mode scaling to financial values
-        const scaledProjects = (data || []).map(project => ({
-          ...project,
-          target_funding: DEMO_CONFIG.isEnabled ? project.target_funding / 1000 : project.target_funding,
-          current_funding: DEMO_CONFIG.isEnabled ? project.current_funding / 1000 : project.current_funding,
-          presale_price: DEMO_CONFIG.isEnabled ? (project.presale_price || 0) / 1000 : (project.presale_price || 0),
-          min_investment: DEMO_CONFIG.isEnabled ? project.min_investment / 1000 : project.min_investment,
-          max_investment: project.max_investment ? (DEMO_CONFIG.isEnabled ? project.max_investment / 1000 : project.max_investment) : null
-        }));
-        
-        setProjects(scaledProjects);
+        setProjects(data || []);
       } catch (error) {
         console.error('Error:', error);
         toast({
@@ -161,57 +149,65 @@ const Developers = () => {
     image_url: villaBali
   }];
 
-  // Display projects with enhanced data merging
-  const getDisplayProjects = () => {
-    if (projects.length === 0) {
-      // Fallback hardcoded projects for initial display with demo scaling
-      const fallbackProjects = [{
-        id: 'a47ac10b-58cc-4372-a567-0e02b2c3d478',
-        title: 'Digital Nomad Coliving Hub',
-        creator_name: 'Remote Work Studios',
-        description: 'Modern coliving spaces in Bali designed for digital nomads with high-speed internet, coworking areas, and community events in tropical paradise.',
-        target_funding: DEMO_CONFIG.isEnabled ? 450 : 450000,
-        current_funding: DEMO_CONFIG.isEnabled ? 90 : 90000,
-        min_investment: DEMO_CONFIG.isEnabled ? 45 : 45000,
-        estimated_yield: 22,
-        project_status: 'presale_active',
-        timeline: '12 months',
-        image_url: coworkingMallorca,
-        category: 'Real Estate'
-      }, {
-        id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
-        title: 'Berber Eco Luxury Riad Retreat',
-        creator_name: 'Atlas Desert Developments',
-        description: 'Authentic Moroccan riad converted into an eco-luxury retreat with traditional architecture and modern sustainability features.',
-        target_funding: DEMO_CONFIG.isEnabled ? 750 : 750000,
-        current_funding: DEMO_CONFIG.isEnabled ? 607 : 607500,
-        min_investment: DEMO_CONFIG.isEnabled ? 75 : 75000,
-        estimated_yield: 28,
-        project_status: 'presale_active',
-        timeline: '18 months',
-        image_url: desertOasisMorocco,
-        category: 'Hospitality'
-      }];
-      return fallbackProjects;
-    }
-    
-    return projects.map(project => {
-      const fundingPercentage = project.target_funding > 0 ? (project.current_funding / project.target_funding) * 100 : 0;
-      const thresholdNeeded = Math.max(0, (project.target_funding * 0.8) - project.current_funding);
-      
-      return {
-        ...project,
-        presale_percentage: Math.round(fundingPercentage),
-        threshold_needed: thresholdNeeded,
-        status_badge: project.project_status === 'funded' ? 'Funded - Development Starting' : 
-                     fundingPercentage >= 80 ? 'Above 80% Threshold' : 'Presale Active',
-        image_url: project.image_url || coworkingMallorca,
-        category: project.category || 'Development'
-      };
-    });
-  };
-
-  const currentProjects = getDisplayProjects();
+  // Current projects seeking 80% - hardcoded to match screenshot
+  const currentProjects = [{
+    id: 'a47ac10b-58cc-4372-a567-0e02b2c3d478',
+    title: 'Digital Nomad Coliving Hub',
+    creator_name: 'Remote Work Studios',
+    description: 'Modern coliving spaces in Bali designed for digital nomads with high-speed internet, coworking areas, and community events in tropical paradise.',
+    target_funding: 450000,
+    current_funding: 90000,
+    presale_price: 90000,
+    min_investment: 45000,
+    estimated_yield: 22,
+    project_status: 'presale_active',
+    timeline: '12 months',
+    image_url: coworkingMallorca,
+    presale_percentage: 20,
+    status_badge: 'Presale Active',
+    units_sold: '2/10',
+    public_markup: '+17.6%',
+    threshold_needed: 270000,
+    category: 'Real Estate'
+  }, {
+    id: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+    title: 'Berber Eco Luxury Riad Retreat',
+    creator_name: 'Atlas Desert Developments',
+    description: 'Authentic Moroccan riad converted into an eco-luxury retreat with traditional architecture and modern sustainability features.',
+    target_funding: 750000,
+    current_funding: 607500,
+    presale_price: 607500,
+    min_investment: 75000,
+    estimated_yield: 28,
+    project_status: 'presale_active',
+    timeline: '18 months',
+    image_url: desertOasisMorocco,
+    presale_percentage: 81,
+    status_badge: 'Presale Active',
+    units_sold: '8.1/10',
+    public_markup: '+17.6%',
+    threshold_needed: 0,
+    category: 'Hospitality'
+  }, {
+    id: 'b47ac10b-58cc-4372-a567-0e02b2c3d480',
+    title: 'Urban Vertical Farm Complex',
+    creator_name: 'AgriTech Builders',
+    description: 'Innovative vertical farming facility using hydroponic technology to produce organic vegetables in urban environments.',
+    target_funding: 920000,
+    current_funding: 736000,
+    presale_price: 736000,
+    min_investment: 75000,
+    estimated_yield: 31,
+    project_status: 'funded',
+    timeline: '15 months',
+    image_url: ecoSmartCity,
+    presale_percentage: 80,
+    status_badge: 'Funded - Development Starting',
+    units_sold: '8/10',
+    public_markup: '+17.6%',
+    development_approved: true,
+    category: 'Agriculture'
+  }];
   const benefits = [{
     icon: <DollarSign className="h-8 w-8" />,
     title: "Instant Funding Access",

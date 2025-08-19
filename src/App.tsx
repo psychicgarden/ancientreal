@@ -12,7 +12,6 @@ import Developers from "./pages/Developers";
 import SmartContractTest from "./pages/SmartContractTest";
 import LegalPortal from "./pages/LegalPortal";
 import AdminProjects from "./pages/AdminProjects";
-import AdminDashboard from "./pages/AdminDashboard";
 import TestRoute from "./pages/TestRoute";
 import NotFound from "./pages/NotFound";
 import BusinessModel from "./pages/BusinessModel";
@@ -54,7 +53,6 @@ function App() {
                 <Route path="/legal-portal" element={<LegalPortal />} />
                 <Route path="/legal" element={<LegalPortal />} />
                 <Route path="/business-model" element={<BusinessModel />} />
-                <Route path="/admin" element={<AdminDashboard />} />
                 <Route path="/admin/projects" element={<AdminProjects />} />
                 <Route path="/test-route" element={<TestRoute />} />
                 <Route path="/test" element={<SmartContractTest />} />
