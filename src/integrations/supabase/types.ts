@@ -1727,6 +1727,10 @@ export type Database = {
         }
         Returns: string
       }
+      reset_developer_project_funding: {
+        Args: { p_project_id?: string }
+        Returns: Json
+      }
       reset_fractional_portfolio: {
         Args: { p_wallet: string }
         Returns: Json
