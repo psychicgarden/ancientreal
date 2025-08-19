@@ -357,11 +357,12 @@ const BusinessModel = () => {
 
           {/* Tabbed Content */}
           <Tabs defaultValue="revenue-model" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 mb-8">
+            <TabsList className="grid w-full grid-cols-5 mb-8">
               <TabsTrigger value="revenue-model">Revenue Model</TabsTrigger>
               <TabsTrigger value="platform-assessment">Platform Assessment</TabsTrigger>
               <TabsTrigger value="budget-breakdown">Budget Breakdown</TabsTrigger>
               <TabsTrigger value="legal-structuring">Legal Structuring</TabsTrigger>
+              <TabsTrigger value="buyers-journey">Buyer's Journey</TabsTrigger>
             </TabsList>
 
             <TabsContent value="revenue-model">
@@ -2754,6 +2755,310 @@ const BusinessModel = () => {
                       <p className="text-center font-medium text-lg">
                         We're not early-stage experimenters—we're applying proven legal frameworks to high-growth emerging markets with institutional-grade execution.
                       </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="buyers-journey">
+              <div className="space-y-8">
+                {/* Header */}
+                <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20">
+                  <CardContent className="p-8">
+                    <div className="flex items-center gap-3 mb-6">
+                      <Home className="w-8 h-8 text-primary" />
+                      <h3 className="text-3xl font-bold">Buyer's Journey: A 360° Wealth Model</h3>
+                    </div>
+                    <p className="text-xl text-muted-foreground mb-6">
+                      Our model is designed to create a clear, 10-year path to wealth creation for all participants. Here is a step-by-step walkthrough of the journey for each stakeholder, based on a property with an initial value of $150,000.
+                    </p>
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div className="bg-primary/5 rounded-lg p-4 text-center">
+                        <div className="text-2xl font-bold text-primary">11x ROI</div>
+                        <div className="text-sm text-muted-foreground">Buyer Returns</div>
+                      </div>
+                      <div className="bg-accent/5 rounded-lg p-4 text-center">
+                        <div className="text-2xl font-bold text-accent">9.8% IRR</div>
+                        <div className="text-sm text-muted-foreground">Lending Pool</div>
+                      </div>
+                      <div className="bg-secondary/5 rounded-lg p-4 text-center">
+                        <div className="text-2xl font-bold text-secondary">$113.1K</div>
+                        <div className="text-sm text-muted-foreground">Platform Revenue</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Buyer's Journey */}
+                <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border-blue-200 dark:border-blue-800">
+                  <CardContent className="p-8">
+                    <div className="flex items-center gap-3 mb-6">
+                      <Users className="w-8 h-8 text-blue-600" />
+                      <h3 className="text-2xl font-bold text-blue-800 dark:text-blue-400">1. The Buyer's Journey: From Renter to Owner</h3>
+                    </div>
+                    <p className="text-lg mb-6 text-blue-700 dark:text-blue-300">
+                      This is the core experience, transforming a renter into a global property owner.
+                    </p>
+
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                      {/* Step 1 */}
+                      <div className="bg-white/50 dark:bg-black/20 rounded-lg p-6 border border-blue-200/50">
+                        <div className="text-center mb-4">
+                          <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <span className="text-blue-600 dark:text-blue-400 font-bold text-lg">1</span>
+                          </div>
+                          <h4 className="font-bold text-lg mb-2">Initial Purchase</h4>
+                        </div>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex justify-between">
+                            <span>Home Price:</span>
+                            <span className="font-bold">$150,000</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Down Payment (20%):</span>
+                            <span className="font-bold text-primary">$30,000</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Mortgage:</span>
+                            <span className="font-bold">$120,000</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Monthly Payment:</span>
+                            <span className="font-bold">~$1,456</span>
+                          </div>
+                          <div className="text-xs text-muted-foreground mt-2">
+                            Fixed 8% interest over 10 years
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Step 2 */}
+                      <div className="bg-white/50 dark:bg-black/20 rounded-lg p-6 border border-blue-200/50">
+                        <div className="text-center mb-4">
+                          <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <span className="text-blue-600 dark:text-blue-400 font-bold text-lg">2</span>
+                          </div>
+                          <h4 className="font-bold text-lg mb-2">10-Year Journey</h4>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-3xl mb-2">📈</div>
+                          <p className="text-sm">
+                            For the next 10 years, you make fixed monthly payments, building equity with each one. At the end of the term, the mortgage is fully paid off.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Step 3 */}
+                      <div className="bg-white/50 dark:bg-black/20 rounded-lg p-6 border border-blue-200/50">
+                        <div className="text-center mb-4">
+                          <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <span className="text-blue-600 dark:text-blue-400 font-bold text-lg">3</span>
+                          </div>
+                          <h4 className="font-bold text-lg mb-2">Year 10 Event</h4>
+                        </div>
+                        <div className="space-y-2 text-sm">
+                          <div className="text-center mb-3">
+                            <div className="text-lg font-bold text-primary">$421,500</div>
+                            <div className="text-xs text-muted-foreground">Appraised Value</div>
+                          </div>
+                          <div className="space-y-1">
+                            <div className="flex justify-between">
+                              <span>50% to You:</span>
+                              <span className="font-bold text-green-600">$135,750</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>40% to Platform:</span>
+                              <span className="font-bold">$108,600</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>10% to Lenders:</span>
+                              <span className="font-bold">$27,150</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Step 4 */}
+                      <div className="bg-white/50 dark:bg-black/20 rounded-lg p-6 border border-blue-200/50">
+                        <div className="text-center mb-4">
+                          <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <span className="text-green-600 dark:text-green-400 font-bold text-lg">4</span>
+                          </div>
+                          <h4 className="font-bold text-lg mb-2">Wealth Summary</h4>
+                        </div>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex justify-between">
+                            <span>Initial Investment:</span>
+                            <span className="font-bold">$30,000</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Total Equity Year 10:</span>
+                            <span className="font-bold text-green-600">~$339,000</span>
+                          </div>
+                          <div className="flex justify-between border-t pt-2 mt-3">
+                            <span>Return on Investment:</span>
+                            <span className="font-bold text-primary text-lg">Over 11x</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-6 bg-green-100 dark:bg-green-900/20 rounded-lg p-4">
+                      <p className="text-center font-medium text-green-800 dark:text-green-400">
+                        🏡 Transform what would have been rent into a powerful financial asset
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Lending Pool Journey */}
+                <Card className="bg-gradient-to-r from-purple-50 to-violet-50 dark:from-purple-950/20 dark:to-violet-950/20 border-purple-200 dark:border-purple-800">
+                  <CardContent className="p-8">
+                    <div className="flex items-center gap-3 mb-6">
+                      <DollarSign className="w-8 h-8 text-purple-600" />
+                      <h3 className="text-2xl font-bold text-purple-800 dark:text-purple-400">2. The Lending Pool's Journey: Secure, High-Yield Returns</h3>
+                    </div>
+                    <p className="text-lg mb-6 text-purple-700 dark:text-purple-300">
+                      The lending pool provides the capital for the mortgage and receives a steady, secure return plus an equity bonus.
+                    </p>
+
+                    <div className="grid md:grid-cols-2 gap-8">
+                      <div className="space-y-6">
+                        <div className="bg-white/50 dark:bg-black/20 rounded-lg p-6">
+                          <h4 className="font-bold text-lg mb-4 text-purple-700 dark:text-purple-400">Investment Details</h4>
+                          <div className="space-y-3">
+                            <div className="flex justify-between">
+                              <span>Mortgage Lent:</span>
+                              <span className="font-bold">$120,000</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Interest Earned (10 Years):</span>
+                              <span className="font-bold text-green-600">$54,712</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Appreciation Bonus:</span>
+                              <span className="font-bold text-green-600">$27,150</span>
+                            </div>
+                            <div className="border-t pt-3">
+                              <div className="flex justify-between">
+                                <span className="font-bold">Total Return:</span>
+                                <span className="font-bold text-primary text-lg">$81,862</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-6">
+                        <div className="bg-white/50 dark:bg-black/20 rounded-lg p-6">
+                          <h4 className="font-bold text-lg mb-4 text-purple-700 dark:text-purple-400">Performance Metrics</h4>
+                          <div className="space-y-4">
+                            <div className="text-center">
+                              <div className="text-3xl font-bold text-green-600">+68%</div>
+                              <div className="text-sm text-muted-foreground">Gross ROI</div>
+                            </div>
+                            <div className="text-center">
+                              <div className="text-3xl font-bold text-primary">9.8%</div>
+                              <div className="text-sm text-muted-foreground">Annualized IRR (10 yrs)</div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-purple-100 dark:bg-purple-900/20 rounded-lg p-4">
+                          <p className="text-center font-medium text-purple-800 dark:text-purple-400">
+                            💰 Stable, high-yield returns that consistently outperform traditional financial products like REITs and bonds
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Platform Journey */}
+                <Card className="bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20 border-orange-200 dark:border-orange-800">
+                  <CardContent className="p-8">
+                    <div className="flex items-center gap-3 mb-6">
+                      <Building2 className="w-8 h-8 text-orange-600" />
+                      <h3 className="text-2xl font-bold text-orange-800 dark:text-orange-400">3. Ancient LLC's Journey: The Platform</h3>
+                    </div>
+                    <p className="text-lg mb-6 text-orange-700 dark:text-orange-300">
+                      The platform's revenue is directly tied to the success of the properties, creating a performance-based, long-term cash flow engine.
+                    </p>
+
+                    <div className="grid md:grid-cols-3 gap-6">
+                      <div className="bg-white/50 dark:bg-black/20 rounded-lg p-6 text-center">
+                        <div className="text-3xl mb-3">📈</div>
+                        <div className="text-2xl font-bold text-orange-600">$108,600</div>
+                        <div className="text-sm text-muted-foreground mb-2">Appreciation Share at Year 10</div>
+                        <div className="text-xs text-orange-600">40% of property appreciation</div>
+                      </div>
+
+                      <div className="bg-white/50 dark:bg-black/20 rounded-lg p-6 text-center">
+                        <div className="text-3xl mb-3">🏛️</div>
+                        <div className="text-2xl font-bold text-orange-600">$4,500</div>
+                        <div className="text-sm text-muted-foreground mb-2">Platform Fee</div>
+                        <div className="text-xs text-orange-600">3% of property value</div>
+                      </div>
+
+                      <div className="bg-white/50 dark:bg-black/20 rounded-lg p-6 text-center">
+                        <div className="text-3xl mb-3">💰</div>
+                        <div className="text-2xl font-bold text-primary">$113,100</div>
+                        <div className="text-sm text-muted-foreground mb-2">Total Revenue Per Unit</div>
+                        <div className="text-xs text-primary">Performance-based model</div>
+                      </div>
+                    </div>
+
+                    <div className="mt-6 bg-orange-100 dark:bg-orange-900/20 rounded-lg p-4">
+                      <p className="text-center font-medium text-orange-800 dark:text-orange-400">
+                        🚀 This model allows Ancient to generate significant, non-speculative revenue that can be reinvested to scale the development of new projects globally
+                      </p>
+                    </div>
+
+                    <div className="mt-6 grid md:grid-cols-2 gap-4">
+                      <div className="bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg p-4">
+                        <h4 className="font-bold mb-2">Scalable Revenue Model</h4>
+                        <p className="text-sm text-muted-foreground">Revenue directly tied to property success, creating sustainable growth</p>
+                      </div>
+                      <div className="bg-gradient-to-r from-secondary/10 to-primary/10 rounded-lg p-4">
+                        <h4 className="font-bold mb-2">Global Expansion Fund</h4>
+                        <p className="text-sm text-muted-foreground">Reinvest platform revenue to develop new villages worldwide</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Summary */}
+                <Card className="bg-gradient-to-r from-gold/10 to-primary/10 border-gold/20">
+                  <CardContent className="p-8">
+                    <div className="text-center">
+                      <h3 className="text-2xl font-bold mb-4">The Complete Wealth Ecosystem</h3>
+                      <p className="text-lg text-muted-foreground mb-6">
+                        A win-win-win model where buyers build wealth, lenders earn stable returns, and the platform scales sustainably
+                      </p>
+                      
+                      <div className="grid md:grid-cols-3 gap-6">
+                        <div className="bg-white/50 dark:bg-black/20 rounded-lg p-6">
+                          <div className="text-3xl mb-2">🏠</div>
+                          <div className="text-xl font-bold text-primary">Buyers</div>
+                          <div className="text-sm text-muted-foreground">Transform rent into equity</div>
+                          <div className="text-lg font-bold mt-2">11x ROI</div>
+                        </div>
+                        
+                        <div className="bg-white/50 dark:bg-black/20 rounded-lg p-6">
+                          <div className="text-3xl mb-2">💎</div>
+                          <div className="text-xl font-bold text-accent">Lenders</div>
+                          <div className="text-sm text-muted-foreground">Secure, high-yield returns</div>
+                          <div className="text-lg font-bold mt-2">9.8% IRR</div>
+                        </div>
+                        
+                        <div className="bg-white/50 dark:bg-black/20 rounded-lg p-6">
+                          <div className="text-3xl mb-2">🚀</div>
+                          <div className="text-xl font-bold text-secondary">Platform</div>
+                          <div className="text-sm text-muted-foreground">Performance-based revenue</div>
+                          <div className="text-lg font-bold mt-2">$113K/unit</div>
+                        </div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
