@@ -70,7 +70,8 @@ class SmartContractIntegration {
         this.signer = await web3Provider.getSigner();
         
         // Verify we're on the correct network
-        const currentChainId = await web3Provider.getNetwork().then(n => n.chainId);
+        const network = await web3Provider.getNetwork();
+        const currentChainId = Number(network.chainId); // Convert bigint to number
         if (currentChainId !== config.chainId) {
           throw new Error(`Wrong network. Expected ${config.chainId}, got ${currentChainId}`);
         }
