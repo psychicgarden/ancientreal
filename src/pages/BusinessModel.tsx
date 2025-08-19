@@ -2118,29 +2118,6 @@ const BusinessModel = () => {
                     </div>
                   </div>
 
-                  {/* Peak Risk Calculation */}
-                  <div className="bg-red-50 dark:bg-red-950/20 p-6 rounded-lg border border-red-200 dark:border-red-800">
-                    <h4 className="text-xl font-bold text-red-700 dark:text-red-400 mb-4">Peak Risk Calculation Made Simple</h4>
-                    
-                    <div className="text-center space-y-2 mb-4">
-                      <div className="text-3xl font-bold">
-                        <span className="text-slate-700 dark:text-slate-300">$7.0M</span>
-                        <span className="mx-2">–</span>
-                        <span className="text-red-600">$2.94M</span>
-                        <span className="mx-2">=</span>
-                        <span className="text-red-700 dark:text-red-400">$4.06M</span>
-                      </div>
-                      <div className="text-muted-foreground">
-                        Starting Capital minus Lowest Treasury Balance equals Peak Capital at Risk
-                      </div>
-                      <div className="text-red-600 font-medium">
-                        This happens at Month 36, not Month 30
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        We never have all $7M exposed at once
-                      </div>
-                    </div>
-                  </div>
 
                   {/* Plain English Takeaway */}
                   <div className="bg-amber-50 dark:bg-amber-950/20 p-6 rounded-lg border border-amber-200 dark:border-amber-800">
