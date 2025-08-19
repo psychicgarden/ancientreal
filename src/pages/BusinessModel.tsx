@@ -542,38 +542,126 @@ const BusinessModel = () => {
                               <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                               <span className="text-sm">$827M annual revenue at scale</span>
                             </div>
-                            <div className="flex items-start space-x-3">
-                              <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                              <span className="text-sm">Global nomad infrastructure network</span>
-                            </div>
+                             <div className="flex items-start space-x-3">
+                               <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                               <span className="text-sm">Global nomad infrastructure network</span>
+                             </div>
+                             <div className="flex items-start space-x-3">
+                               <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                               <span className="text-sm">Decentralized governance & citizenship model</span>
+                             </div>
                           </div>
                         </div>
                       </CardContent>
                     </Card>
                   </div>
                   
-                  {/* Evolution Flow Visual */}
-                  <div className="relative">
-                    <div className="flex items-center justify-center space-x-8">
-                      <div className="text-center">
-                        <div className="text-3xl font-bold text-primary mb-2">$24M</div>
-                        <div className="text-sm text-muted-foreground">Boutique Development</div>
-                      </div>
-                      
-                      <div className="flex items-center space-x-2">
-                        <ArrowRight className="w-6 h-6 text-muted-foreground" />
-                        <div className="text-sm font-medium text-primary">$7M Platform</div>
-                        <ArrowRight className="w-6 h-6 text-muted-foreground" />
-                      </div>
-                      
-                      <div className="text-center">
-                        <div className="text-3xl font-bold text-blue-500 mb-2">$827M</div>
-                        <div className="text-sm text-muted-foreground">Platform Economics</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                   {/* Evolution Flow Visual */}
+                   <div className="relative">
+                     <div className="flex items-center justify-center space-x-8">
+                       <div className="text-center">
+                         <div className="text-3xl font-bold text-primary mb-2">$24M</div>
+                         <div className="text-sm text-muted-foreground">Boutique Development</div>
+                       </div>
+                       
+                       <div className="flex items-center space-x-2">
+                         <ArrowRight className="w-6 h-6 text-muted-foreground" />
+                         <div className="text-sm font-medium text-primary">$7M Platform</div>
+                         <ArrowRight className="w-6 h-6 text-muted-foreground" />
+                       </div>
+                       
+                       <div className="text-center">
+                         <div className="text-3xl font-bold text-blue-500 mb-2">$827M</div>
+                         <div className="text-sm text-muted-foreground">Platform Economics</div>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+
+               {/* Risk-Adjusted Scenarios */}
+               <div className="mb-16">
+                 <div className="text-center mb-8">
+                   <h3 className="text-2xl font-bold mb-3">Risk-Adjusted Return Scenarios</h3>
+                   <p className="text-muted-foreground max-w-2xl mx-auto">
+                     Conservative modeling across different execution speeds: Even at half-pace, $7.5M seed delivers substantial returns
+                   </p>
+                 </div>
+                 
+                 <div className="max-w-4xl mx-auto">
+                   <Card className="bg-card/30 backdrop-blur-sm border-border/30">
+                     <CardContent className="p-8">
+                       <div className="overflow-x-auto">
+                         <table className="w-full">
+                           <thead>
+                             <tr className="border-b border-border/30">
+                               <th className="text-left py-3 px-4 font-medium text-muted-foreground">Scenario</th>
+                               <th className="text-right py-3 px-4 font-medium text-muted-foreground">Volume Hit</th>
+                               <th className="text-right py-3 px-4 font-medium text-muted-foreground">Year 10 Revenue</th>
+                               <th className="text-right py-3 px-4 font-medium text-muted-foreground">Valuation Multiple</th>
+                               <th className="text-right py-3 px-4 font-medium text-muted-foreground">Platform Value</th>
+                             </tr>
+                           </thead>
+                           <tbody>
+                             <tr className="border-b border-border/20">
+                               <td className="py-4 px-4">
+                                 <div className="flex items-center gap-2">
+                                   <span className="text-lg">🐻</span>
+                                   <div>
+                                     <div className="font-medium">Bear Case</div>
+                                     <div className="text-sm text-muted-foreground">50% execution</div>
+                                   </div>
+                                 </div>
+                               </td>
+                               <td className="text-right py-4 px-4 font-medium">50%</td>
+                               <td className="text-right py-4 px-4 font-medium">$413M</td>
+                               <td className="text-right py-4 px-4 font-medium">2.5x</td>
+                               <td className="text-right py-4 px-4 font-bold text-foreground">$1.03B</td>
+                             </tr>
+                             <tr className="border-b border-border/20 bg-primary/5">
+                               <td className="py-4 px-4">
+                                 <div className="flex items-center gap-2">
+                                   <span className="text-lg">🎯</span>
+                                   <div>
+                                     <div className="font-medium text-primary">Base Case</div>
+                                     <div className="text-sm text-muted-foreground">Roadmap target</div>
+                                   </div>
+                                 </div>
+                               </td>
+                               <td className="text-right py-4 px-4 font-medium">100%</td>
+                               <td className="text-right py-4 px-4 font-medium">$827M</td>
+                               <td className="text-right py-4 px-4 font-medium">2.5x</td>
+                               <td className="text-right py-4 px-4 font-bold text-primary">$2.07B</td>
+                             </tr>
+                             <tr>
+                               <td className="py-4 px-4">
+                                 <div className="flex items-center gap-2">
+                                   <span className="text-lg">🚀</span>
+                                   <div>
+                                     <div className="font-medium">Bull Case</div>
+                                     <div className="text-sm text-muted-foreground">Accelerated growth</div>
+                                   </div>
+                                 </div>
+                               </td>
+                               <td className="text-right py-4 px-4 font-medium">150%</td>
+                               <td className="text-right py-4 px-4 font-medium">$1.24B</td>
+                               <td className="text-right py-4 px-4 font-medium">2.5x</td>
+                               <td className="text-right py-4 px-4 font-bold text-foreground">$3.10B</td>
+                             </tr>
+                           </tbody>
+                         </table>
+                       </div>
+                       
+                       <div className="mt-6 p-4 bg-muted/30 rounded-lg">
+                         <p className="text-sm text-muted-foreground">
+                           <strong>Methodology:</strong> Valuations based on 2.5x revenue multiple (conservative vs. 4-6x industry standard for growth platforms). 
+                           Bear case assumes 50% execution across all metrics, while Bull case models accelerated adoption through network effects.
+                         </p>
+                       </div>
+                     </CardContent>
+                   </Card>
+                 </div>
+               </div>
 
               {/* Infrastructure Investment Overview */}
               <div className="mb-16 mt-16">
@@ -616,89 +704,6 @@ const BusinessModel = () => {
                   </Card>
                 </div>
 
-                {/* Risk-Adjusted Scenarios */}
-                <div className="mb-16">
-                  <div className="text-center mb-8">
-                    <h3 className="text-2xl font-bold mb-3">Risk-Adjusted Return Scenarios</h3>
-                    <p className="text-muted-foreground max-w-2xl mx-auto">
-                      Conservative modeling across different execution speeds: Even at half-pace, $7.5M seed delivers substantial returns
-                    </p>
-                  </div>
-                  
-                  <div className="max-w-4xl mx-auto">
-                    <Card className="bg-card/30 backdrop-blur-sm border-border/30">
-                      <CardContent className="p-8">
-                        <div className="overflow-x-auto">
-                          <table className="w-full">
-                            <thead>
-                              <tr className="border-b border-border/30">
-                                <th className="text-left py-3 px-4 font-medium text-muted-foreground">Scenario</th>
-                                <th className="text-right py-3 px-4 font-medium text-muted-foreground">Volume Hit</th>
-                                <th className="text-right py-3 px-4 font-medium text-muted-foreground">Year 10 Revenue</th>
-                                <th className="text-right py-3 px-4 font-medium text-muted-foreground">Valuation Multiple</th>
-                                <th className="text-right py-3 px-4 font-medium text-muted-foreground">Platform Value</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr className="border-b border-border/20">
-                                <td className="py-4 px-4">
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-lg">🐻</span>
-                                    <div>
-                                      <div className="font-medium">Bear Case</div>
-                                      <div className="text-sm text-muted-foreground">50% execution</div>
-                                    </div>
-                                  </div>
-                                </td>
-                                <td className="text-right py-4 px-4 font-medium">50%</td>
-                                <td className="text-right py-4 px-4 font-medium">$413M</td>
-                                <td className="text-right py-4 px-4 font-medium">2.5x</td>
-                                <td className="text-right py-4 px-4 font-bold text-foreground">$1.03B</td>
-                              </tr>
-                              <tr className="border-b border-border/20 bg-primary/5">
-                                <td className="py-4 px-4">
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-lg">🎯</span>
-                                    <div>
-                                      <div className="font-medium text-primary">Base Case</div>
-                                      <div className="text-sm text-muted-foreground">Roadmap target</div>
-                                    </div>
-                                  </div>
-                                </td>
-                                <td className="text-right py-4 px-4 font-medium">100%</td>
-                                <td className="text-right py-4 px-4 font-medium">$827M</td>
-                                <td className="text-right py-4 px-4 font-medium">2.5x</td>
-                                <td className="text-right py-4 px-4 font-bold text-primary">$2.07B</td>
-                              </tr>
-                              <tr>
-                                <td className="py-4 px-4">
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-lg">🚀</span>
-                                    <div>
-                                      <div className="font-medium">Bull Case</div>
-                                      <div className="text-sm text-muted-foreground">Accelerated growth</div>
-                                    </div>
-                                  </div>
-                                </td>
-                                <td className="text-right py-4 px-4 font-medium">150%</td>
-                                <td className="text-right py-4 px-4 font-medium">$1.24B</td>
-                                <td className="text-right py-4 px-4 font-medium">2.5x</td>
-                                <td className="text-right py-4 px-4 font-bold text-foreground">$3.10B</td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                        
-                        <div className="mt-6 p-4 bg-muted/30 rounded-lg">
-                          <p className="text-sm text-muted-foreground">
-                            <strong>Methodology:</strong> Valuations based on 2.5x revenue multiple (conservative vs. 4-6x industry standard for growth platforms). 
-                            Bear case assumes 50% execution across all metrics, while Bull case models accelerated adoption through network effects.
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
 
               </div>
 
