@@ -200,11 +200,41 @@ PHASE 1 – PROOF ENGINE (Years 0-3)
 • Build foundational community & systems
 • Focus: Boutique development approach
 
-PHASE 2 – DEVELOPER PLATFORM ($7M Investment)
+PHASE 2 – DEVELOPER PLATFORM ($7M Investment):
 • Technology platform & legal framework
 • Enable thousands of developers globally
 • Financing tools & community systems
-• Focus: Platform economics
+
+INFRASTRUCTURE BREAKDOWN - $7M TOTAL:
+1. Land & Build: $5.10M
+   • $2.00M → Land acquisitions (6 coastal plots)
+   • $2.75M → Construction + finishes for first resort
+   • $350K → Land & construction buffer
+2. Legal/Permits/Compliance: $450K
+   • $100K → Counsel retainers (Mexico, Brazil, Spain, Greece)
+   • $80K → Entity formation & banking setup
+   • $120K → Permits & environmental approvals
+   • $150K → Compliance & regulatory setup
+3. Platform & Smart Contracts: $655K
+   • $200K → Platform development (frontend/backend)
+   • $175K → Smart contract development & audits
+   • $80K → DevOps, security & infrastructure
+   • $200K → Technology team & contractor costs
+4. Marketing & Sales: $260K
+   • $100K → Digital campaigns (nomad community targeting)
+   • $60K → Content production & partnerships
+   • $50K → PR/events & community events
+   • $50K → Sales team & CRM systems
+5. Operations/Buffers/PM: $680K
+   • $200K → Operational runway (12-month team/admin)
+   • $150K → Property management setup & systems
+   • $180K → General business & financial contingencies
+   • $150K → Emergency reserves & working capital
+
+PHASE EVOLUTION - PROGRESSIVE DEPLOYMENT:
+Phase 1 (Foundation): $150K (2%) - Legal setup, banking, compliance
+Phase 2 (Market Entry): $470K (7%) - Mexico land, marketing, operations
+Phase 3 (Multi-Market): $6.38M (91%) - Full build-out, protected by recycling
 
 PHASE 3 – NETWORK STATE (Years 3-10)
 • 7,500 properties serving 2M nomads
