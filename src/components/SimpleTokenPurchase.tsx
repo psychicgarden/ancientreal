@@ -10,12 +10,10 @@ import { useWallet } from "@/contexts/WalletContext";
 import { supabase } from "@/integrations/supabase/client";
 import NetworkGuard from "@/components/NetworkGuard";
 
-const images = [
-  "/src/assets/villa-tulum.jpg",
-  "/src/assets/bali-jungle-resort.jpg",
-  "/src/assets/desert-oasis-morocco.jpg",
-  "/src/assets/beach-house-mykonos.jpg"
-];
+import { PROPERTY_IMAGES } from "@/lib/assets";
+
+// Use centralized image management
+const images = PROPERTY_IMAGES;
 
 type UIMarketProperty = {
   id: string;
@@ -199,6 +197,10 @@ export const SimpleTokenPurchase = () => {
                   src={property.image} 
                   alt={property.name}
                   className="w-full h-full object-cover rounded-t-lg"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.src = '/placeholder.svg';
+                  }}
                 />
                 <Badge className="absolute top-2 right-2 bg-green-500">
                   {property.expectedReturn} APY

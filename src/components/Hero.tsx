@@ -1,14 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Home, TrendingUp, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import heroImage from "@/assets/hero-image.jpg";
+import { ASSETS } from "@/lib/assets";
 const Hero = () => {
   const navigate = useNavigate();
   return <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image with Overlay */}
-      <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{
-      backgroundImage: `url(${heroImage})`
-    }}>
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat" 
+        style={{ backgroundImage: `url(${ASSETS.HERO_IMAGE})` }}
+      >
         <div className="absolute inset-0 bg-gradient-hero/60" />
       </div>
 

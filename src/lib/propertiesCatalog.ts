@@ -13,17 +13,15 @@ export interface CatalogProperty {
   expectedReturn?: number;
 }
 
-// Import images via aliases to keep one source of truth
-import villaTulum from "@/assets/villa-tulum.jpg";
-import beachChalet from "@/assets/beach-chalet.jpg";
-import villaEriceira from "@/assets/villa-ericeira-portugal.jpg";
+// Import images from centralized assets
+import { ASSETS } from '@/lib/assets';
 
 export const PROPERTIES_CATALOG: CatalogProperty[] = [
   {
     id: "art-deco-loft-mexico",
     name: "Art Deco Loft",
     location: "Mazunte, Mexico",
-    image: villaTulum,
+    image: ASSETS.ART_DECO_LOFT_MEXICO,
     totalValue: 129000,
     sharePrice: 129,
     totalShares: 1000,
@@ -34,7 +32,7 @@ export const PROPERTIES_CATALOG: CatalogProperty[] = [
     id: "bahia-brazil-villa",
     name: "Bahia Ocean Villa",
     location: "Bahia, Brazil",
-    image: beachChalet,
+    image: ASSETS.LUXURY_BOHO_BUNGALOW,
     totalValue: 130000,
     sharePrice: 130,
     totalShares: 1000,
@@ -45,7 +43,7 @@ export const PROPERTIES_CATALOG: CatalogProperty[] = [
     id: "oceanview-loft-ericeira",
     name: "Oceanview Loft",
     location: "Ericeira, Portugal",
-    image: villaEriceira,
+    image: ASSETS.COASTAL_APARTMENT_ERICEIRA,
     totalValue: 150000,
     sharePrice: 150,
     totalShares: 1000,
