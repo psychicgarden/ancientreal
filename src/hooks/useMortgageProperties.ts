@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import { PROPERTIES_CATALOG } from '@/lib/propertiesCatalog';
+import villaTulum from "@/assets/villa-tulum.jpg";
+import beachChalet from "@/assets/beach-chalet.jpg";
+import villaEriceira from "@/assets/villa-ericeira-portugal.jpg";
 
 export interface MortgagePropertyData {
   id: string;
@@ -23,7 +26,7 @@ const MORTGAGE_PROPERTIES: MortgagePropertyData[] = [
     id: "mazunte-mexico-villa",
     name: "Mallorca Beach Villa",
     location: "Mallorca, Spain",
-    image: "/src/assets/villa-tulum.jpg",
+    image: villaTulum,
     totalValue: 129000,
     downPayment: 25800, // 20% down
     monthlyPayment: computeMonthlyPaymentUSD(129000 - 25800, 800, 120), // Calculate dynamically
@@ -36,7 +39,7 @@ const MORTGAGE_PROPERTIES: MortgagePropertyData[] = [
     id: "bahia-brazil-villa",
     name: "Koh Phangan Ocean Villa", 
     location: "Koh Phangan, Thailand",
-    image: "/src/assets/beach-chalet.jpg",
+    image: beachChalet,
     totalValue: 120000,
     downPayment: 24000, // 20% down
     monthlyPayment: computeMonthlyPaymentUSD(120000 - 24000, 800, 120), // Calculate dynamically
@@ -49,7 +52,7 @@ const MORTGAGE_PROPERTIES: MortgagePropertyData[] = [
     id: "ericeira-portugal-villa",
     name: "Corfu Coastal Villa",
     location: "Corfu, Greece",
-    image: "/src/assets/villa-ericeira-portugal.jpg",
+    image: villaEriceira,
     totalValue: 150000,
     downPayment: 30000, // 20% down
     monthlyPayment: computeMonthlyPaymentUSD(150000 - 30000, 800, 120), // Calculate dynamically
