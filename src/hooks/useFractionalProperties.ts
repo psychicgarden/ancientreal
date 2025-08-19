@@ -70,10 +70,10 @@ export interface PropertyInvestmentData {
 
 // Comprehensive image mapping for property names and asset paths
 const imageOverrides: Record<string, string> = {
-  // Property name overrides
-  'Art Deco Loft': bohoArtDecoLoft,
-  'Bahia Ocean Villa': luxuryBohoBungalow,
-  'Oceanview Loft': artDecoCoastalEriceira,
+  // Property name overrides - exact matches for database entries
+  'Art Deco Loft': villaTulum,
+  'Bahia Ocean Villa': beachChalet,
+  'Oceanview Loft': villaEriceira,
   'Villa Tulum': villaTulum,
   'Villa Ericeira': villaEriceira,
   'Villa Bahia': villaBahia,
@@ -129,25 +129,19 @@ const assetPathMapping: Record<string, string> = {
 
 // Function to resolve image path
 const resolveImagePath = (propertyName: string, imageUrl: string): string => {
-  console.log('Resolving image for:', propertyName, 'URL:', imageUrl);
-  
   // First try property name override
   if (imageOverrides[propertyName]) {
-    console.log('Found override for:', propertyName, 'Image:', imageOverrides[propertyName]);
     return imageOverrides[propertyName];
   }
   
   // If imageUrl starts with /src/assets/, extract filename and map it
   if (imageUrl?.startsWith('/src/assets/')) {
     const filename = imageUrl.split('/').pop();
-    console.log('Extracted filename:', filename);
     if (filename && assetPathMapping[filename]) {
-      console.log('Found asset mapping for:', filename, 'Image:', assetPathMapping[filename]);
       return assetPathMapping[filename];
     }
   }
   
-  console.log('No mapping found, using fallback for:', propertyName);
   // Return original URL or placeholder as fallback
   return imageUrl || '/placeholder.svg';
 };
