@@ -244,8 +244,8 @@ const BusinessModel = () => {
             desc: "Issue Digital-Nomad Visas (from just 6 in 2019)"
           }, {
             icon: "💸",
-            title: "A Market Ignored",
-            stat: "$750B Mortgage Blackout",
+            title: "Global Mortgage Blackout",
+            stat: "$750B",
             desc: "If just 10% of 50M digital nomads wanted $150K homes, that's a $750B TAM with a $250B immediate gap. Legacy banks leave the most mobile workforce locked out."
           }].map(trend => <Card key={trend.title} className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-card transition-all duration-300">
                 <CardContent className="p-6">
