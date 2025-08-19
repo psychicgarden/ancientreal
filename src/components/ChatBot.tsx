@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useWallet } from '@/contexts/WalletContext';
 import { useLocation } from 'react-router-dom';
 import { useErrorHandler } from '@/lib/error-handler';
+import { useAsyncOperation } from '@/hooks/useAsyncOperation';
 
 interface ChatMessage {
   id: string;
@@ -22,16 +23,18 @@ interface QuickReply {
 }
 
 const ChatBot: React.FC = () => {
+  // Local state for ChatBot functionality
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [hasGreeted, setHasGreeted] = useState(false);
+  
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
   const { account, isConnected } = useWallet();
   const location = useLocation();
   const { handleError } = useErrorHandler();
+  const { execute } = useAsyncOperation();
 
   const quickReplies: QuickReply[] = [
     { text: "How to invest?", message: "How do I start investing in properties on the platform?" },

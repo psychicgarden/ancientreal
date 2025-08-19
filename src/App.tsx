@@ -16,6 +16,8 @@ import TestRoute from "./pages/TestRoute";
 import NotFound from "./pages/NotFound";
 import BusinessModel from "./pages/BusinessModel";
 import { WalletProvider } from "@/contexts/WalletContext";
+import { UIProvider } from "@/contexts/UIContext";
+import { ErrorBoundary } from "@/components/ui/error-boundary";
 import ChatBot from "@/components/ChatBot";
 import { Navigate } from "react-router-dom";
 
@@ -33,8 +35,10 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <WalletProvider>
-          <div className="min-h-screen">
+        <ErrorBoundary>
+          <WalletProvider>
+            <UIProvider>
+              <div className="min-h-screen">
             <Toaster />
             <BrowserRouter>
               <Routes>
@@ -57,8 +61,10 @@ function App() {
               </Routes>
               <ChatBot />
             </BrowserRouter>
-          </div>
-        </WalletProvider>
+              </div>
+            </UIProvider>
+          </WalletProvider>
+        </ErrorBoundary>
       </TooltipProvider>
     </QueryClientProvider>
   );

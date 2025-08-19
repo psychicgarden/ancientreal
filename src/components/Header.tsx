@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import { Menu, X, Settings, Beaker, User, ChevronDown } from "lucide-react";
 import { useWallet } from "@/contexts/WalletContext";
+import { useUI } from "@/contexts/UIContext";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -9,8 +9,8 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 
 function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDeveloperPanelOpen, setIsDeveloperPanelOpen] = useState(false);
+  // Use centralized UI state instead of local state
+  const { state, togglePanel } = useUI();
   const { 
     isConnected, 
     account, 
@@ -211,16 +211,16 @@ function Header() {
                 variant="ghost"
                 size="sm"
                 className="lg:hidden p-2"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                onClick={() => togglePanel('mobileMenu')}
               >
-                {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                {state.panels.mobileMenu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </Button>
             </div>
           </div>
         </div>
 
         {/* Mobile Menu */}
-        {isMenuOpen && (
+        {state.panels.mobileMenu && (
           <div className="lg:hidden border-t border-border/30 bg-background/95 backdrop-blur-xl">
             <div className="container mx-auto px-6 py-6">
               <nav className="space-y-4">
