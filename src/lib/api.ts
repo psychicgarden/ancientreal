@@ -86,6 +86,24 @@ export class SupabaseApi {
     }
   }
 
+  static async getUserStakingTransactions(userId: string): Promise<ApiResponse> {
+    try {
+      const { data, error } = await supabase
+        .from('staking_transactions')
+        .select('*')
+        .eq('user_wallet_address', userId)
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        return { data: null, error: error.message, success: false };
+      }
+      
+      return { data, error: null, success: true };
+    } catch (error: any) {
+      return { data: null, error: error.message || 'Unknown error', success: false };
+    }
+  }
+
   static async createStakingTransaction(transaction: any): Promise<ApiResponse> {
     try {
       const { data, error } = await supabase
