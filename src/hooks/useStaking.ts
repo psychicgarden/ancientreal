@@ -41,8 +41,29 @@ export const useStaking = () => {
       const walletAddress = isDemoMode() ? DEMO_CONFIG.testWalletAddress : account;
       const result = await api.supabase.getUserStaking(walletAddress);
       
-      if (result.success && result.data && result.data.length > 0) {
-        setStakingData(result.data[0]); // getUserStaking returns an array, take first item
+      if (result.success && result.data) {
+        // Handle both array and object responses
+        const stakingInfo = Array.isArray(result.data) ? result.data[0] : result.data;
+        if (stakingInfo) {
+          setStakingData(stakingInfo);
+        } else {
+          // In demo mode, create default data if none exists
+          if (isDemoMode()) {
+            setStakingData({
+              id: 'demo-staking',
+              total_staked: 5000,
+              total_earned: 245.50,
+              current_apy: 8.0,
+              last_yield_calculation: new Date().toISOString(),
+              is_active: true
+            });
+          } else {
+            handleError(new Error('No staking data found'), {
+              operation: 'load_staking_data',
+              component: 'useStaking'
+            });
+          }
+        }
       } else {
         // In demo mode, create default data if none exists
         if (isDemoMode()) {
