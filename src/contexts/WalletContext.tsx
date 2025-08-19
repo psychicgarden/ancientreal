@@ -4,6 +4,8 @@ import { CONTRACTS, NETWORK_CONFIG, VILLAGE_MEMBERSHIP_FEE, MAZUNTE_PROPERTY } f
 import { web3Integration, Web3Integration } from '@/lib/web3-integration';
 import { getExplorerTxUrl } from '@/lib/utils';
 import { DEMO_CONFIG, getDemoWallet } from '@/config/demo';
+import { isCorrectNetwork } from '@/config/chain';
+import { WalletStorage } from '@/lib/wallet-storage';
 
 interface WalletContextType {
   isConnected: boolean;
@@ -82,42 +84,104 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     return networks[chainId] || `Network ${chainId}`;
   };
 
+  // Auto-connection with proper validation
   useEffect(() => {
-    // Check if already connected and initialize Web3
-    if (window.ethereum) {
-      window.ethereum.request({ method: 'eth_accounts' })
-        .then(async (accounts: string[]) => {
-          if (accounts.length > 0) {
-            try {
-              const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-              
-              setAccount(accounts[0]);
-              setChainId(chainId);
-              setNetworkName(getNetworkName(chainId));
-              setIsConnected(true);
-              
-              // Try to initialize web3 and get balances
-              await web3Integration.initialize();
-            } catch (error) {
-              console.error('Web3 initialization failed:', error);
-            }
-          }
-        })
-        .catch(console.error);
+    const initializeWallet = async () => {
+      // Never auto-connect in demo mode unless explicitly enabled
+      if (DEMO_CONFIG.isEnabled) {
+        console.log("Demo mode: Skipping auto-connection");
+        return;
+      }
 
-      // Listen for account and network changes
-      window.ethereum.on('accountsChanged', (accounts: string[]) => {
-        if (accounts.length === 0) {
-          disconnectWallet();
-        } else {
-          setAccount(accounts[0]);
+      if (!window.ethereum) {
+        console.log("No ethereum provider found");
+        return;
+      }
+
+      const { wallet, account: lastAccount, shouldAutoConnect } = WalletStorage.getLastWallet();
+      
+      // Only auto-connect if user previously chose to connect
+      if (!shouldAutoConnect || !lastAccount) {
+        console.log("No auto-connect preference found");
+        return;
+      }
+
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+        
+        // Verify the last connected account is still available
+        if (!accounts.includes(lastAccount)) {
+          console.log("Last connected account no longer available");
+          WalletStorage.clearWalletConnection();
+          return;
         }
-      });
 
-      window.ethereum.on('chainChanged', (chainId: string) => {
+        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+        
+        setAccount(lastAccount);
         setChainId(chainId);
         setNetworkName(getNetworkName(chainId));
-      });
+        setIsConnected(true);
+
+        // Validate network without auto-switching
+        if (!isCorrectNetwork(chainId)) {
+          toast({
+            title: "Wrong Network",
+            description: `Please switch to ${NETWORK_CONFIG.chainName} to use all features`,
+            variant: "destructive"
+          });
+        } else {
+          // Only initialize Web3 if on correct network
+          try {
+            await web3Integration.initialize();
+          } catch (error) {
+            console.error('Web3 initialization failed:', error);
+          }
+        }
+
+      } catch (error) {
+        console.error('Auto-connection failed:', error);
+        WalletStorage.clearWalletConnection();
+      }
+    };
+
+    initializeWallet();
+
+    // Enhanced event listeners with proper validation
+    if (window.ethereum) {
+      const handleAccountsChanged = (accounts: string[]) => {
+        if (accounts.length === 0) {
+          disconnectWallet();
+        } else if (accounts[0] !== account) {
+          setAccount(accounts[0]);
+          // Update stored account if connected
+          if (isConnected) {
+            WalletStorage.saveWalletConnection(accounts[0], 'metamask');
+          }
+        }
+      };
+
+      const handleChainChanged = (chainId: string) => {
+        setChainId(chainId);
+        setNetworkName(getNetworkName(chainId));
+        
+        // Show network warning if wrong chain
+        if (isConnected && !isCorrectNetwork(chainId)) {
+          toast({
+            title: "Network Changed",
+            description: `You switched to ${getNetworkName(chainId)}. Please switch to ${NETWORK_CONFIG.chainName} for full functionality`,
+            variant: "destructive"
+          });
+        }
+      };
+
+      window.ethereum.on('accountsChanged', handleAccountsChanged);
+      window.ethereum.on('chainChanged', handleChainChanged);
+
+      return () => {
+        window.ethereum?.removeListener('accountsChanged', handleAccountsChanged);
+        window.ethereum?.removeListener('chainChanged', handleChainChanged);
+      };
     }
   }, []);
 
@@ -161,23 +225,62 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [isConnected, account, chainId, isDemoMode, updateBalances]);
 
   const switchToAvalancheFuji = async () => {
+    if (!window.ethereum) {
+      toast({
+        title: "No Wallet Found",
+        description: "Please install MetaMask to switch networks",
+        variant: "destructive"
+      });
+      return;
+    }
+
     try {
       await window.ethereum.request({
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: NETWORK_CONFIG.chainId }],
       });
+      
+      toast({
+        title: "Network Switched",
+        description: `Successfully switched to ${NETWORK_CONFIG.chainName}`,
+      });
+      
     } catch (switchError: any) {
       if (switchError.code === 4902) {
+        // Network not added to wallet, try to add it
         try {
           await window.ethereum.request({
             method: 'wallet_addEthereumChain',
             params: [NETWORK_CONFIG],
           });
-        } catch (addError) {
-          throw addError;
+          
+          toast({
+            title: "Network Added",
+            description: `${NETWORK_CONFIG.chainName} has been added to your wallet`,
+          });
+          
+        } catch (addError: any) {
+          console.error(`Error adding ${NETWORK_CONFIG.chainName} network:`, addError);
+          toast({
+            title: "Network Error",
+            description: `Failed to add ${NETWORK_CONFIG.chainName} network to your wallet.`,
+            variant: "destructive"
+          });
         }
+      } else if (switchError.code === 4001) {
+        // User rejected the request
+        toast({
+          title: "Network Switch Cancelled",
+          description: "You cancelled the network switch request",
+          variant: "destructive"
+        });
       } else {
-        throw switchError;
+        console.error(`Error switching to ${NETWORK_CONFIG.chainName}:`, switchError);
+        toast({
+          title: "Network Error", 
+          description: `Failed to switch to ${NETWORK_CONFIG.chainName} network.`,
+          variant: "destructive"
+        });
       }
     }
   };
@@ -197,17 +300,18 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const connectWallet = async () => {
     if (!window.ethereum) {
       toast({
-        title: "MetaMask Required",
-        description: "Please install MetaMask to connect your wallet.",
-        variant: "destructive",
+        title: "Wallet Not Found",
+        description: "Please install MetaMask or another Ethereum wallet",
+        variant: "destructive"
       });
       return;
     }
 
     setIsLoading(true);
+
     try {
+      // Demo mode handling
       if (DEMO_CONFIG.isEnabled) {
-        // Simulate wallet connection in demo mode
         const demoWallet = getDemoWallet();
         if (demoWallet) {
           setTimeout(() => {
@@ -229,34 +333,68 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       }
 
       // Request account access
-      const accounts = await window.ethereum.request({
-        method: 'eth_requestAccounts',
+      const accounts = await window.ethereum.request({ 
+        method: 'eth_requestAccounts' 
       });
 
-      if (accounts.length > 0) {
-        const account = accounts[0];
-        
-        // Get current network
-        const chainId = await window.ethereum.request({
-          method: 'eth_chainId',
-        });
-        
-        setAccount(account);
-        setChainId(chainId);
-        setNetworkName(getNetworkName(chainId));
-        setIsConnected(true);
-        
-        toast({
-          title: "Wallet Connected",
-          description: `Connected to ${getNetworkName(chainId)}`,
-        });
+      if (accounts.length === 0) {
+        throw new Error('No accounts returned from wallet');
       }
+
+      const account = accounts[0];
+      const chainId = await window.ethereum.request({ 
+        method: 'eth_chainId' 
+      });
+
+      // Set basic connection state
+      setAccount(account);
+      setChainId(chainId);
+      setNetworkName(getNetworkName(chainId));
+      setIsConnected(true);
+
+      // Save wallet preference for auto-connection
+      WalletStorage.saveWalletConnection(account, 'metamask');
+
+      // Check network and prompt switch if needed
+      if (!isCorrectNetwork(chainId)) {
+        toast({
+          title: "Network Switch Required",
+          description: `Please switch to ${NETWORK_CONFIG.chainName} to use all features`,
+          variant: "destructive"
+        });
+        // Don't initialize Web3 on wrong network
+      } else {
+        // Initialize Web3 only on correct network
+        try {
+          await web3Integration.initialize();
+          toast({
+            title: "Wallet Connected",
+            description: `Connected to ${getNetworkName(chainId)}`,
+          });
+        } catch (error) {
+          console.error('Web3 initialization failed:', error);
+          toast({
+            title: "Connection Warning", 
+            description: "Wallet connected but Web3 initialization failed",
+            variant: "destructive"
+          });
+        }
+      }
+
     } catch (error: any) {
-      console.error('Error connecting wallet:', error);
+      console.error('Connection failed:', error);
+      
+      let errorMessage = "Failed to connect wallet";
+      if (error.code === 4001) {
+        errorMessage = "Connection rejected by user";
+      } else if (error.code === -32002) {
+        errorMessage = "Connection request already pending";
+      }
+      
       toast({
         title: "Connection Failed",
-        description: error.message || "Failed to connect wallet",
-        variant: "destructive",
+        description: errorMessage,
+        variant: "destructive"
       });
     } finally {
       setIsLoading(false);
@@ -264,15 +402,19 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const disconnectWallet = () => {
+    setIsConnected(false);
     setAccount(null);
     setChainId(null);
     setNetworkName("Unknown");
-    setIsConnected(false);
     setUsdtBalance('0');
     setEthBalance('0');
+    
+    // Clear wallet storage
+    WalletStorage.clearWalletConnection();
+    
     toast({
       title: "Wallet Disconnected",
-      description: "Your wallet has been disconnected",
+      description: "Your wallet has been disconnected"
     });
   };
 
