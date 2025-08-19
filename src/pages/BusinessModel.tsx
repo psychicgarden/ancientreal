@@ -2420,6 +2420,98 @@ const BusinessModel = () => {
         </div>
       </section>
 
+      {/* Investor Return Scenarios */}
+      <section className="py-20 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">Investor Return Scenarios</h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Conservative modeling across different execution speeds with detailed valuation analysis
+            </p>
+          </div>
+          
+          <div className="max-w-6xl mx-auto">
+            <Card className="bg-card/30 backdrop-blur-sm border-border/30">
+              <CardContent className="p-8">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-border/30">
+                        <th className="text-left py-3 px-4 font-medium text-muted-foreground">Scenario</th>
+                        <th className="text-center py-3 px-4 font-medium text-muted-foreground">Volume Hit</th>
+                        <th className="text-center py-3 px-4 font-medium text-muted-foreground">Year-10 Revenue</th>
+                        <th className="text-center py-3 px-4 font-medium text-muted-foreground">Valuation Multiple</th>
+                        <th className="text-center py-3 px-4 font-medium text-muted-foreground">Company EV</th>
+                        <th className="text-center py-3 px-4 font-medium text-muted-foreground">Your 50%</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-border/20">
+                        <td className="py-4 px-4">
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg">🐻</span>
+                            <div>
+                              <div className="font-medium">Bear</div>
+                              <div className="text-sm text-muted-foreground italic">(50% of plan)</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="text-center py-4 px-4">
+                          <div className="font-medium">~2,500 homes</div>
+                          <div className="text-sm text-muted-foreground">1 M users</div>
+                        </td>
+                        <td className="text-center py-4 px-4 font-medium">$410 M</td>
+                        <td className="text-center py-4 px-4 font-medium">10 x</td>
+                        <td className="text-center py-4 px-4 font-bold text-foreground">$4.1 B</td>
+                        <td className="text-center py-4 px-4 font-bold text-primary">$2.0 B</td>
+                      </tr>
+                      <tr className="border-b border-border/20 bg-primary/5">
+                        <td className="py-4 px-4">
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg">🟢</span>
+                            <div>
+                              <div className="font-medium text-primary">Base</div>
+                              <div className="text-sm text-muted-foreground italic">(road-map hit)</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="text-center py-4 px-4">
+                          <div className="font-medium">~5,000 homes</div>
+                          <div className="text-sm text-muted-foreground">2 M users</div>
+                        </td>
+                        <td className="text-center py-4 px-4 font-medium">$827 M</td>
+                        <td className="text-center py-4 px-4 font-medium">13 x</td>
+                        <td className="text-center py-4 px-4 font-bold text-primary">$10.8 B</td>
+                        <td className="text-center py-4 px-4 font-bold text-primary">$5.4 B</td>
+                      </tr>
+                      <tr>
+                        <td className="py-4 px-4">
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg">🚀</span>
+                            <div>
+                              <div className="font-medium">Bull</div>
+                              <div className="text-sm text-muted-foreground italic">(150% of plan)</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="text-center py-4 px-4">
+                          <div className="font-medium">~7,500 homes</div>
+                          <div className="text-sm text-muted-foreground">3 M users</div>
+                        </td>
+                        <td className="text-center py-4 px-4 font-medium">$1.24 B</td>
+                        <td className="text-center py-4 px-4 font-medium">14 x</td>
+                        <td className="text-center py-4 px-4 font-bold text-foreground">$17.4 B</td>
+                        <td className="text-center py-4 px-4 font-bold text-primary">$8.7 B</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
 
       {/* CTA */}
       <section className="py-20 px-4 text-center bg-gradient-primary/5">
