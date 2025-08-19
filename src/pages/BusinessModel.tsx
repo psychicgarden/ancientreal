@@ -239,9 +239,9 @@ const BusinessModel = () => {
             desc: "BlackRock's BUIDL Fund, launched Mar 2024, surpassed $1B AUM in under 12 months—a 200× growth, signaling rapid institutional adoption."
           }, {
             icon: "🗺",
-            title: "Visa Tailwinds",
+            title: "Visas & Tokenization Take Off",
             stat: "50+ Countries",
-            desc: "Issue Digital-Nomad Visas (from just 6 in 2019)"
+            desc: "Nomad visas have exploded from 6 to 66+ nations since 2019. At the same time, real estate tokenization has moved from pilots to legal frameworks in the US, UK, EU, UAE, Singapore, Switzerland, Mexico, Brazil, India—with new markets opening monthly."
           }, {
             icon: "💸",
             title: "Global Mortgage Blackout",
