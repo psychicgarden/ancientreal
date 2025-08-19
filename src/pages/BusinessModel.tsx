@@ -210,7 +210,7 @@ const BusinessModel = () => {
           }, {
             icon: "🏛",
             title: "Institutional Scale-Up",
-            stat: "$5M → $1B+ AUM",
+            stat: "$5M → $1B+",
             desc: "BlackRock's BUIDL Fund, launched Mar 2024, surpassed $1B AUM in under 12 months—a 200× growth, signaling rapid institutional adoption."
           }, {
             icon: "💻",
