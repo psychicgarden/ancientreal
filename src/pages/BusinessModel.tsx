@@ -2535,42 +2535,42 @@ const BusinessModel = () => {
                     <td className="p-6">
                       <div className="flex items-center gap-3">
                         <span className="text-2xl">🐻</span>
-                        <span className="font-medium text-muted-foreground">Bear</span>
+                        <span className="font-medium text-muted-foreground">Bear <span className="italic">(50% of plan)</span></span>
                       </div>
                     </td>
-                    <td className="p-6 font-medium text-foreground">25%</td>
-                    <td className="p-6 font-bold text-foreground">$50M</td>
-                    <td className="p-6 font-medium text-foreground">8x</td>
-                    <td className="p-6 font-bold text-lg text-foreground">$400M</td>
-                    <td className="p-6 font-bold text-xl text-primary">$200M</td>
+                    <td className="p-6 font-medium text-foreground">~2 500 homes • 1 M users</td>
+                    <td className="p-6 font-bold text-foreground">$410 M</td>
+                    <td className="p-6 font-medium text-foreground">10 x</td>
+                    <td className="p-6 font-bold text-lg text-foreground">$4.1 B</td>
+                    <td className="p-6 font-bold text-xl text-primary">$2.0 B</td>
                   </tr>
                   
                   <tr className="border-b border-border/20 hover:bg-muted/20 transition-colors duration-200 bg-primary/5">
                     <td className="p-6">
                       <div className="flex items-center gap-3">
                         <span className="text-2xl">🟢</span>
-                        <span className="font-medium text-primary">Base</span>
+                        <span className="font-medium text-primary">Base <span className="italic">(road-map hit)</span></span>
                       </div>
                     </td>
-                    <td className="p-6 font-medium text-foreground">50%</td>
-                    <td className="p-6 font-bold text-foreground">$100M</td>
-                    <td className="p-6 font-medium text-foreground">10x</td>
-                    <td className="p-6 font-bold text-lg text-foreground">$1.0B</td>
-                    <td className="p-6 font-bold text-xl text-primary">$500M</td>
+                    <td className="p-6 font-medium text-foreground">~5 000 homes • 2 M users</td>
+                    <td className="p-6 font-bold text-foreground">$827 M</td>
+                    <td className="p-6 font-medium text-foreground">13 x</td>
+                    <td className="p-6 font-bold text-lg text-foreground">$10.8 B</td>
+                    <td className="p-6 font-bold text-xl text-primary">$5.4 B</td>
                   </tr>
                   
                   <tr className="hover:bg-muted/20 transition-colors duration-200">
                     <td className="p-6">
                       <div className="flex items-center gap-3">
                         <span className="text-2xl">🚀</span>
-                        <span className="font-medium text-accent">Bull</span>
+                        <span className="font-medium text-accent">Bull <span className="italic">(150% of plan)</span></span>
                       </div>
                     </td>
-                    <td className="p-6 font-medium text-foreground">100%</td>
-                    <td className="p-6 font-bold text-foreground">$200M</td>
-                    <td className="p-6 font-medium text-foreground">12x</td>
-                    <td className="p-6 font-bold text-lg text-foreground">$2.4B</td>
-                    <td className="p-6 font-bold text-xl text-accent">$1.2B</td>
+                    <td className="p-6 font-medium text-foreground">~7 500 homes • 3 M users</td>
+                    <td className="p-6 font-bold text-foreground">$1.24 B</td>
+                    <td className="p-6 font-medium text-foreground">14 x</td>
+                    <td className="p-6 font-bold text-lg text-foreground">$17.4 B</td>
+                    <td className="p-6 font-bold text-xl text-accent">$8.7 B</td>
                   </tr>
                 </tbody>
               </table>
