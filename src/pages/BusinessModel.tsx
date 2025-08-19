@@ -3,7 +3,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Code, Target, Rocket, Building2, BarChart3, Zap, Network } from "lucide-react";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Code, Target, Rocket, Building2, BarChart3, Zap, Network, Menu, Home, Users, Briefcase, CreditCard, Plane, Code2, FileText, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SectionHeader from "@/components/SectionHeader";
 import PlatformAssessment from "@/components/PlatformAssessment";
@@ -143,6 +151,78 @@ const BusinessModel = () => {
   const navigate = useNavigate();
   const totalPlatformFees = flywheelData.reduce((sum, flip) => sum + flip.platformFee, 0);
   return <div className="min-h-screen bg-gradient-subtle">
+      {/* Navigation Menu */}
+      <div className="fixed top-4 right-4 z-50">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button 
+              variant="outline" 
+              size="icon" 
+              className="h-12 w-12 bg-background/80 backdrop-blur-sm border-border/50 hover:bg-background/90 shadow-lg"
+            >
+              <Menu className="h-5 w-5" />
+              <span className="sr-only">Open navigation menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent 
+            align="end" 
+            className="w-56 bg-background/95 backdrop-blur-sm border-border/50 shadow-xl"
+            sideOffset={8}
+          >
+            <DropdownMenuLabel className="font-semibold">Navigate to</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            
+            <DropdownMenuItem onClick={() => navigate("/")} className="cursor-pointer">
+              <Home className="mr-2 h-4 w-4" />
+              <span>Home</span>
+            </DropdownMenuItem>
+            
+            <DropdownMenuItem onClick={() => navigate("/investor-portal")} className="cursor-pointer">
+              <Briefcase className="mr-2 h-4 w-4" />
+              <span>Investor Portal</span>
+            </DropdownMenuItem>
+            
+            <DropdownMenuItem onClick={() => navigate("/portfolio")} className="cursor-pointer">
+              <BarChart3 className="mr-2 h-4 w-4" />
+              <span>Portfolio</span>
+            </DropdownMenuItem>
+            
+            <DropdownMenuItem onClick={() => navigate("/banking")} className="cursor-pointer">
+              <CreditCard className="mr-2 h-4 w-4" />
+              <span>Banking</span>
+            </DropdownMenuItem>
+            
+            <DropdownMenuSeparator />
+            
+            <DropdownMenuItem onClick={() => navigate("/traveler")} className="cursor-pointer">
+              <Plane className="mr-2 h-4 w-4" />
+              <span>Traveler Portal</span>
+            </DropdownMenuItem>
+            
+            <DropdownMenuItem onClick={() => navigate("/community")} className="cursor-pointer">
+              <Users className="mr-2 h-4 w-4" />
+              <span>Community</span>
+            </DropdownMenuItem>
+            
+            <DropdownMenuItem onClick={() => navigate("/developers")} className="cursor-pointer">
+              <Code2 className="mr-2 h-4 w-4" />
+              <span>Developers</span>
+            </DropdownMenuItem>
+            
+            <DropdownMenuSeparator />
+            
+            <DropdownMenuItem onClick={() => navigate("/legal-portal")} className="cursor-pointer">
+              <FileText className="mr-2 h-4 w-4" />
+              <span>Legal Portal</span>
+            </DropdownMenuItem>
+            
+            <DropdownMenuItem onClick={() => navigate("/test")} className="cursor-pointer">
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Smart Contract Test</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
       {/* Wide Banner Hero Section */}
       <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
         {/* Background Image */}
