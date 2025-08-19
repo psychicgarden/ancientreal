@@ -7,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useWallet } from '@/contexts/WalletContext';
 import { useLocation } from 'react-router-dom';
+import { useErrorHandler } from '@/lib/error-handler';
 
 interface ChatMessage {
   id: string;
