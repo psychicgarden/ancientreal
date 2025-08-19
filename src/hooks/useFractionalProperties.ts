@@ -1,9 +1,33 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { calculatePropertyAppreciation } from '@/lib/finance';
+
+// Import all relevant property assets
 import bohoArtDecoLoft from '@/assets/boho-art-deco-loft-mexico.jpg';
 import luxuryBohoBungalow from '@/assets/luxury-boho-beach-bungalow-bahia.jpg';
 import artDecoCoastalEriceira from '@/assets/art-deco-coastal-ericeira.jpg';
+import villaTulum from '@/assets/villa-tulum.jpg';
+import villaEriceira from '@/assets/villa-ericeira-portugal.jpg';
+import villaBahia from '@/assets/villa-bahia.jpg';
+import villaBali from '@/assets/villa-bali.jpg';
+import villaGreece from '@/assets/villa-greece.jpg';
+import villaMexico from '@/assets/villa-mexico.jpg';
+import beachChalet from '@/assets/beach-chalet.jpg';
+import beachHouseMaldives from '@/assets/beach-house-maldives.jpg';
+import beachHouseMykonos from '@/assets/beach-house-mykonos.jpg';
+import apartmentNyc from '@/assets/apartment-nyc.jpg';
+import apartmentGreece from '@/assets/apartment-greece.jpg';
+import penthouseMexico from '@/assets/penthouse-mexico.jpg';
+import loftBahia from '@/assets/loft-bahia.jpg';
+import desertOasisMorocco from '@/assets/desert-oasis-morocco.jpg';
+import desertOasisBahia from '@/assets/desert-oasis-bahia.jpg';
+import jungleLodgeCostarica from '@/assets/jungle-lodge-costarica.jpg';
+import baliJungleResort from '@/assets/bali-jungle-resort.jpg';
+import ericeiraCoastalApartment from '@/assets/ericeira-coastal-apartment.jpg';
+import artisticBohoCoastalEriceira from '@/assets/artistic-boho-coastal-ericeira.jpg';
+import artDecoLoftMexico from '@/assets/art-deco-loft-mexico.jpg';
+import bahiaBeachBungalow from '@/assets/bahia-beach-bungalow.jpg';
+import villaCorfu from '@/assets/villa-corfu-greece.jpg';
 
 export interface FractionalProperty {
   id: string;
@@ -44,10 +68,82 @@ export interface PropertyInvestmentData {
   isVillage?: boolean;
 }
 
+// Comprehensive image mapping for property names and asset paths
 const imageOverrides: Record<string, string> = {
+  // Property name overrides
   'Art Deco Loft': bohoArtDecoLoft,
   'Bahia Ocean Villa': luxuryBohoBungalow,
   'Oceanview Loft': artDecoCoastalEriceira,
+  'Villa Tulum': villaTulum,
+  'Villa Ericeira': villaEriceira,
+  'Villa Bahia': villaBahia,
+  'Villa Bali': villaBali,
+  'Villa Greece': villaGreece,
+  'Villa Mexico': villaMexico,
+  'Beach Chalet': beachChalet,
+  'Beach House Maldives': beachHouseMaldives,
+  'Beach House Mykonos': beachHouseMykonos,
+  'Apartment NYC': apartmentNyc,
+  'Apartment Greece': apartmentGreece,
+  'Penthouse Mexico': penthouseMexico,
+  'Loft Bahia': loftBahia,
+  'Desert Oasis Morocco': desertOasisMorocco,
+  'Desert Oasis Bahia': desertOasisBahia,
+  'Jungle Lodge Costa Rica': jungleLodgeCostarica,
+  'Bali Jungle Resort': baliJungleResort,
+  'Ericeira Coastal Apartment': ericeiraCoastalApartment,
+  'Artistic Boho Coastal Ericeira': artisticBohoCoastalEriceira,
+  'Art Deco Loft Mexico': artDecoLoftMexico,
+  'Bahia Beach Bungalow': bahiaBeachBungalow,
+  'Villa Corfu': villaCorfu,
+};
+
+// Asset path mapping for development asset URLs
+const assetPathMapping: Record<string, string> = {
+  'villa-tulum.jpg': villaTulum,
+  'villa-ericeira-portugal.jpg': villaEriceira,
+  'villa-bahia.jpg': villaBahia,
+  'villa-bali.jpg': villaBali,
+  'villa-greece.jpg': villaGreece,
+  'villa-mexico.jpg': villaMexico,
+  'beach-chalet.jpg': beachChalet,
+  'beach-house-maldives.jpg': beachHouseMaldives,
+  'beach-house-mykonos.jpg': beachHouseMykonos,
+  'apartment-nyc.jpg': apartmentNyc,
+  'apartment-greece.jpg': apartmentGreece,
+  'penthouse-mexico.jpg': penthouseMexico,
+  'loft-bahia.jpg': loftBahia,
+  'desert-oasis-morocco.jpg': desertOasisMorocco,
+  'desert-oasis-bahia.jpg': desertOasisBahia,
+  'jungle-lodge-costarica.jpg': jungleLodgeCostarica,
+  'bali-jungle-resort.jpg': baliJungleResort,
+  'ericeira-coastal-apartment.jpg': ericeiraCoastalApartment,
+  'artistic-boho-coastal-ericeira.jpg': artisticBohoCoastalEriceira,
+  'art-deco-loft-mexico.jpg': artDecoLoftMexico,
+  'boho-art-deco-loft-mexico.jpg': bohoArtDecoLoft,
+  'luxury-boho-beach-bungalow-bahia.jpg': luxuryBohoBungalow,
+  'art-deco-coastal-ericeira.jpg': artDecoCoastalEriceira,
+  'bahia-beach-bungalow.jpg': bahiaBeachBungalow,
+  'villa-corfu-greece.jpg': villaCorfu,
+};
+
+// Function to resolve image path
+const resolveImagePath = (propertyName: string, imageUrl: string): string => {
+  // First try property name override
+  if (imageOverrides[propertyName]) {
+    return imageOverrides[propertyName];
+  }
+  
+  // If imageUrl starts with /src/assets/, extract filename and map it
+  if (imageUrl?.startsWith('/src/assets/')) {
+    const filename = imageUrl.split('/').pop();
+    if (filename && assetPathMapping[filename]) {
+      return assetPathMapping[filename];
+    }
+  }
+  
+  // Return original URL or placeholder as fallback
+  return imageUrl || '/placeholder.svg';
 };
 
 export const useFractionalProperties = () => {
@@ -83,7 +179,7 @@ export const useFractionalProperties = () => {
     // Handle null values with fallbacks
     const propertyName = prop.property_name || `Property ${prop.id.slice(0, 8)}`;
     const propertyLocation = prop.property_location || 'Location TBD';
-    const propertyImage = imageOverrides[propertyName] ?? prop.property_image_url ?? '/placeholder.svg';
+    const propertyImage = resolveImagePath(propertyName, prop.property_image_url);
 
     return {
       id: prop.id,
