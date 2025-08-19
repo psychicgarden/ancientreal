@@ -2421,7 +2421,7 @@ const BusinessModel = () => {
       </section>
 
       {/* Investor Return Scenarios */}
-      <section className="py-20 px-4">
+      <section className="px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4">Investor Return Scenarios</h2>
