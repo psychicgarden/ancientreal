@@ -18,6 +18,7 @@ import OneTimeReset from "@/components/admin/OneTimeReset";
 import RentalIncomeTracker from "@/components/RentalIncomeTracker";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { shouldAllowPortfolioReset } from "@/config/demo";
 
 const Portfolio = () => {
   const { isConnected, account, connectWallet } = useWallet();
@@ -324,8 +325,8 @@ const Portfolio = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-      {/* Portfolio Reset Component */}
-      {account && <OneTimeReset wallet={account} />}
+      {/* Portfolio Reset Component - Only in Demo Mode */}
+      {account && shouldAllowPortfolioReset() && <OneTimeReset wallet={account} />}
       
       {/* Header */}
       <div className="border-b bg-background/80 backdrop-blur-sm">

@@ -27,6 +27,7 @@ import {
 import { PlatformAnalytics } from '@/components/PlatformAnalytics';
 import { useWallet } from '@/contexts/WalletContext';
 import { resetPortfolio } from '@/lib/admin/resetPortfolio';
+import { shouldAllowPortfolioReset } from '@/config/demo';
 
 interface ProjectSubmission {
   id: string;
@@ -172,6 +173,16 @@ const AdminProjects = () => {
   };
 
   const handlePortfolioReset = async () => {
+    // Check demo mode first
+    if (!shouldAllowPortfolioReset()) {
+      toast({ 
+        title: 'Feature Disabled', 
+        description: 'Portfolio reset is only available in demo mode.',
+        variant: 'destructive' 
+      });
+      return;
+    }
+
     if (!account) {
       toast({ 
         title: 'Wallet Not Connected', 
@@ -275,7 +286,7 @@ const AdminProjects = () => {
               onClick={handlePortfolioReset} 
               variant="destructive" 
               className="self-start md:self-auto"
-              disabled={resetting || !account}
+              disabled={resetting || !account || !shouldAllowPortfolioReset()}
             >
               {resetting ? (
                 <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
