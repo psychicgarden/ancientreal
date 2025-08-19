@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useWallet } from '@/contexts/WalletContext';
 import { api } from '@/lib/api';
 import { useErrorHandler } from '@/lib/error-handler';
+import { isDemoMode, DEMO_CONFIG } from '@/config/demo';
+import { seedDemoStakingData } from '@/lib/demo-staking-seeder';
 
 interface StakingData {
   id: string;
@@ -35,21 +37,47 @@ export const useStaking = () => {
     }
 
     try {
-      const result = await api.supabase.getUserStaking(account);
+      // In demo mode, provide fallback wallet address if needed
+      const walletAddress = isDemoMode() ? DEMO_CONFIG.testWalletAddress : account;
+      const result = await api.supabase.getUserStaking(walletAddress);
       
       if (result.success) {
         setStakingData(result.data || null);
       } else {
-        handleError(new Error(result.error), {
+        // In demo mode, create default data if none exists
+        if (isDemoMode() && result.error?.includes('No data')) {
+          setStakingData({
+            id: 'demo-staking',
+            total_staked: 5000,
+            total_earned: 245.50,
+            current_apy: 8.0,
+            last_yield_calculation: new Date().toISOString(),
+            is_active: true
+          });
+        } else {
+          handleError(new Error(result.error), {
+            operation: 'load_staking_data',
+            component: 'useStaking'
+          });
+        }
+      }
+    } catch (error) {
+      // In demo mode, provide fallback data
+      if (isDemoMode()) {
+        setStakingData({
+          id: 'demo-staking',
+          total_staked: 5000,
+          total_earned: 245.50,
+          current_apy: 8.0,
+          last_yield_calculation: new Date().toISOString(),
+          is_active: true
+        });
+      } else {
+        handleError(error, {
           operation: 'load_staking_data',
           component: 'useStaking'
         });
       }
-    } catch (error) {
-      handleError(error, {
-        operation: 'load_staking_data',
-        component: 'useStaking'
-      });
     } finally {
       setLoading(false);
     }
@@ -59,7 +87,9 @@ export const useStaking = () => {
     if (!account) return;
 
     try {
-      const result = await api.supabase.getUserTransactions(account);
+      // In demo mode, provide fallback wallet address if needed
+      const walletAddress = isDemoMode() ? DEMO_CONFIG.testWalletAddress : account;
+      const result = await api.supabase.getUserTransactions(walletAddress);
       
       if (result.success && result.data) {
         // Filter for staking transactions
@@ -67,20 +97,57 @@ export const useStaking = () => {
           ['deposit', 'withdrawal', 'yield'].includes(tx.transaction_type)
         );
         setTransactions(stakingTxs);
+      } else if (isDemoMode()) {
+        // Provide demo transactions
+        setTransactions([
+          {
+            id: 'demo-tx-1',
+            transaction_type: 'deposit',
+            amount: 5000,
+            transaction_hash: null,
+            status: 'completed',
+            created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+          },
+          {
+            id: 'demo-tx-2',
+            transaction_type: 'yield',
+            amount: 12.25,
+            transaction_hash: null,
+            status: 'completed',
+            created_at: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString()
+          }
+        ]);
       }
     } catch (error) {
-      handleError(error, {
-        operation: 'load_staking_transactions',
-        component: 'useStaking'
-      });
+      if (isDemoMode()) {
+        // Provide demo transactions as fallback
+        setTransactions([
+          {
+            id: 'demo-tx-1',
+            transaction_type: 'deposit',
+            amount: 5000,
+            transaction_hash: null,
+            status: 'completed',
+            created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+          }
+        ]);
+      } else {
+        handleError(error, {
+          operation: 'load_staking_transactions',
+          component: 'useStaking'
+        });
+      }
     }
   };
 
   const createStakingTransaction = async (type: string, amount: number) => {
     if (!account) throw new Error('Wallet not connected');
 
+    // In demo mode, use demo wallet address and simulate transaction
+    const walletAddress = isDemoMode() ? DEMO_CONFIG.testWalletAddress : account;
+    
     const result = await api.supabase.createStakingTransaction({
-      user_wallet_address: account.toLowerCase(),
+      user_wallet_address: walletAddress.toLowerCase(),
       transaction_type: type,
       amount,
       status: 'pending'
@@ -94,6 +161,9 @@ export const useStaking = () => {
   };
 
   useEffect(() => {
+    if (isDemoMode()) {
+      seedDemoStakingData();
+    }
     loadStakingData();
     loadTransactions();
   }, [account]);
