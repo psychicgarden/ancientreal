@@ -3,8 +3,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Code, Target, Rocket, Building2, BarChart3 } from "lucide-react";
+import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Code, Target, Rocket, Building2, BarChart3, Zap, Network } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import SectionHeader from "@/components/SectionHeader";
 import PlatformAssessment from "@/components/PlatformAssessment";
 
 // Import property images
@@ -441,6 +442,114 @@ const BusinessModel = () => {
                   <div className="mt-8 p-6 bg-primary/10 rounded-lg">
                     <div className="text-3xl font-bold text-primary">$24.53M</div>
                     <div className="text-sm text-muted-foreground">Total 10-Year Revenue Capture</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Scaling Beyond Development */}
+              <div className="mb-16 mt-16">
+                <SectionHeader 
+                  title="Scaling Beyond Development"
+                  subtitle="From boutique property flips to platform infrastructure serving millions"
+                />
+                
+                <div className="max-w-6xl mx-auto space-y-12">
+                  {/* Context Bridge */}
+                  <div className="text-center space-y-6">
+                    <p className="text-lg text-muted-foreground leading-relaxed max-w-4xl mx-auto">
+                      The 4 strategic property flips demonstrate our model works for early adopters—proving we can 
+                      create profitable, community-centered developments that attract digital nomads. But reaching 
+                      <span className="text-primary font-semibold"> 50+ million nomads</span> requires a fundamentally different approach.
+                    </p>
+                    
+                    <div className="grid md:grid-cols-2 gap-8 mt-12">
+                      <Card className="p-6 bg-gradient-to-br from-orange-500/10 to-red-500/10 border-orange-500/30">
+                        <div className="text-center">
+                          <Building className="w-12 h-12 text-orange-500 mx-auto mb-4" />
+                          <h3 className="text-xl font-bold mb-3">Boutique Development</h3>
+                          <div className="text-3xl font-bold text-orange-500 mb-2">$24M</div>
+                          <p className="text-sm text-muted-foreground mb-4">4 Properties • 100s of Users</p>
+                          <div className="space-y-2 text-sm text-left">
+                            <div className="flex items-center space-x-2">
+                              <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                              <span>Direct property development</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                              <span>Limited scalability</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                              <span>Capital-intensive growth</span>
+                            </div>
+                          </div>
+                        </div>
+                      </Card>
+                      
+                      <Card className="p-6 bg-gradient-to-br from-blue-500/10 to-purple-500/10 border-blue-500/30">
+                        <div className="text-center">
+                          <Globe className="w-12 h-12 text-blue-500 mx-auto mb-4" />
+                          <h3 className="text-xl font-bold mb-3">Platform Economics</h3>
+                          <div className="text-3xl font-bold text-blue-500 mb-2">$827M</div>
+                          <p className="text-sm text-muted-foreground mb-4">7,500 Properties • 2M Users</p>
+                          <div className="space-y-2 text-sm text-left">
+                            <div className="flex items-center space-x-2">
+                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              <span>Enable others to build</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              <span>Network effects at scale</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                              <span>Technology-driven growth</span>
+                            </div>
+                          </div>
+                        </div>
+                      </Card>
+                    </div>
+                  </div>
+                  
+                  {/* Platform Transformation Visual */}
+                  <div className="bg-gradient-card p-8 rounded-lg border border-border/30">
+                    <h3 className="text-2xl font-bold text-center mb-8">The Platform Transformation</h3>
+                    
+                    <div className="flex items-center justify-center space-x-8 mb-8">
+                      <div className="text-center">
+                        <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mb-3">
+                          <Zap className="w-8 h-8 text-primary" />
+                        </div>
+                        <div className="font-semibold">Proof of Concept</div>
+                        <div className="text-sm text-muted-foreground">Years 0-3</div>
+                      </div>
+                      
+                      <ArrowRight className="w-8 h-8 text-muted-foreground" />
+                      
+                      <div className="text-center">
+                        <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mb-3">
+                          <Network className="w-8 h-8 text-green-500" />
+                        </div>
+                        <div className="font-semibold">Platform Infrastructure</div>
+                        <div className="text-sm text-muted-foreground">$7M Investment</div>
+                      </div>
+                      
+                      <ArrowRight className="w-8 h-8 text-muted-foreground" />
+                      
+                      <div className="text-center">
+                        <div className="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center mb-3">
+                          <Globe className="w-8 h-8 text-blue-500" />
+                        </div>
+                        <div className="font-semibold">Network Scale</div>
+                        <div className="text-sm text-muted-foreground">Years 3-10</div>
+                      </div>
+                    </div>
+                    
+                    <p className="text-center text-muted-foreground max-w-2xl mx-auto">
+                      The <span className="text-primary font-semibold">$7M infrastructure investment</span> creates the 
+                      technology platform, legal framework, and operational systems needed to enable thousands of 
+                      developers to build nomad-focused properties using our tools, financing, and community.
+                    </p>
                   </div>
                 </div>
               </div>
