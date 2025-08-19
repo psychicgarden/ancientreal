@@ -908,12 +908,293 @@ const BusinessModel = () => {
 
               {/* Year-based Sub-Tabs for Complete 36-Month Timeline */}
               <Card className="p-8 bg-gradient-card border-none shadow-luxury">
-                <Tabs defaultValue="year-1" className="w-full">
-                  <TabsList className="grid w-full grid-cols-3 mb-8">
+                <Tabs defaultValue="overall-funds" className="w-full">
+                  <TabsList className="grid w-full grid-cols-4 mb-8">
+                    <TabsTrigger value="overall-funds">Overall Use of Funds</TabsTrigger>
                     <TabsTrigger value="year-1">Year 1: Foundation & Mexico</TabsTrigger>
                     <TabsTrigger value="year-2">Year 2: Brazil & Spain Entry</TabsTrigger>
                     <TabsTrigger value="year-3">Year 3: Multi-Market Expansion</TabsTrigger>
                   </TabsList>
+
+                  {/* Overall Use of Funds Tab */}
+                  <TabsContent value="overall-funds" className="space-y-8">
+                    <div className="space-y-8">
+                      {/* Header */}
+                      <div className="relative p-8 bg-gradient-to-br from-[hsl(var(--gold))]/10 via-[hsl(var(--accent))]/5 to-transparent border border-[hsl(var(--gold))]/20 rounded-xl shadow-luxury">
+                        <div className="absolute inset-0 bg-gradient-to-r from-[hsl(var(--gold))]/5 to-transparent rounded-xl"></div>
+                        <div className="relative flex items-center space-x-4">
+                          <div className="w-16 h-16 bg-gradient-to-br from-[hsl(var(--gold))] to-[hsl(var(--accent))] rounded-2xl flex items-center justify-center shadow-lg">
+                            <span className="text-3xl">📊</span>
+                          </div>
+                          <div className="space-y-2">
+                            <h3 className="text-3xl font-bold bg-gradient-to-r from-[hsl(var(--foreground))] to-[hsl(var(--muted-foreground))] bg-clip-text text-transparent">
+                              Core Expenditure Breakdown — $7.00M Total
+                            </h3>
+                          </div>
+                        </div>
+                        <div className="absolute bottom-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-[hsl(var(--gold))]/40 to-transparent"></div>
+                      </div>
+
+                      {/* Core Expenditure Categories */}
+                      <div className="grid gap-6">
+                        {/* 1. Land & Build */}
+                        <Card className="p-6 bg-gradient-to-r from-green-500/10 to-emerald-500/5 border border-green-500/20">
+                          <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                              <h4 className="text-xl font-bold text-green-700 dark:text-green-400">1. Land & Build</h4>
+                              <span className="text-2xl font-bold text-green-600">$5.10M</span>
+                            </div>
+                            <div className="grid md:grid-cols-3 gap-4 text-sm">
+                              <div className="flex justify-between">
+                                <span>$2.00M →</span>
+                                <span>Land acquisitions (6 coastal plots)</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>$2.75M →</span>
+                                <span>Construction + finishes for first resort</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>$350K →</span>
+                                <span>Land & construction buffer (raised from $200K for overruns, opportunistic land grabs, or upgrades)</span>
+                              </div>
+                            </div>
+                          </div>
+                        </Card>
+
+                        {/* 2. Legal / Permits / Compliance */}
+                        <Card className="p-6 bg-gradient-to-r from-blue-500/10 to-cyan-500/5 border border-blue-500/20">
+                          <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                              <h4 className="text-xl font-bold text-blue-700 dark:text-blue-400">2. Legal / Permits / Compliance</h4>
+                              <span className="text-2xl font-bold text-blue-600">$450K</span>
+                            </div>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                              <div className="flex justify-between">
+                                <span>$100K →</span>
+                                <span>Counsel retainers (Mexico, Brazil, Spain, Greece)</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>$120K →</span>
+                                <span>Entity setups (SPVs, fideicomiso trusts, HoldingCos, DAO structuring)</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>$110K →</span>
+                                <span>Closings, filings, notary & cross-border structuring</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>$120K →</span>
+                                <span>Licensing, insurance, compliance renewals (with $25K added buffer baked in)</span>
+                              </div>
+                            </div>
+                          </div>
+                        </Card>
+
+                        {/* 3. Platform & Smart Contracts */}
+                        <Card className="p-6 bg-gradient-to-r from-purple-500/10 to-violet-500/5 border border-purple-500/20">
+                          <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                              <h4 className="text-xl font-bold text-purple-700 dark:text-purple-400">3. Platform & Smart Contracts</h4>
+                              <span className="text-2xl font-bold text-purple-600">$655K</span>
+                            </div>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                              <div className="flex justify-between">
+                                <span>$360K →</span>
+                                <span>CTO hire (3 years comp; full build + oversight)</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>$45K →</span>
+                                <span>Compliance + KYC/AML integrations</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>$125K →</span>
+                                <span>Secondary market & liquidity features (boosted for robustness)</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>$125K →</span>
+                                <span>DAO & governance tooling (boosted for full functionality)</span>
+                              </div>
+                            </div>
+                          </div>
+                        </Card>
+
+                        {/* 4. Marketing & Sales */}
+                        <Card className="p-6 bg-gradient-to-r from-orange-500/10 to-red-500/5 border border-orange-500/20">
+                          <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                              <h4 className="text-xl font-bold text-orange-700 dark:text-orange-400">4. Marketing & Sales</h4>
+                              <span className="text-2xl font-bold text-orange-600">$260K</span>
+                            </div>
+                            <div className="mb-2 text-sm text-muted-foreground">(spread across 36 months, lean but global-capable)</div>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4 text-sm">
+                              <div className="flex justify-between">
+                                <span>$50K →</span>
+                                <span>Brand development + launch campaigns</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>$40K →</span>
+                                <span>Mazunte presale push</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>$80K →</span>
+                                <span>Bahia presale + multi-market rollouts</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>$50K →</span>
+                                <span>Global campaign (Spain + Greece + cross-market)</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>$40K →</span>
+                                <span>Content, PR, digital ad buys</span>
+                              </div>
+                            </div>
+                          </div>
+                        </Card>
+
+                        {/* 5. Operations / Buffers / PM */}
+                        <Card className="p-6 bg-gradient-to-r from-amber-500/10 to-yellow-500/5 border border-amber-500/20">
+                          <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                              <h4 className="text-xl font-bold text-amber-700 dark:text-amber-400">5. Operations / Buffers / PM</h4>
+                              <span className="text-2xl font-bold text-amber-600">$680K</span>
+                            </div>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+                              <div className="flex justify-between">
+                                <span>$150K →</span>
+                                <span>Core PM salary + founder stipend</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>$120K →</span>
+                                <span>Local PMs / staff across 4 sites</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>$90K →</span>
+                                <span>Travel & site planning</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>$70K →</span>
+                                <span>SaaS, platform hosting, admin stack</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>$60K →</span>
+                                <span>Advisory, accounting, audit</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span>$190K →</span>
+                                <span>Treasury buffers (6-month reserves to smooth cashflow)</span>
+                              </div>
+                            </div>
+                          </div>
+                        </Card>
+
+                        {/* 6. Liquidity Pool Stake */}
+                        <Card className="p-6 bg-gradient-to-r from-teal-500/10 to-cyan-500/5 border border-teal-500/20">
+                          <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                              <h4 className="text-xl font-bold text-teal-700 dark:text-teal-400">6. Liquidity Pool Stake</h4>
+                              <span className="text-2xl font-bold text-teal-600">$185K</span>
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              Locked + staked for investor confidence and liquidity depth
+                            </div>
+                          </div>
+                        </Card>
+                      </div>
+
+                      {/* Clean Totals */}
+                      <Card className="p-8 bg-gradient-to-r from-[hsl(var(--gold))]/20 to-[hsl(var(--accent))]/10 border border-[hsl(var(--gold))]/30">
+                        <div className="space-y-6">
+                          <div className="flex items-center space-x-3 mb-6">
+                            <span className="text-2xl">✅</span>
+                            <h3 className="text-2xl font-bold text-[hsl(var(--gold))]">Clean Totals</h3>
+                          </div>
+                          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div className="flex justify-between">
+                              <span>Land & Build:</span>
+                              <span className="font-bold text-green-600">$5.10M</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Legal / Permits / Compliance:</span>
+                              <span className="font-bold text-blue-600">$450K</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Platform & Smart Contracts:</span>
+                              <span className="font-bold text-purple-600">$655K</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Marketing & Sales:</span>
+                              <span className="font-bold text-orange-600">$260K</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Operations / Buffers / PM:</span>
+                              <span className="font-bold text-amber-600">$680K</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Liquidity Pool Stake:</span>
+                              <span className="font-bold text-teal-600">$185K</span>
+                            </div>
+                          </div>
+                          <div className="border-t pt-4">
+                            <div className="flex justify-between text-xl">
+                              <span className="font-bold">Overall:</span>
+                              <span className="font-bold text-[hsl(var(--gold))]">$7.00M</span>
+                            </div>
+                          </div>
+                        </div>
+                      </Card>
+
+                      {/* Why This Version Wins */}
+                      <Card className="p-8 bg-gradient-to-r from-emerald-500/10 to-green-500/5 border border-emerald-500/20">
+                        <div className="space-y-6">
+                          <div className="flex items-center space-x-3 mb-6">
+                            <span className="text-2xl">💡</span>
+                            <h3 className="text-2xl font-bold text-emerald-700 dark:text-emerald-400">Why This Version Wins</h3>
+                          </div>
+                          <div className="space-y-4">
+                            <div className="flex items-start space-x-3">
+                              <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <span className="text-white text-sm">✓</span>
+                              </div>
+                              <div>
+                                <span className="font-semibold">Legal reserve:</span> Strong enough to absorb multi-jurisdiction complexity without being bloated.
+                              </div>
+                            </div>
+                            <div className="flex items-start space-x-3">
+                              <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <span className="text-white text-sm">✓</span>
+                              </div>
+                              <div>
+                                <span className="font-semibold">Construction buffer:</span> Upgraded, giving you protection against inflation and room to pounce on land or material opportunities.
+                              </div>
+                            </div>
+                            <div className="flex items-start space-x-3">
+                              <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <span className="text-white text-sm">✓</span>
+                              </div>
+                              <div>
+                                <span className="font-semibold">Platform:</span> Fully funded, no risk of underbuilding the tech.
+                              </div>
+                            </div>
+                            <div className="flex items-start space-x-3">
+                              <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <span className="text-white text-sm">✓</span>
+                              </div>
+                              <div>
+                                <span className="font-semibold">Operations:</span> Lean and steady, with a healthy treasury buffer.
+                              </div>
+                            </div>
+                            <div className="flex items-start space-x-3">
+                              <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <span className="text-white text-sm">✓</span>
+                              </div>
+                              <div>
+                                <span className="font-semibold">Liquidity:</span> The $185K stake shows investors you're serious about DeFi alignment.
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </Card>
+                    </div>
+                  </TabsContent>
 
                   {/* Year 1 Tab */}
                   <TabsContent value="year-1" className="space-y-8">
