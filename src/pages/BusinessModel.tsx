@@ -2503,6 +2503,88 @@ const BusinessModel = () => {
         </div>
       </section>
 
+      {/* Return Scenarios Section */}
+      <section className="py-16 px-4 bg-gradient-to-br from-background via-muted/10 to-background">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              Your Return Scenarios
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Even at half-speed execution, strong returns. Conservative modeling with 50% equity assumption.
+            </p>
+          </div>
+
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-background/95 via-muted/5 to-background/95 backdrop-blur-sm border border-border/50 shadow-2xl">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5"></div>
+            
+            <div className="relative overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-border/30">
+                    <th className="text-left p-6 font-semibold text-foreground">Scenario</th>
+                    <th className="text-left p-6 font-semibold text-foreground">Volume Hit</th>
+                    <th className="text-left p-6 font-semibold text-foreground">Year-10 Revenue</th>
+                    <th className="text-left p-6 font-semibold text-foreground">Valuation Multiple</th>
+                    <th className="text-left p-6 font-semibold text-foreground">Company EV</th>
+                    <th className="text-left p-6 font-semibold text-foreground">Your 50%</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-border/20 hover:bg-muted/20 transition-colors duration-200">
+                    <td className="p-6">
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">🐻</span>
+                        <span className="font-medium text-muted-foreground">Bear</span>
+                      </div>
+                    </td>
+                    <td className="p-6 font-medium text-foreground">25%</td>
+                    <td className="p-6 font-bold text-foreground">$50M</td>
+                    <td className="p-6 font-medium text-foreground">8x</td>
+                    <td className="p-6 font-bold text-lg text-foreground">$400M</td>
+                    <td className="p-6 font-bold text-xl text-primary">$200M</td>
+                  </tr>
+                  
+                  <tr className="border-b border-border/20 hover:bg-muted/20 transition-colors duration-200 bg-primary/5">
+                    <td className="p-6">
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">🟢</span>
+                        <span className="font-medium text-primary">Base</span>
+                      </div>
+                    </td>
+                    <td className="p-6 font-medium text-foreground">50%</td>
+                    <td className="p-6 font-bold text-foreground">$100M</td>
+                    <td className="p-6 font-medium text-foreground">10x</td>
+                    <td className="p-6 font-bold text-lg text-foreground">$1.0B</td>
+                    <td className="p-6 font-bold text-xl text-primary">$500M</td>
+                  </tr>
+                  
+                  <tr className="hover:bg-muted/20 transition-colors duration-200">
+                    <td className="p-6">
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">🚀</span>
+                        <span className="font-medium text-accent">Bull</span>
+                      </div>
+                    </td>
+                    <td className="p-6 font-medium text-foreground">100%</td>
+                    <td className="p-6 font-bold text-foreground">$200M</td>
+                    <td className="p-6 font-medium text-foreground">12x</td>
+                    <td className="p-6 font-bold text-lg text-foreground">$2.4B</td>
+                    <td className="p-6 font-bold text-xl text-accent">$1.2B</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <div className="p-6 bg-muted/10 border-t border-border/30">
+              <p className="text-sm text-muted-foreground text-center">
+                📊 Base case represents our primary roadmap target with proven market traction
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="py-20 px-4 text-center bg-gradient-primary/5">
         <div className="max-w-4xl mx-auto">
