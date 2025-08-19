@@ -798,38 +798,38 @@ const BusinessModel = () => {
 
 
               {/* Three-Phase Funnel Overview */}
-              <Card className="p-8 bg-gradient-card border-none shadow-luxury">
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-bold mb-4">Progressive Capital Deployment — Investor Risk Minimized</h3>
-                  <p className="text-muted-foreground">Start small, scale smart — each phase unlocks only after milestone gates are achieved</p>
+              <Card className="p-6 bg-gradient-card border-none shadow-luxury">
+                <div className="text-center mb-6">
+                  <h3 className="text-xl font-bold mb-2">Progressive Capital Deployment — Investor Risk Minimized</h3>
+                  <p className="text-sm text-muted-foreground">Start small, scale smart — each phase unlocks only after milestone gates are achieved</p>
                 </div>
 
                 {/* Funnel Visual */}
-                <div className="space-y-6 max-w-4xl mx-auto">
+                <div className="space-y-3 max-w-4xl mx-auto">
                   {/* Phase 1 - Foundation */}
-                  <Card className="p-6 bg-gradient-to-r from-green-500/10 to-green-600/10 border-green-500/30">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold text-sm">1</div>
-                        <h4 className="text-xl font-bold text-green-600">Phase 1 — Foundation</h4>
+                  <Card className="p-4 bg-gradient-to-r from-green-500/10 to-green-600/10 border-green-500/30">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center font-bold text-xs">1</div>
+                        <h4 className="text-lg font-bold text-green-600">Phase 1 — Foundation</h4>
                       </div>
                       <div className="text-right">
-                        <div className="text-2xl font-bold text-green-600">$150K (2%)</div>
-                        <div className="text-sm text-green-600 font-medium">Max Risk: $150K</div>
+                        <div className="text-xl font-bold text-green-600">$150K (2%)</div>
+                        <div className="text-xs text-green-600 font-medium">Max Risk: $150K</div>
                       </div>
                     </div>
-                    <div className="grid md:grid-cols-2 gap-4">
+                    <div className="grid md:grid-cols-2 gap-3">
                       <div>
-                        <div className="text-sm font-medium mb-2">Deployment Focus:</div>
-                        <ul className="text-sm text-muted-foreground space-y-1">
+                        <div className="text-xs font-medium mb-1">Deployment Focus:</div>
+                        <ul className="text-xs text-muted-foreground space-y-0.5">
                           <li>• Legal, banking, compliance setup</li>
                           <li>• ParentCo + Mexico SPV formed</li>
                           <li>• Platform audit + onboarding</li>
                         </ul>
                       </div>
                       <div>
-                        <div className="text-sm font-medium mb-2">Milestone Gates:</div>
-                        <ul className="text-sm text-green-600 space-y-1">
+                        <div className="text-xs font-medium mb-1">Milestone Gates:</div>
+                        <ul className="text-xs text-green-600 space-y-0.5">
                           <li>✅ ParentCo live</li>
                           <li>✅ Nevis banking established</li>
                           <li>✅ Legal counsel retained</li>
@@ -839,57 +839,62 @@ const BusinessModel = () => {
                   </Card>
 
                   {/* Phase 2 - Market Entry */}
-                  <Card className="p-6 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border-yellow-500/30">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-yellow-500 text-white rounded-full flex items-center justify-center font-bold text-sm">2</div>
-                        <h4 className="text-xl font-bold text-yellow-600">Phase 2 — Market Entry</h4>
+                  <Card className="p-4 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border-yellow-500/30">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-6 h-6 bg-yellow-500 text-white rounded-full flex items-center justify-center font-bold text-xs">2</div>
+                        <h4 className="text-lg font-bold text-yellow-600">Phase 2 — Market Entry</h4>
                       </div>
                       <div className="text-right">
-                        <div className="text-2xl font-bold text-yellow-600">$470K (7%)</div>
-                        <div className="text-sm text-yellow-600 font-medium">Max Risk: $620K total</div>
+                        <div className="text-xl font-bold text-yellow-600">$470K (7%)</div>
+                        <div className="text-xs text-yellow-600 font-medium">Max Risk: $620K total</div>
                       </div>
                     </div>
-                    <div className="grid md:grid-cols-2 gap-4">
+                    <div className="grid md:grid-cols-2 gap-3">
                       <div>
-                        <div className="text-sm font-medium mb-2">Deployment Focus:</div>
-                        <ul className="text-sm text-muted-foreground space-y-1">
+                        <div className="text-xs font-medium mb-1">Deployment Focus:</div>
+                        <ul className="text-xs text-muted-foreground space-y-0.5">
                           <li>• Mexico land deposits</li>
                           <li>• Marketing + presales campaigns</li>
                           <li>• Operations runway</li>
                         </ul>
                       </div>
                       <div>
-                        <div className="text-sm font-medium mb-2">Milestone Gates:</div>
-                        
+                        <div className="text-xs font-medium mb-1">Milestone Gates:</div>
+                        <ul className="text-xs text-yellow-600 space-y-0.5">
+                          <li>✅ First land acquisition completed</li>
+                          <li>✅ Presales campaign launched</li>
+                          <li>✅ Marketing partnerships established</li>
+                          <li>✅ Operations team hired</li>
+                        </ul>
                       </div>
                     </div>
                   </Card>
 
                   {/* Phase 3 - Multi-Market Rollout */}
-                  <Card className="p-6 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-blue-500/30">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm">3</div>
-                        <h4 className="text-xl font-bold text-blue-600">Phase 3 — Multi-Market Rollout</h4>
+                  <Card className="p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-blue-500/30">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-xs">3</div>
+                        <h4 className="text-lg font-bold text-blue-600">Phase 3 — Multi-Market Rollout</h4>
                       </div>
                       <div className="text-right">
-                        <div className="text-2xl font-bold text-blue-600">$6.38M (91%)</div>
-                        <div className="text-sm text-blue-600 font-medium">Max Risk: $4.06M (protected by recycling)</div>
+                        <div className="text-xl font-bold text-blue-600">$6.38M (91%)</div>
+                        <div className="text-xs text-blue-600 font-medium">Max Risk: $4.06M (protected by recycling)</div>
                       </div>
                     </div>
-                    <div className="grid md:grid-cols-2 gap-4">
+                    <div className="grid md:grid-cols-2 gap-3">
                       <div>
-                        <div className="text-sm font-medium mb-2">Deployment Focus:</div>
-                        <ul className="text-sm text-muted-foreground space-y-1">
+                        <div className="text-xs font-medium mb-1">Deployment Focus:</div>
+                        <ul className="text-xs text-muted-foreground space-y-0.5">
                           <li>• Brazil, Spain, Greece expansion</li>
                           <li>• Construction & builds</li>
                           <li>• Multi-market scaling</li>
                         </ul>
                       </div>
                       <div>
-                        <div className="text-sm font-medium mb-2">Milestone Gates:</div>
-                        <ul className="text-sm text-blue-600 space-y-1">
+                        <div className="text-xs font-medium mb-1">Milestone Gates:</div>
+                        <ul className="text-xs text-blue-600 space-y-0.5">
                           <li>✅ Treasury recycling active</li>
                           <li>✅ Multi-market validation</li>
                           <li>✅ Regulatory cleared</li>
