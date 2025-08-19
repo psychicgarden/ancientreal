@@ -227,7 +227,7 @@ const BusinessModel = () => {
       <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
-          <img src="/src/assets/eco-smart-city.jpg" alt="Eco Smart City Vision" className="w-full h-full object-cover filter brightness-[0.4] contrast-[1.3] saturate-[1.2]" />
+          <img src={ecoSmartCity} alt="Eco Smart City Vision" className="w-full h-full object-cover filter brightness-[0.4] contrast-[1.3] saturate-[1.2]" />
           {/* Dramatic Gradient Overlays */}
           <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-transparent to-black/40" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />

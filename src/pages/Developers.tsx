@@ -12,6 +12,13 @@ import Footer from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Rocket, Users, DollarSign, Code, Shield, Star, Clock, TrendingUp, Award, Upload, Vote, Zap } from "lucide-react";
+
+// Import images
+import baliJungleResort from "@/assets/bali-jungle-resort.jpg";
+import ecoSmartCity from "@/assets/eco-smart-city.jpg";
+import villaBali from "@/assets/villa-bali.jpg";
+import coworkingMallorca from "@/assets/coworking-mallorca.jpg";
+import desertOasisMorocco from "@/assets/desert-oasis-morocco.jpg";
 const Developers = () => {
   const {
     toast
@@ -111,7 +118,7 @@ const Developers = () => {
     development_time: '18 months',
     roi_percentage: 41,
     quote: "Zero upfront cost. We provided full funding after community validation.",
-    image_url: '/src/assets/bali-jungle-resort.jpg'
+    image_url: baliJungleResort
   }, {
     id: 'success-2',
     title: 'Smart City Infrastructure',
@@ -125,7 +132,7 @@ const Developers = () => {
     development_time: '24 months',
     roi_percentage: 63,
     quote: "Community funded, DAO approved. Developer kept 60% equity with zero risk.",
-    image_url: '/src/assets/eco-smart-city.jpg'
+    image_url: ecoSmartCity
   }, {
     id: 'success-3',
     title: 'Renewable Energy Villas',
@@ -139,7 +146,7 @@ const Developers = () => {
     development_time: '15 months',
     roi_percentage: 42,
     quote: "From idea to fully funded in 45 days. No personal investment required.",
-    image_url: '/src/assets/villa-bali.jpg'
+    image_url: villaBali
   }];
 
   // Current projects seeking 80% - hardcoded to match screenshot
@@ -155,7 +162,7 @@ const Developers = () => {
     estimated_yield: 22,
     project_status: 'presale_active',
     timeline: '12 months',
-    image_url: '/src/assets/coworking-mallorca.jpg',
+    image_url: coworkingMallorca,
     presale_percentage: 20,
     status_badge: 'Presale Active',
     units_sold: '2/10',
@@ -174,7 +181,7 @@ const Developers = () => {
     estimated_yield: 28,
     project_status: 'presale_active',
     timeline: '18 months',
-    image_url: '/src/assets/desert-oasis-morocco.jpg',
+    image_url: desertOasisMorocco,
     presale_percentage: 81,
     status_badge: 'Presale Active',
     units_sold: '8.1/10',
@@ -193,7 +200,7 @@ const Developers = () => {
     estimated_yield: 31,
     project_status: 'funded',
     timeline: '15 months',
-    image_url: '/src/assets/eco-smart-city.jpg',
+    image_url: ecoSmartCity,
     presale_percentage: 80,
     status_badge: 'Funded - Development Starting',
     units_sold: '8/10',
