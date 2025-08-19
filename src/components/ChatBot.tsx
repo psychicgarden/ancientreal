@@ -30,6 +30,7 @@ const ChatBot: React.FC = () => {
   const { toast } = useToast();
   const { account, isConnected } = useWallet();
   const location = useLocation();
+  const { handleError } = useErrorHandler();
 
   const quickReplies: QuickReply[] = [
     { text: "How to invest?", message: "How do I start investing in properties on the platform?" },
