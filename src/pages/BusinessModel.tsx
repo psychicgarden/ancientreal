@@ -208,10 +208,10 @@ const BusinessModel = () => {
             stat: "50M → 100M+",
             desc: "6× growth since 2019, accelerating toward 100M+ by 2030"
           }, {
-            icon: "🏛",
-            title: "Institutional Scale-Up",
-            stat: "$5M → $1B+",
-            desc: "BlackRock's BUIDL Fund, launched Mar 2024, surpassed $1B AUM in under 12 months—a 200× growth, signaling rapid institutional adoption."
+            icon: "⚖",
+            title: "Tokenized Real Estate",
+            stat: "$310M → $1.4T by 2030",
+            desc: "Real-estate RWAs have 4X'd in the past 18 months."
           }, {
             icon: "💻",
             title: "Remote Work Default",
@@ -233,10 +233,10 @@ const BusinessModel = () => {
             stat: "$5T Liquid",
             desc: "Massive wealth, yet <50% own homes due to geographic constraints"
           }, {
-            icon: "⚖",
-            title: "Tokenized Real Estate",
-            stat: "$310M → $1.4T by 2030",
-            desc: "Real-estate RWAs have 4X'd in the past 18 months."
+            icon: "🏛",
+            title: "Institutional Scale-Up",
+            stat: "$5M → $1B+",
+            desc: "BlackRock's BUIDL Fund, launched Mar 2024, surpassed $1B AUM in under 12 months—a 200× growth, signaling rapid institutional adoption."
           }, {
             icon: "🗺",
             title: "Visa Tailwinds",
