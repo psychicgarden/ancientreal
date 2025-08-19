@@ -208,10 +208,10 @@ const BusinessModel = () => {
             stat: "50M → 100M+",
             desc: "6× growth since 2019, accelerating toward 100M+ by 2030"
           }, {
-            icon: "🧳",
-            title: "Massive Pipeline",
-            stat: "35M+",
-            desc: "North-American & European workers intend to go nomadic within two years"
+            icon: "🏛",
+            title: "Institutional Scale-Up",
+            stat: "$5M → $1B+ AUM",
+            desc: "BlackRock's BUIDL Fund, launched Mar 2024, surpassed $1B AUM in under 12 months—a 200× growth, signaling rapid institutional adoption of tokenized assets."
           }, {
             icon: "💻",
             title: "Remote Work Default",
