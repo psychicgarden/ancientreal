@@ -298,19 +298,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const connectWallet = async () => {
-    if (!window.ethereum) {
-      toast({
-        title: "Wallet Not Found",
-        description: "Please install MetaMask or another Ethereum wallet",
-        variant: "destructive"
-      });
-      return;
-    }
-
     setIsLoading(true);
 
     try {
-      // Demo mode handling
+      // Demo mode handling - check first before MetaMask
       if (DEMO_CONFIG.isEnabled) {
         const demoWallet = getDemoWallet();
         if (demoWallet) {
@@ -329,6 +320,16 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             });
           }, 1000);
         }
+        return;
+      }
+
+      // Check for MetaMask in live mode
+      if (!window.ethereum) {
+        toast({
+          title: "Wallet Not Found",
+          description: "Please install MetaMask or another Ethereum wallet",
+          variant: "destructive"
+        });
         return;
       }
 
