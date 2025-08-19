@@ -87,7 +87,7 @@ This is the standard for institutional tokenized assets globally. Even Tether Go
 
 This structure is used by major platforms like RealT, Reental, and follows the same legal principles as Tether Gold's tokenization model.`,
       
-      'investment': `Ancient offers two investment models for premium Mexican coastal properties:
+      'investment': `Ancient offers two investment models across premium nomad destinations globally:
 
 **1. Buy Shares (Fractional Investment):**
 • Start investing from just $50 - no minimum down payment
@@ -104,9 +104,9 @@ This structure is used by major platforms like RealT, Reental, and follows the s
 
 **Current Properties:**
 
-• Art Deco Loft Mexico: $240K, 8.5% yield
-• Bahia Beach Bungalow: $180K, 9.2% yield  
-• Ericeira Oceanview: $320K, 7.8% yield
+• Mallorca Beach Villa, Spain: $129K, 17.4% yield
+• Koh Phangan Ocean Villa, Thailand: $130K, 15.9% yield  
+• Corfu Coastal Villa, Greece: $150K, 18.8% yield
 
 **Process:**
 
@@ -170,131 +170,52 @@ ANCIENT'S SOLUTION - BORDERLESS MORTGAGE PROTOCOL:
 - Convert "dead rent spend" into fractional, on-chain property deeds
 - First trust-less, borderless mortgage protocol for a borderless world
 - Build equity instead of burning rent receipts
-- Access dream properties in nomad hubs like Tulum, Bali, Portugal
+- Access dream properties in nomad hubs globally
 
-ARBITRAGE ECONOMICS THAT POWERS THE MODEL:
-- Build Cost: ~$75K per property in undervalued nomad destinations
-- Sale Price: $150K per property (still below market comparables)
-- Developer Problem: Huge markups but struggle to find 100% cash buyers
-- Our Solution: Fractional ownership eliminates the 100% cash barrier
-- Perfect Storm: Tokenized real estate market forecast to soar from $310M → $1.4T by 2030
+CURRENT BUSINESS MODEL - DEVELOPMENT FLYWHEEL:
 
-WHY WE BUILD FIRST:
-1. Prove the arbitrage works in target nomad destinations
-2. Demonstrate to developers that we solve their liquidity problem
-3. Create immediate revenue to fund borderless mortgage infrastructure
-4. Establish Ancient as the mortgage rail, deed registry, and town square for post-city civilization
+ECONOMICS THAT POWER THE MODEL:
+- Build Cost: $75K per property in strategic nomad destinations
+- Sale Price: $135K per property (proven market comparables)
+- Platform captures 3 revenue streams across 10 years
 
-PLATFORM OVERVIEW:
-- Blockchain-based real estate investment platform with two distinct models
-- Built on Avalanche Fuji Testnet using USDT for transactions
-- Features include: fractional property investment, mortgage groups, yield farming, secondary marketplace
+10-YEAR REVENUE CAPTURE: $24.53M TOTAL
+1. Platform Fees: $453.6K (Infrastructure revenue for serving nomad economy)
+2. Mortgage Interest: $7.46M (8% yield serving the $250B cross-border lending void)
+3. ARW Appreciation: $16.62M (Capturing nomad wealth lost to rent into property equity)
 
-USE OF FUNDS - $7.5M Seed A:
-1. Land Acquisition - $1.5M (20%): Secure 4 prime development plots across Mazunte (Mexico), Bahia (Brazil), Ericeira (Portugal), and Greece
-2. Construction Fund - $3.5M (47%): Core pool to finance first development cycle, recycled from each flip revenue
-3. Platform & Technology - $1.0M (13%): Build Ancient digital platform, tokenization, DAO governance, marketplace
-4. Legal & Compliance - $500K (7%): International structuring, Nevis ParentCo + SPVs, securities compliance
-5. Team & Operations - $750K (10%): 2 years runway for founding team and local project managers
-6. Marketing & Launch - $250K (3%): Launch campaign for Founding Pass NFTs, community building
+CURRENT FLYWHEEL STRATEGY - 6 LOCATIONS, 112 UNITS:
+1. Mazunte, Mexico: 15 units, $1.125M build cost, $2.025M sales price, $60.75K platform fee
+2. Bahia, Brazil: 21 units, $1.575M build cost, $2.835M sales price, $85.05K platform fee
+3. Corfu, Greece: 16 units, $1.2M build cost, $2.16M sales price, $64.8K platform fee
+4. Mallorca, Spain: 15 units, $1.125M build cost, $2.025M sales price, $60.75K platform fee
+5. Koh Phangan, Thailand: 25 units, $1.875M build cost, $3.375M sales price, $101.25K platform fee
+6. Antalya, Turkey: 20 units, $1.5M build cost, $2.7M sales price, $81K platform fee
 
-INVESTOR RISK CLARITY: Your capital is never used for mortgages. Those are entirely external and off our balance sheet.
+THREE-PHASE EVOLUTION:
 
-BUSINESS MODEL: Three Phases to $12B
+PHASE 1 – PROOF ENGINE (Years 0-3)
+• 4 strategic property flips prove demand
+• $24M revenue validates business model
+• Build foundational community & systems
+• Focus: Boutique development approach
 
-PHASE 1 – Foundation & Proof of Concept (Years 1-6)
-What we do:
-• Build and sell 178 regenerative homes across 5 strategic lifestyle hubs (EQUITY-ONLY, NO DEBT)
-• All mortgages are external capital (banks, institutional lenders, DeFi pools) - NOT from company raise
-• Develop and refine the technology stack (fractional marketplace, tokenization rails, lender servicing)
+PHASE 2 – DEVELOPER PLATFORM ($7M Investment)
+• Technology platform & legal framework
+• Enable thousands of developers globally
+• Financing tools & community systems
+• Focus: Platform economics
 
-Execution Table (canonical numbers):
-Location | Year | Homes | Revenue | Profit | Mortgages
-Mazunte, Mexico | 1–2 | 15 | $2.06M | $0.93M | 3
-Bahia, Brazil | 2–3 | 21 | $3.04M | $1.47M | 5
-Porto, Portugal | 3–4 | 31 | $4.87M | $2.54M | 8
-Corfu, Greece | 4–5 | 48 | $8.45M | $4.85M | 12
-Ericeira, Portugal | 5–6 | 63 | $12.60M | $7.88M | 20
-Total | 6 yrs | 178 | $31.02M | $17.67M | 48
+PHASE 3 – NETWORK STATE (Years 3-10)
+• 7,500 properties serving 2M nomads
+• $827M annual revenue at scale
+• Global nomad infrastructure network
+• Decentralized governance & citizenship model
 
-Returns to Investor (Phase 1):
-• Profits generated: $17.67M
-• Investor's 70% preferred share: $12.37M
-• Return: 1.65x in 6 years (even if the company stops here, investor walks away positive)
-
-PHASE 2 – Platform Launch & Scale (Years 3-7)
-What we do:
-• Transition from developer → platform
-• Attract external developers to list their projects  
-• Scale mortgage operations with institutional capital
-• Enable fractional ownership from $1,000 for retail buyers globally
-
-Key Milestones:
-• Attract 50+ builders into the developer marketplace
-• Grow mortgage pool to 700+ loans funded by a $50M institutional facility
-• Open platform to 12 countries across LatAm and Europe
-• Monetize via: Platform fees (~3%), Servicing fees (0.5–1%), Capital gains capture (ARWs: 40% to Ancient, 10% lenders, 50% buyers)
-
-Growth Metrics:
-Year | Users | Properties | Annual Revenue | Company Valuation
-3 | 15,000 | 200 | $15M | $240M
-5 | 150,000 | 1,500 | $127M | $1.65B
-7 | 500,000 | 5,000 | $350M | $5.25B
-
-PHASE 3 – Global Domination (Years 7-10+)
-What we do:
-• Become the Shopify × Airbnb × Robinhood of regenerative real estate
-• Expand across 25 countries with network-effect scale
-
-At scale:
-• 2M+ global users
-• 15,000 new properties listed annually
-• Annual revenue: $914.5M (diversified across developer fees, servicing, ARWs, marketplace)
-
-CASH-FLOW WATERFALL & INVESTOR DISTRIBUTIONS
-
-Phase 1 – Development Flips (178 Homes)
-Sources of Cash Flow:
-• Build/sell spread from homes = $17.67M profit
-• Very light mortgage pool = 48 loans, not material to cash flow
-
-Distribution Waterfall:
-1. Investor 70% Preferred Share of Profits: $17.67M × 70% = $12.37M paid to investors over 6 years
-2. GP/Company 30% Share: $17.67M × 30% = $5.30M retained by company
-
-Investor Profile:
-• Multiple = 1.65x in 6 years, even if company stopped here
-• Risk = low → mortgage exposure capped at $2M pool
-
-Phase 2 – Platform Scale (Marketplace + Mortgages)
-Sources of Cash Flow:
-• Developer fees (≈3% of property value)
-• Mortgage servicing spread (0.75%)
-• ARW capture (Ancient takes 40%)
-• Marketplace fractional transaction fees (0.5–1%)
-
-Distribution Waterfall:
-1. Investors continue to receive 70% of Profits until end of Phase 2
-2. Company retains 30%, fueling reinvestment into tech, global expansion, and working capital
-
-Phase 3 – Global Network-State (2M Users)
-Sources of Cash Flow:
-• Global developer listings (~15,000/year)
-• Servicing on $5B+ mortgages
-• ARWs captured at scale (50% buyer / 40% Ancient / 10% lenders)
-• Platform network fees
-
-Distribution Waterfall:
-1. Investor Preferred Ends → Convert to Equity Stake
-2. At IPO/strategic exit, investors receive equity appreciation from their original ParentCo shares
-3. By this stage, they've already received $12.37M cash distributions from Phase 1 + 70% share from Phase 2 profits
-
-MARKET TRENDS & TAILWINDS:
-• Tokenization of real assets: Expected to exceed $16T by 2030 (BCG, Citigroup)
-• Global mortgage gap: $400B+ unmet demand in emerging markets (World Bank)
-• Digital nomad surge: 40M+ nomads by 2030; high concentration in coastal lifestyle hubs
-• Sustainable real estate premium: Regenerative builds already selling 10–25% above market in EU/LatAm
-• Platform winners: History shows category leaders (Airbnb, Shopify) capture 30–50% of sector value
+CURRENT PROPERTY PORTFOLIO (UPDATED LOCATIONS):
+- Mallorca Beach Villa: Mallorca, Spain - Mortgage groups available
+- Koh Phangan Ocean Villa: Koh Phangan, Thailand - Mortgage groups available  
+- Corfu Coastal Villa: Corfu, Greece - Mortgage groups available
 
 INVESTMENT MODELS:
 1. BUY SHARES (Fractional Investment): Users can start investing from just $50 with no minimum down payment. Purchase fractional tokens representing property ownership with flexible investment amounts.
@@ -308,11 +229,6 @@ KEY FEATURES:
 5. SECONDARY TRADING: P2P marketplace for trading property shares
 6. COLLATERAL LENDING: Borrow against property equity
 7. KYC VERIFICATION: Required for compliance and access to features
-
-PROPERTY PORTFOLIO:
-- Art Deco Loft in Mexico: $240,000, 8.5% annual yield, luxury beachfront property
-- Bahia Beach Bungalow: $180,000, 9.2% annual yield, eco-smart sustainable living
-- Ericeira Oceanview Apartment: $320,000, 7.8% annual yield, Portuguese coastal property
 
 FINANCIAL MODEL:
 - Fractional Shares: Start from $50, no down payment required
