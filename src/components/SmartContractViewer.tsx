@@ -5,6 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink, Copy, Shield, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { NETWORK_CONFIG } from "@/lib/contracts";
+import { CONTRACTS as CONTRACT_ADDRESSES, CHAIN } from "@/config/chain";
 
 interface SmartContractViewerProps {
   isOpen: boolean;
@@ -276,10 +278,10 @@ contract MazunteMortgageV2 is ERC1155, Ownable, ReentrancyGuard, Pausable {
     });
   };
 
-  const contractAddress = "0x966fed85116f6d2839A1B2C3D4E5F6789abcd123";
+  const contractAddress = CONTRACT_ADDRESSES.MAZUNTE_MORTGAGE;
   const networkInfo = {
-    name: "Avalanche Fuji Testnet",
-    chainId: 43113,
+    name: NETWORK_CONFIG.chainName,
+    chainId: CHAIN.id,
     explorer: "https://testnet.snowtrace.io"
   };
 

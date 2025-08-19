@@ -12,6 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 import NetworkGuard from "@/components/NetworkGuard";
 import { toBase, fmtUSD, asUSD, principalBase } from "@/lib/money";
 import { PROPERTY_ID_MAP } from "@/lib/constants";
+import { NETWORK_CONFIG } from "@/lib/contracts";
 
 interface MortgagePaymentModalProps {
   isOpen: boolean;
@@ -246,7 +247,7 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Network:</span>
-                  <span>Avalanche C-Chain</span>
+                  <span>{NETWORK_CONFIG.chainName}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Est. Gas Fee:</span>

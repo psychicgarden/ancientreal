@@ -1,6 +1,7 @@
 
 import { ethers } from 'ethers';
 import { CONTRACTS, NETWORK_CONFIG, VILLAGE_CITIZENSHIP_FEE } from '@/lib/contracts';
+import { CONTRACTS as CONTRACT_ADDRESSES } from '@/config/chain';
 
 export class Web3Integration {
   private provider: ethers.BrowserProvider | null = null;
@@ -135,7 +136,7 @@ export class Web3Integration {
     const feeAmountUSDT = (feeAmount * 1e6).toString(); // Convert to USDT units
     
     // Platform treasury address (you should configure this)
-    const PLATFORM_TREASURY = "0x742d35Cc6670C068fC0DB3674fE6c61c2B3d2a0B"; // Replace with actual treasury address
+    const PLATFORM_TREASURY = CONTRACT_ADDRESSES.PLATFORM_TREASURY;
     
     // Ensure contracts are configured
     this.ensureAddressConfigured(CONTRACTS.USDT.address, 'USDT');

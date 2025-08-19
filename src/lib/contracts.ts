@@ -1,8 +1,9 @@
-// Smart Contract Configuration for Avalanche Fuji Testnet
+// Smart Contract Configuration - Now using centralized config
+import { CONTRACTS as CONTRACT_ADDRESSES, NETWORK_CONFIG as CHAIN_CONFIG } from '@/config/chain';
 
 export const CONTRACTS = {
   MAZUNTE_MORTGAGE: {
-    address: "0x5FbDB2315678afecb367f032d93F642f64180aa3", // Deployed on Fuji testnet
+    address: CONTRACT_ADDRESSES.MAZUNTE_MORTGAGE,
     abi: [
       // Core functions
       "function purchaseProperty(uint256 downPayment) external",
@@ -24,7 +25,7 @@ export const CONTRACTS = {
   },
 
   USDT: {
-    address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512", // Deployed on Fuji testnet
+    address: CONTRACT_ADDRESSES.USDT,
     abi: [
       "function balanceOf(address account) external view returns (uint256)",
       "function transfer(address to, uint256 amount) external returns (bool)",
@@ -36,7 +37,7 @@ export const CONTRACTS = {
   },
 
   VILLAGE_CITIZENSHIP: {
-    address: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0", // Deployed on Fuji testnet
+    address: CONTRACT_ADDRESSES.VILLAGE_CITIZENSHIP,
     abi: [
       "function becomeCitizen() external payable",
       "function hasCitizenship(address user) external view returns (bool)",
@@ -45,7 +46,7 @@ export const CONTRACTS = {
   },
 
   SECONDARY_MARKETPLACE: {
-    address: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", // Deployed on Fuji testnet
+    address: CONTRACT_ADDRESSES.SECONDARY_MARKETPLACE,
     abi: [
       // Pools
       "function createPool(address propertyToken, uint256 tokenId, address baseToken, uint256 feeRate, uint256 priceImpactThreshold) external",
@@ -64,21 +65,8 @@ export const CONTRACTS = {
   }
 };
 
-export const NETWORK_CONFIG = {
-  chainId: '0xa869', // 43113 in hex (Avalanche Fuji)
-  chainName: 'Avalanche Fuji Testnet',
-  nativeCurrency: {
-    name: 'Avalanche',
-    symbol: 'AVAX',
-    decimals: 18,
-  },
-  rpcUrls: [
-    'https://api.avax-test.network/ext/bc/C/rpc',
-    'https://avalanche-fuji-c-chain.publicnode.com',
-    'https://rpc.ankr.com/avalanche_fuji'
-  ],
-  blockExplorerUrls: ['https://testnet.snowtrace.io/'],
-};
+// Re-export network config from centralized location
+export const NETWORK_CONFIG = CHAIN_CONFIG;
 
 // Mazunte Property Constants
 export const MAZUNTE_PROPERTY = {

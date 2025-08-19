@@ -3,6 +3,7 @@ import { useToast } from '@/hooks/use-toast';
 import { CONTRACTS, NETWORK_CONFIG, VILLAGE_MEMBERSHIP_FEE, MAZUNTE_PROPERTY } from '@/lib/contracts';
 import { web3Integration, Web3Integration } from '@/lib/web3-integration';
 import { getExplorerTxUrl } from '@/lib/utils';
+import { DEMO_CONFIG, getDemoWallet } from '@/config/demo';
 
 interface WalletContextType {
   isConnected: boolean;
@@ -60,7 +61,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [isMakingPayment, setIsMakingPayment] = useState(false);
   const [usdtBalance, setUsdtBalance] = useState('0');
   const [ethBalance, setEthBalance] = useState('0');
-  const [isDemoMode, setIsDemoMode] = useState(false); // Start in real mode by default
+  const [isDemoMode, setIsDemoMode] = useState(DEMO_CONFIG.isEnabled); // Use centralized demo config
   const [isGettingTestTokens, setIsGettingTestTokens] = useState(false);
   const { toast } = useToast();
 
@@ -72,6 +73,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       '0xa86a': 'Avalanche',
       '0x38': 'BSC',
       '0xa4b1': 'Arbitrum',
+      [NETWORK_CONFIG.chainId]: NETWORK_CONFIG.chainName,
       '0x2a': 'Kovan Testnet',
       '0x5': 'Goerli Testnet',
       '0xaa36a7': 'Sepolia Testnet',
@@ -204,22 +206,25 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     setIsLoading(true);
     try {
-      if (isDemoMode) {
+      if (DEMO_CONFIG.isEnabled) {
         // Simulate wallet connection in demo mode
-        setTimeout(() => {
-          setAccount("0x966fed85116f6d283921a6ed176d7643a99cbf94");
-          setChainId("0x1");
-          setNetworkName("Demo Network");
-          setIsConnected(true);
-          setUsdtBalance("1000");
-          setEthBalance("2.5");
-          setIsLoading(false);
-          
-          toast({
-            title: "Demo Wallet Connected",
-            description: "Connected to demo wallet with test tokens",
-          });
-        }, 1000);
+        const demoWallet = getDemoWallet();
+        if (demoWallet) {
+          setTimeout(() => {
+            setAccount(demoWallet.address);
+            setChainId(demoWallet.chainId);
+            setNetworkName(demoWallet.networkName);
+            setIsConnected(true);
+            setUsdtBalance("1000");
+            setEthBalance("2.5");
+            setIsLoading(false);
+            
+            toast({
+              title: "Demo Wallet Connected",
+              description: "Connected to demo wallet with test tokens",
+            });
+          }, 1000);
+        }
         return;
       }
 
@@ -650,10 +655,11 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   // Demo Mode Functions
   const toggleDemoMode = () => {
-    setIsDemoMode(!isDemoMode);
+    const newDemoMode = !isDemoMode;
+    setIsDemoMode(newDemoMode);
     toast({
-      title: isDemoMode ? "Live Mode Activated" : "Demo Mode Activated",
-      description: isDemoMode ? "You're now using live blockchain values" : "You're now using demo values for testing",
+      title: newDemoMode ? "Demo Mode Activated" : "Live Mode Activated", 
+      description: newDemoMode ? "You're now using demo values for testing" : "You're now using live blockchain values",
     });
   };
 

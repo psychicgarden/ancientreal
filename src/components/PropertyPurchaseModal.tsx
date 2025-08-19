@@ -22,6 +22,7 @@ import {
 import { SmartContractViewer } from "./SmartContractViewer";
 import { supabase } from "@/integrations/supabase/client";
 import NetworkGuard from "@/components/NetworkGuard";
+import { NETWORK_CONFIG } from "@/lib/contracts";
 
 interface PropertyPurchaseModalProps {
   isOpen: boolean;
@@ -447,7 +448,7 @@ export const PropertyPurchaseModal = ({ isOpen, onClose, property }: PropertyPur
             <CardContent className="space-y-3">
               <div className="flex justify-between items-center">
                 <span>Network:</span>
-                <span className="font-medium">Avalanche Fuji Testnet</span>
+                <span className="font-medium">{NETWORK_CONFIG.chainName}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span>Payment Token:</span>
