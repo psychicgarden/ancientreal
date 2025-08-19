@@ -55,6 +55,12 @@ const BankingInterface = () => {
     createStakingTransaction 
   } = useStaking();
 
+  // Debug logging to see what data we're getting
+  useEffect(() => {
+    console.log('Banking Interface - stakingData:', stakingData);
+    console.log('Banking Interface - transactions:', transactions);
+  }, [stakingData, transactions]);
+
   // Load price feed
   useEffect(() => {
     loadPriceData();
@@ -242,13 +248,15 @@ const BankingInterface = () => {
   };
 
   const formatAmount = (amount: number | null | undefined) => {
-    if (amount === null || amount === undefined || isNaN(amount)) return '$0.00';
+    if (amount === null || amount === undefined) return '$0.00';
+    const numAmount = Number(amount);
+    if (isNaN(numAmount)) return '$0.00';
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
-    }).format(Number(amount));
+    }).format(numAmount);
   };
 
   const getTransactionIcon = (type: string) => {
