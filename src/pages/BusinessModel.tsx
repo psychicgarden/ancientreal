@@ -251,7 +251,7 @@ const BusinessModel = () => {
                 <CardContent className="p-6">
                   <div className="text-3xl mb-3">{trend.icon}</div>
                   <div className="text-2xl font-bold text-primary mb-2">{trend.stat}</div>
-                  <h3 className="font-semibold mb-2">{trend.title}</h3>
+                  <h3 className="text-sm font-semibold mb-2">{trend.title}</h3>
                   <p className="text-sm text-muted-foreground">{trend.desc}</p>
                 </CardContent>
               </Card>)}
