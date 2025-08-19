@@ -7,7 +7,7 @@ import { TrendingUp, DollarSign, Home, Building, Target } from "lucide-react";
 import { InvestorTierStatus } from "./InvestorTierStatus";
 
 import { useWallet } from "@/contexts/WalletContext";
-import { supabase } from "@/integrations/supabase/client";
+import { usePortfolioData } from "@/hooks/usePortfolioData";
 
 interface PortfolioSummaryProps {
   userProperties?: any[];
@@ -20,68 +20,19 @@ export const BeginnerPortfolioSummary: React.FC<PortfolioSummaryProps> = ({
   developerInvestments: propDeveloperInvestments,
   loading: propLoading
 }) => {
-  const { isConnected, account } = useWallet();
-  const [userProperties, setUserProperties] = useState<any[]>([]);
-  const [developerInvestments, setDeveloperInvestments] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Use centralized portfolio data hook
+  const { 
+    userProperties: fetchedUserProperties, 
+    developerInvestments: fetchedDeveloperInvestments, 
+    loading: dataLoading 
+  } = usePortfolioData();
 
-  // Use props if provided, otherwise fetch data
-  const actualUserProperties = propUserProperties || userProperties;
-  const actualDeveloperInvestments = propDeveloperInvestments || developerInvestments;
-  const actualLoading = propLoading !== undefined ? propLoading : loading;
+  // Use props if provided, otherwise use fetched data
+  const actualUserProperties = propUserProperties || fetchedUserProperties;
+  const actualDeveloperInvestments = propDeveloperInvestments || fetchedDeveloperInvestments;
+  const actualLoading = propLoading !== undefined ? propLoading : dataLoading;
 
-  // Fetch data only if not provided via props
-  useEffect(() => {
-    if (propUserProperties && propDeveloperInvestments) {
-      setLoading(false);
-      return;
-    }
-
-    const fetchData = async () => {
-      if (!isConnected || !account) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        setLoading(true);
-
-        // Fetch user properties
-        const { data: properties } = await supabase
-          .from('user_properties')
-          .select('*')
-          .eq('user_wallet_address', account.toLowerCase())
-          .eq('is_active', true)
-          .order('created_at', { ascending: false });
-
-        // Fetch developer investments
-        const { data: investments } = await supabase
-          .from('developer_investments')
-          .select(`
-            *,
-            developer_projects (
-              title,
-              description,
-              creator_name,
-              target_funding,
-              current_funding,
-              image_url
-            )
-          `)
-          .eq('user_wallet_address', account.toLowerCase())
-          .order('created_at', { ascending: false });
-
-        setUserProperties(properties || []);
-        setDeveloperInvestments(investments || []);
-      } catch (error) {
-        console.error('Error fetching portfolio data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [isConnected, account, propUserProperties, propDeveloperInvestments]);
+  // Data fetching is now handled by usePortfolioData hook
 
   // Deduplicate properties by unique purchase key
   const uniqueUserProperties = useMemo(() => {

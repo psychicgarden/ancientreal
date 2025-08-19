@@ -3,9 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { useWallet } from "@/contexts/WalletContext";
-import { supabase } from "@/integrations/supabase/client";
 import { TrendingUp, DollarSign, Calendar, Target, BarChart3, Eye } from "lucide-react";
+import { useDeveloperInvestments } from "@/hooks/useDeveloperInvestments";
 
 interface DeveloperInvestment {
   id: string;
@@ -29,45 +28,12 @@ interface DeveloperInvestment {
 }
 
 export const DeveloperInvestmentsAnalytics: React.FC = () => {
-  const [investments, setInvestments] = useState<DeveloperInvestment[]>([]);
-  const [loading, setLoading] = useState(true);
   const [selectedInvestment, setSelectedInvestment] = useState<DeveloperInvestment | null>(null);
-  const { account } = useWallet();
+  
+  // Use centralized developer investments hook
+  const { investments, loading } = useDeveloperInvestments();
 
-  useEffect(() => {
-    if (account) {
-      fetchInvestments();
-    }
-  }, [account]);
-
-  const fetchInvestments = async () => {
-    if (!account) return;
-
-    try {
-      const { data, error } = await supabase
-        .from('developer_investments')
-        .select(`
-          *,
-          developer_projects (
-            title,
-            project_status,
-            current_funding,
-            target_funding,
-            timeline,
-            estimated_yield
-          )
-        `)
-        .eq('user_wallet_address', account?.toLowerCase() ?? '')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setInvestments(data || []);
-    } catch (error) {
-      console.error('Error fetching investments:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Data fetching is now handled by useDeveloperInvestments hook
 
   const totalInvested = investments.reduce((sum, inv) => sum + inv.investment_amount, 0);
   const totalProjectedValue = investments.reduce((sum, inv) => sum + inv.projected_value, 0);
@@ -84,17 +50,7 @@ export const DeveloperInvestmentsAnalytics: React.FC = () => {
     );
   }
 
-  if (!account) {
-    return (
-      <Card>
-        <CardContent className="p-6">
-          <div className="text-center text-muted-foreground">
-            Connect your wallet to view developer investments
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+  // Wallet connection check removed - handled by hook
 
   if (investments.length === 0) {
     return (

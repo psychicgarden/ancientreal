@@ -4,9 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, DollarSign, BarChart3, PieChart, Calendar, Target } from "lucide-react";
-import { useWallet } from "@/contexts/WalletContext";
-import { supabase } from "@/integrations/supabase/client";
 import { calculateMortgageMetrics, calculatePortfolioMetrics, MortgageData } from "@/lib/mortgageCalculations";
+import { usePortfolioData } from "@/hooks/usePortfolioData";
 import { fromBase } from "@/lib/money";
 
 interface EnhancedPortfolioAnalyticsProps {
@@ -14,82 +13,14 @@ interface EnhancedPortfolioAnalyticsProps {
 }
 
 export const EnhancedPortfolioAnalytics: React.FC<EnhancedPortfolioAnalyticsProps> = () => {
-  const { isConnected, account } = useWallet();
-  const [mortgageProperties, setMortgageProperties] = useState<any[]>([]);
-  const [fractionalInvestments, setFractionalInvestments] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Use centralized portfolio data hook
+  const { 
+    userProperties: mortgageProperties, 
+    fractionalInvestments, 
+    loading 
+  } = usePortfolioData();
 
-  useEffect(() => {
-    const fetchPortfolioData = async () => {
-      if (!isConnected || !account) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        // Fetch mortgage properties
-        const { data: userProperties, error: mortgageError } = await supabase
-          .from('user_properties')
-          .select('*')
-          .eq('user_wallet_address', account.toLowerCase())
-          .eq('is_active', true);
-
-        if (mortgageError) throw mortgageError;
-
-        // Fetch fractional investments
-        const { data: fractionalData, error: fractionalError } = await supabase
-          .from('fractional_investments')
-          .select(`
-            *,
-            property_fractionalization (
-              property_name,
-              property_location,
-              current_speculation_price,
-              monthly_base_rent
-            )
-          `)
-          .eq('investor_wallet_address', account.toLowerCase())
-          .eq('status', 'active');
-
-        if (fractionalError) throw fractionalError;
-
-        setMortgageProperties(userProperties || []);
-        setFractionalInvestments(fractionalData || []);
-      } catch (error) {
-        console.error('Error fetching portfolio data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPortfolioData();
-
-    // Real-time subscriptions
-    const propertiesChannel = supabase
-      .channel('user_properties_analytics')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'user_properties',
-        filter: `user_wallet_address=eq.${account?.toLowerCase()}`
-      }, () => fetchPortfolioData())
-      .subscribe();
-
-    const fractionalChannel = supabase
-      .channel('fractional_investments_analytics')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'fractional_investments',
-        filter: `investor_wallet_address=eq.${account?.toLowerCase()}`
-      }, () => fetchPortfolioData())
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(propertiesChannel);
-      supabase.removeChannel(fractionalChannel);
-    };
-  }, [isConnected, account]);
+  // Data fetching and real-time subscriptions now handled by usePortfolioData hook
 
   if (loading) {
     return (

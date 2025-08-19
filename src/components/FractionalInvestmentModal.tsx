@@ -9,7 +9,8 @@ import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useWallet } from "@/contexts/WalletContext";
-import { supabase } from "@/integrations/supabase/client";
+import { api } from "@/lib/api";
+import { useErrorHandler } from "@/lib/error-handler";
 import { 
   TrendingUp, 
   Calculator, 
@@ -54,6 +55,7 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
   const [isInvesting, setIsInvesting] = useState(false);
   const { toast } = useToast();
   const { account, isConnected } = useWallet();
+  const { handleError, handleSuccess } = useErrorHandler();
 
   if (!property) return null;
 
@@ -107,46 +109,35 @@ const FractionalInvestmentModal: React.FC<FractionalInvestmentModalProps> = ({
     setIsInvesting(true);
 
     try {
-      // Record fractional investment in database
-      const { error } = await supabase
-        .from('fractional_investments')
-        .insert({
-          property_id: property.id,
-          investor_wallet_address: account,
-          investment_amount: investmentAmount,
-          token_amount: tokenAmount,
-          ownership_percentage: ownershipPercentage,
-          original_property_price: property.originalPrice,
-          speculation_price: property.currentSpeculationPrice,
-          status: 'active'
-        });
-
-      if (error) throw error;
-
-      // Update property fractionalization tokens sold
-      const { error: updateError } = await supabase
-        .from('property_fractionalization')
-        .update({
-          tokens_sold: property.tokensSold + tokenAmount
-        })
-        .eq('id', property.id);
-
-      if (updateError) throw updateError;
-
-      toast({
-        title: "Investment Successful! 🎉",
-        description: `You've invested $${investmentAmount} and own ${ownershipPercentage.toFixed(4)}% of ${property.name}`,
+      // Record fractional investment using centralized API
+      const result = await api.supabase.createFractionalInvestment({
+        property_id: property.id,
+        investor_wallet_address: account,
+        investment_amount: investmentAmount,
+        token_amount: tokenAmount,
+        ownership_percentage: ownershipPercentage,
+        original_property_price: property.originalPrice,
+        speculation_price: property.currentSpeculationPrice,
+        status: 'active'
       });
+
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to create investment');
+      }
+
+      handleSuccess(
+        `You've invested $${investmentAmount} and own ${ownershipPercentage.toFixed(4)}% of ${property.name}`,
+        "Investment Successful! 🎉"
+      );
 
       onOpenChange(false);
       setInvestmentAmount(50);
 
     } catch (error) {
-      console.error('Investment error:', error);
-      toast({
-        title: "Investment Failed",
-        description: "There was an error processing your investment. Please try again.",
-        variant: "destructive"
+      handleError(error, {
+        operation: 'create_fractional_investment',
+        component: 'FractionalInvestmentModal',
+        userAction: 'Submit investment'
       });
     } finally {
       setIsInvesting(false);

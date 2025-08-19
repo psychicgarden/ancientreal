@@ -122,6 +122,34 @@ export class SupabaseApi {
     }
   }
 
+  static async getUserDeveloperInvestments(userId: string): Promise<ApiResponse> {
+    try {
+      const { data, error } = await supabase
+        .from('developer_investments')
+        .select(`
+          *,
+          developer_projects (
+            title,
+            project_status,
+            current_funding,
+            target_funding,
+            timeline,
+            estimated_yield
+          )
+        `)
+        .eq('user_wallet_address', userId.toLowerCase())
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        return { data: null, error: error.message, success: false };
+      }
+      
+      return { data, error: null, success: true };
+    } catch (error: any) {
+      return { data: null, error: error.message || 'Unknown error', success: false };
+    }
+  }
+
   static async createDeveloperInvestment(investment: any): Promise<ApiResponse> {
     try {
       const { data, error } = await supabase
