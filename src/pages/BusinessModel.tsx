@@ -243,10 +243,10 @@ const BusinessModel = () => {
             stat: "50+ Countries",
             desc: "Issue Digital-Nomad Visas (from just 6 in 2019)"
           }, {
-            icon: "💳",
-            title: "Cross-border Void",
-            stat: "$250B",
-            desc: "Capital nomads want but banks refuse to lend"
+            icon: "💸",
+            title: "$750B Mortgage Blackout",
+            stat: "A Market Ignored",
+            desc: "If just 10% of 50M digital nomads wanted $150K homes, that's a $750B TAM with a $250B immediate gap. Legacy banks leave the most mobile workforce locked out."
           }].map(trend => <Card key={trend.title} className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-card transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="text-3xl mb-3">{trend.icon}</div>
