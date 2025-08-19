@@ -560,6 +560,33 @@ export type Database = {
           },
         ]
       }
+      platform_backups: {
+        Row: {
+          backup_data: Json
+          backup_name: string
+          backup_type: string | null
+          created_at: string | null
+          id: string
+          notes: string | null
+        }
+        Insert: {
+          backup_data: Json
+          backup_name: string
+          backup_type?: string | null
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+        }
+        Update: {
+          backup_data?: Json
+          backup_name?: string
+          backup_type?: string | null
+          created_at?: string | null
+          id?: string
+          notes?: string | null
+        }
+        Relationships: []
+      }
       platform_fees: {
         Row: {
           created_at: string
@@ -1653,6 +1680,10 @@ export type Database = {
       calculate_monthly_payment: {
         Args: { apr_bps: number; loan_amount_usd: number; term_months: number }
         Returns: number
+      }
+      create_platform_backup: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
       }
       distribute_monthly_rental_income: {
         Args: { property_frac_id: string; rental_month?: string }
