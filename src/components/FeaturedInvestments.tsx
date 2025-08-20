@@ -70,9 +70,9 @@ const FeaturedInvestments = () => {
   return <section className="px-6 bg-gradient-to-br from-background via-background to-muted/5 py-[20px]">
       <div className="container mx-auto">
         <SectionHeader
-          eyebrow="Featured"
-          title="Sustainable Living"
-          subtitle="20% Down Financing — Thoughtfully curated eco‑luxury residences. Modern financing for conscious living."
+          eyebrow="The Ancient Collective"
+          title="Private residences in the world's most soulful places"
+          subtitle="Access the network. Access the extraordinary. Start with 20% down. Modern financing for conscious living. Own your place in the story."
         />
 
         {propertiesLoading ? (
