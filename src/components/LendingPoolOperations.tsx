@@ -211,12 +211,12 @@ export const LendingPoolOperations = () => {
     };
   }).reverse();
 
-  // Capital allocation pie chart data
+  // Capital allocation pie chart data - colors match metric cards
   const allocationData = [
-    { name: 'Available Capital', value: poolMetrics.availableCapital, color: 'hsl(var(--chart-1))' },
-    { name: 'Deployed in Mortgages', value: poolMetrics.deployedCapital, color: 'hsl(var(--chart-2))' },
-    { name: 'Reserve Buffer', value: poolMetrics.totalStaked * 0.1, color: 'hsl(var(--chart-3))' }
-  ];
+    { name: 'Available Capital', value: poolMetrics.availableCapital, color: 'hsl(45 100% 50%)' }, // Yellow to match card
+    { name: 'Deployed in Mortgages', value: poolMetrics.deployedCapital, color: 'hsl(120 60% 50%)' }, // Green to match card
+    { name: 'Reserve Buffer', value: 0, color: 'hsl(220 60% 60%)' } // Blue/gray - now shows 0 since we deploy 100%
+  ].filter(item => item.value > 0); // Filter out zero values
 
   if (loading) {
     return (
@@ -362,10 +362,24 @@ export const LendingPoolOperations = () => {
               <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                 <div className="flex items-center gap-3">
                   <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="text-sm font-medium">Mortgage Funding</span>
+                  <span className="text-sm font-medium">Mortgage Funding ({poolMetrics.utilizationRate.toFixed(1)}% deployed)</span>
                 </div>
                 <span className="text-sm font-bold">${poolMetrics.deployedCapital.toLocaleString()}</span>
               </div>
+              {poolMetrics.availableCapital > 0 && (
+                <>
+                  <div className="flex justify-center">
+                    <div className="w-4 h-4 text-muted-foreground flex items-center justify-center">•••</div>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                      <span className="text-sm font-medium">Available for New Loans</span>
+                    </div>
+                    <span className="text-sm font-bold">${poolMetrics.availableCapital.toLocaleString()}</span>
+                  </div>
+                </>
+              )}
               <div className="flex justify-center">
                 <ArrowRight className="w-4 h-4 text-muted-foreground" />
               </div>
