@@ -44,8 +44,11 @@ export const useStaking = () => {
       const result = await api.supabase.getUserStaking(walletAddress);
       
       if (result.success && result.data) {
-        // Handle both array and object responses
-        const stakingInfo = Array.isArray(result.data) ? result.data[0] : result.data;
+        // Now we expect only one record per user due to unique constraint
+        const stakingInfo = Array.isArray(result.data) && result.data.length > 0 
+          ? result.data[0] 
+          : result.data;
+          
         if (stakingInfo) {
           console.log('Staking data loaded successfully:', stakingInfo);
           setStakingData(stakingInfo);
@@ -160,15 +163,20 @@ export const useStaking = () => {
 
   const updateUserStakingBalance = async (walletAddress: string, amountDelta: number) => {
     try {
-      // Get current staking data
+      console.log('Updating staking balance for wallet:', walletAddress, 'delta:', amountDelta);
+      
+      // Get current staking data (should be only one record now)
       const currentResult = await api.supabase.getUserStaking(walletAddress);
       let currentStaking = null;
 
       if (currentResult.success && currentResult.data) {
-        currentStaking = Array.isArray(currentResult.data) ? currentResult.data[0] : currentResult.data;
+        currentStaking = Array.isArray(currentResult.data) && currentResult.data.length > 0 
+          ? currentResult.data[0] 
+          : currentResult.data;
       }
 
       const newTotalStaked = (currentStaking?.total_staked || 0) + amountDelta;
+      console.log('Current staked:', currentStaking?.total_staked || 0, 'New total:', newTotalStaked);
       
       const stakingData = {
         user_wallet_address: walletAddress.toLowerCase(),
@@ -179,9 +187,18 @@ export const useStaking = () => {
         last_yield_calculation: new Date().toISOString()
       };
 
-      await api.supabase.upsertUserStaking(stakingData);
+      console.log('Upserting staking data:', stakingData);
+      const upsertResult = await api.supabase.upsertUserStaking(stakingData);
+      
+      if (!upsertResult.success) {
+        console.error('Failed to upsert staking data:', upsertResult.error);
+        throw new Error(upsertResult.error || 'Failed to update staking balance');
+      }
+      
+      console.log('Staking balance updated successfully');
     } catch (error) {
       console.error('Failed to update staking balance:', error);
+      throw error; // Re-throw to let the caller handle it
     }
   };
 
