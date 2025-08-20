@@ -63,6 +63,7 @@ export async function fetchRealContractAddresses(): Promise<Record<string, strin
           console.log(`✅ USDT: ${contract.address}`);
           break;
         case 'EnhancedStakingPool':
+        case 'STAKING_POOL':
           contractMap['STAKING_POOL'] = contract.address;
           console.log(`✅ STAKING_POOL: ${contract.address}`);
           break;
