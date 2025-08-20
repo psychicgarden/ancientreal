@@ -22,21 +22,17 @@ const Hero = () => {
 
           {/* Main Headline */}
           <h1 className="text-2xl md:text-5xl lg:text-6xl font-bold leading-relaxed text-accent-foreground mb-6">
+            The World's First
+            <br />
             <span className="bg-gradient-to-r from-gold to-gold/80 bg-clip-text text-transparent">
-              The Ancient Collective
+              Decentralized Nation
             </span>
           </h1>
 
           {/* Subheading */}
-          <p className="text-xl text-accent-foreground/80 mb-12 max-w-3xl mx-auto leading-relaxed md:text-xl">
-            Private residences in the world's most soulful places.
-            <br />
-            Access the network. Access the extraordinary.
-            <br />
-            Start with 20% down. Modern financing for conscious living.
-            <br />
-            Own your place in the story.
-          </p>
+          <p className="text-xl text-accent-foreground/80 mb-12 max-w-3xl mx-auto leading-relaxed md:text-xl">50 Million digital nomads seeking homeownership abroad and can't get a mortgage. 
+<br />
+We Solve That.</p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
