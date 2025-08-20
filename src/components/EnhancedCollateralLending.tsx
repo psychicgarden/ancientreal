@@ -63,7 +63,37 @@ interface LiquidationBot {
 export const EnhancedCollateralLending = () => {
   const { isConnected, connectWallet } = useWallet();
   const { toast } = useToast();
-  
+  // Define liquidation bots data first
+  const liquidationBots: LiquidationBot[] = [
+    {
+      id: 'bot-1',
+      strategy: 'Conservative Protection',
+      triggerLTV: 72,
+      slippageTolerance: 2.5,
+      gasLimit: 500000,
+      enabled: true,
+      lastExecution: 'Never'
+    },
+    {
+      id: 'bot-2',
+      strategy: 'Aggressive Defense',
+      triggerLTV: 75,
+      slippageTolerance: 1.0,
+      gasLimit: 800000,
+      enabled: false,
+      lastExecution: '2 hours ago'
+    },
+    {
+      id: 'bot-3',
+      strategy: 'Flash Loan Protection',
+      triggerLTV: 78,
+      slippageTolerance: 0.5,
+      gasLimit: 1200000,
+      enabled: true,
+      lastExecution: '15 minutes ago'
+    }
+  ];
+
   // State management
   const [selectedCollateral, setSelectedCollateral] = useState('');
   const [loanAmount, setLoanAmount] = useState('');
@@ -168,26 +198,7 @@ export const EnhancedCollateralLending = () => {
     }
   ];
 
-  const liquidationBots: LiquidationBot[] = [
-    {
-      id: 'bot-1',
-      strategy: 'Conservative Protection',
-      triggerLTV: 72,
-      slippageTolerance: 2.5,
-      gasLimit: 500000,
-      enabled: true,
-      lastExecution: 'Never'
-    },
-    {
-      id: 'bot-2',
-      strategy: 'Aggressive Optimization',
-      triggerLTV: 78,
-      slippageTolerance: 5.0,
-      gasLimit: 800000,
-      enabled: true,
-      lastExecution: '2 days ago'
-    }
-  ];
+  // Remove the duplicate definition
 
   const activePositions: DynamicCollateralPosition[] = [
     {

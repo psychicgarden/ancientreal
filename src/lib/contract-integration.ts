@@ -62,9 +62,13 @@ export async function fetchRealContractAddresses(): Promise<Record<string, strin
           contractMap['USDT'] = contract.address;
           console.log(`✅ USDT: ${contract.address}`);
           break;
-        case 'EnhancedStakingPool':
+        case 'STAKING_POOL':
           contractMap['STAKING_POOL'] = contract.address;
           console.log(`✅ STAKING_POOL: ${contract.address}`);
+          break;
+        case 'EnhancedStakingPool':
+          contractMap['STAKING_POOL'] = contract.address;
+          console.log(`✅ STAKING_POOL (Enhanced): ${contract.address}`);
           break;
         case 'VillageCitizenship':
           contractMap['VILLAGE_CITIZENSHIP'] = contract.address;
@@ -97,6 +101,13 @@ export async function fetchRealContractAddresses(): Promise<Record<string, strin
       PLATFORM_TREASURY: contractMap.PLATFORM_TREASURY,
       // SIMPLE_MORTGAGE temporarily excluded due to invalid address
     };
+
+    // Filter out undefined values to prevent validation errors
+    Object.keys(cachedContracts).forEach(key => {
+      if (!cachedContracts[key]) {
+        delete cachedContracts[key];
+      }
+    });
 
     // Final validation - ensure no undefined addresses
     Object.entries(cachedContracts).forEach(([name, address]) => {

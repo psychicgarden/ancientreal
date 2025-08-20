@@ -51,6 +51,22 @@ export const CONTRACTS = {
     ]
   },
 
+  STAKING_POOL: {
+    address: CONTRACT_ADDRESSES.STAKING_POOL,
+    abi: [
+      "function stake(uint256 amount) external",
+      "function unstake(uint256 amount) external",
+      "function getStakedAmount(address user) external view returns (uint256)",
+      "function getTotalStaked() external view returns (uint256)",
+      "function getRewards(address user) external view returns (uint256)",
+      "function claimRewards() external",
+      "function stakingToken() external view returns (address)",
+      "event Staked(address indexed user, uint256 amount)",
+      "event Unstaked(address indexed user, uint256 amount)",
+      "event RewardsClaimed(address indexed user, uint256 amount)"
+    ]
+  },
+
   VILLAGE_CITIZENSHIP: {
     address: CONTRACT_ADDRESSES.VILLAGE_CITIZENSHIP,
     abi: [
