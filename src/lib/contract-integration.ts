@@ -5,8 +5,9 @@ import { CONTRACTS, CHAIN } from "@/config/chain";
 interface ContractAddress {
   contract_name: string;
   address: string;
-  network: string;
-  deployed_at: string;
+  network?: string;
+  deployed_at?: string;
+  deployment_status?: string;
 }
 
 let cachedContracts: Record<string, string> | null = null;
@@ -20,9 +21,10 @@ export async function fetchRealContractAddresses(): Promise<Record<string, strin
   }
 
   try {
+    console.log('🔍 Fetching contract addresses from database...');
     const { data: contracts, error } = await supabase
       .from('contract_addresses')
-      .select('contract_name, address')
+      .select('contract_name, address, deployed_at, deployment_status')
       .eq('network', 'fuji')
       .order('deployed_at', { ascending: false });
 
@@ -30,6 +32,8 @@ export async function fetchRealContractAddresses(): Promise<Record<string, strin
       console.warn('Failed to fetch real contract addresses, using config defaults:', error);
       return CONTRACTS;
     }
+
+    console.log('📋 Raw contracts from database:', contracts);
 
     // Map contract names to addresses
     const contractMap: Record<string, string> = {};

@@ -48,9 +48,21 @@ export class Web3Integration {
   private async initializeContracts(): Promise<void> {
     if (!this.signer) throw new Error('Signer not initialized');
 
+    // Clear cache to ensure fresh data
+    const { clearContractCache } = await import('./contract-integration');
+    clearContractCache();
+
     // Get real contract addresses from database
     const realContracts = await fetchRealContractAddresses();
     console.log('🔗 Initializing with real contract addresses:', realContracts);
+    
+    // Debug: Check if we have the VillageCitizenship address
+    if (!realContracts.VILLAGE_CITIZENSHIP) {
+      console.error('❌ VillageCitizenship contract address not found in database!');
+      console.log('Available contracts:', Object.keys(realContracts));
+    } else {
+      console.log('✅ VillageCitizenship address found:', realContracts.VILLAGE_CITIZENSHIP);
+    }
 
     this.contracts.mazunteMortgage = new ethers.Contract(
       realContracts.MAZUNTE_MORTGAGE,

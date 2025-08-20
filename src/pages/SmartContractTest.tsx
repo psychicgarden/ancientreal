@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -6,6 +6,7 @@ import { useWallet } from "@/contexts/WalletContext";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import { CONTRACTS } from "@/lib/contracts";
+import { supabase } from "@/integrations/supabase/client";
 
 const SmartContractTest = () => {
   const { 
@@ -20,6 +21,42 @@ const SmartContractTest = () => {
   } = useWallet();
   const { toast } = useToast();
   const [isTestingContract, setIsTestingContract] = useState(false);
+  const [contractAddresses, setContractAddresses] = useState<{
+    villageCitizenship?: string;
+    mazunteMortgage?: string;
+  }>({});
+
+  useEffect(() => {
+    const fetchContractAddresses = async () => {
+      try {
+        const { data: contracts, error } = await supabase
+          .from('contract_addresses')
+          .select('contract_name, address')
+          .eq('network', 'fuji')
+          .eq('deployment_status', 'deployed');
+
+        if (error) {
+          console.error('Error fetching contract addresses:', error);
+          return;
+        }
+
+        const addresses: any = {};
+        contracts?.forEach(contract => {
+          if (contract.contract_name === 'VillageCitizenship') {
+            addresses.villageCitizenship = contract.address;
+          } else if (contract.contract_name === 'MazunteMortgage') {
+            addresses.mazunteMortgage = contract.address;
+          }
+        });
+
+        setContractAddresses(addresses);
+      } catch (error) {
+        console.error('Error fetching contract addresses:', error);
+      }
+    };
+
+    fetchContractAddresses();
+  }, []);
 
   const handleVillageMembershipTest = async () => {
     await joinVillage();
@@ -98,11 +135,15 @@ const SmartContractTest = () => {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Village Contract:</span>
-                    <span className="font-mono text-sm">{CONTRACTS.VILLAGE_CITIZENSHIP.address}</span>
+                    <span className="font-mono text-sm">
+                      {contractAddresses.villageCitizenship || 'Loading...'}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Mazunte Contract:</span>
-                    <span className="font-mono text-sm">{CONTRACTS.MAZUNTE_MORTGAGE.address}</span>
+                    <span className="font-mono text-sm">
+                      {contractAddresses.mazunteMortgage || CONTRACTS.MAZUNTE_MORTGAGE.address}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Token Symbol:</span>
