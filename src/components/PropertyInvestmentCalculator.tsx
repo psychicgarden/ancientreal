@@ -38,11 +38,11 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
   // Investment calculations using centralized finance service
   const investmentAmount = investment[0];
   
-  // Create property data for calculation
+  // Create property data for calculation - use specific data for Art Deco Loft
   const propertyData: PropertyMortgageData = {
     propertyValue: property.totalValue,
     downPayment: property.downPayment,
-    aprBps: 800, // 8% APR
+    aprBps: property.name === "Art Deco Loft" ? 800 : 750, // 8% APR for Art Deco Loft, 7.5% for others
     termMonths: 120, // 10 years
     monthlyRent: property.monthlyRent,
     platformFeePercent: 0.03
@@ -51,9 +51,9 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
   // Calculate metrics using centralized service
   const metrics = calculateInvestmentMetrics(investmentAmount, propertyData);
 
-  // Property appreciation calculations using database value or 181% default
-  const appreciationPercent = property.projected_appreciation_percent || 181;
-  const tenYearPropertyValue = property.totalValue * (1 + (appreciationPercent / 100));
+  // Property appreciation calculations - use networkValue for Art Deco Loft or calculate for others
+  const tenYearPropertyValue = property.networkValue || 
+    (property.totalValue * (1 + ((property.projected_appreciation_percent || 181) / 100)));
   const totalAppreciation = tenYearPropertyValue - property.totalValue;
   const buyerAppreciationShare = totalAppreciation * 0.5; // 50% split
 
