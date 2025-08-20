@@ -6,6 +6,7 @@ import { useState } from "react";
 import { MortgagePaymentModal } from "@/components/MortgagePaymentModal";
 import { PropertyAnalyticsModal } from "@/components/PropertyAnalyticsModal";
 import { MortgagePropertyData } from "@/hooks/useMortgageProperties";
+import { calculateInvestmentMetrics, PropertyMortgageData } from "@/lib/finance";
 
 interface MortgagePropertyCardProps {
   property: MortgagePropertyData;
@@ -22,22 +23,31 @@ export const MortgagePropertyCard = ({
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isAnalyticsModalOpen, setIsAnalyticsModalOpen] = useState(false);
 
-  // Calculate financial metrics
-  const monthlyProfit = Math.round(property.monthlyRent - property.monthlyPayment);
+  // Use centralized finance calculations to match PropertyInvestmentCalculator
+  const propertyData: PropertyMortgageData = {
+    propertyValue: property.totalValue,
+    downPayment: property.downPayment,
+    aprBps: property.name === "Art Deco Loft" ? 800 : 750, // 8% APR for Art Deco Loft, 7.5% for others
+    termMonths: 120, // 10 years
+    monthlyRent: property.monthlyRent,
+    platformFeePercent: 0.03
+  };
+
+  const metrics = calculateInvestmentMetrics(property.downPayment, propertyData);
   
-  // Calculate platform fee (3% of property value) and total investment
+  // Use calculated values from centralized service
+  const monthlyProfit = Math.round(metrics.monthlyProfit);
   const platformFee = property.totalValue * 0.03;
   const totalInvestment = property.downPayment + platformFee;
   
-  // Calculate 10-year ROI: (Total Cash Flow + Final Equity - Total Investment) / Total Investment
-  const totalCashFlow = monthlyProfit * 120;
-  const finalEquity = property.networkValue;
-  const totalReturn = (totalCashFlow + finalEquity - totalInvestment) / totalInvestment;
-  const totalReturn10Year = Math.round(totalReturn * 100) / 100;
+  // Calculate total return using same logic as PropertyInvestmentCalculator
+  const actualWealthCreated = metrics.totalProfit;
+  const totalReturn10Year = (actualWealthCreated / totalInvestment) + 1;
+
   
-  // Calculate return range
-  const returnLow = Math.floor(property.expectedReturn - 1.5);
-  const returnHigh = Math.ceil(property.expectedReturn + 1.5);
+  // Calculate return range based on metrics
+  const returnLow = Math.floor(metrics.cashFlowYield - 1.5);
+  const returnHigh = Math.ceil(metrics.cashFlowYield + 1.5);
 
   return (
     <Card className="group overflow-hidden hover:shadow-xl transition-all duration-500 hover:scale-[1.02] bg-card/40 backdrop-blur-sm border border-border/30">
@@ -122,7 +132,7 @@ export const MortgagePropertyCard = ({
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Total 10-Year Return:</span>
-                  <span className="text-lg font-bold text-primary">{totalReturn10Year}x</span>
+                  <span className="text-lg font-bold text-primary">{totalReturn10Year.toFixed(1)}x</span>
                 </div>
                 <div className="flex justify-between items-start pt-2">
                   <span className="text-sm text-muted-foreground">Annual Return Range:</span>
@@ -155,7 +165,7 @@ export const MortgagePropertyCard = ({
                 
                 <div className="flex-1 text-center min-w-0">
                   <div className="text-xl font-bold text-red-500 mb-1 whitespace-nowrap">
-                    ${property.monthlyPayment.toLocaleString()}
+                    ${Math.round(metrics.monthlyPayment).toLocaleString()}
                   </div>
                   <div className="text-xs text-muted-foreground uppercase tracking-wide leading-tight">
                     Mortgage<br />Payment
