@@ -46,7 +46,7 @@ export class Web3Integration {
     }
   }
 
-  private async getContract(contractName: keyof typeof CONTRACTS): Promise<ethers.Contract> {
+  async getContract(contractName: keyof typeof CONTRACTS): Promise<ethers.Contract> {
     if (!this.signer) throw new Error('Signer not initialized');
 
     // Always fetch fresh addresses from database
