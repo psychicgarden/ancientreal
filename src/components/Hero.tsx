@@ -2,9 +2,12 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Home, TrendingUp, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ASSETS } from "@/lib/assets";
+
 const Hero = () => {
   const navigate = useNavigate();
-  return <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+  
+  return (
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image with Overlay */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat" 
@@ -38,9 +41,9 @@ We Solve That.</p>
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
             <Button 
-              variant="pill"
+              variant="default"
               size="lg"
-              className="text-lg px-8 py-4"
+              className="text-lg px-8 py-4 bg-primary hover:bg-primary/90"
               onClick={() => navigate('/investor')}
             >
               View Properties
@@ -85,6 +88,8 @@ We Solve That.</p>
           <div className="w-1 h-3 bg-accent-foreground/30 rounded-full mt-2"></div>
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };
+
 export default Hero;
