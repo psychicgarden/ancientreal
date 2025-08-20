@@ -9,10 +9,10 @@ import villaEriceira from '@/assets/villa-ericeira-portugal.jpg';
 import baliJungleResort from '@/assets/bali-jungle-resort.jpg';
 import desertOasisMorocco from '@/assets/desert-oasis-morocco.jpg';
 import beachHouseMykonos from '@/assets/beach-house-mykonos.jpg';
-// Uploaded property images
-const artDecoLoftMexico = '/lovable-uploads/51bde256-1db5-4dc6-8d4b-889d09573c29.png';
-const luxuryBohoBungalow = '/lovable-uploads/0de3f9c6-8215-4db2-a0af-0e6516c1d081.png';
-const coastalApartmentEriceira = '/lovable-uploads/10592a9f-ab4b-4f89-b841-82bfac9c95d7.png';
+// New boho luxury property images
+import mazunteBohoVilla from '@/assets/mazunte-boho-villa.jpg';
+import mallorcaOceanviewVilla from '@/assets/mallorca-oceanview-villa.jpg';
+import bahiaTropicalHaven from '@/assets/bahia-tropical-haven.jpg';
 
 // Asset management utilities
 export const ASSETS = {
@@ -26,9 +26,9 @@ export const ASSETS = {
   BALI_JUNGLE_RESORT: baliJungleResort,
   DESERT_OASIS_MOROCCO: desertOasisMorocco,
   BEACH_HOUSE_MYKONOS: beachHouseMykonos,
-  ART_DECO_LOFT_MEXICO: artDecoLoftMexico,
-  LUXURY_BOHO_BUNGALOW: luxuryBohoBungalow,
-  COASTAL_APARTMENT_ERICEIRA: coastalApartmentEriceira,
+  ART_DECO_LOFT_MEXICO: mazunteBohoVilla,
+  LUXURY_BOHO_BUNGALOW: bahiaTropicalHaven,
+  COASTAL_APARTMENT_ERICEIRA: mallorcaOceanviewVilla,
   
   // Fallback images
   PLACEHOLDER: '/placeholder.svg',
