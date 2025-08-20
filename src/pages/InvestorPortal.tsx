@@ -1,4 +1,5 @@
 import { useState } from "react";
+import mallorcaLuxuryVillaBoho from "@/assets/mallorca-luxury-villa-boho.jpg";
 import greekMediterraneanBohoApartment from "@/assets/greek-mediterranean-boho-apartment.jpg";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
@@ -129,7 +130,7 @@ const InvestorPortal = () => {
                         <CardContent className="p-0">
                           <div className="relative aspect-video overflow-hidden">
                             <img
-                              src={greekMediterraneanBohoApartment}
+                              src={mallorcaLuxuryVillaBoho}
                               alt={property.name}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                             />
