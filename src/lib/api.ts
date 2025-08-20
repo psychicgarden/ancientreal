@@ -143,18 +143,26 @@ export class SupabaseApi {
 
   static async upsertUserStaking(stakingData: any): Promise<ApiResponse> {
     try {
+      logger.debug('Upserting user staking data', { 
+        user_wallet_address: stakingData.user_wallet_address,
+        total_staked: stakingData.total_staked 
+      }, 'SupabaseApi');
+      
       const { data, error } = await supabase
         .from('user_staking')
-        .upsert(stakingData)
+        .upsert(stakingData, { onConflict: 'user_wallet_address' })
         .select()
         .single();
       
       if (error) {
+        logger.error('Failed to upsert user staking', error, 'SupabaseApi');
         return { data: null, error: error.message, success: false };
       }
       
+      logger.debug('Successfully upserted user staking data', { data }, 'SupabaseApi');
       return { data, error: null, success: true };
     } catch (error: any) {
+      logger.error('Exception in upsertUserStaking', error, 'SupabaseApi');
       return { data: null, error: error.message || 'Unknown error', success: false };
     }
   }
