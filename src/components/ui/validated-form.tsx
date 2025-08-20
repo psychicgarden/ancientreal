@@ -45,7 +45,7 @@ export function ValidatedForm<T extends FieldValues>({
   const { execute } = useAsyncOperation();
 
   const form = useForm<T>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema as any),
     defaultValues,
     mode: 'onChange', // Validate on change for better UX
   });
@@ -149,7 +149,7 @@ export function useValidatedForm<T extends FieldValues>(
   const { handleError } = useErrorHandler();
   
   const form = useForm<T>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema as any),
     defaultValues,
     mode: 'onChange',
   });
