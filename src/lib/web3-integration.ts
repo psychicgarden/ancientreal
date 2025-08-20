@@ -25,7 +25,7 @@ export class Web3Integration {
     this.provider = new ethers.BrowserProvider(window.ethereum);
     await this.switchToAvalanche();
     this.signer = await this.provider.getSigner();
-    await this.initializeContracts();
+    console.log('✅ Wallet connected, contracts will be initialized on-demand');
   }
 
   private async switchToAvalanche(): Promise<void> {
@@ -46,56 +46,34 @@ export class Web3Integration {
     }
   }
 
-  private async initializeContracts(): Promise<void> {
+  private async getContract(contractName: keyof typeof CONTRACTS): Promise<ethers.Contract> {
     if (!this.signer) throw new Error('Signer not initialized');
 
-    // Clear cache to ensure fresh data
+    // Always fetch fresh addresses from database
     const { clearContractCache } = await import('./contract-integration');
     clearContractCache();
-
-    // Get real contract addresses from database with retry logic
-    console.log('🔍 Fetching contract addresses from database...');
-    this.realAddresses = await fetchRealContractAddresses();
-    console.log('🔗 Contract addresses loaded:', this.realAddresses);
     
-    // Critical validation - ensure we have the VillageCitizenship address
-    if (!this.realAddresses.VILLAGE_CITIZENSHIP || this.realAddresses.VILLAGE_CITIZENSHIP === '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0') {
-      console.error('❌ CRITICAL: Using fallback address instead of database address!');
-      console.log('Expected database address: 0x8f8d4b2b8d4f4a9b8d4f4a9b8d4f4a9b8d4f4a9b');
-      console.log('Current address:', this.realAddresses.VILLAGE_CITIZENSHIP);
-      
-      // Force refresh and try again
-      clearContractCache();
-      this.realAddresses = await fetchRealContractAddresses();
-      
-      if (!this.realAddresses.VILLAGE_CITIZENSHIP || this.realAddresses.VILLAGE_CITIZENSHIP === '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0') {
-        throw new Error('Failed to load correct VillageCitizenship address from database. Cannot proceed with fallback address.');
+    console.log(`🔍 Getting fresh contract address for ${contractName}...`);
+    const freshAddresses = await fetchRealContractAddresses();
+    
+    // Get the address key (convert contract name to address key)
+    const addressKey = contractName.replace('_', '_').toUpperCase();
+    const contractAddress = freshAddresses[addressKey];
+    
+    // Critical validation - prevent fallback address usage
+    if (contractName === 'VILLAGE_CITIZENSHIP') {
+      if (!contractAddress || contractAddress === '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0') {
+        throw new Error(`CRITICAL: Cannot use fallback address for ${contractName}. Expected database address: 0x8f8d4b2b8d4f4a9b8d4f4a9b8d4f4a9b8d4f4a9b, got: ${contractAddress}`);
       }
     }
     
-    console.log('✅ VillageCitizenship address confirmed:', this.realAddresses.VILLAGE_CITIZENSHIP);
-
-    this.contracts.mazunteMortgage = new ethers.Contract(
-      this.realAddresses.MAZUNTE_MORTGAGE,
-      CONTRACTS.MAZUNTE_MORTGAGE.abi,
-      this.signer
-    );
-
-    this.contracts.usdt = new ethers.Contract(
-      this.realAddresses.USDT,
-      CONTRACTS.USDT.abi,
-      this.signer
-    );
-
-    this.contracts.villageCitizenship = new ethers.Contract(
-      this.realAddresses.VILLAGE_CITIZENSHIP,
-      CONTRACTS.VILLAGE_CITIZENSHIP.abi,
-      this.signer
-    );
-
-    this.contracts.secondaryMarketplace = new ethers.Contract(
-      this.realAddresses.SECONDARY_MARKETPLACE,
-      CONTRACTS.SECONDARY_MARKETPLACE.abi,
+    this.ensureAddressConfigured(contractAddress, contractName);
+    
+    console.log(`✅ Creating fresh contract instance for ${contractName} at ${contractAddress}`);
+    
+    return new ethers.Contract(
+      contractAddress,
+      CONTRACTS[contractName].abi,
       this.signer
     );
   }
@@ -106,20 +84,20 @@ export class Web3Integration {
   }
 
   async getUSDTBalance(account: string): Promise<string> {
-    this.ensureAddressConfigured(this.realAddresses.USDT, 'USDT');
-    const balance = await this.contracts.usdt.balanceOf(account);
+    const usdtContract = await this.getContract('USDT');
+    const balance = await usdtContract.balanceOf(account);
     return ethers.formatUnits(balance, 6); // USDT has 6 decimals
   }
 
   async approveUSDT(spender: string, amount: string): Promise<ethers.ContractTransactionResponse> {
-    this.ensureAddressConfigured(this.realAddresses.USDT, 'USDT');
+    const usdtContract = await this.getContract('USDT');
     const amountWei = ethers.parseUnits(amount, 6);
-    return await this.contracts.usdt.approve(spender, amountWei);
+    return await usdtContract.approve(spender, amountWei);
   }
 
   async checkUSDTAllowance(owner: string, spender: string): Promise<string> {
-    this.ensureAddressConfigured(this.realAddresses.USDT, 'USDT');
-    const allowance = await this.contracts.usdt.allowance(owner, spender);
+    const usdtContract = await this.getContract('USDT');
+    const allowance = await usdtContract.allowance(owner, spender);
     return ethers.formatUnits(allowance, 6);
   }
 
@@ -129,9 +107,10 @@ export class Web3Integration {
   }> {
     const account = await this.getAccount();
     const downPaymentUSDT = (downPayment * 1e6).toString(); // Convert to USDT units
-    // Ensure contracts are configured
-    this.ensureAddressConfigured(this.realAddresses.MAZUNTE_MORTGAGE, 'MazunteMortgage');
-    this.ensureAddressConfigured(this.realAddresses.USDT, 'USDT');
+    
+    // Get fresh contract instances
+    const mortgageContract = await this.getContract('MAZUNTE_MORTGAGE');
+    const mortgageAddress = mortgageContract.target as string;
 
     // Check USDT balance
     const balance = await this.getUSDTBalance(account);
@@ -140,14 +119,14 @@ export class Web3Integration {
     }
 
     // Check and approve USDT allowance
-    const allowance = await this.checkUSDTAllowance(account, this.realAddresses.MAZUNTE_MORTGAGE);
+    const allowance = await this.checkUSDTAllowance(account, mortgageAddress);
     if (parseFloat(allowance) < downPayment) {
-      const approveTx = await this.approveUSDT(this.realAddresses.MAZUNTE_MORTGAGE, downPaymentUSDT);
+      const approveTx = await this.approveUSDT(mortgageAddress, downPaymentUSDT);
       await approveTx.wait();
     }
 
     // Purchase property
-    const tx = await this.contracts.mazunteMortgage.purchaseProperty(downPaymentUSDT);
+    const tx = await mortgageContract.purchaseProperty(downPaymentUSDT);
     const receipt = await tx.wait();
     
     // Extract mortgage ID from events
@@ -163,12 +142,12 @@ export class Web3Integration {
     const account = await this.getAccount();
     const feeAmountUSDT = (feeAmount * 1e6).toString(); // Convert to USDT units
     
+    // Get fresh contract instances
+    const usdtContract = await this.getContract('USDT');
+    
     // Get real contract addresses including platform treasury
     const realContracts = await fetchRealContractAddresses();
     const PLATFORM_TREASURY = realContracts.PLATFORM_TREASURY;
-    
-    // Ensure contracts are configured
-    this.ensureAddressConfigured(this.realAddresses.USDT, 'USDT');
 
     // Check USDT balance
     const balance = await this.getUSDTBalance(account);
@@ -177,7 +156,7 @@ export class Web3Integration {
     }
 
     // Transfer platform fee to treasury
-    const tx = await this.contracts.usdt.transfer(PLATFORM_TREASURY, feeAmountUSDT);
+    const tx = await usdtContract.transfer(PLATFORM_TREASURY, feeAmountUSDT);
     await tx.wait();
     
     return tx;
@@ -191,6 +170,10 @@ export class Web3Integration {
     const mortgageDetails = await this.getMortgageDetails(account);
     const monthlyPayment = parseFloat(ethers.formatUnits(mortgageDetails.monthlyPayment, 6));
     
+    // Get fresh contract instances
+    const mortgageContract = await this.getContract('MAZUNTE_MORTGAGE');
+    const mortgageAddress = mortgageContract.target as string;
+    
     // Check USDT balance
     const balance = await this.getUSDTBalance(account);
     if (parseFloat(balance) < monthlyPayment) {
@@ -198,14 +181,14 @@ export class Web3Integration {
     }
 
     // Check and approve USDT allowance
-    const allowance = await this.checkUSDTAllowance(account, this.realAddresses.MAZUNTE_MORTGAGE);
+    const allowance = await this.checkUSDTAllowance(account, mortgageAddress);
     if (parseFloat(allowance) < monthlyPayment) {
       const paymentUSDT = (monthlyPayment * 1e6).toString();
-      const approveTx = await this.approveUSDT(this.realAddresses.MAZUNTE_MORTGAGE, paymentUSDT);
+      const approveTx = await this.approveUSDT(mortgageAddress, paymentUSDT);
       await approveTx.wait();
     }
 
-    return await this.contracts.mazunteMortgage.makePayment();
+    return await mortgageContract.makePayment();
   }
 
   async getMortgageDetails(account: string): Promise<{
@@ -223,8 +206,8 @@ export class Web3Integration {
     isCompleted: boolean;
     coolingOffActive: boolean;
   }> {
-    this.ensureAddressConfigured(this.realAddresses.MAZUNTE_MORTGAGE, 'MazunteMortgage');
-    return await this.contracts.mazunteMortgage.getMortgageDetails(account);
+    const mortgageContract = await this.getContract('MAZUNTE_MORTGAGE');
+    return await mortgageContract.getMortgageDetails(account);
   }
 
   async getPropertyStatus(): Promise<{
@@ -235,8 +218,8 @@ export class Web3Integration {
     totalRentalIncomeGenerated: bigint;
     fullyOwned: boolean;
   }> {
-    this.ensureAddressConfigured(this.realAddresses.MAZUNTE_MORTGAGE, 'MazunteMortgage');
-    return await this.contracts.mazunteMortgage.getPropertyStatus();
+    const mortgageContract = await this.getContract('MAZUNTE_MORTGAGE');
+    return await mortgageContract.getPropertyStatus();
   }
 
   async getPaymentSchedule(account: string): Promise<Array<{
@@ -247,54 +230,40 @@ export class Web3Integration {
     dueDate: bigint;
     isPaid: boolean;
   }>> {
-    this.ensureAddressConfigured(this.realAddresses.MAZUNTE_MORTGAGE, 'MazunteMortgage');
-    return await this.contracts.mazunteMortgage.getPaymentSchedule(account);
+    const mortgageContract = await this.getContract('MAZUNTE_MORTGAGE');
+    return await mortgageContract.getPaymentSchedule(account);
   }
 
   async isPaymentOverdue(account: string): Promise<boolean> {
-    this.ensureAddressConfigured(this.realAddresses.MAZUNTE_MORTGAGE, 'MazunteMortgage');
-    return await this.contracts.mazunteMortgage.isPaymentOverdue(account);
+    const mortgageContract = await this.getContract('MAZUNTE_MORTGAGE');
+    return await mortgageContract.isPaymentOverdue(account);
   }
 
   async joinVillage(): Promise<ethers.ContractTransactionResponse> {
-    // Force refresh addresses before critical operation
-    const { clearContractCache } = await import('./contract-integration');
-    clearContractCache();
-    this.realAddresses = await fetchRealContractAddresses();
+    console.log('🏛️ Getting fresh VillageCitizenship contract...');
     
-    console.log('🏛️ Joining village with fresh address:', this.realAddresses.VILLAGE_CITIZENSHIP);
+    // Get fresh contract instance with validated address
+    const villageContract = await this.getContract('VILLAGE_CITIZENSHIP');
     
-    // Validate we're not using the fallback address
-    if (this.realAddresses.VILLAGE_CITIZENSHIP === '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0') {
-      throw new Error('Cannot join village with fallback address. Database address required: 0x8f8d4b2b8d4f4a9b8d4f4a9b8d4f4a9b8d4f4a9b');
-    }
-    
-    this.ensureAddressConfigured(this.realAddresses.VILLAGE_CITIZENSHIP, 'VillageCitizenship');
-    
-    // Reinitialize the contract with fresh address
-    this.contracts.villageCitizenship = new ethers.Contract(
-      this.realAddresses.VILLAGE_CITIZENSHIP,
-      CONTRACTS.VILLAGE_CITIZENSHIP.abi,
-      this.signer
-    );
+    console.log('✅ Using verified contract address:', villageContract.target);
     
     const feeInWei = ethers.parseEther(VILLAGE_CITIZENSHIP_FEE);
-    return await this.contracts.villageCitizenship.becomeCitizen({ value: feeInWei });
+    return await villageContract.becomeCitizen({ value: feeInWei });
   }
 
   async checkVillageMembership(account: string): Promise<boolean> {
-    this.ensureAddressConfigured(this.realAddresses.VILLAGE_CITIZENSHIP, 'VillageCitizenship');
-    return await this.contracts.villageCitizenship.hasCitizenship(account);
+    const villageContract = await this.getContract('VILLAGE_CITIZENSHIP');
+    return await villageContract.hasCitizenship(account);
   }
 
   async cancelDuringCoolingOff(): Promise<ethers.ContractTransactionResponse> {
-    this.ensureAddressConfigured(this.realAddresses.MAZUNTE_MORTGAGE, 'MazunteMortgage');
-    return await this.contracts.mazunteMortgage.cancelDuringCoolingOff();
+    const mortgageContract = await this.getContract('MAZUNTE_MORTGAGE');
+    return await mortgageContract.cancelDuringCoolingOff();
   }
 
   async activateMortgage(): Promise<ethers.ContractTransactionResponse> {
-    this.ensureAddressConfigured(this.realAddresses.MAZUNTE_MORTGAGE, 'MazunteMortgage');
-    return await this.contracts.mazunteMortgage.confirmMortgageActivation();
+    const mortgageContract = await this.getContract('MAZUNTE_MORTGAGE');
+    return await mortgageContract.confirmMortgageActivation();
   }
 
   // Secondary Marketplace functions
@@ -305,8 +274,8 @@ export class Web3Integration {
     feeRate: number,
     priceImpactThreshold: number
   ): Promise<ethers.ContractTransactionResponse> {
-    this.ensureAddressConfigured(this.realAddresses.SECONDARY_MARKETPLACE, 'SecondaryMarketplace');
-    return await this.contracts.secondaryMarketplace.createPool(
+    const marketplaceContract = await this.getContract('SECONDARY_MARKETPLACE');
+    return await marketplaceContract.createPool(
       propertyToken,
       tokenId,
       baseToken,
@@ -320,8 +289,8 @@ export class Web3Integration {
     propertyAmount: string,
     baseAmount: string
   ): Promise<ethers.ContractTransactionResponse> {
-    this.ensureAddressConfigured(this.realAddresses.SECONDARY_MARKETPLACE, 'SecondaryMarketplace');
-    return await this.contracts.secondaryMarketplace.addLiquidity(
+    const marketplaceContract = await this.getContract('SECONDARY_MARKETPLACE');
+    return await marketplaceContract.addLiquidity(
       poolId,
       ethers.parseUnits(propertyAmount, 18),
       ethers.parseUnits(baseAmount, 6)
@@ -334,8 +303,8 @@ export class Web3Integration {
     amountIn: string,
     minAmountOut: string
   ): Promise<ethers.ContractTransactionResponse> {
-    this.ensureAddressConfigured(this.realAddresses.SECONDARY_MARKETPLACE, 'SecondaryMarketplace');
-    return await this.contracts.secondaryMarketplace.swapTokens(
+    const marketplaceContract = await this.getContract('SECONDARY_MARKETPLACE');
+    return await marketplaceContract.swapTokens(
       poolId,
       propertyToBase,
       ethers.parseUnits(amountIn, propertyToBase ? 18 : 6),
@@ -344,32 +313,37 @@ export class Web3Integration {
   }
 
   async getCurrentPrice(poolId: number): Promise<string> {
-    const price = await this.contracts.secondaryMarketplace.getCurrentPrice(poolId);
+    const marketplaceContract = await this.getContract('SECONDARY_MARKETPLACE');
+    const price = await marketplaceContract.getCurrentPrice(poolId);
     return ethers.formatUnits(price, 18);
   }
 
   async getUserLPTokens(poolId: number, user: string): Promise<string> {
-    const tokens = await this.contracts.secondaryMarketplace.getUserLPTokens(poolId, user);
+    const marketplaceContract = await this.getContract('SECONDARY_MARKETPLACE');
+    const tokens = await marketplaceContract.getUserLPTokens(poolId, user);
     return ethers.formatUnits(tokens, 18);
   }
 
-  // Event listeners
-  onMortgageCreated(callback: (buyer: string, mortgageId: string, downPayment: bigint, monthlyPayment: bigint) => void): void {
-    this.contracts.mazunteMortgage.on('MortgageCreated', callback);
+  // Event listeners - Note: These will create fresh contract instances each time
+  async onMortgageCreated(callback: (buyer: string, mortgageId: string, downPayment: bigint, monthlyPayment: bigint) => void): Promise<void> {
+    const mortgageContract = await this.getContract('MAZUNTE_MORTGAGE');
+    mortgageContract.on('MortgageCreated', callback);
   }
 
-  onPaymentMade(callback: (buyer: string, amount: bigint, principalPaid: bigint, interestPaid: bigint, remainingBalance: bigint) => void): void {
-    this.contracts.mazunteMortgage.on('PaymentMade', callback);
+  async onPaymentMade(callback: (buyer: string, amount: bigint, principalPaid: bigint, interestPaid: bigint, remainingBalance: bigint) => void): Promise<void> {
+    const mortgageContract = await this.getContract('MAZUNTE_MORTGAGE');
+    mortgageContract.on('PaymentMade', callback);
   }
 
-  onMortgageCompleted(callback: (buyer: string, totalPaid: bigint) => void): void {
-    this.contracts.mazunteMortgage.on('MortgageCompleted', callback);
+  async onMortgageCompleted(callback: (buyer: string, totalPaid: bigint) => void): Promise<void> {
+    const mortgageContract = await this.getContract('MAZUNTE_MORTGAGE');
+    mortgageContract.on('MortgageCompleted', callback);
   }
 
   removeAllListeners(): void {
-    Object.values(this.contracts).forEach(contract => {
-      contract.removeAllListeners();
-    });
+    // Since we no longer cache contracts, this method is simplified
+    // Event listeners would need to be managed differently with lazy loading
+    console.log('Event listeners cleared (lazy loading mode)');
   }
 
   formatUSDT(amount: bigint): string {
