@@ -144,7 +144,10 @@ const Portfolio = () => {
           },
           (payload) => {
             console.log('📡 Real-time update received for user_properties:', payload);
-            fetchUserData(); // Refetch data when changes occur
+            // Only refetch if not currently loading to prevent loops
+            if (!loading) {
+              setTimeout(() => fetchUserData(), 100); // Debounce refetch
+            }
           }
         )
         .on(
@@ -156,7 +159,9 @@ const Portfolio = () => {
             filter: `user_wallet_address=eq.${account.toLowerCase()}`
           },
           () => {
-            fetchUserData(); // Refetch data when changes occur
+            if (!loading) {
+              setTimeout(() => fetchUserData(), 100);
+            }
           }
         )
         .on(
@@ -168,10 +173,11 @@ const Portfolio = () => {
             filter: `user_wallet_address=eq.${account.toLowerCase()}`
           },
           () => {
-            fetchUserData(); // Refetch data when changes occur
+            if (!loading) {
+              setTimeout(() => fetchUserData(), 100);
+            }
           }
         )
-        // Removed fractional investments real-time subscription
         .subscribe();
 
       return () => {
