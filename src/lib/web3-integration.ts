@@ -1,7 +1,8 @@
 
 import { ethers } from 'ethers';
 import { CONTRACTS, NETWORK_CONFIG, VILLAGE_CITIZENSHIP_FEE } from '@/lib/contracts';
-import { CONTRACTS as CONTRACT_ADDRESSES } from '@/config/chain';
+import { NETWORK_CONFIG as CHAIN_CONFIG } from '@/config/chain';
+import { fetchRealContractAddresses } from './contract-integration';
 
 export class Web3Integration {
   private provider: ethers.BrowserProvider | null = null;
@@ -23,20 +24,20 @@ export class Web3Integration {
     this.provider = new ethers.BrowserProvider(window.ethereum);
     await this.switchToAvalanche();
     this.signer = await this.provider.getSigner();
-    this.initializeContracts();
+    await this.initializeContracts();
   }
 
   private async switchToAvalanche(): Promise<void> {
     try {
       await window.ethereum.request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId: NETWORK_CONFIG.chainId }],
+        params: [{ chainId: CHAIN_CONFIG.chainId }],
       });
     } catch (switchError: any) {
       if (switchError.code === 4902) {
         await window.ethereum.request({
           method: 'wallet_addEthereumChain',
-          params: [NETWORK_CONFIG],
+          params: [CHAIN_CONFIG],
         });
       } else {
         throw switchError;
@@ -44,29 +45,33 @@ export class Web3Integration {
     }
   }
 
-  private initializeContracts(): void {
+  private async initializeContracts(): Promise<void> {
     if (!this.signer) throw new Error('Signer not initialized');
 
+    // Get real contract addresses from database
+    const realContracts = await fetchRealContractAddresses();
+    console.log('🔗 Initializing with real contract addresses:', realContracts);
+
     this.contracts.mazunteMortgage = new ethers.Contract(
-      CONTRACTS.MAZUNTE_MORTGAGE.address,
+      realContracts.MAZUNTE_MORTGAGE,
       CONTRACTS.MAZUNTE_MORTGAGE.abi,
       this.signer
     );
 
     this.contracts.usdt = new ethers.Contract(
-      CONTRACTS.USDT.address,
+      realContracts.USDT,
       CONTRACTS.USDT.abi,
       this.signer
     );
 
     this.contracts.villageCitizenship = new ethers.Contract(
-      CONTRACTS.VILLAGE_CITIZENSHIP.address,
+      realContracts.VILLAGE_CITIZENSHIP,
       CONTRACTS.VILLAGE_CITIZENSHIP.abi,
       this.signer
     );
 
     this.contracts.secondaryMarketplace = new ethers.Contract(
-      CONTRACTS.SECONDARY_MARKETPLACE.address,
+      realContracts.SECONDARY_MARKETPLACE,
       CONTRACTS.SECONDARY_MARKETPLACE.abi,
       this.signer
     );
@@ -135,8 +140,9 @@ export class Web3Integration {
     const account = await this.getAccount();
     const feeAmountUSDT = (feeAmount * 1e6).toString(); // Convert to USDT units
     
-    // Platform treasury address (you should configure this)
-    const PLATFORM_TREASURY = CONTRACT_ADDRESSES.PLATFORM_TREASURY;
+    // Get real contract addresses including platform treasury
+    const realContracts = await fetchRealContractAddresses();
+    const PLATFORM_TREASURY = realContracts.PLATFORM_TREASURY;
     
     // Ensure contracts are configured
     this.ensureAddressConfigured(CONTRACTS.USDT.address, 'USDT');
