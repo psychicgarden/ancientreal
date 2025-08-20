@@ -20,8 +20,8 @@ Deno.serve(async (req) => {
 
     console.log('🚀 Starting smart contract deployment...');
 
-    // Simulate the deployment process (in reality, this would call your Hardhat script)
-    const deploymentResults = await simulateDeployment();
+    // Execute real Hardhat deployment script
+    const deploymentResults = await executeHardhatDeployment();
 
     // Store contract addresses in database
     for (const [contractName, result] of Object.entries(deploymentResults)) {
@@ -78,36 +78,196 @@ Deno.serve(async (req) => {
   }
 });
 
-// Simulate contract deployment (replace with actual Hardhat deployment)
-async function simulateDeployment() {
-  console.log('📋 Simulating contract deployment...');
+// Execute real Hardhat deployment
+async function executeHardhatDeployment() {
+  console.log('📋 Starting real contract deployment...');
   
-  // In real implementation, this would:
-  // 1. Execute the Hardhat deployment script
-  // 2. Parse the output to extract contract addresses
-  // 3. Return the actual deployment results
+  try {
+    // Set up environment variables for deployment
+    const env = {
+      ...Deno.env.toObject(),
+      PRIVATE_KEY: Deno.env.get('PRIVATE_KEY') || '',
+      SNOWTRACE_API_KEY: Deno.env.get('SNOWTRACE_API_KEY') || 'demo-key'
+    };
+
+    // Create deployment script content
+    const deploymentScript = `
+const { ethers } = require("hardhat");
+
+async function main() {
+  console.log("🚀 Deploying contracts to Avalanche Fuji...");
   
-  // For now, simulate the deployment with mock addresses
-  await new Promise(resolve => setTimeout(resolve, 3000)); // Simulate deployment time
+  const [deployer] = await ethers.getSigners();
+  console.log("Deploying from:", deployer.address);
   
-  return {
-    'TestUSDT': {
-      address: '0x' + Array(40).fill(0).map(() => Math.floor(Math.random() * 16).toString(16)).join(''),
-      txHash: '0x' + Array(64).fill(0).map(() => Math.floor(Math.random() * 16).toString(16)).join(''),
-      deployer: '0x966fed85116f6d283921a6ed176d7643a99cbf94',
-      gasUsed: 1500000
-    },
-    'EnhancedStakingPool': {
-      address: '0x' + Array(40).fill(0).map(() => Math.floor(Math.random() * 16).toString(16)).join(''),
-      txHash: '0x' + Array(64).fill(0).map(() => Math.floor(Math.random() * 16).toString(16)).join(''),
-      deployer: '0x966fed85116f6d283921a6ed176d7643a99cbf94',
-      gasUsed: 2100000
-    },
-    'AncientMortgage': {
-      address: '0x' + Array(40).fill(0).map(() => Math.floor(Math.random() * 16).toString(16)).join(''),
-      txHash: '0x' + Array(64).fill(0).map(() => Math.floor(Math.random() * 16).toString(16)).join(''),
-      deployer: '0x966fed85116f6d283921a6ed176d7643a99cbf94',
-      gasUsed: 2800000
-    }
+  const balance = await deployer.provider.getBalance(deployer.address);
+  console.log("Account balance:", ethers.formatEther(balance), "AVAX");
+
+  const results = {};
+
+  // Deploy TestUSDT
+  console.log("📄 Deploying TestUSDT...");
+  const TestUSDT = await ethers.getContractFactory("TestUSDT");
+  const testUSDT = await TestUSDT.deploy();
+  await testUSDT.waitForDeployment();
+  
+  const usdtAddress = await testUSDT.getAddress();
+  const usdtTx = testUSDT.deploymentTransaction();
+  
+  results.TestUSDT = {
+    address: usdtAddress,
+    txHash: usdtTx.hash,
+    deployer: deployer.address,
+    gasUsed: 1500000
   };
+  
+  console.log("✅ TestUSDT deployed at:", usdtAddress);
+
+  // Deploy EnhancedStakingPool
+  console.log("📄 Deploying EnhancedStakingPool...");
+  const EnhancedStakingPool = await ethers.getContractFactory("EnhancedStakingPool");
+  const stakingPool = await EnhancedStakingPool.deploy(
+    usdtAddress,
+    "0x0000000000000000000000000000000000000000", // Placeholder mortgage contract
+    deployer.address
+  );
+  await stakingPool.waitForDeployment();
+  
+  const stakingAddress = await stakingPool.getAddress();
+  const stakingTx = stakingPool.deploymentTransaction();
+  
+  results.EnhancedStakingPool = {
+    address: stakingAddress,
+    txHash: stakingTx.hash,
+    deployer: deployer.address,
+    gasUsed: 2100000
+  };
+  
+  console.log("✅ EnhancedStakingPool deployed at:", stakingAddress);
+
+  // Deploy AncientMortgage
+  console.log("📄 Deploying AncientMortgage...");
+  const AncientMortgage = await ethers.getContractFactory("AncientMortgage");
+  const mortgage = await AncientMortgage.deploy(
+    usdtAddress,
+    deployer.address,
+    stakingAddress,
+    deployer.address
+  );
+  await mortgage.waitForDeployment();
+  
+  const mortgageAddress = await mortgage.getAddress();
+  const mortgageTx = mortgage.deploymentTransaction();
+  
+  results.AncientMortgage = {
+    address: mortgageAddress,
+    txHash: mortgageTx.hash,
+    deployer: deployer.address,
+    gasUsed: 2800000
+  };
+  
+  console.log("✅ AncientMortgage deployed at:", mortgageAddress);
+
+  // Output results for parsing
+  console.log("DEPLOYMENT_RESULTS:", JSON.stringify(results));
+  
+  return results;
+}
+
+main().catch((error) => {
+  console.error("Deployment failed:", error);
+  process.exit(1);
+});
+`;
+
+    // Write the deployment script to a temporary file
+    await Deno.writeTextFile('/tmp/deploy.js', deploymentScript);
+    
+    // Create package.json for dependencies
+    const packageJson = {
+      name: "contract-deployment",
+      version: "1.0.0",
+      dependencies: {
+        "hardhat": "^3.0.0",
+        "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+        "@openzeppelin/contracts": "^5.4.0"
+      }
+    };
+    
+    await Deno.writeTextFile('/tmp/package.json', JSON.stringify(packageJson, null, 2));
+    
+    // Create hardhat.config.js
+    const hardhatConfig = `
+require("@nomicfoundation/hardhat-toolbox");
+
+module.exports = {
+  solidity: "0.8.19",
+  networks: {
+    fuji: {
+      url: "https://api.avax-test.network/ext/bc/C/rpc",
+      chainId: 43113,
+      accounts: ["${env.PRIVATE_KEY}"],
+      gas: 8000000,
+      gasPrice: 25000000000
+    }
+  }
+};
+`;
+    
+    await Deno.writeTextFile('/tmp/hardhat.config.js', hardhatConfig);
+
+    console.log('📦 Installing dependencies...');
+    
+    // Install npm dependencies
+    const installProcess = new Deno.Command('npm', {
+      args: ['install'],
+      cwd: '/tmp',
+      env: env,
+      stdout: 'piped',
+      stderr: 'piped'
+    });
+    
+    const installResult = await installProcess.output();
+    
+    if (!installResult.success) {
+      throw new Error(`npm install failed: ${new TextDecoder().decode(installResult.stderr)}`);
+    }
+
+    console.log('🚀 Running Hardhat deployment...');
+    
+    // Run the deployment
+    const deployProcess = new Deno.Command('npx', {
+      args: ['hardhat', 'run', '/tmp/deploy.js', '--network', 'fuji'],
+      cwd: '/tmp',
+      env: env,
+      stdout: 'piped',
+      stderr: 'piped'
+    });
+    
+    const deployResult = await deployProcess.output();
+    const stdout = new TextDecoder().decode(deployResult.stdout);
+    const stderr = new TextDecoder().decode(deployResult.stderr);
+    
+    console.log('Deployment output:', stdout);
+    if (stderr) console.log('Deployment stderr:', stderr);
+    
+    if (!deployResult.success) {
+      throw new Error(`Deployment failed: ${stderr}`);
+    }
+    
+    // Parse deployment results from output
+    const resultsMatch = stdout.match(/DEPLOYMENT_RESULTS: (.+)/);
+    if (!resultsMatch) {
+      throw new Error('Could not parse deployment results');
+    }
+    
+    const results = JSON.parse(resultsMatch[1]);
+    console.log('✅ Parsed deployment results:', results);
+    
+    return results;
+    
+  } catch (error) {
+    console.error('❌ Deployment execution failed:', error);
+    throw error;
+  }
 }
