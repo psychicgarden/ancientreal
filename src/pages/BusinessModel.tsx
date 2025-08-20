@@ -179,7 +179,7 @@ const BusinessModel = () => {
             
             <DropdownMenuItem onClick={() => navigate("/investor-portal")} className="cursor-pointer">
               <Briefcase className="mr-2 h-4 w-4" />
-              <span>Investor Portal</span>
+              <span>Investment Access</span>
             </DropdownMenuItem>
             
             <DropdownMenuItem onClick={() => navigate("/portfolio")} className="cursor-pointer">
@@ -3179,7 +3179,7 @@ const BusinessModel = () => {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button size="lg" onClick={() => navigate('/investor-portal')} className="text-lg px-8 py-6">
-              Access Investor Portal
+              Access Investment Portal
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
             <Button variant="outline" size="lg" onClick={() => navigate('/portfolio')} className="text-lg px-8 py-6">

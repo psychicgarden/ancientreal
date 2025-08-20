@@ -485,7 +485,7 @@ const Portfolio = () => {
                     <div>
                       <h3 className="text-lg font-semibold">No Whole Properties Yet</h3>
                       <p className="text-muted-foreground">
-                        Visit the Investor Portal to purchase your first property
+                        Visit Investment Access to purchase your first property
                       </p>
                     </div>
                     <Link to="/investor">

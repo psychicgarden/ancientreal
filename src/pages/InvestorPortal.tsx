@@ -32,7 +32,7 @@ const InvestorPortal = () => {
             <div className="text-center mb-8">
               <h1 className="text-4xl md:text-6xl font-bold mb-6">
                 <span className="bg-gradient-primary bg-clip-text text-transparent">
-                  Investor Portal
+                  Investment Access
                 </span>
               </h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-6">
