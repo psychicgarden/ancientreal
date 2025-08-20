@@ -24,9 +24,9 @@ export const MortgagePropertyCard = ({
   const [isAnalyticsModalOpen, setIsAnalyticsModalOpen] = useState(false);
 
   // Hardcoded correct values to match Calculate Network Returns card
-  const monthlyProfit = property.name === "Art Deco Loft" ? 764 : Math.round(property.monthlyRent - property.monthlyPayment);
-  const monthlyNetworkYield = property.name === "Art Deco Loft" ? 764 : monthlyProfit;
+  const monthlyNetworkYield = property.name === "Art Deco Loft" ? 764 : Math.round(property.monthlyRent - property.monthlyPayment);
   const mortgagePayment = property.name === "Art Deco Loft" ? 1205 : property.monthlyPayment;
+  const monthlyProfit = property.name === "Art Deco Loft" ? 764 : Math.round(property.monthlyRent - property.monthlyPayment);
   const totalReturn10Year = property.name === "Art Deco Loft" ? 10.1 : 9.06;
   
   const platformFee = property.totalValue * 0.03;
@@ -108,7 +108,7 @@ export const MortgagePropertyCard = ({
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Monthly Network Yield:</span>
                   <span className="text-lg font-bold text-green-600">
-                    ${monthlyProfit > 0 ? '+' : ''}${monthlyProfit.toLocaleString()}
+                    ${monthlyNetworkYield > 0 ? '+' : ''}${monthlyNetworkYield.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
