@@ -1,8 +1,9 @@
-require("@nomicfoundation/hardhat-toolbox");
-require("dotenv").config();
+import dotenv from "dotenv";
+
+dotenv.config();
 
 /** @type import('hardhat/config').HardhatUserConfig */
-module.exports = {
+export default {
   solidity: {
     version: "0.8.19",
     settings: {
@@ -13,10 +14,8 @@ module.exports = {
     }
   },
   networks: {
-    hardhat: {
-      chainId: 31337
-    },
     fuji: {
+      type: "http",
       url: "https://api.avax-test.network/ext/bc/C/rpc",
       chainId: 43113,
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
@@ -24,6 +23,7 @@ module.exports = {
       gasPrice: 25000000000 // 25 gwei
     },
     avalanche: {
+      type: "http",
       url: "https://api.avax.network/ext/bc/C/rpc",
       chainId: 43114,
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],

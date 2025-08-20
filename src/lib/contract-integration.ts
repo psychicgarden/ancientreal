@@ -58,7 +58,7 @@ export async function fetchRealContractAddresses(): Promise<Record<string, strin
           contractMap['MAZUNTE_MORTGAGE'] = contract.address;
           console.log(`✅ MAZUNTE_MORTGAGE: ${contract.address}`);
           break;
-        case 'TestUSDT':
+        case 'USDT':
           contractMap['USDT'] = contract.address;
           console.log(`✅ USDT: ${contract.address}`);
           break;
@@ -73,6 +73,10 @@ export async function fetchRealContractAddresses(): Promise<Record<string, strin
         case 'SecondaryMarketplace':
           contractMap['SECONDARY_MARKETPLACE'] = contract.address;
           console.log(`✅ SECONDARY_MARKETPLACE: ${contract.address}`);
+          break;
+        case 'PlatformTreasury':
+          contractMap['PLATFORM_TREASURY'] = contract.address;
+          console.log(`✅ PLATFORM_TREASURY: ${contract.address}`);
           break;
       }
     });
@@ -91,6 +95,7 @@ export async function fetchRealContractAddresses(): Promise<Record<string, strin
       VILLAGE_CITIZENSHIP: contractMap.VILLAGE_CITIZENSHIP,
       SECONDARY_MARKETPLACE: contractMap.SECONDARY_MARKETPLACE,
       PLATFORM_TREASURY: contractMap.PLATFORM_TREASURY,
+      // SIMPLE_MORTGAGE temporarily excluded due to invalid address
     };
 
     // Final validation - ensure no undefined addresses
