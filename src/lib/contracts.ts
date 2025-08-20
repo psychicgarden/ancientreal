@@ -24,6 +24,20 @@ export const CONTRACTS = {
     ]
   },
 
+  SIMPLE_MORTGAGE: {
+    address: CONTRACT_ADDRESSES.SIMPLE_MORTGAGE,
+    abi: [
+      "function purchaseProperty(uint256 _propertyValue, uint256 _downPayment, uint256 _interestRate, uint256 _termMonths) external",
+      "function makePayment() external",
+      "function getMortgageDetails(address _borrower) external view returns (tuple(uint256 propertyValue, uint256 downPayment, uint256 loanAmount, uint256 monthlyPayment, uint256 remainingBalance, uint256 interestRate, uint256 termMonths, uint256 monthsPaid, uint256 nextPaymentDue, bool isActive, address borrower))",
+      "function isPaymentOverdue(address _borrower) external view returns (bool)",
+      "function calculateMonthlyPayment(uint256 _loanAmount, uint256 _interestRate, uint256 _termMonths) external pure returns (uint256)",
+      "event MortgageCreated(address indexed borrower, uint256 propertyValue, uint256 downPayment, uint256 loanAmount, uint256 monthlyPayment)",
+      "event PaymentMade(address indexed borrower, uint256 paymentAmount, uint256 principalPaid, uint256 interestPaid, uint256 remainingBalance)",
+      "event MortgageCompleted(address indexed borrower, uint256 totalPaid)"
+    ]
+  },
+
   USDT: {
     address: CONTRACT_ADDRESSES.USDT,
     abi: [

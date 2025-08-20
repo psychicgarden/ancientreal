@@ -40,6 +40,7 @@ export const CHAIN = {
 export const CONTRACTS = {
   MAZUNTE_MORTGAGE: '0x0b92ece58415c0b1aba86c372f45ffc4d6046bed', // AncientMortgage - Full Business Model
   USDT: '0xc29837e2f495d8f04c5e7aca7d378baa8765dd36', // TestUSDT - 6 decimals with faucet
+  SIMPLE_MORTGAGE: '0x0000000000000000000000000000000000000000', // SimpleMortgage - Clean, production-ready contract
   STAKING_POOL: '0x474ebf5b375ea4dae1b5ae33f86cb0f30e82af27', // EnhancedStakingPool - Investor Yields
   VILLAGE_CITIZENSHIP: import.meta.env.VITE_VILLAGE_CITIZENSHIP_ADDRESS ?? '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
   SECONDARY_MARKETPLACE: import.meta.env.VITE_SECONDARY_MARKETPLACE_ADDRESS ?? '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',

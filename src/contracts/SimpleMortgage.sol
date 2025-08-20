@@ -3,187 +3,166 @@ pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-/**
- * @title SimpleMortgage - Ultra Simple Mortgage Contract
- * @dev Handles basic property purchase and monthly payments only
- */
 contract SimpleMortgage is Ownable, ReentrancyGuard {
-    
-    // ===== STATE VARIABLES =====
-    IERC20 public immutable usdt;
-    
-    uint256 public constant PROPERTY_VALUE = 129000 * 10**6; // $129,000 USDT (6 decimals)
-    uint256 public constant DOWN_PAYMENT = 25800 * 10**6;    // $25,800 USDT (20%)
-    uint256 public constant PLATFORM_FEE = 3870 * 10**6;     // $3,870 USDT (3%)
-    uint256 public constant MONTHLY_PAYMENT = 1205 * 10**6;  // $1,205 USDT
-    uint256 public constant TOTAL_PAYMENTS = 120; // 10 years
-    
-    address public treasury;
-    uint256 public totalMortgages;
+    IERC20 public immutable USDT;
     
     struct Mortgage {
-        address borrower;
-        uint256 paymentsLeft;
-        uint256 totalPaid;
+        uint256 propertyValue;
+        uint256 downPayment;
+        uint256 loanAmount;
+        uint256 monthlyPayment;
+        uint256 remainingBalance;
+        uint256 interestRate; // in basis points (e.g., 800 = 8%)
+        uint256 termMonths;
+        uint256 monthsPaid;
+        uint256 nextPaymentDue;
         bool isActive;
-        uint256 startTime;
+        address borrower;
     }
     
     mapping(address => Mortgage) public mortgages;
-    mapping(address => bool) public kycVerified;
+    mapping(address => bool) public hasMortgage;
     
-    // ===== EVENTS =====
-    event PropertyPurchased(address indexed borrower, uint256 downPayment, uint256 platformFee);
-    event PaymentMade(address indexed borrower, uint256 amount, uint256 paymentsLeft);
-    event MortgageCompleted(address indexed borrower);
-    event KYCVerified(address indexed user);
+    uint256 public constant PAYMENT_INTERVAL = 30 days;
+    uint256 public constant BASIS_POINTS = 10000;
     
-    // ===== CONSTRUCTOR =====
-    constructor(
-        address _usdt,
-        address _treasury
-    ) {
-        usdt = IERC20(_usdt);
-        treasury = _treasury;
+    event MortgageCreated(
+        address indexed borrower,
+        uint256 propertyValue,
+        uint256 downPayment,
+        uint256 loanAmount,
+        uint256 monthlyPayment
+    );
+    
+    event PaymentMade(
+        address indexed borrower,
+        uint256 paymentAmount,
+        uint256 principalPaid,
+        uint256 interestPaid,
+        uint256 remainingBalance
+    );
+    
+    event MortgageCompleted(address indexed borrower, uint256 totalPaid);
+    
+    constructor(address _usdtAddress) {
+        USDT = IERC20(_usdtAddress);
     }
     
-    // ===== MODIFIERS =====
-    modifier onlyKYCVerified() {
-        require(kycVerified[msg.sender], "KYC verification required");
-        _;
-    }
-    
-    modifier hasActiveMortgage() {
-        require(mortgages[msg.sender].isActive, "No active mortgage");
-        _;
-    }
-    
-    modifier noActiveMortgage() {
-        require(!mortgages[msg.sender].isActive, "Already has active mortgage");
-        _;
-    }
-    
-    // ===== MAIN FUNCTIONS =====
-    
-    /**
-     * @dev Verify KYC for a user (owner only for simplicity)
-     */
-    function verifyKYC(address user) external onlyOwner {
-        kycVerified[user] = true;
-        emit KYCVerified(user);
-    }
-    
-    /**
-     * @dev Purchase property with down payment + platform fee
-     */
-    function purchaseProperty() external onlyKYCVerified noActiveMortgage nonReentrant {
-        uint256 totalRequired = DOWN_PAYMENT + PLATFORM_FEE;
+    function purchaseProperty(
+        uint256 _propertyValue,
+        uint256 _downPayment,
+        uint256 _interestRate, // in basis points
+        uint256 _termMonths
+    ) external nonReentrant {
+        require(!hasMortgage[msg.sender], "Already has active mortgage");
+        require(_downPayment >= (_propertyValue * 2000) / BASIS_POINTS, "Minimum 20% down payment required");
+        require(_interestRate >= 200 && _interestRate <= 3000, "Interest rate must be between 2% and 30%");
+        require(_termMonths >= 12 && _termMonths <= 360, "Term must be between 1 and 30 years");
         
-        // Transfer down payment + platform fee from buyer
-        require(
-            usdt.transferFrom(msg.sender, address(this), totalRequired),
-            "USDT transfer failed"
-        );
+        uint256 loanAmount = _propertyValue - _downPayment;
+        require(loanAmount > 0, "Invalid loan amount");
         
-        // Transfer platform fee to treasury
-        require(
-            usdt.transfer(treasury, PLATFORM_FEE),
-            "Platform fee transfer failed"
-        );
+        // Calculate monthly payment using amortization formula
+        uint256 monthlyPayment = calculateMonthlyPayment(loanAmount, _interestRate, _termMonths);
         
-        // Create mortgage record
+        // Transfer down payment from borrower
+        require(USDT.transferFrom(msg.sender, address(this), _downPayment), "Down payment transfer failed");
+        
+        // Create mortgage
         mortgages[msg.sender] = Mortgage({
-            borrower: msg.sender,
-            paymentsLeft: TOTAL_PAYMENTS,
-            totalPaid: 0,
+            propertyValue: _propertyValue,
+            downPayment: _downPayment,
+            loanAmount: loanAmount,
+            monthlyPayment: monthlyPayment,
+            remainingBalance: loanAmount,
+            interestRate: _interestRate,
+            termMonths: _termMonths,
+            monthsPaid: 0,
+            nextPaymentDue: block.timestamp + PAYMENT_INTERVAL,
             isActive: true,
-            startTime: block.timestamp
+            borrower: msg.sender
         });
         
-        totalMortgages++;
+        hasMortgage[msg.sender] = true;
         
-        emit PropertyPurchased(msg.sender, DOWN_PAYMENT, PLATFORM_FEE);
+        emit MortgageCreated(msg.sender, _propertyValue, _downPayment, loanAmount, monthlyPayment);
     }
     
-    /**
-     * @dev Make monthly mortgage payment
-     */
-    function makePayment() external hasActiveMortgage nonReentrant {
+    function makePayment() external nonReentrant {
+        require(hasMortgage[msg.sender], "No active mortgage");
         Mortgage storage mortgage = mortgages[msg.sender];
+        require(mortgage.isActive, "Mortgage not active");
         
-        require(mortgage.paymentsLeft > 0, "Mortgage already completed");
+        uint256 paymentAmount = mortgage.monthlyPayment;
+        require(USDT.balanceOf(msg.sender) >= paymentAmount, "Insufficient USDT balance");
+        
+        // Calculate interest and principal portions
+        uint256 interestPayment = (mortgage.remainingBalance * mortgage.interestRate) / (12 * BASIS_POINTS);
+        uint256 principalPayment = paymentAmount - interestPayment;
+        
+        // Ensure we don't overpay
+        if (principalPayment > mortgage.remainingBalance) {
+            principalPayment = mortgage.remainingBalance;
+            paymentAmount = interestPayment + principalPayment;
+        }
         
         // Transfer payment from borrower
-        require(
-            usdt.transferFrom(msg.sender, address(this), MONTHLY_PAYMENT),
-            "Payment transfer failed"
-        );
+        require(USDT.transferFrom(msg.sender, address(this), paymentAmount), "Payment transfer failed");
         
         // Update mortgage state
-        mortgage.totalPaid += MONTHLY_PAYMENT;
-        mortgage.paymentsLeft--;
+        mortgage.remainingBalance -= principalPayment;
+        mortgage.monthsPaid += 1;
+        mortgage.nextPaymentDue = block.timestamp + PAYMENT_INTERVAL;
         
-        emit PaymentMade(msg.sender, MONTHLY_PAYMENT, mortgage.paymentsLeft);
-        
-        // Complete mortgage if all payments made
-        if (mortgage.paymentsLeft == 0) {
+        // Check if mortgage is completed
+        if (mortgage.remainingBalance == 0) {
             mortgage.isActive = false;
-            emit MortgageCompleted(msg.sender);
+            emit MortgageCompleted(msg.sender, mortgage.loanAmount);
         }
+        
+        emit PaymentMade(msg.sender, paymentAmount, principalPayment, interestPayment, mortgage.remainingBalance);
     }
     
-    // ===== VIEW FUNCTIONS =====
-    
-    /**
-     * @dev Get mortgage details for a borrower
-     */
-    function getMortgageDetails(address borrower) external view returns (
-        uint256 paymentsLeft,
-        uint256 totalPaid,
-        bool isActive,
-        uint256 startTime
-    ) {
-        Mortgage memory mortgage = mortgages[borrower];
-        return (
-            mortgage.paymentsLeft,
-            mortgage.totalPaid,
-            mortgage.isActive,
-            mortgage.startTime
-        );
+    function calculateMonthlyPayment(
+        uint256 _loanAmount,
+        uint256 _interestRate,
+        uint256 _termMonths
+    ) public pure returns (uint256) {
+        if (_loanAmount == 0) return 0;
+        
+        uint256 monthlyRate = (_interestRate * BASIS_POINTS) / (12 * BASIS_POINTS * BASIS_POINTS);
+        
+        if (monthlyRate == 0) {
+            return _loanAmount / _termMonths;
+        }
+        
+        // Simplified monthly payment calculation
+        // For production, use more accurate amortization formula
+        uint256 basePayment = _loanAmount / _termMonths;
+        uint256 interestComponent = (_loanAmount * _interestRate) / (12 * BASIS_POINTS);
+        
+        return basePayment + (interestComponent * 60 / 100); // Rough approximation
     }
     
-    /**
-     * @dev Check if user has KYC verification
-     */
-    function isKYCVerified(address user) external view returns (bool) {
-        return kycVerified[user];
+    function getMortgageDetails(address _borrower) external view returns (Mortgage memory) {
+        require(hasMortgage[_borrower], "No mortgage found");
+        return mortgages[_borrower];
     }
     
-    /**
-     * @dev Get contract balance
-     */
-    function getBalance() external view returns (uint256) {
-        return usdt.balanceOf(address(this));
+    function isPaymentOverdue(address _borrower) external view returns (bool) {
+        if (!hasMortgage[_borrower]) return false;
+        Mortgage storage mortgage = mortgages[_borrower];
+        return mortgage.isActive && block.timestamp > mortgage.nextPaymentDue;
     }
     
-    // ===== ADMIN FUNCTIONS =====
-    
-    /**
-     * @dev Withdraw contract balance (owner only)
-     */
-    function withdraw(uint256 amount) external onlyOwner {
-        require(
-            usdt.transfer(owner(), amount),
-            "Withdrawal failed"
-        );
+    // Owner functions
+    function withdrawFunds(uint256 _amount) external onlyOwner {
+        require(USDT.transfer(owner(), _amount), "Withdraw failed");
     }
     
-    /**
-     * @dev Update treasury address (owner only)
-     */
-    function setTreasury(address _treasury) external onlyOwner {
-        treasury = _treasury;
+    function emergencyPause(address _borrower) external onlyOwner {
+        mortgages[_borrower].isActive = false;
     }
 }
