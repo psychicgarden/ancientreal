@@ -31,20 +31,56 @@ serve(async (req) => {
     // Update Supabase with contract info
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     
-    const { error: dbError } = await supabase
+    // Check if contract already exists
+    const { data: existingContract, error: checkError } = await supabase
       .from('contract_addresses')
-      .upsert({
-        contract_name: 'VillageCitizenship',
-        address: contractAddress,
-        network: 'fuji',
-        deployment_tx_hash: transactionHash,
-        deployer_address: '0x966fed85116f6d283921a6ed176d7643a99cbf94',
-        deployment_status: 'deployed'
-      });
+      .select('*')
+      .eq('contract_name', 'VillageCitizenship')
+      .eq('network', 'fuji')
+      .single();
 
-    if (dbError) {
-      console.error('❌ Database update error:', dbError);
-      throw new Error(`Database update failed: ${dbError.message}`);
+    if (checkError && checkError.code !== 'PGRST116') {
+      console.error('❌ Error checking existing contract:', checkError);
+      throw new Error(`Failed to check existing contract: ${checkError.message}`);
+    }
+
+    if (existingContract) {
+      console.log('📋 Contract already exists, updating...');
+      // Update existing record
+      const { error: updateError } = await supabase
+        .from('contract_addresses')
+        .update({
+          address: contractAddress,
+          deployment_tx_hash: transactionHash,
+          deployer_address: '0x966fed85116f6d283921a6ed176d7643a99cbf94',
+          deployment_status: 'deployed',
+          updated_at: new Date().toISOString()
+        })
+        .eq('contract_name', 'VillageCitizenship')
+        .eq('network', 'fuji');
+
+      if (updateError) {
+        console.error('❌ Database update error:', updateError);
+        throw new Error(`Database update failed: ${updateError.message}`);
+      }
+    } else {
+      console.log('📝 Inserting new contract record...');
+      // Insert new record
+      const { error: insertError } = await supabase
+        .from('contract_addresses')
+        .insert({
+          contract_name: 'VillageCitizenship',
+          address: contractAddress,
+          network: 'fuji',
+          deployment_tx_hash: transactionHash,
+          deployer_address: '0x966fed85116f6d283921a6ed176d7643a99cbf94',
+          deployment_status: 'deployed'
+        });
+
+      if (insertError) {
+        console.error('❌ Database insert error:', insertError);
+        throw new Error(`Database insert failed: ${insertError.message}`);
+      }
     }
 
     console.log('✅ VillageCitizenship contract address updated successfully');
