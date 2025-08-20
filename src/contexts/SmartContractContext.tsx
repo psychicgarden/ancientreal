@@ -1,162 +1,168 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { featureFlags, SmartContractFeatureFlags } from '@/lib/feature-flags';
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { smartContractIntegration, initializeSmartContracts } from '@/lib/smart-contract-integration';
+import { featureFlags, SmartContractFeatureFlags } from '@/lib/feature-flags';
+import { useToast } from '@/hooks/use-toast';
 
 interface SmartContractContextType {
-  // Feature flag state
-  flags: SmartContractFeatureFlags;
-  updateFlag: (key: keyof SmartContractFeatureFlags, value: boolean) => void;
-  enableEmergencyMode: () => void;
-  
-  // Integration state
   isInitialized: boolean;
   isConnected: boolean;
-  currentNetwork: string;
+  currentNetwork: string | null;
   error: string | null;
-  
-  // Health monitoring
-  healthStatus: {
-    connected: boolean;
-    network: string;
-    blockNumber: number;
-    contractsInitialized: string[];
-    errors: string[];
-  } | null;
+  flags: SmartContractFeatureFlags;
+  healthStatus: any;
   
   // Actions
-  initialize: () => Promise<void>;
+  initialize: () => Promise<boolean>;
   healthCheck: () => Promise<void>;
+  updateFlag: (key: keyof SmartContractFeatureFlags, value: boolean) => void;
+  enableEmergencyMode: () => void;
   emergencyShutdown: () => void;
 }
 
-const SmartContractContext = createContext<SmartContractContextType | null>(null);
+const SmartContractContext = createContext<SmartContractContextType | undefined>(undefined);
 
-export function SmartContractProvider({ children }: { children: React.ReactNode }) {
-  const [flags, setFlags] = useState<SmartContractFeatureFlags>(featureFlags.getAllFlags());
+export function SmartContractProvider({ children }: { children: ReactNode }) {
   const [isInitialized, setIsInitialized] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
-  const [currentNetwork, setCurrentNetwork] = useState('unknown');
+  const [currentNetwork, setCurrentNetwork] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [healthStatus, setHealthStatus] = useState<SmartContractContextType['healthStatus']>(null);
+  const [flags, setFlags] = useState<SmartContractFeatureFlags>(featureFlags.getAllFlags());
+  const [healthStatus, setHealthStatus] = useState<any>(null);
+  const { toast } = useToast();
 
-  // Update flag with validation
-  const updateFlag = useCallback((key: keyof SmartContractFeatureFlags, value: boolean) => {
-    try {
-      featureFlags.updateFlag(key, value);
-      setFlags(featureFlags.getAllFlags());
-      console.log(`Feature flag updated: ${key} = ${value}`);
-    } catch (error) {
-      console.error('Failed to update feature flag:', error);
-      setError(`Failed to update ${key}: ${error}`);
-    }
-  }, []);
+  // Initialize smart contracts on mount
+  useEffect(() => {
+    const initContracts = async () => {
+      try {
+        await initializeSmartContracts();
+        const health = await smartContractIntegration.healthCheck();
+        
+        setIsInitialized(true);
+        setIsConnected(health.connected);
+        setCurrentNetwork(health.network);
+        setHealthStatus(health);
+        setError(health.errors.length > 0 ? health.errors.join(', ') : null);
+        
+        if (health.connected) {
+          toast({
+            title: "Smart Contracts Connected",
+            description: `Connected to ${health.network} (Block: ${health.blockNumber})`,
+          });
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to initialize smart contracts');
+        toast({
+          variant: "destructive",
+          title: "Smart Contract Error",
+          description: "Failed to connect to blockchain. Using Supabase fallback.",
+        });
+      }
+    };
 
-  // Emergency mode activation
-  const enableEmergencyMode = useCallback(() => {
-    try {
-      featureFlags.enableEmergencyMode();
-      smartContractIntegration.emergencyShutdown();
-      setFlags(featureFlags.getAllFlags());
-      setIsConnected(false);
-      setError('Emergency mode activated - all smart contract features disabled');
-      console.warn('🚨 Emergency mode activated');
-    } catch (error) {
-      console.error('Failed to activate emergency mode:', error);
-    }
-  }, []);
+    initContracts();
+  }, [toast]);
 
-  // Initialize smart contract integration
-  const initialize = useCallback(async () => {
+  const initialize = async (): Promise<boolean> => {
     try {
       setError(null);
-      console.log('Initializing smart contract integration...');
+      const success = await smartContractIntegration.initialize();
       
-      await initializeSmartContracts();
+      if (success) {
+        const health = await smartContractIntegration.healthCheck();
+        setIsInitialized(true);
+        setIsConnected(health.connected);
+        setCurrentNetwork(health.network);
+        setHealthStatus(health);
+        
+        toast({
+          title: "Smart Contracts Initialized",
+          description: `Connected to ${health.network}`,
+        });
+      }
       
-      setIsInitialized(true);
-      setIsConnected(true);
-      setCurrentNetwork(featureFlags.isEnabled('testnetMode') ? 'fuji' : 'mainnet');
-      
-      console.log('✅ Smart contract integration initialized');
-    } catch (error) {
-      console.error('❌ Smart contract initialization failed:', error);
-      setError(error instanceof Error ? error.message : 'Initialization failed');
-      setIsInitialized(false);
-      setIsConnected(false);
-      
-      // Auto-enable emergency mode on critical failures
-      enableEmergencyMode();
+      return success;
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : 'Failed to initialize';
+      setError(errorMsg);
+      toast({
+        variant: "destructive",
+        title: "Initialization Failed",
+        description: errorMsg,
+      });
+      return false;
     }
-  }, [enableEmergencyMode]);
+  };
 
-  // Health check
-  const healthCheck = useCallback(async () => {
+  const healthCheck = async (): Promise<void> => {
     try {
       const health = await smartContractIntegration.healthCheck();
       setHealthStatus(health);
       setIsConnected(health.connected);
       setCurrentNetwork(health.network);
+      setError(health.errors.length > 0 ? health.errors.join(', ') : null);
       
-      if (health.errors.length > 0) {
-        setError(health.errors.join('; '));
-      } else {
-        setError(null);
-      }
-    } catch (error) {
-      console.error('Health check failed:', error);
-      setError(error instanceof Error ? error.message : 'Health check failed');
-      setIsConnected(false);
+      toast({
+        title: "Health Check Complete",
+        description: `Network: ${health.network}, Contracts: ${health.contractsInitialized.length}`,
+      });
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : 'Health check failed';
+      setError(errorMsg);
+      toast({
+        variant: "destructive",
+        title: "Health Check Failed",
+        description: errorMsg,
+      });
     }
-  }, []);
+  };
 
-  // Emergency shutdown
-  const emergencyShutdown = useCallback(() => {
+  const updateFlag = (key: keyof SmartContractFeatureFlags, value: boolean): void => {
+    featureFlags.updateFlag(key, value);
+    setFlags(featureFlags.getAllFlags());
+    
+    toast({
+      title: "Feature Flag Updated",
+      description: `${key}: ${value ? 'Enabled' : 'Disabled'}`,
+    });
+  };
+
+  const enableEmergencyMode = (): void => {
+    featureFlags.enableEmergencyMode();
+    setFlags(featureFlags.getAllFlags());
+    setIsConnected(false);
+    
+    toast({
+      variant: "destructive",
+      title: "Emergency Mode Activated",
+      description: "All smart contract features have been disabled",
+    });
+  };
+
+  const emergencyShutdown = (): void => {
     smartContractIntegration.emergencyShutdown();
-    enableEmergencyMode();
-  }, [enableEmergencyMode]);
-
-  // Auto-initialize on mount
-  useEffect(() => {
-    // Only auto-initialize if contracts are enabled and we're not in emergency mode
-    if (flags.contractAddressesVerified && !flags.emergencyMode && !isInitialized) {
-      initialize();
-    }
-  }, [flags.contractAddressesVerified, flags.emergencyMode, isInitialized, initialize]);
-
-  // Periodic health checks
-  useEffect(() => {
-    if (isInitialized && isConnected) {
-      const interval = setInterval(healthCheck, 30000); // Every 30 seconds
-      return () => clearInterval(interval);
-    }
-  }, [isInitialized, isConnected, healthCheck]);
-
-  // Listen for feature flag changes
-  useEffect(() => {
-    const checkFlags = () => {
-      const currentFlags = featureFlags.getAllFlags();
-      setFlags(currentFlags);
-    };
-
-    // Check flags periodically in case they're updated elsewhere
-    const interval = setInterval(checkFlags, 5000);
-    return () => clearInterval(interval);
-  }, []);
+    setIsInitialized(false);
+    setIsConnected(false);
+    setCurrentNetwork(null);
+    setFlags(featureFlags.getAllFlags());
+    
+    toast({
+      variant: "destructive",
+      title: "Emergency Shutdown",
+      description: "Smart contract integration has been shut down",
+    });
+  };
 
   const value: SmartContractContextType = {
-    flags,
-    updateFlag,
-    enableEmergencyMode,
-    
     isInitialized,
     isConnected,
     currentNetwork,
     error,
-    
+    flags,
     healthStatus,
-    
     initialize,
     healthCheck,
+    updateFlag,
+    enableEmergencyMode,
     emergencyShutdown,
   };
 
@@ -169,64 +175,8 @@ export function SmartContractProvider({ children }: { children: React.ReactNode 
 
 export function useSmartContract(): SmartContractContextType {
   const context = useContext(SmartContractContext);
-  if (!context) {
-    throw new Error('useSmartContract must be used within SmartContractProvider');
+  if (context === undefined) {
+    throw new Error('useSmartContract must be used within a SmartContractProvider');
   }
   return context;
-}
-
-// Specific hooks for different contract types
-export function useMortgageContract() {
-  const { flags, isConnected, error } = useSmartContract();
-  
-  const isEnabled = flags.mortgageContractEnabled && !flags.emergencyMode;
-  const canPurchase = isEnabled && flags.mortgagePurchaseEnabled;
-  const canMakePayments = isEnabled && flags.mortgagePaymentsEnabled;
-  const canTriggerAppraisal = isEnabled && flags.year10AppraisalEnabled;
-  
-  return {
-    isEnabled,
-    canPurchase,
-    canMakePayments,
-    canTriggerAppraisal,
-    isConnected: isConnected && isEnabled,
-    error: isEnabled ? error : 'Mortgage contract disabled',
-    fallbackToSupabase: !isEnabled || !!error,
-  };
-}
-
-export function useEscrowContract() {
-  const { flags, isConnected, error } = useSmartContract();
-  
-  const isEnabled = flags.developerEscrowEnabled && !flags.emergencyMode;
-  const canInvest = isEnabled && flags.escrowInvestmentEnabled;
-  const canCompleteMilestone = isEnabled && flags.escrowMilestoneEnabled;
-  
-  return {
-    isEnabled,
-    canInvest,
-    canCompleteMilestone,
-    isConnected: isConnected && isEnabled,
-    error: isEnabled ? error : 'Escrow contract disabled',
-    fallbackToSupabase: !isEnabled || !!error,
-  };
-}
-
-export function useStakingContract() {
-  const { flags, isConnected, error } = useSmartContract();
-  
-  const isEnabled = flags.stakingPoolEnabled && !flags.emergencyMode;
-  const canDeposit = isEnabled && flags.stakingDepositsEnabled;
-  const canWithdraw = isEnabled && flags.stakingWithdrawalsEnabled;
-  const canReceiveYield = isEnabled && flags.crossContractYieldEnabled;
-  
-  return {
-    isEnabled,
-    canDeposit,
-    canWithdraw,
-    canReceiveYield,
-    isConnected: isConnected && isEnabled,
-    error: isEnabled ? error : 'Staking contract disabled',
-    fallbackToSupabase: !isEnabled || !!error,
-  };
 }

@@ -17,6 +17,7 @@ import NotFound from "./pages/NotFound";
 import BusinessModel from "./pages/BusinessModel";
 import { WalletProvider } from "@/contexts/WalletContext";
 import { UIProvider } from "@/contexts/UIContext";
+import { SmartContractProvider } from "@/contexts/SmartContractContext";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 import ChatBot from "@/components/ChatBot";
 import { Navigate } from "react-router-dom";
@@ -38,7 +39,8 @@ function App() {
         <ErrorBoundary>
           <WalletProvider>
             <UIProvider>
-              <div className="min-h-screen">
+              <SmartContractProvider>
+                <div className="min-h-screen">
             <Toaster />
             <BrowserRouter>
               <Routes>
@@ -59,9 +61,10 @@ function App() {
                 <Route path="/investor-report" element={<Navigate to="/portfolio?tab=platform" replace />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
-              <ChatBot />
-            </BrowserRouter>
-              </div>
+                <ChatBot />
+              </BrowserRouter>
+                </div>
+              </SmartContractProvider>
             </UIProvider>
           </WalletProvider>
         </ErrorBoundary>

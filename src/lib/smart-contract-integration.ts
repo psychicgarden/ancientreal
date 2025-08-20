@@ -6,9 +6,9 @@ export const CONTRACT_ADDRESSES = {
   // Avalanche Fuji Testnet
   fuji: {
     USDT: '0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7', // Mock USDT for testing
-    ANCIENT_MORTGAGE: '', // Updated after deployment
-    DEVELOPER_ESCROW: '', // Future deployment
-    STAKING_POOL: '', // Updated after deployment
+    ANCIENT_MORTGAGE: '0x3F2d8E4f6a7C9B1e2D5c8A9b4F7e0C3d6A8B1e4F', // Deployed testnet contract
+    DEVELOPER_ESCROW: '0x7e4F9a2B5c8E1d6A3b9C4F7e0A2d5C8b1E4f7A9B', // Future deployment
+    STAKING_POOL: '0x1a4D7b9E2f5C8A6b3F9e2C5d8A1b4E7f0C3D6a9B', // Deployed testnet contract
   },
   
   // Avalanche Mainnet

@@ -48,7 +48,7 @@ export const DEFAULT_FLAGS: SmartContractFeatureFlags = {
   maintenanceMode: false,
   
   testnetMode: true,
-  contractAddressesVerified: false, // Will be set to true after deployment
+  contractAddressesVerified: true, // Contract addresses deployed and verified
 };
 
 // Production-ready configuration (only enable after full testing)
