@@ -4,7 +4,7 @@
 
 The project has been switched to the **public** repository for easier access and development.
 
-**New Repository:** `https://github.com/psychicgarden/boho-shares-01-main.git`
+**New Repository:** `https://github.com/psychicgarden/ancientreal.git`
 
 ## Solution 1: Make Repository Public (Temporary)
 
@@ -42,7 +42,7 @@ cat ~/.ssh/id_ed25519.pub
 
 ### Step 3: Use SSH URL Instead
 ```bash
-git clone git@github.com:psychicgarden/boho-shares-01.git
+git clone git@github.com:psychicgarden/ancientreal.git
 ```
 
 ## Solution 3: Personal Access Token
@@ -59,7 +59,7 @@ git clone git@github.com:psychicgarden/boho-shares-01.git
 
 ### Step 2: Clone with Token
 ```bash
-git clone https://YOUR_TOKEN@github.com/psychicgarden/boho-shares-01.git
+git clone https://YOUR_TOKEN@github.com/psychicgarden/ancientreal.git
 ```
 
 ## Solution 4: Configure Git Credentials (Cursor/IDE)
@@ -69,13 +69,13 @@ git clone https://YOUR_TOKEN@github.com/psychicgarden/boho-shares-01.git
 ### Option A: Git Credential Manager
 ```bash
 git config --global credential.helper store
-git clone https://github.com/psychicgarden/boho-shares-01.git
+git clone https://github.com/psychicgarden/ancientreal.git
 # Enter username and personal access token when prompted
 ```
 
 ### Option B: Update Remote URL
 ```bash
-git remote set-url origin https://YOUR_TOKEN@github.com/psychicgarden/boho-shares-01.git
+git remote set-url origin https://YOUR_TOKEN@github.com/psychicgarden/ancientreal.git
 ```
 
 ## Recommended Approach for Development
@@ -97,8 +97,8 @@ If you're using Cursor IDE:
 
 Test your setup:
 ```bash
-git clone https://github.com/psychicgarden/boho-shares-01.git
-cd boho-shares-01
+git clone https://github.com/psychicgarden/ancientreal.git
+cd ancientreal
 git status
 ```
 
