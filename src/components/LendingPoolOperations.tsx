@@ -132,9 +132,12 @@ export const LendingPoolOperations = () => {
     const availableCapital = totalStaked - deployedCapital;
     const utilizationRate = totalStaked > 0 ? (deployedCapital / totalStaked) * 100 : 0;
     
-    const monthlyInterestExpected = propertyData.reduce((sum, prop) => sum + prop.monthly_payment * 0.7, 0); // Estimate 70% goes to interest
-    const annualInterestExpected = monthlyInterestExpected * 12;
-    const currentAPY = totalStaked > 0 ? (annualInterestExpected / totalStaked) * 100 : 0;
+    // Calculate APY based on 7.5% interest rate + appreciation share
+    const annualInterestRate = 0.075; // 7.5% base rate
+    const appreciationShareAPY = 0.015; // ~1.5% from 10% appreciation share amortized over 10 years
+    const currentAPY = (annualInterestRate + appreciationShareAPY) * 100; // ~9%
+    
+    const monthlyInterestExpected = deployedCapital * annualInterestRate / 12;
 
     return {
       totalStaked,
@@ -577,6 +580,82 @@ export const LendingPoolOperations = () => {
                   <span className="font-medium">Total Pool Return:</span>
                   <span className="font-bold">~$148,000</span>
                 </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Live Example */}
+      <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+        <CardHeader>
+          <CardTitle className="text-primary">Live Example: Pool Capital at Work</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Real scenario showing how your staked funds generate returns through mortgage lending
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">Investment</h4>
+                <div className="p-4 bg-white/50 rounded-lg space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Pool Investment</span>
+                    <span className="font-bold">$160,000</span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm text-muted-foreground">
+                    <span>Investment Period</span>
+                    <span>10 years</span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm text-muted-foreground">
+                    <span>Target APY</span>
+                    <span>{poolMetrics.currentAPY.toFixed(1)}%</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">Returns</h4>
+                <div className="p-4 bg-white/50 rounded-lg space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Principal Repaid</span>
+                    <span className="font-bold">$160,000</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Interest Income (7.5%)</span>
+                    <span className="font-bold text-green-600">$120,000</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Appreciation Share (10%)</span>
+                    <span className="font-bold text-green-600">$20,000</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Platform Fees</span>
+                    <span className="font-bold text-green-600">$8,000</span>
+                  </div>
+                  <div className="border-t pt-2 mt-2">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-semibold">Total Returns</span>
+                      <span className="font-bold text-green-600">$308,000</span>
+                    </div>
+                    <div className="flex justify-between items-center text-xs text-muted-foreground">
+                      <span>Net Profit on $160k</span>
+                      <span className="text-green-600">+$148,000</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="mt-6 p-4 bg-blue-50/50 rounded-lg border border-blue-200/50">
+              <h5 className="font-semibold text-blue-800 mb-2">How This Investment Works</h5>
+              <div className="text-sm text-blue-700 space-y-1">
+                <p>• Pool capital funds mortgages for property buyers at 8% APR</p>
+                <p>• Investors earn 7.5% annual interest from mortgage payments</p>
+                <p>• Principal is fully repaid when mortgages are paid off</p>
+                <p>• Additional returns from 10% property appreciation share after 10 years</p>
+                <p>• Platform fees from successful property transactions</p>
               </div>
             </div>
           </div>
