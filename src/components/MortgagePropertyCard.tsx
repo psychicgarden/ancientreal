@@ -23,29 +23,28 @@ export const MortgagePropertyCard = ({
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isAnalyticsModalOpen, setIsAnalyticsModalOpen] = useState(false);
 
-  // Calculate investment metrics using the proper calculation that includes platform fee
-  const platformFee = property.downPayment * 0.03;
+  // Use the same calculation logic as PropertyInvestmentCalculator for consistency
+  const propertyData: PropertyMortgageData = {
+    propertyValue: property.totalValue,
+    downPayment: property.downPayment,
+    aprBps: property.name === "Art Deco Loft" ? 800 : 750, // 8% for Art Deco, 7.5% for others
+    termMonths: 120, // 10 years
+    monthlyRent: property.monthlyRent,
+    platformFeePercent: 0.03
+  };
+
+  // Calculate using the centralized finance function
+  const metrics = calculateInvestmentMetrics(property.downPayment, propertyData);
+  
+  // Extract calculated values
+  const platformFee = property.totalValue * 0.03; // Same as PropertyInvestmentCalculator
   const totalInvestment = property.downPayment + platformFee;
-  
-  // Calculate monthly profit and 10-year projections
-  const monthlyProfit = Math.round(property.monthlyRent - property.monthlyPayment);
+  const monthlyProfit = metrics.monthlyProfit;
   const monthlyNetworkYield = monthlyProfit;
-  const mortgagePayment = property.monthlyPayment;
+  const mortgagePayment = metrics.monthlyPayment;
   
-  // Calculate 10-year cash flow
-  const totalCashFlow = monthlyProfit * 120; // 10 years
-  
-  // Calculate property appreciation (same logic as PropertyInvestmentCalculator)
-  const appreciationPercent = 181;
-  const buyerShare = 0.5;
-  const totalAppreciation = property.totalValue * (appreciationPercent / 100);
-  const buyerAppreciationShare = totalAppreciation * buyerShare;
-  
-  // Total profit over 10 years
-  const totalProfit = totalCashFlow + buyerAppreciationShare;
-  
-  // Calculate proper 10-year return: (totalProfit / totalInvestment) + 1
-  const totalReturn10Year = (totalProfit / totalInvestment) + 1;
+  // Calculate 10-year return: (totalProfit / totalInvestment) + 1
+  const totalReturn10Year = (metrics.totalProfit / totalInvestment) + 1;
   
   // Calculate return range
   const returnLow = Math.floor(property.expectedReturn - 1.5);
