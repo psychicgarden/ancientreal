@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 import { featureFlags } from './feature-flags';
+import { ContractDatabaseIntegration } from './contract-database-integration';
 
 // Smart contract addresses for different networks
 export const CONTRACT_ADDRESSES = {
@@ -94,10 +95,11 @@ class SmartContractIntegration {
   }
   
   private async initializeContracts(network: 'fuji' | 'mainnet'): Promise<void> {
-    const addresses = CONTRACT_ADDRESSES[network];
+    // Fetch live contract addresses from database
+    const addresses = await ContractDatabaseIntegration.getAllContractAddresses(network);
     
     // Only initialize contracts that are enabled via feature flags
-    if (featureFlags.isEnabled('mortgageContractEnabled') && addresses.ANCIENT_MORTGAGE) {
+    if (featureFlags.isEnabled('mortgageContractEnabled') && addresses.AncientMortgage) {
       // Initialize Ancient Mortgage contract with ABI
       const MORTGAGE_ABI = [
         "function purchaseProperty(uint256 propertyPrice, uint256 downPayment) external returns (uint256)",
@@ -106,12 +108,12 @@ class SmartContractIntegration {
         "function setKYCVerified(address investor, bool status) external",
         "function setAccreditedInvestor(address investor, bool status) external"
       ];
-      this.contracts.ancientMortgage = new ethers.Contract(addresses.ANCIENT_MORTGAGE, MORTGAGE_ABI, this.signer);
+      this.contracts.ancientMortgage = new ethers.Contract(addresses.AncientMortgage, MORTGAGE_ABI, this.signer);
     }
     
-    if (featureFlags.isEnabled('developerEscrowEnabled') && addresses.DEVELOPER_ESCROW) {
+    if (featureFlags.isEnabled('developerEscrowEnabled') && addresses.DeveloperEscrowManager) {
       // Initialize Developer Escrow contract
-      // this.contracts.developerEscrow = new ethers.Contract(addresses.DEVELOPER_ESCROW, ABI, this.signer);
+      // this.contracts.developerEscrow = new ethers.Contract(addresses.DeveloperEscrowManager, ABI, this.signer);
     }
     
     if (featureFlags.isEnabled('stakingPoolEnabled') && addresses.STAKING_POOL) {
@@ -126,7 +128,7 @@ class SmartContractIntegration {
       this.contracts.stakingPool = new ethers.Contract(addresses.STAKING_POOL, STAKING_ABI, this.signer);
     }
     
-    // USDT contract for payments
+    // USDT contract for payments  
     if (addresses.USDT) {
       const USDT_ABI = [
         "function balanceOf(address account) external view returns (uint256)",
