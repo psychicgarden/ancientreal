@@ -17,7 +17,7 @@ export function SectionHeader({
   return <header className={cn("mx-auto max-w-4xl space-y-3 animate-fade-in", align === "center" ? "text-center" : "text-left", className)}>
       {eyebrow && <p className="text-xs tracking-widest uppercase text-muted-foreground/80">{eyebrow}</p>}
       <h2 className="text-3xl md:text-4xl font-semibold tracking-tight leading-tight">{title}</h2>
-      {subtitle && <p className="text-lg text-muted-foreground leading-relaxed py-0 my-[30px]">{subtitle}</p>}
+      {subtitle && <p className="text-lg text-muted-foreground leading-relaxed py-0 my-[30px] mb-[50px]">{subtitle}</p>}
     </header>;
 }
 export default SectionHeader;
