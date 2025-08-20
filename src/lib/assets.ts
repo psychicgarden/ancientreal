@@ -9,7 +9,7 @@ import villaEriceira from '@/assets/villa-ericeira-portugal.jpg';
 import baliJungleResort from '@/assets/bali-jungle-resort.jpg';
 import desertOasisMorocco from '@/assets/desert-oasis-morocco.jpg';
 import beachHouseMykonos from '@/assets/beach-house-mykonos.jpg';
-// New boho luxury property images
+// NEW AI-GENERATED BOHO LUXURY PROPERTY IMAGES
 import mazunteBohoVilla from '@/assets/mazunte-boho-villa.jpg';
 import mallorcaOceanviewVilla from '@/assets/mallorca-oceanview-villa.jpg';
 import bahiaTropicalHaven from '@/assets/bahia-tropical-haven.jpg';
@@ -19,7 +19,7 @@ export const ASSETS = {
   // Hero section
   HERO_IMAGE: heroImage,
   
-  // Featured properties
+  // Featured properties - UPDATED WITH NEW AI IMAGES
   VILLA_TULUM: villaTulum,
   BEACH_CHALET: beachChalet,
   VILLA_ERICEIRA: villaEriceira,
