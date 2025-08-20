@@ -63,7 +63,7 @@ const FeaturedInvestments = () => {
       totalValue: property.totalValue,
       listPrice: property.totalValue,
       downPayment: property.downPayment,
-      monthlyPayment: metrics.monthlyPayment,
+      monthlyPayment: Math.round(metrics.monthlyPayment),
       monthlyRent: property.monthlyRent, // Use real database value
       monthlyProfit, // Calculated from real values
       networkValue, // Proper appreciation model
