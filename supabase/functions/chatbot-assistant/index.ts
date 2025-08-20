@@ -680,24 +680,59 @@ Answer user questions about the platform, investment process, calculations, and 
       }
     }
 
+    // Enhanced query detection for investor vs retail routing
+    const messageLower = message.toLowerCase();
+    
+    // Enhanced investor detection patterns
+    const investorPatterns = [
+      // Large investment amounts
+      /\$[\d,.]+m[illion]*|[\d,.]+\s*million|\$[\d,]+k[illion]*|\$[\d,]+,[\d,]+/i,
+      // Business model queries
+      /investment.*get.*used|how.*money.*spent|capital.*deployment|funds.*allocation/i,
+      // Return timeline queries
+      /when.*returns|return.*timeline|returns.*hit|when.*profit|timeline.*returns/i,
+      // Investor-level language
+      /my.*investment|our.*investment|investor.*returns|business.*model|scaling.*strategy/i,
+      // Phase-related queries
+      /phase.*1|phase.*2|phase.*3|roadmap|development.*plan/i
+    ];
+    
+    const isInvestorQuery = investorPatterns.some(pattern => pattern.test(messageLower)) ||
+                           messageLower.includes('7m') || messageLower.includes('7.5m') ||
+                           messageLower.includes('million') || messageLower.includes('$1m');
+    
     // Enhanced system prompt with query type detection and formatting
     const systemPrompt = `${knowledgeContext}
 
 CRITICAL INSTRUCTIONS FOR QUERY ROUTING:
 
-FOR BUSINESS/INVESTOR QUESTIONS (investment allocation, capital deployment, business returns, how raised funds are used, business model, scaling strategy):
-- Reference the "USE OF FUNDS" section for $7.5M allocation breakdown
-- Reference the "BUSINESS MODEL" section for three-phase execution 
-- Reference the "CASH-FLOW WATERFALL" section for investor returns
-- Always mention: "Your capital is never used for mortgages - those are entirely external"
+${isInvestorQuery ? `
+🚨 INVESTOR QUERY DETECTED - PRIORITIZE BUSINESS MODEL RESPONSES:
 
+FOR THIS INVESTOR QUESTION, FOCUS ON:
+- Reference the "INFRASTRUCTURE BREAKDOWN - $7M TOTAL INVESTMENT" section (lines 280-315)
+- Reference the "3-PHASE EVOLUTION ROADMAP" section (lines 257-323)  
+- Reference the "10-YEAR REVENUE CAPTURE: $24.53M TOTAL" section (lines 203-207)
+- ALWAYS emphasize: "Your $7M is NEVER used for mortgages - those are external financing. Your capital builds the infrastructure that generates platform returns."
+- Explain return timeline: Phase 1 (0-3 years) property flips, Phase 2 (3-7 years) platform scaling
+- Reference specific deployment: $5.1M land/build, $450K legal, $655K tech, $260K marketing, $680K operations
+
+INVESTOR RETURN SOURCES:
+1. Platform Fees: 3% of each property transaction ($453.6K over 10 years)
+2. Mortgage Interest: 8% APR on external financing ($7.46M over 10 years)  
+3. Property Appreciation: 40% to Ancient Holdings ($16.62M over 10 years)
+` : `
 FOR RETAIL USER QUESTIONS (how to invest, what properties, user experience):
 - Reference the "INVESTMENT MODELS" section (Buy Shares vs Join Groups)
 - Reference the "PROPERTY PORTFOLIO" section for specific properties
 - Reference the "KEY FEATURES" section for platform capabilities
+`}
 
-KEYWORDS THAT TRIGGER BUSINESS MODEL RESPONSES:
-- "7.5M", "investment allocation", "capital deployment", "business model", "how is money spent", "use of funds", "business returns", "scaling", "phases", "investor returns"
+ENHANCED KEYWORDS THAT TRIGGER BUSINESS MODEL RESPONSES:
+- Large amounts: "$7M", "$7.5M", "7 million", "million", "$1M+", any amount over $100K
+- Capital usage: "investment get used", "money spent", "capital deployment", "funds allocation", "how is money used"
+- Return timing: "when returns", "return timeline", "returns hit", "when profit", "timeline returns"
+- Business queries: "business model", "scaling", "phases", "roadmap", "investor returns", "my investment"
 
 KEYWORDS THAT TRIGGER COMPETITIVE ANALYSIS RESPONSES:
 - "competition", "competitors", "competitive", "vs", "compare", "comparison", "other platforms", "reental", "realt", "binaryx", "lofty", "alternative", "why ancient", "differentiation", "market", "crowded", "saturated", "too many"
