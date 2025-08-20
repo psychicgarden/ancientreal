@@ -1,7 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { MapPin, Users, TrendingUp, Heart } from "lucide-react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { MapPin } from "lucide-react";
+
 interface OriginalPropertyCardProps {
   id: string;
   image: string;
@@ -19,117 +17,46 @@ const OriginalPropertyCard = ({
   image,
   title,
   location,
-  price,
-  sharePrice,
   totalShares,
   availableShares,
-  expectedReturn,
-  type,
 }: OriginalPropertyCardProps) => {
-  const [isLiked, setIsLiked] = useState(false);
-  const percentageSold = ((totalShares - availableShares) / totalShares) * 100;
+  const soldShares = totalShares - availableShares;
 
   return (
-    <div className="group bg-gradient-card rounded-2xl shadow-card hover:shadow-luxury transition-all duration-500 overflow-hidden border border-border/50">
+    <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
       {/* Image */}
-      <div className="relative overflow-hidden">
+      <div className="relative">
         <img
           src={image}
           alt={title}
-          loading="lazy"
-          className="w-full h-60 object-cover group-hover:scale-105 transition-transform duration-700"
+          className="w-full h-64 object-cover"
         />
         
-        {/* Type Badge */}
-        <div className="absolute top-4 left-4">
-          <span className="bg-background/90 backdrop-blur-sm text-foreground text-xs font-medium px-3 py-1 rounded-full border border-border/50">
-            {type}
-          </span>
-        </div>
-        
-        {/* Like Button */}
-        <button
-          onClick={() => setIsLiked(!isLiked)}
-          className="absolute top-4 right-4 p-2 rounded-full bg-background/90 backdrop-blur-sm border border-border/50 hover:bg-background transition-colors"
-        >
-          <Heart
-            className={`h-4 w-4 ${
-              isLiked ? "fill-red-500 text-red-500" : "text-muted-foreground"
-            }`}
-          />
-        </button>
-
-        {/* Funding Progress */}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent p-4">
-          <div className="space-y-2">
-            <div className="flex justify-between text-white text-sm">
-              <span>Funding Progress</span>
-              <span>{percentageSold.toFixed(1)}%</span>
-            </div>
-            <div className="w-full bg-white/20 rounded-full h-1.5">
-              <div
-                className="bg-gradient-primary h-1.5 rounded-full transition-all duration-700"
-                style={{ width: `${percentageSold}%` }}
-              />
-            </div>
+        {/* Availability Badge */}
+        <div className="absolute top-3 left-3">
+          <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2">
+            <div className="text-xs text-gray-600 font-medium">Availability</div>
+            <div className="text-sm font-semibold text-gray-900">{soldShares}/15 sold</div>
           </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="p-6 space-y-4">
-        {/* Title & Location */}
-        <div>
-          <h3 className="text-xl font-semibold text-foreground leading-tight mb-2">
-            {title}
-          </h3>
-          <div className="flex items-center text-muted-foreground">
-            <MapPin className="h-4 w-4 mr-2" />
-            <span className="text-sm">{location}</span>
-          </div>
+      <div className="p-6">
+        <h3 className="text-xl font-bold text-gray-900 mb-2">
+          {title}
+        </h3>
+        <div className="flex items-center text-gray-600 mb-4">
+          <MapPin className="h-4 w-4 mr-1" />
+          <span className="text-sm">{location}</span>
         </div>
-
-        {/* Pricing */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <p className="text-sm text-muted-foreground">Total Value</p>
-            <p className="text-lg font-bold text-foreground">
-              ${price.toLocaleString()}
-            </p>
-          </div>
-          <div>
-            <p className="text-sm text-muted-foreground">Per Share</p>
-            <p className="text-lg font-bold text-foreground">
-              ${sharePrice}
-            </p>
-          </div>
-        </div>
-
-        {/* Shares Info */}
-        <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center text-muted-foreground">
-            <Users className="h-4 w-4 mr-1" />
-            <span>{availableShares} of {totalShares} shares available</span>
-          </div>
-        </div>
-
-        {/* Expected Return */}
-        <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-          <span className="text-sm font-medium text-foreground">Expected Annual Return</span>
-          <div className="flex items-center text-green-600">
-            <TrendingUp className="h-4 w-4 mr-1" />
-            <span className="font-bold">{expectedReturn}%</span>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-3 pt-2">
-          <Button className="w-full" size="lg" asChild>
-            <Link to="/investor">Invest Now</Link>
-          </Button>
-          <Button variant="outline" size="lg" asChild>
-            <Link to="/banking">20% Down Purchase</Link>
-          </Button>
+        
+        {/* Progress Bar */}
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div
+            className="bg-orange-500 h-2 rounded-full transition-all duration-500"
+            style={{ width: `${(soldShares / 15) * 100}%` }}
+          />
         </div>
       </div>
     </div>
