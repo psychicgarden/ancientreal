@@ -28,6 +28,7 @@ import {
 import { PlatformAnalytics } from '@/components/PlatformAnalytics';
 import { LendingPoolOperations } from '@/components/LendingPoolOperations';
 import { ContractDeployment } from '@/components/ContractDeployment';
+import { VillageCitizenshipDeployment } from '@/components/VillageCitizenshipDeployment';
 import { useWallet } from '@/contexts/WalletContext';
 import { resetPortfolio } from '@/lib/admin/resetPortfolio';
 import { shouldAllowPortfolioReset } from '@/config/demo';
@@ -351,7 +352,10 @@ const AdminProjects = () => {
 
         {/* Conditional Content Based on Active Tab */}
         {activeTab === 'contracts' ? (
-          <ContractDeployment />
+          <div className="space-y-6">
+            <ContractDeployment />
+            <VillageCitizenshipDeployment />
+          </div>
         ) : activeTab === 'analytics' ? (
           <PlatformAnalytics />
         ) : activeTab === 'lending' ? (
