@@ -1,0 +1,16 @@
+mode: inline           # or "summary" if you prefer one big comment
+maxComments: 60
+paths:
+  include:
+    - src/**           # frontend
+    - apps/**          # if you use a monorepo
+    - contracts/**     # solidity
+    - test/**          # tests
+  exclude:
+    - dist/**
+    - build/**
+    - node_modules/**
+triggers:
+  onOpen: true         # run automatically when a PR opens
+  onUpdate: true       # run automatically on new commits
+  onLabel: ["bugbot"]  # manual trigger by adding a label
