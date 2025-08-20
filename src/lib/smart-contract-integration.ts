@@ -6,9 +6,9 @@ export const CONTRACT_ADDRESSES = {
   // Avalanche Fuji Testnet
   fuji: {
     USDT: '0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7', // Mock USDT for testing
-    ANCIENT_MORTGAGE: '', // Will be set after deployment
-    DEVELOPER_ESCROW: '', // Will be set after deployment
-    STAKING_POOL: '', // Will be set after deployment
+    ANCIENT_MORTGAGE: '', // Updated after deployment
+    DEVELOPER_ESCROW: '', // Future deployment
+    STAKING_POOL: '', // Updated after deployment
   },
   
   // Avalanche Mainnet
@@ -98,9 +98,15 @@ class SmartContractIntegration {
     
     // Only initialize contracts that are enabled via feature flags
     if (featureFlags.isEnabled('mortgageContractEnabled') && addresses.ANCIENT_MORTGAGE) {
-      // Initialize Ancient Mortgage contract
-      // ABI would be imported from compiled artifacts
-      // this.contracts.ancientMortgage = new ethers.Contract(addresses.ANCIENT_MORTGAGE, ABI, this.signer);
+      // Initialize Ancient Mortgage contract with ABI
+      const MORTGAGE_ABI = [
+        "function purchaseProperty(uint256 propertyPrice, uint256 downPayment) external returns (uint256)",
+        "function makePayment(uint256 tokenId) external",
+        "function getMortgageDetails(uint256 tokenId) external view returns (address, uint256, uint256, uint256, uint256, bool)",
+        "function setKYCVerified(address investor, bool status) external",
+        "function setAccreditedInvestor(address investor, bool status) external"
+      ];
+      this.contracts.ancientMortgage = new ethers.Contract(addresses.ANCIENT_MORTGAGE, MORTGAGE_ABI, this.signer);
     }
     
     if (featureFlags.isEnabled('developerEscrowEnabled') && addresses.DEVELOPER_ESCROW) {
@@ -109,13 +115,26 @@ class SmartContractIntegration {
     }
     
     if (featureFlags.isEnabled('stakingPoolEnabled') && addresses.STAKING_POOL) {
-      // Initialize Staking Pool contract
-      // this.contracts.stakingPool = new ethers.Contract(addresses.STAKING_POOL, ABI, this.signer);
+      // Initialize Staking Pool contract with ABI
+      const STAKING_ABI = [
+        "function deposit(uint256 assets, address receiver) external returns (uint256)",
+        "function withdraw(uint256 assets, address receiver, address owner) external returns (uint256)",
+        "function totalAssets() external view returns (uint256)",
+        "function balanceOf(address account) external view returns (uint256)",
+        "function getCurrentAPY() external view returns (uint256)"
+      ];
+      this.contracts.stakingPool = new ethers.Contract(addresses.STAKING_POOL, STAKING_ABI, this.signer);
     }
     
     // USDT contract for payments
     if (addresses.USDT) {
-      // this.contracts.usdt = new ethers.Contract(addresses.USDT, USDT_ABI, this.signer);
+      const USDT_ABI = [
+        "function balanceOf(address account) external view returns (uint256)",
+        "function transfer(address to, uint256 amount) external returns (bool)",
+        "function approve(address spender, uint256 amount) external returns (bool)",
+        "function decimals() external view returns (uint8)"
+      ];
+      this.contracts.usdt = new ethers.Contract(addresses.USDT, USDT_ABI, this.signer);
     }
   }
   

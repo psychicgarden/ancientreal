@@ -27,28 +27,28 @@ export interface SmartContractFeatureFlags {
   contractAddressesVerified: boolean;
 }
 
-// Default configuration - everything disabled for safety
+// Default configuration - ready for testnet integration
 export const DEFAULT_FLAGS: SmartContractFeatureFlags = {
-  mortgageContractEnabled: false,
+  mortgageContractEnabled: true,
   developerEscrowEnabled: false,
-  stakingPoolEnabled: false,
+  stakingPoolEnabled: true,
   
-  mortgagePurchaseEnabled: false,
-  mortgagePaymentsEnabled: false,
-  year10AppraisalEnabled: false,
+  mortgagePurchaseEnabled: true,
+  mortgagePaymentsEnabled: true,
+  year10AppraisalEnabled: true,
   escrowInvestmentEnabled: false,
   escrowMilestoneEnabled: false,
-  stakingDepositsEnabled: false,
-  stakingWithdrawalsEnabled: false,
+  stakingDepositsEnabled: true,
+  stakingWithdrawalsEnabled: true,
   
-  crossContractYieldEnabled: false,
-  appreciationDistributionEnabled: false,
+  crossContractYieldEnabled: true,
+  appreciationDistributionEnabled: true,
   
   emergencyMode: false,
   maintenanceMode: false,
   
   testnetMode: true,
-  contractAddressesVerified: false,
+  contractAddressesVerified: false, // Will be set to true after deployment
 };
 
 // Production-ready configuration (only enable after full testing)

@@ -9,6 +9,12 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
+// Interface for staking pool integration
+interface IStakingPool {
+    function receiveMortgageInterest(uint256 amount) external;
+    function receiveAppreciationShare(uint256 amount) external;
+}
+
 /**
  * @title AncientMortgage
  * @dev REDESIGNED mortgage contract implementing exact business requirements
@@ -209,6 +215,10 @@ contract AncientMortgage is ERC721, Ownable, ReentrancyGuard, Pausable {
 
         require(usdt.transferFrom(msg.sender, address(this), paymentAmount), "Payment transfer failed");
 
+        // ✅ NEW: Wire mortgage interest to staking pool for live yield
+        require(usdt.transfer(lendingPoolContract, interestPortion), "Interest transfer failed");
+        IStakingPool(lendingPoolContract).receiveMortgageInterest(interestPortion);
+
         // ✅ FIXED: Check if payment is late BEFORE updating due date
         bool isLate = block.timestamp > mortgage.nextPaymentDue;
         
@@ -302,10 +312,11 @@ contract AncientMortgage is ERC721, Ownable, ReentrancyGuard, Pausable {
         require(!appraisal.executed, "Already executed");
         require(usdt.balanceOf(address(this)) >= appraisal.appreciationAmount, "Insufficient contract balance");
 
-        // ✅ FIXED: Actual USDT transfers
+        // ✅ FIXED: Actual USDT transfers with staking pool notification
         require(usdt.transfer(mortgage.borrower, appraisal.buyerShare), "Buyer transfer failed");
         require(usdt.transfer(treasuryWallet, appraisal.treasuryShare), "Treasury transfer failed");
         require(usdt.transfer(lendingPoolContract, appraisal.lendingShare), "Lending pool transfer failed");
+        IStakingPool(lendingPoolContract).receiveAppreciationShare(appraisal.lendingShare);
 
         appraisal.executed = true;
 
