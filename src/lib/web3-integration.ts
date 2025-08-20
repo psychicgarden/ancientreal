@@ -53,17 +53,27 @@ export class Web3Integration {
     const { clearContractCache } = await import('./contract-integration');
     clearContractCache();
 
-    // Get real contract addresses from database
+    // Get real contract addresses from database with retry logic
+    console.log('🔍 Fetching contract addresses from database...');
     this.realAddresses = await fetchRealContractAddresses();
-    console.log('🔗 Initializing with real contract addresses:', this.realAddresses);
+    console.log('🔗 Contract addresses loaded:', this.realAddresses);
     
-    // Debug: Check if we have the VillageCitizenship address
-    if (!this.realAddresses.VILLAGE_CITIZENSHIP) {
-      console.error('❌ VillageCitizenship contract address not found in database!');
-      console.log('Available contracts:', Object.keys(this.realAddresses));
-    } else {
-      console.log('✅ VillageCitizenship address found:', this.realAddresses.VILLAGE_CITIZENSHIP);
+    // Critical validation - ensure we have the VillageCitizenship address
+    if (!this.realAddresses.VILLAGE_CITIZENSHIP || this.realAddresses.VILLAGE_CITIZENSHIP === '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0') {
+      console.error('❌ CRITICAL: Using fallback address instead of database address!');
+      console.log('Expected database address: 0x8f8d4b2b8d4f4a9b8d4f4a9b8d4f4a9b8d4f4a9b');
+      console.log('Current address:', this.realAddresses.VILLAGE_CITIZENSHIP);
+      
+      // Force refresh and try again
+      clearContractCache();
+      this.realAddresses = await fetchRealContractAddresses();
+      
+      if (!this.realAddresses.VILLAGE_CITIZENSHIP || this.realAddresses.VILLAGE_CITIZENSHIP === '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0') {
+        throw new Error('Failed to load correct VillageCitizenship address from database. Cannot proceed with fallback address.');
+      }
     }
+    
+    console.log('✅ VillageCitizenship address confirmed:', this.realAddresses.VILLAGE_CITIZENSHIP);
 
     this.contracts.mazunteMortgage = new ethers.Contract(
       this.realAddresses.MAZUNTE_MORTGAGE,
@@ -247,8 +257,27 @@ export class Web3Integration {
   }
 
   async joinVillage(): Promise<ethers.ContractTransactionResponse> {
-    console.log('🏛️ Joining village with address:', this.realAddresses.VILLAGE_CITIZENSHIP);
+    // Force refresh addresses before critical operation
+    const { clearContractCache } = await import('./contract-integration');
+    clearContractCache();
+    this.realAddresses = await fetchRealContractAddresses();
+    
+    console.log('🏛️ Joining village with fresh address:', this.realAddresses.VILLAGE_CITIZENSHIP);
+    
+    // Validate we're not using the fallback address
+    if (this.realAddresses.VILLAGE_CITIZENSHIP === '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0') {
+      throw new Error('Cannot join village with fallback address. Database address required: 0x8f8d4b2b8d4f4a9b8d4f4a9b8d4f4a9b8d4f4a9b');
+    }
+    
     this.ensureAddressConfigured(this.realAddresses.VILLAGE_CITIZENSHIP, 'VillageCitizenship');
+    
+    // Reinitialize the contract with fresh address
+    this.contracts.villageCitizenship = new ethers.Contract(
+      this.realAddresses.VILLAGE_CITIZENSHIP,
+      CONTRACTS.VILLAGE_CITIZENSHIP.abi,
+      this.signer
+    );
+    
     const feeInWei = ethers.parseEther(VILLAGE_CITIZENSHIP_FEE);
     return await this.contracts.villageCitizenship.becomeCitizen({ value: feeInWei });
   }
