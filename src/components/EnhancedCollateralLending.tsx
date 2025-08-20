@@ -72,6 +72,7 @@ export const EnhancedCollateralLending = () => {
   const [flashLoanEnabled, setFlashLoanEnabled] = useState(false);
   const [insuranceEnabled, setInsuranceEnabled] = useState(true);
   const [isCreatingLoan, setIsCreatingLoan] = useState(false);
+  const [liquidationBotsState, setLiquidationBotsState] = useState(liquidationBots);
 
   // Enhanced data structures
   const userTokens = [
@@ -183,7 +184,7 @@ export const EnhancedCollateralLending = () => {
       triggerLTV: 78,
       slippageTolerance: 5.0,
       gasLimit: 800000,
-      enabled: false,
+      enabled: true,
       lastExecution: '2 days ago'
     }
   ];
@@ -255,6 +256,20 @@ export const EnhancedCollateralLending = () => {
   
   const currentLtv = selectedCollateral && loanAmount ? 
     (parseFloat(loanAmount) / maxLoanAmount) * 80 : 0;
+
+  const toggleBotStatus = (botId: string) => {
+    setLiquidationBotsState(prev => 
+      prev.map(bot => 
+        bot.id === botId 
+          ? { ...bot, enabled: !bot.enabled }
+          : bot
+      )
+    );
+    toast({
+      title: "Bot Status Updated",
+      description: `Liquidation bot ${botId} has been ${liquidationBotsState.find(b => b.id === botId)?.enabled ? 'disabled' : 'enabled'}.`,
+    });
+  };
 
   const calculateHealthFactor = (collateralValue: number, loanAmount: number, liquidationThreshold: number) => {
     return (collateralValue * (liquidationThreshold / 100)) / loanAmount;
@@ -790,7 +805,7 @@ export const EnhancedCollateralLending = () => {
         </TabsContent>
 
         <TabsContent value="liquidation-bots" className="space-y-4">
-          {liquidationBots.map((bot) => (
+          {liquidationBotsState.map((bot) => (
             <Card key={bot.id}>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
@@ -825,7 +840,11 @@ export const EnhancedCollateralLending = () => {
                 <div className="flex gap-2">
                   <Button variant="outline" size="sm">Configure</Button>
                   <Button variant="outline" size="sm">Test Run</Button>
-                  <Button variant={bot.enabled ? "destructive" : "default"} size="sm">
+                  <Button 
+                    variant={bot.enabled ? "destructive" : "default"} 
+                    size="sm"
+                    onClick={() => toggleBotStatus(bot.id)}
+                  >
                     {bot.enabled ? "Disable" : "Enable"}
                   </Button>
                 </div>
