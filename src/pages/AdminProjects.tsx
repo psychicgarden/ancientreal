@@ -29,7 +29,9 @@ import { PlatformAnalytics } from '@/components/PlatformAnalytics';
 import { LendingPoolOperations } from '@/components/LendingPoolOperations';
 import { ContractDeployment } from '@/components/ContractDeployment';
 import { VillageCitizenshipDeployment } from '@/components/VillageCitizenshipDeployment';
-import { useWallet } from '@/contexts/WalletContext';
+// Remove wallet dependency for admin pages - not needed
+// import { WalletContext } from '@/contexts/WalletContext';
+// import { useContext } from 'react';
 import { resetPortfolio } from '@/lib/admin/resetPortfolio';
 import { shouldAllowPortfolioReset } from '@/config/demo';
 
@@ -63,7 +65,8 @@ interface ProjectSubmission {
 }
 
 const AdminProjects = () => {
-  const { account } = useWallet();
+  // Admin pages don't require wallet connection
+  const account = null; // Wallet not needed for admin functionality
   const [submissions, setSubmissions] = useState<ProjectSubmission[]>([]);
   const [filteredSubmissions, setFilteredSubmissions] = useState<ProjectSubmission[]>([]);
   const [loading, setLoading] = useState(true);
