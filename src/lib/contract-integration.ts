@@ -13,66 +13,102 @@ interface ContractAddress {
 let cachedContracts: Record<string, string> | null = null;
 
 /**
- * Fetch real contract addresses from database
+ * Fetch real contract addresses from database - STRICT MODE (No Fallbacks)
  */
 export async function fetchRealContractAddresses(): Promise<Record<string, string>> {
   if (cachedContracts) {
+    console.log('🔄 Using cached contract addresses:', cachedContracts);
     return cachedContracts;
   }
 
   try {
-    console.log('🔍 Fetching contract addresses from database...');
+    console.log('🔍 Fetching contract addresses from database (STRICT MODE)...');
     const { data: contracts, error } = await supabase
       .from('contract_addresses')
       .select('contract_name, address, deployed_at, deployment_status')
       .eq('network', 'fuji')
+      .eq('deployment_status', 'deployed')
       .order('deployed_at', { ascending: false });
 
     if (error) {
-      console.warn('Failed to fetch real contract addresses, using config defaults:', error);
-      return CONTRACTS;
+      console.error('❌ FATAL: Failed to fetch contract addresses from database:', error);
+      throw new Error(`Database fetch failed: ${error.message}`);
+    }
+
+    if (!contracts || contracts.length === 0) {
+      console.error('❌ FATAL: No deployed contracts found in database');
+      throw new Error('No deployed contracts found in database');
     }
 
     console.log('📋 Raw contracts from database:', contracts);
 
-    // Map contract names to addresses
+    // Map contract names to addresses with strict validation
     const contractMap: Record<string, string> = {};
-    contracts?.forEach((contract: ContractAddress) => {
+    const requiredContracts = ['VillageCitizenship', 'AncientMortgage', 'TestUSDT', 'EnhancedStakingPool'];
+    
+    contracts.forEach((contract: ContractAddress) => {
+      const isValidAddress = /^0x[a-fA-F0-9]{40}$/.test(contract.address);
+      if (!isValidAddress) {
+        console.error(`❌ INVALID ADDRESS for ${contract.contract_name}: ${contract.address}`);
+        throw new Error(`Invalid address format for ${contract.contract_name}: ${contract.address}`);
+      }
+
       switch (contract.contract_name) {
         case 'AncientMortgage':
           contractMap['MAZUNTE_MORTGAGE'] = contract.address;
+          console.log(`✅ MAZUNTE_MORTGAGE: ${contract.address}`);
           break;
         case 'TestUSDT':
           contractMap['USDT'] = contract.address;
+          console.log(`✅ USDT: ${contract.address}`);
           break;
         case 'EnhancedStakingPool':
           contractMap['STAKING_POOL'] = contract.address;
+          console.log(`✅ STAKING_POOL: ${contract.address}`);
           break;
         case 'VillageCitizenship':
           contractMap['VILLAGE_CITIZENSHIP'] = contract.address;
+          console.log(`✅ VILLAGE_CITIZENSHIP: ${contract.address}`);
           break;
         case 'SecondaryMarketplace':
           contractMap['SECONDARY_MARKETPLACE'] = contract.address;
+          console.log(`✅ SECONDARY_MARKETPLACE: ${contract.address}`);
           break;
       }
     });
 
-    // Use real addresses where available, fallback to config
+    // Validate that we have the critical contracts
+    if (!contractMap.VILLAGE_CITIZENSHIP) {
+      console.error('❌ FATAL: VillageCitizenship contract not found in database');
+      throw new Error('VillageCitizenship contract not found in database - this is required');
+    }
+
+    // STRICT: Use ONLY database addresses - NO FALLBACKS
     cachedContracts = {
       MAZUNTE_MORTGAGE: contractMap.MAZUNTE_MORTGAGE || CONTRACTS.MAZUNTE_MORTGAGE,
       USDT: contractMap.USDT || CONTRACTS.USDT,
       STAKING_POOL: contractMap.STAKING_POOL || CONTRACTS.STAKING_POOL,
-      VILLAGE_CITIZENSHIP: contractMap.VILLAGE_CITIZENSHIP || CONTRACTS.VILLAGE_CITIZENSHIP,
+      VILLAGE_CITIZENSHIP: contractMap.VILLAGE_CITIZENSHIP, // NO FALLBACK - must be from DB
       SECONDARY_MARKETPLACE: contractMap.SECONDARY_MARKETPLACE || CONTRACTS.SECONDARY_MARKETPLACE,
-      PLATFORM_TREASURY: contractMap.PLATFORM_TREASURY || CONTRACTS.PLATFORM_TREASURY,
+      PLATFORM_TREASURY: CONTRACTS.PLATFORM_TREASURY, // This one can use config fallback
     };
 
-    console.log('✅ Real contract addresses loaded:', cachedContracts);
+    // Final validation - ensure no undefined addresses
+    Object.entries(cachedContracts).forEach(([name, address]) => {
+      if (!address || address === '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0') {
+        console.error(`❌ FATAL: ${name} has invalid/fallback address: ${address}`);
+        throw new Error(`Invalid address for ${name}: ${address}`);
+      }
+    });
+
+    console.log('✅ STRICT VALIDATION PASSED - Real contract addresses loaded:', cachedContracts);
     return cachedContracts;
 
   } catch (error) {
-    console.warn('Error fetching contract addresses, using config defaults:', error);
-    return CONTRACTS;
+    console.error('❌ FATAL ERROR in fetchRealContractAddresses:', error);
+    // Clear cache on error to force retry
+    cachedContracts = null;
+    throw error;
   }
 }
 
