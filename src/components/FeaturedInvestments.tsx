@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import SectionHeader from "@/components/SectionHeader";
 import { useFractionalProperties } from "@/hooks/useFractionalProperties";
 import { Skeleton } from "@/components/ui/skeleton";
-import { calculatePropertyAppreciation } from '@/lib/finance';
+import { calculatePropertyAppreciation, calculateInvestmentMetrics, PropertyMortgageData } from '@/lib/finance';
 const FeaturedInvestments = () => {
   const {
     isConnected,
@@ -31,20 +31,30 @@ const FeaturedInvestments = () => {
 
   // Transform properties for Village display with correct financial calculations
   const transformedProperties = properties.map(property => {
-    // Calculate real monthly profit based on actual rent and mortgage payment
-    const monthlyRent = property.monthlyRent; // Use actual database value
-    const monthlyPayment = Math.round(property.monthlyPayment);
-    const monthlyProfit = Math.round(monthlyRent - monthlyPayment);
+    // Use the same calculation logic as PropertyInvestmentCalculator and MortgagePropertyCard
+    const propertyData: PropertyMortgageData = {
+      propertyValue: property.totalValue,
+      downPayment: property.downPayment,
+      aprBps: property.location.includes('Mexico') ? 800 : 750, // 8% for Mexico, 7.5% for others
+      termMonths: 120, // 10 years
+      monthlyRent: property.monthlyRent,
+      platformFeePercent: 0.03
+    };
+
+    // Calculate using the centralized finance function
+    const metrics = calculateInvestmentMetrics(property.downPayment, propertyData);
+    
+    // Extract calculated values
+    const platformFee = property.totalValue * 0.03;
+    const totalInvestment = property.downPayment + platformFee;
+    const monthlyProfit = metrics.monthlyProfit;
     
     // Calculate network value using 181% appreciation and buyer's total equity
     const appreciation = calculatePropertyAppreciation(property.totalValue, property.projected_appreciation_percent || 181, 0.5);
     const networkValue = Math.round(appreciation.buyerTotalEquity);
     
-    // Calculate 10-year total return multiple
-    const totalCashFlow = monthlyProfit * 120; // 10 years = 120 months
-    const equityGain = networkValue - property.downPayment;
-    const totalReturn = (totalCashFlow + equityGain + property.downPayment) / property.downPayment;
-    const totalReturnMultiple = Math.round(totalReturn * 10) / 10; // Round to 1 decimal
+    // Calculate 10-year return: (totalProfit / totalInvestment) + 1 (same as other components)
+    const totalReturnMultiple = Math.round(((metrics.totalProfit / totalInvestment) + 1) * 10) / 10; // Round to 1 decimal
     
     return {
       type: property.location.includes('Mexico') ? "🏝️ Join the Mazunte Village" : "Villa",
@@ -53,8 +63,8 @@ const FeaturedInvestments = () => {
       totalValue: property.totalValue,
       listPrice: property.totalValue,
       downPayment: property.downPayment,
-      monthlyPayment,
-      monthlyRent, // Use real database value
+      monthlyPayment: metrics.monthlyPayment,
+      monthlyRent: property.monthlyRent, // Use real database value
       monthlyProfit, // Calculated from real values
       networkValue, // Proper appreciation model
       totalReturnMultiple, // 10-year total return multiple
