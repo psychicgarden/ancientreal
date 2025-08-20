@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { PROPERTIES_CATALOG } from '@/lib/propertiesCatalog';
-import villaTulum from "@/assets/villa-tulum.jpg";
-import beachChalet from "@/assets/beach-chalet.jpg";
-import villaEriceira from "@/assets/villa-ericeira-portugal.jpg";
+import antalyaTurkeyVilla from "@/assets/antalya-turkey-villa.jpg";
+import kohPhanganSeaBungalow from "@/assets/koh-phangan-sea-bungalow.jpg";
+import corfuGreekApartment from "@/assets/corfu-greek-apartment.jpg";
 
 export interface MortgagePropertyData {
   id: string;
@@ -23,10 +23,10 @@ import { computeMonthlyPaymentUSD } from '@/lib/finance';
 
 const MORTGAGE_PROPERTIES: MortgagePropertyData[] = [
   {
-    id: "mazunte-mexico-villa",
-    name: "Mallorca Beach Villa",
-    location: "Mallorca, Spain",
-    image: villaTulum,
+    id: "antalya-turkey-villa",
+    name: "Antalya Coastal Villa",
+    location: "Antalya, Turkey",
+    image: antalyaTurkeyVilla,
     totalValue: 129000,
     downPayment: 25800, // 20% down
     monthlyPayment: computeMonthlyPaymentUSD(129000 - 25800, 800, 120), // Calculate dynamically
@@ -36,10 +36,10 @@ const MORTGAGE_PROPERTIES: MortgagePropertyData[] = [
     isAvailable: true,
   },
   {
-    id: "bahia-brazil-villa",
+    id: "koh-phangan-thailand-villa",
     name: "Koh Phangan Ocean Villa", 
     location: "Koh Phangan, Thailand",
-    image: beachChalet,
+    image: kohPhanganSeaBungalow,
     totalValue: 120000,
     downPayment: 24000, // 20% down
     monthlyPayment: computeMonthlyPaymentUSD(120000 - 24000, 800, 120), // Calculate dynamically
@@ -49,10 +49,10 @@ const MORTGAGE_PROPERTIES: MortgagePropertyData[] = [
     isAvailable: true,
   },
   {
-    id: "ericeira-portugal-villa",
+    id: "corfu-greece-villa",
     name: "Corfu Coastal Villa",
     location: "Corfu, Greece",
-    image: villaEriceira,
+    image: corfuGreekApartment,
     totalValue: 150000,
     downPayment: 30000, // 20% down
     monthlyPayment: computeMonthlyPaymentUSD(150000 - 30000, 800, 120), // Calculate dynamically
