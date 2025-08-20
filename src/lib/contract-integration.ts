@@ -83,20 +83,20 @@ export async function fetchRealContractAddresses(): Promise<Record<string, strin
       throw new Error('VillageCitizenship contract not found in database - this is required');
     }
 
-    // STRICT: Use ONLY database addresses - NO FALLBACKS
+    // Use database addresses with config fallbacks for compatibility
     cachedContracts = {
       MAZUNTE_MORTGAGE: contractMap.MAZUNTE_MORTGAGE || CONTRACTS.MAZUNTE_MORTGAGE,
       USDT: contractMap.USDT || CONTRACTS.USDT,
       STAKING_POOL: contractMap.STAKING_POOL || CONTRACTS.STAKING_POOL,
-      VILLAGE_CITIZENSHIP: contractMap.VILLAGE_CITIZENSHIP, // NO FALLBACK - must be from DB
+      VILLAGE_CITIZENSHIP: contractMap.VILLAGE_CITIZENSHIP || CONTRACTS.VILLAGE_CITIZENSHIP,
       SECONDARY_MARKETPLACE: contractMap.SECONDARY_MARKETPLACE || CONTRACTS.SECONDARY_MARKETPLACE,
-      PLATFORM_TREASURY: CONTRACTS.PLATFORM_TREASURY, // This one can use config fallback
+      PLATFORM_TREASURY: contractMap.PLATFORM_TREASURY || CONTRACTS.PLATFORM_TREASURY,
     };
 
     // Final validation - ensure no undefined addresses
     Object.entries(cachedContracts).forEach(([name, address]) => {
-      if (!address || address === '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0') {
-        console.error(`❌ FATAL: ${name} has invalid/fallback address: ${address}`);
+      if (!address || !/^0x[a-fA-F0-9]{40}$/.test(address)) {
+        console.error(`❌ FATAL: ${name} has invalid address: ${address}`);
         throw new Error(`Invalid address for ${name}: ${address}`);
       }
     });

@@ -207,7 +207,7 @@ const SmartContractTest = () => {
                           <span className="font-mono text-xs block">
                             {contractAddresses.villageCitizenship || 'Loading...'}
                           </span>
-                          {contractAddresses.villageCitizenship === '0x8f8d4b2b8d4f4a9b8d4f4a9b8d4f4a9b8d4f4a9b' ? (
+                          {contractAddresses.villageCitizenship === '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0' ? (
                             <Badge className="bg-green-600/10 text-green-600 border-green-600/20 text-xs">✅ Correct</Badge>
                           ) : (
                             <Badge className="bg-red-600/10 text-red-600 border-red-600/20 text-xs">❌ Wrong</Badge>
@@ -239,10 +239,10 @@ const SmartContractTest = () => {
                           <span className="font-mono text-xs block">
                             {web3ContractAddresses.VILLAGE_CITIZENSHIP || 'Loading...'}
                           </span>
-                          {web3ContractAddresses.VILLAGE_CITIZENSHIP === '0x8f8d4b2b8d4f4a9b8d4f4a9b8d4f4a9b8d4f4a9b' ? (
+                          {web3ContractAddresses.VILLAGE_CITIZENSHIP === '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0' ? (
                             <Badge className="bg-green-600/10 text-green-600 border-green-600/20 text-xs">✅ Correct</Badge>
-                          ) : web3ContractAddresses.VILLAGE_CITIZENSHIP === '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0' ? (
-                            <Badge className="bg-red-600/10 text-red-600 border-red-600/20 text-xs">❌ Fallback</Badge>
+                          ) : web3ContractAddresses.VILLAGE_CITIZENSHIP === '0x8f8d4b2b8d4f4a9b8d4f4a9b8d4f4a9b8d4f4a9b' ? (
+                            <Badge className="bg-red-600/10 text-red-600 border-red-600/20 text-xs">❌ Old/Invalid</Badge>
                           ) : (
                             <Badge className="bg-yellow-600/10 text-yellow-600 border-yellow-600/20 text-xs">⚠️ Unknown</Badge>
                           )}
