@@ -119,12 +119,22 @@ This structure is used by major platforms like RealT, Reental, and follows the s
 All backed by legal SPV structure and professional property management.`
     };
 
-    // Check for offline response triggers
+    // Check for offline response triggers - BUT SKIP FOR INVESTOR QUERIES
     const messageLower = message.toLowerCase();
-    for (const [key, response] of Object.entries(offlineResponses)) {
-      if (messageLower.includes(key) || 
-          (key === 'tether' && (messageLower.includes('similar') || messageLower.includes('legal'))) ||
-          (key === 'investment' && (messageLower.includes('invest') || messageLower.includes('how to')))) {
+    
+    // Skip offline responses for investor-level queries
+    const isInvestorQuery = /\$[\d,.]+m[illion]*|[\d,.]+\s*million|\$[\d,]+k[illion]*|\$[\d,]+,[\d,]+/i.test(messageLower) ||
+                           messageLower.includes('7m') || messageLower.includes('7.5m') ||
+                           messageLower.includes('million') || messageLower.includes('$1m') ||
+                           /investment.*get.*used|how.*money.*spent|capital.*deployment|funds.*allocation/i.test(messageLower) ||
+                           /when.*returns|return.*timeline|returns.*hit|when.*profit|timeline.*returns/i.test(messageLower) ||
+                           /business.*model|scaling.*strategy|investor.*returns/i.test(messageLower);
+    
+    if (!isInvestorQuery) {
+      for (const [key, response] of Object.entries(offlineResponses)) {
+        if (messageLower.includes(key) || 
+            (key === 'tether' && (messageLower.includes('similar') || messageLower.includes('legal'))) ||
+            (key === 'investment' && (messageLower.includes('invest') || messageLower.includes('how to')))) {
         
         // Log the offline response
         try {
@@ -139,12 +149,13 @@ All backed by legal SPV structure and professional property management.`
           console.log('Failed to log offline conversation:', logError);
         }
 
-        return new Response(JSON.stringify({ 
-          response,
-          success: true 
-        }), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+          return new Response(JSON.stringify({ 
+            response,
+            success: true 
+          }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
       }
     }
 
