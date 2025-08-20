@@ -61,7 +61,7 @@ function App() {
                 <Route path="/investor-report" element={<Navigate to="/portfolio?tab=platform" replace />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
-                <ChatBot />
+              <ChatBot />
               </BrowserRouter>
                 </div>
               </SmartContractProvider>
