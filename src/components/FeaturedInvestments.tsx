@@ -47,7 +47,7 @@ const FeaturedInvestments = () => {
     // Extract calculated values
     const platformFee = property.totalValue * 0.03;
     const totalInvestment = property.downPayment + platformFee;
-    const monthlyProfit = metrics.monthlyProfit;
+    const monthlyProfit = Math.round(metrics.monthlyProfit);
     
     // Calculate network value using 181% appreciation and buyer's total equity
     const appreciation = calculatePropertyAppreciation(property.totalValue, property.projected_appreciation_percent || 181, 0.5);
