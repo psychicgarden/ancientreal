@@ -71,9 +71,9 @@ export interface PropertyInvestmentData {
 // Comprehensive image mapping for property names and asset paths
 const imageOverrides: Record<string, string> = {
   // Property name overrides - exact matches for database entries
-  'Art Deco Loft': villaTulum,
-  'Bahia Ocean Villa': beachChalet,
-  'Oceanview Loft': villaEriceira,
+  'Art Deco Loft': bohoArtDecoLoft,
+  'Bahia Ocean Villa': luxuryBohoBungalow,
+  'Oceanview Loft': artDecoCoastalEriceira,
   'Villa Tulum': villaTulum,
   'Villa Ericeira': villaEriceira,
   'Villa Bahia': villaBahia,
