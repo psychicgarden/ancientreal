@@ -100,7 +100,10 @@ const BankingInterface = () => {
   };
 
   const handleDeposit = async () => {
-    if (!isConnected || !walletAddress) {
+    const { isDemoMode } = useWallet();
+    
+    // Allow demo mode to proceed without wallet connection
+    if (!isDemoMode && (!isConnected || !walletAddress)) {
       toast({
         title: "Wallet not connected",
         description: "Please connect your wallet to deposit funds.",
@@ -184,10 +187,22 @@ const BankingInterface = () => {
   };
 
   const handleWithdraw = async () => {
-    if (!isConnected || !walletAddress || !stakingData) {
+    const { isDemoMode } = useWallet();
+    
+    // Allow demo mode to proceed with different validation
+    if (!isDemoMode && (!isConnected || !walletAddress)) {
       toast({
         title: "Cannot withdraw",
         description: "Please connect your wallet and ensure you have staked funds.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!stakingData) {
+      toast({
+        title: "No staking data",
+        description: "Please ensure you have staked funds before withdrawing.",
         variant: "destructive",
       });
       return;

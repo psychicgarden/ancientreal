@@ -301,24 +301,23 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setIsLoading(true);
 
     try {
-      // Demo mode handling - check first before MetaMask
+      // Demo mode handling - connect immediately
       if (DEMO_CONFIG.isEnabled) {
         const demoWallet = getDemoWallet();
         if (demoWallet) {
-          setTimeout(() => {
-            setAccount(demoWallet.address);
-            setChainId(demoWallet.chainId);
-            setNetworkName(demoWallet.networkName);
-            setIsConnected(true);
-            setUsdtBalance("1000");
-            setEthBalance("2.5");
-            setIsLoading(false);
-            
-            toast({
-              title: "Demo Wallet Connected",
-              description: "Connected to demo wallet with test tokens",
-            });
-          }, 1000);
+          // Set demo connection immediately without setTimeout
+          setAccount(demoWallet.address);
+          setChainId(demoWallet.chainId);
+          setNetworkName(demoWallet.networkName);
+          setIsConnected(true);
+          setUsdtBalance("1000");
+          setEthBalance("2.5");
+          setIsLoading(false);
+          
+          toast({
+            title: "Demo Wallet Connected",
+            description: "Connected to demo wallet with test tokens",
+          });
         }
         return;
       }
