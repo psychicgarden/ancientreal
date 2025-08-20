@@ -207,7 +207,7 @@ const Index = () => {
                 </div>
 
                 <Button className="w-full mt-6 group-hover:scale-105 transition-transform" variant="outline" asChild>
-                  <Link to="/investor">
+                  <Link to="/developers">
                     Browse Projects <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
                 </Button>
@@ -263,7 +263,7 @@ const Index = () => {
                 </div>
 
                 <Button className="w-full mt-6 group-hover:scale-105 transition-transform" variant="outline" asChild>
-                  <Link to="/developers">
+                  <Link to="/investor-portal">
                     Explore Properties <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
                 </Button>
