@@ -128,7 +128,7 @@ export const LendingPoolOperations = () => {
   const calculatePoolMetrics = (): PoolMetrics => {
     const totalStaked = stakingData.reduce((sum, staker) => sum + staker.total_staked, 0);
     const totalMortgageDebt = propertyData.reduce((sum, prop) => sum + prop.remaining_balance, 0);
-    const deployedCapital = Math.min(totalStaked * 0.8, totalMortgageDebt); // 80% deployment max
+    const deployedCapital = Math.min(totalStaked, totalMortgageDebt); // 100% deployment
     const availableCapital = totalStaked - deployedCapital;
     const utilizationRate = totalStaked > 0 ? (deployedCapital / totalStaked) * 100 : 0;
     
