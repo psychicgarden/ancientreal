@@ -127,15 +127,15 @@ export const LendingPoolOperations = () => {
   // Calculate pool metrics
   const calculatePoolMetrics = (): PoolMetrics => {
     const totalStaked = stakingData.reduce((sum, staker) => sum + staker.total_staked, 0);
-    const totalMortgageDebt = propertyData.reduce((sum, prop) => sum + prop.remaining_balance, 0);
-    const deployedCapital = Math.min(totalStaked, totalMortgageDebt); // 100% deployment
-    const availableCapital = totalStaked - deployedCapital;
+    const deployedCapital = totalStaked * 0.9; // Deploy 90% of available capital
+    const availableCapital = totalStaked * 0.1; // Keep 10% as reserve buffer
     const utilizationRate = totalStaked > 0 ? (deployedCapital / totalStaked) * 100 : 0;
     
-    // Calculate APY based on 7.5% interest rate + appreciation share
-    const annualInterestRate = 0.075; // 7.5% base rate
+    // Calculate blended APY - 90% deployed at 9% = 8.1% blended return
+    const annualInterestRate = 0.075; // 7.5% base rate on deployed capital
     const appreciationShareAPY = 0.015; // ~1.5% from 10% appreciation share amortized over 10 years
-    const currentAPY = (annualInterestRate + appreciationShareAPY) * 100; // ~9%
+    const fullAPY = (annualInterestRate + appreciationShareAPY) * 100; // 9% on deployed portion
+    const currentAPY = fullAPY * 0.9; // Blended APY accounting for 10% non-earning reserve
     
     const monthlyInterestExpected = deployedCapital * annualInterestRate / 12;
 
@@ -213,9 +213,8 @@ export const LendingPoolOperations = () => {
 
   // Capital allocation pie chart data - colors match metric cards
   const allocationData = [
-    { name: 'Available Capital', value: poolMetrics.availableCapital, color: 'hsl(45 100% 50%)' }, // Yellow to match card
     { name: 'Deployed in Mortgages', value: poolMetrics.deployedCapital, color: 'hsl(120 60% 50%)' }, // Green to match card
-    { name: 'Reserve Buffer', value: 0, color: 'hsl(220 60% 60%)' } // Blue/gray - now shows 0 since we deploy 100%
+    { name: 'Reserve Buffer', value: poolMetrics.availableCapital, color: 'hsl(220 60% 60%)' } // Blue for 10% reserve
   ].filter(item => item.value > 0); // Filter out zero values
 
   if (loading) {
@@ -362,24 +361,20 @@ export const LendingPoolOperations = () => {
               <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                 <div className="flex items-center gap-3">
                   <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="text-sm font-medium">Mortgage Funding ({poolMetrics.utilizationRate.toFixed(1)}% deployed)</span>
+                  <span className="text-sm font-medium">Mortgage Funding (90% deployed)</span>
                 </div>
                 <span className="text-sm font-bold">${poolMetrics.deployedCapital.toLocaleString()}</span>
               </div>
-              {poolMetrics.availableCapital > 0 && (
-                <>
-                  <div className="flex justify-center">
-                    <div className="w-4 h-4 text-muted-foreground flex items-center justify-center">•••</div>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                      <span className="text-sm font-medium">Available for New Loans</span>
-                    </div>
-                    <span className="text-sm font-bold">${poolMetrics.availableCapital.toLocaleString()}</span>
-                  </div>
-                </>
-              )}
+              <div className="flex justify-center">
+                <div className="w-4 h-4 text-muted-foreground flex items-center justify-center">•••</div>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                  <span className="text-sm font-medium">Reserve Buffer (10%)</span>
+                </div>
+                <span className="text-sm font-bold">${poolMetrics.availableCapital.toLocaleString()}</span>
+              </div>
               <div className="flex justify-center">
                 <ArrowRight className="w-4 h-4 text-muted-foreground" />
               </div>
