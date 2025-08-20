@@ -74,10 +74,8 @@ const FeaturedInvestments = () => {
           title="The Ancient Collective"
           subtitle={
             <>
-              Private residences in the world's most soulful places.
+              Private residences in the world's most soulful places. Start with 20% down. Modern financing for conscious living.
               <br />
-              <br />
-              Start with 20% down. Modern financing for conscious living.
               <br />
               Own your place in the story.
             </>
