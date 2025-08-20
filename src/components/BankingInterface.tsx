@@ -35,7 +35,7 @@ interface StakingTransaction {
 
 const BankingInterface = () => {
   const { toast } = useToast();
-  const { account: walletAddress, isConnected } = useWallet();
+  const { account: walletAddress, isConnected, isDemoMode } = useWallet();
   const [depositAmount, setDepositAmount] = useState('');
   const [withdrawAmount, setWithdrawAmount] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -100,8 +100,6 @@ const BankingInterface = () => {
   };
 
   const handleDeposit = async () => {
-    const { isDemoMode } = useWallet();
-    
     // Allow demo mode to proceed without wallet connection
     if (!isDemoMode && (!isConnected || !walletAddress)) {
       toast({
@@ -187,8 +185,6 @@ const BankingInterface = () => {
   };
 
   const handleWithdraw = async () => {
-    const { isDemoMode } = useWallet();
-    
     // Allow demo mode to proceed with different validation
     if (!isDemoMode && (!isConnected || !walletAddress)) {
       toast({
