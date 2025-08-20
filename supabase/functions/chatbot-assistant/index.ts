@@ -681,7 +681,7 @@ Answer user questions about the platform, investment process, calculations, and 
     }
 
     // Enhanced query detection for investor vs retail routing
-    const messageLower = message.toLowerCase();
+    // Reuse messageLower from line 123
     
     // Enhanced investor detection patterns
     const investorPatterns = [
@@ -829,12 +829,12 @@ Always be precise, professional, visually appealing, and reference the exact sec
     console.error('Chatbot error:', error);
     
     // Enhanced fallback with specific responses
-    const messageLower = (await req.clone().json()).message?.toLowerCase() || '';
+    const errorMessageLower = message?.toLowerCase() || '';
     let fallbackResponse = "I'm temporarily unavailable. Please try again shortly.";
     
-    if (messageLower.includes('tether') || messageLower.includes('legal') || messageLower.includes('similar')) {
+    if (errorMessageLower.includes('tether') || errorMessageLower.includes('legal') || errorMessageLower.includes('similar')) {
       fallbackResponse = "Ancient uses the same proven SPV legal structure as Tether Gold and other major tokenized asset platforms. The SPV owns the property legally, while tokens represent your economic rights to cash flows and appreciation. This is the standard institutional approach for tokenized real estate globally.";
-    } else if (messageLower.includes('invest') || messageLower.includes('how to')) {
+    } else if (errorMessageLower.includes('invest') || errorMessageLower.includes('how to')) {
       fallbackResponse = "Ancient offers two investment options: Buy Shares (fractional investment starting from $50) or Join Groups (split 20% down payment with 3-6 people). Connect your wallet, complete KYC, and choose from our curated Mexican coastal properties. Each offers 7-9% annual yields plus appreciation potential.";
     }
     
