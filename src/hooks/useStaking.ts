@@ -159,6 +159,8 @@ export const useStaking = () => {
       throw new Error('Wallet not connected');
     }
 
+    console.log('Creating staking transaction:', { type, amount, walletAddress });
+
     // Create the initial transaction
     const result = await api.supabase.createStakingTransaction({
       user_wallet_address: walletAddress.toLowerCase(),
@@ -168,24 +170,31 @@ export const useStaking = () => {
     });
 
     if (!result.success) {
+      console.error('Failed to create transaction:', result.error);
       throw new Error(result.error || 'Failed to create transaction');
     }
 
     const transaction = result.data;
+    console.log('Transaction created:', transaction);
 
     // Immediately complete the transaction (simulating successful blockchain tx)
     const mockTxHash = `0x${Math.random().toString(16).substring(2)}${Date.now().toString(16)}`;
     
+    console.log('Updating transaction status to completed...');
     const updateResult = await api.supabase.updateStakingTransaction(transaction.id, {
       status: 'completed',
       transaction_hash: mockTxHash
     });
 
     if (!updateResult.success) {
-      console.warn('Failed to update transaction status:', updateResult.error);
+      console.error('Failed to update transaction status:', updateResult.error);
+      // Don't throw here, continue with the flow but log the error
+    } else {
+      console.log('Transaction status updated successfully');
     }
 
     // Update user staking balance
+    console.log('Updating user staking balance...');
     if (type === 'deposit') {
       await updateUserStakingBalance(walletAddress, amount);
     } else if (type === 'withdraw') {
@@ -193,6 +202,7 @@ export const useStaking = () => {
     }
 
     // Reload data to reflect changes
+    console.log('Reloading staking data and transactions...');
     await loadStakingData();
     await loadTransactions();
 
