@@ -577,7 +577,7 @@ export const LendingPoolOperations = () => {
                   <span className="font-medium">~$20,000</span>
                 </div>
                 <div className="flex justify-between text-purple-600">
-                  <span className="font-medium">Total Pool Return:</span>
+                  <span className="font-medium">Total Pool Profit:</span>
                   <span className="font-bold">~$148,000</span>
                 </div>
               </div>
