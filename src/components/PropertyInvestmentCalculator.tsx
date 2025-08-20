@@ -48,6 +48,9 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
     platformFeePercent: 0.03
   };
 
+  // Platform fee is separate upfront cost (3% of property list price)
+  const platformFee = property.totalValue * 0.03;
+
   // Calculate metrics using centralized service
   const metrics = calculateInvestmentMetrics(investmentAmount, propertyData);
 
@@ -60,7 +63,8 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
   // Calculate totals for 10-year projection using correct metrics
   const totalCashFlow = metrics.totalCashFlowProfit;
   const actualWealthCreated = metrics.totalProfit; // True profit: cash flow + equity - investment
-  const total10YearROI = investmentAmount > 0 ? (actualWealthCreated / investmentAmount) * 100 : 0;
+  const totalInvestment = investmentAmount + platformFee; // Down payment + platform fee
+  const total10YearROI = totalInvestment > 0 ? (actualWealthCreated / totalInvestment) * 100 : 0;
 
   // Interest savings calculation (vs baseline scenario)
   const baselineData: PropertyMortgageData = {
@@ -72,10 +76,7 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
 
   // Annual calculations
   const annualProfit = metrics.monthlyProfit * 12;
-  const trueAnnualROI = investmentAmount > 0 ? (total10YearROI / 10) : 0;
-
-  // Platform fee is separate upfront cost (3% of property list price)
-  const platformFee = property.totalValue * 0.03;
+  const trueAnnualROI = totalInvestment > 0 ? (total10YearROI / 10) : 0;
 
 
   return (
@@ -134,7 +135,7 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
                   ${Math.round(actualWealthCreated).toLocaleString()}
                 </div>
                 <div className="text-lg text-muted-foreground">
-                  {((actualWealthCreated / investmentAmount) + 1).toFixed(1)}x total return
+                  {((actualWealthCreated / totalInvestment) + 1).toFixed(1)}x total return
                 </div>
                 <div className="text-sm text-muted-foreground mt-1">
                   {total10YearROI.toFixed(0)}% total return over 10 years
@@ -151,14 +152,14 @@ const PropertyInvestmentCalculator = ({ open, onOpenChange, property }: Property
                 <div>
                   <div className="text-sm text-muted-foreground">You Invest</div>
                   <div className="text-2xl font-bold text-red-600">
-                    ${investmentAmount.toLocaleString()}
+                    ${totalInvestment.toLocaleString()}
                   </div>
                   <div className="text-xs text-muted-foreground">Today</div>
                 </div>
                 <div>
                   <div className="text-sm text-muted-foreground">You Get Back</div>
                   <div className="text-2xl font-bold text-primary">
-                    ${(investmentAmount + actualWealthCreated).toLocaleString()}
+                    ${(totalInvestment + actualWealthCreated).toLocaleString()}
                   </div>
                   <div className="text-xs text-muted-foreground">After 10 years</div>
                 </div>
