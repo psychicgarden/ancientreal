@@ -71,7 +71,7 @@ const FeaturedInvestments = () => {
       <div className="container mx-auto">
         <SectionHeader
           eyebrow="Featured"
-          title="Sustainable Living"
+          title="The Ancient Collective"
           subtitle="20% Down Financing — Thoughtfully curated eco‑luxury residences. Modern financing for conscious living."
         />
 
