@@ -18,7 +18,7 @@ export interface MortgagePropertyData {
   isAvailable: boolean;
 }
 
-// Enhanced properties with database-driven calculations
+// Realistic mortgage calculations with risk adjustments
 import { computeMonthlyPaymentUSD } from '@/lib/finance';
 
 const MORTGAGE_PROPERTIES: MortgagePropertyData[] = [
@@ -29,10 +29,10 @@ const MORTGAGE_PROPERTIES: MortgagePropertyData[] = [
     image: antalyaTurkeyVilla,
     totalValue: 129000,
     downPayment: 25800, // 20% down
-    monthlyPayment: computeMonthlyPaymentUSD(129000 - 25800, 800, 120), // Calculate dynamically
-    monthlyRent: 2050,
-    networkValue: 129000 * 2.81, // 181% appreciation
-    expectedReturn: 19.1,
+    monthlyPayment: computeMonthlyPaymentUSD(129000 - 25800, 750, 120), // 7.5% APR, 10 years
+    monthlyRent: 1845, // Reduced by 10% for vacancy/maintenance reserves
+    networkValue: Math.round(129000 * 1.35), // Conservative 35% appreciation over 10 years
+    expectedReturn: 16.5, // Mid-range of 15-18%
     isAvailable: true,
   },
   {
@@ -42,10 +42,10 @@ const MORTGAGE_PROPERTIES: MortgagePropertyData[] = [
     image: kohPhanganSeaBungalow,
     totalValue: 120000,
     downPayment: 24000, // 20% down
-    monthlyPayment: computeMonthlyPaymentUSD(120000 - 24000, 800, 120), // Calculate dynamically
-    monthlyRent: 1900,
-    networkValue: 120000 * 2.81, // 181% appreciation
-    expectedReturn: 19.0,
+    monthlyPayment: computeMonthlyPaymentUSD(120000 - 24000, 750, 120), // 7.5% APR, 10 years
+    monthlyRent: 1710, // Reduced by 10% for vacancy/maintenance reserves
+    networkValue: Math.round(120000 * 1.30), // Conservative 30% appreciation over 10 years
+    expectedReturn: 15.5, // Mid-range of 14-17%
     isAvailable: true,
   },
   {
@@ -55,10 +55,10 @@ const MORTGAGE_PROPERTIES: MortgagePropertyData[] = [
     image: corfuGreekApartment,
     totalValue: 150000,
     downPayment: 30000, // 20% down
-    monthlyPayment: computeMonthlyPaymentUSD(150000 - 30000, 800, 120), // Calculate dynamically
-    monthlyRent: 2266, // Correct rent from database
-    networkValue: 150000 * 2.81, // 181% appreciation
-    expectedReturn: 18.9,
+    monthlyPayment: computeMonthlyPaymentUSD(150000 - 30000, 750, 120), // 7.5% APR, 10 years
+    monthlyRent: 2040, // Reduced by 10% for vacancy/maintenance reserves
+    networkValue: Math.round(150000 * 1.40), // Conservative 40% appreciation over 10 years
+    expectedReturn: 17.5, // Mid-range of 16-19%
     isAvailable: true,
   },
 ];
