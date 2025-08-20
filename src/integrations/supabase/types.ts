@@ -134,6 +134,51 @@ export type Database = {
         }
         Relationships: []
       }
+      contract_addresses: {
+        Row: {
+          abi_json: Json | null
+          address: string
+          contract_name: string
+          created_at: string
+          deployed_at: string
+          deployer_address: string | null
+          deployment_status: string
+          deployment_tx_hash: string | null
+          gas_used: number | null
+          id: string
+          network: string
+          updated_at: string
+        }
+        Insert: {
+          abi_json?: Json | null
+          address: string
+          contract_name: string
+          created_at?: string
+          deployed_at?: string
+          deployer_address?: string | null
+          deployment_status?: string
+          deployment_tx_hash?: string | null
+          gas_used?: number | null
+          id?: string
+          network?: string
+          updated_at?: string
+        }
+        Update: {
+          abi_json?: Json | null
+          address?: string
+          contract_name?: string
+          created_at?: string
+          deployed_at?: string
+          deployer_address?: string | null
+          deployment_status?: string
+          deployment_tx_hash?: string | null
+          gas_used?: number | null
+          id?: string
+          network?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       developer_investments: {
         Row: {
           created_at: string

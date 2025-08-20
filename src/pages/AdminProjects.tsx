@@ -27,6 +27,7 @@ import {
  } from 'lucide-react';
 import { PlatformAnalytics } from '@/components/PlatformAnalytics';
 import { LendingPoolOperations } from '@/components/LendingPoolOperations';
+import { ContractDeployment } from '@/components/ContractDeployment';
 import { useWallet } from '@/contexts/WalletContext';
 import { resetPortfolio } from '@/lib/admin/resetPortfolio';
 import { shouldAllowPortfolioReset } from '@/config/demo';
@@ -72,7 +73,7 @@ const AdminProjects = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [selectedSubmission, setSelectedSubmission] = useState<ProjectSubmission | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'projects' | 'analytics' | 'lending'>('projects');
+  const [activeTab, setActiveTab] = useState<'projects' | 'contracts' | 'analytics' | 'lending'>('projects');
 
   console.log('AdminProjects component rendered', { submissions: submissions.length, loading, error });
 
@@ -314,6 +315,17 @@ const AdminProjects = () => {
             Project Submissions
           </button>
           <button
+            onClick={() => setActiveTab('contracts')}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              activeTab === 'contracts'
+                ? 'bg-background text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            <AlertCircle className="w-4 h-4 mr-2 inline" />
+            Smart Contracts
+          </button>
+          <button
             onClick={() => setActiveTab('analytics')}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
               activeTab === 'analytics'
@@ -338,7 +350,9 @@ const AdminProjects = () => {
         </div>
 
         {/* Conditional Content Based on Active Tab */}
-        {activeTab === 'analytics' ? (
+        {activeTab === 'contracts' ? (
+          <ContractDeployment />
+        ) : activeTab === 'analytics' ? (
           <PlatformAnalytics />
         ) : activeTab === 'lending' ? (
           <LendingPoolOperations />
