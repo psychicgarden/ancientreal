@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import FeaturedInvestments from "@/components/FeaturedInvestments";
+import { SmartContractStatus } from "@/components/SmartContractStatus";
 
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,6 +16,14 @@ const Index = () => {
   return <div className="min-h-screen">
       <Header />
       <Hero />
+      
+      {/* Smart Contract Deployment Status */}
+      <section className="py-12 bg-background">
+        <div className="container mx-auto px-4">
+          <SmartContractStatus />
+        </div>
+      </section>
+      
       <FeaturedInvestments />
       
       {/* The Mathematics of Modern Nomadism */}
