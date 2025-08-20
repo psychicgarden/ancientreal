@@ -40,9 +40,9 @@ export const PROPERTIES_CATALOG: CatalogProperty[] = [
     expectedReturn: 15.9, // Based on $1719 monthly rent
   },
   {
-    id: "oceanview-loft-ericeira",
+    id: "oceanview-loft-mallorca",
     name: "Oceanview Loft",
-    location: "Ericeira, Portugal",
+    location: "Mallorca, Spain",
     image: ASSETS.COASTAL_APARTMENT_ERICEIRA,
     totalValue: 150000,
     sharePrice: 150,
