@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import FeaturedProperties from "@/components/FeaturedProperties";
+import FeaturedInvestments from "@/components/FeaturedInvestments";
 
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,7 +15,7 @@ const Index = () => {
   return <div className="min-h-screen">
       <Header />
       <Hero />
-      <FeaturedProperties />
+      <FeaturedInvestments />
       
       {/* The Mathematics of Modern Nomadism */}
       <section className="py-20 bg-gradient-to-br from-muted/20 to-muted/40">
