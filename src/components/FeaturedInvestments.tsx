@@ -76,8 +76,8 @@ const FeaturedInvestments = () => {
             <>
               Private residences in the world's most soulful places. Start with 20% down. Modern financing for conscious living.
               <br />
-              <br />
               Own your place in the story.
+              <br />
             </>
           }
         />
