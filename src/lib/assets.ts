@@ -9,9 +9,10 @@ import villaEriceira from '@/assets/villa-ericeira-portugal.jpg';
 import baliJungleResort from '@/assets/bali-jungle-resort.jpg';
 import desertOasisMorocco from '@/assets/desert-oasis-morocco.jpg';
 import beachHouseMykonos from '@/assets/beach-house-mykonos.jpg';
-import artDecoLoftMexico from '/lovable-uploads/51bde256-1db5-4dc6-8d4b-889d09573c29.png';
-import luxuryBohoBungalow from '/lovable-uploads/0de3f9c6-8215-4db2-a0af-0e6516c1d081.png';
-import coastalApartmentEriceira from '/lovable-uploads/10592a9f-ab4b-4f89-b841-82bfac9c95d7.png';
+// Uploaded property images
+const artDecoLoftMexico = '/lovable-uploads/51bde256-1db5-4dc6-8d4b-889d09573c29.png';
+const luxuryBohoBungalow = '/lovable-uploads/0de3f9c6-8215-4db2-a0af-0e6516c1d081.png';
+const coastalApartmentEriceira = '/lovable-uploads/10592a9f-ab4b-4f89-b841-82bfac9c95d7.png';
 
 // Asset management utilities
 export const ASSETS = {
