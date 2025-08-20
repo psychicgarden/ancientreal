@@ -57,12 +57,16 @@ export function calculateInvestmentMetrics(
   investmentAmount: number,
   propertyData: PropertyMortgageData
 ): InvestmentCalculation {
-  // Platform fee is separate upfront cost, not deducted from equity
-  const loanAmount = Math.max(0, propertyData.propertyValue - investmentAmount);
+  // Calculate platform fee - separate upfront cost
+  const platformFee = propertyData.platformFeePercent ? investmentAmount * propertyData.platformFeePercent : 0;
+  const totalInvestment = investmentAmount + platformFee; // Total out-of-pocket cost
+  const netInvestment = investmentAmount; // Amount going to property equity
+  
+  const loanAmount = Math.max(0, propertyData.propertyValue - netInvestment);
   
   const monthlyPayment = computeMonthlyPaymentUSD(loanAmount, propertyData.aprBps, propertyData.termMonths);
   const monthlyProfit = propertyData.monthlyRent - monthlyPayment;
-  const cashFlowYield = investmentAmount > 0 ? (monthlyProfit * 12 / investmentAmount) * 100 : 0;
+  const cashFlowYield = totalInvestment > 0 ? (monthlyProfit * 12 / totalInvestment) * 100 : 0;
   
   // Calculate total interest cost over loan term
   const totalPayments = monthlyPayment * propertyData.termMonths;
@@ -75,8 +79,8 @@ export function calculateInvestmentMetrics(
   // Calculate total cash flow profit over the term
   const totalCashFlowProfit = monthlyProfit * propertyData.termMonths;
   
-  // Calculate total profit: Cash flow profit + Capital gains (equity - investment)
-  const capitalGains = totalEquityAtMaturity - investmentAmount;
+  // Calculate total profit: Cash flow profit + Capital gains (equity - total investment including fees)
+  const capitalGains = totalEquityAtMaturity - totalInvestment;
   const totalProfit = totalCashFlowProfit + capitalGains;
   
   return {

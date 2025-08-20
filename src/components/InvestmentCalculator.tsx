@@ -5,6 +5,7 @@ import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calculator, TrendingUp, Home, Users } from "lucide-react";
 import { useWallet } from "@/contexts/WalletContext";
+import { calculateInvestmentMetrics } from "@/lib/finance";
 
 interface InvestmentCalculatorProps {
   open: boolean;
@@ -15,67 +16,58 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
   const [investment, setInvestment] = useState([30000]);
   const { isConnected, purchaseTokens, isPurchasing } = useWallet();
 
-  // Investment calculations - Dynamic Mortgage Model with 3% platform fee
+  // Investment calculations using centralized finance service with platform fee
   const investmentAmount = investment[0];
   const platformFee = investmentAmount * 0.03; // 3% platform fee for property purchases
-  const netInvestment = investmentAmount - platformFee; // Actual amount going to property
-  const propertyValue = 150000; // Oceanview Loft property value
-  const monthlyRent = 2266; // Correct rent from database
+  const totalInvestment = investmentAmount + platformFee; // Total out-of-pocket cost
+  const netInvestment = investmentAmount; // Actual amount going to property
   
-  // Calculate mortgage payment based on net investment (after platform fee)
-  const loanAmount = propertyValue - netInvestment;
-  const annualInterestRate = 0.08; // 8% annual rate
-  const monthlyInterestRate = annualInterestRate / 12;
-  const loanTermMonths = 10 * 12; // 10 years
+  // Property data for calculation
+  const propertyData = {
+    propertyValue: 150000, // Oceanview Loft property value
+    downPayment: netInvestment,
+    aprBps: 800, // 8% APR
+    termMonths: 120, // 10 years
+    monthlyRent: 2266, // Correct rent from database
+    platformFeePercent: 0.03
+  };
   
-  // Mortgage payment formula: M = P[r(1+r)^n]/[(1+r)^n-1]
-  const monthlyMortgage = loanAmount > 0 
-    ? (loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, loanTermMonths)) / 
-      (Math.pow(1 + monthlyInterestRate, loanTermMonths) - 1)
-    : 0;
-    
-  const monthlyProfit = monthlyRent - monthlyMortgage;
+  // Calculate metrics using centralized service
+  const metrics = calculateInvestmentMetrics(investmentAmount, propertyData);
   
-  // Calculate total interest savings
-  const totalPayments = monthlyMortgage * loanTermMonths;
-  const totalInterest = totalPayments - loanAmount;
+  // Calculate baseline scenario (minimum $30K down payment) for interest savings
+  const baselineData = {
+    ...propertyData,
+    downPayment: 30000
+  };
+  const baselineMetrics = calculateInvestmentMetrics(30000, baselineData);
+  const totalInterestSaved = Math.max(0, baselineMetrics.totalInterestCost - metrics.totalInterestCost);
   
-  // Calculate baseline scenario (minimum $30K down payment)
-  const baselineLoanAmount = propertyValue - 30000;
-  const baselineMonthlymortgage = baselineLoanAmount > 0 
-    ? (baselineLoanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, loanTermMonths)) / 
-      (Math.pow(1 + monthlyInterestRate, loanTermMonths) - 1)
-    : 0;
-  const baselineTotalPayments = baselineMonthlymortgage * loanTermMonths;
-  const baselineTotalInterest = baselineTotalPayments - baselineLoanAmount;
-  
-  const totalInterestSaved = baselineTotalInterest - totalInterest;
-  
-  // Calculate absolute returns for this scenario
-  const annualProfit = monthlyProfit * 12;
-  const cashFlowYield = (annualProfit / investmentAmount) * 100;
+  // Annual calculations
+  const annualProfit = metrics.monthlyProfit * 12;
+  const cashFlowYield = metrics.cashFlowYield;
   
   // Property appreciation calculations - 181% appreciation model
   const appreciationPercent = 181;
-  const totalAppreciation = propertyValue * (appreciationPercent / 100); // $271,500
-  const tenYearPropertyValue = propertyValue + totalAppreciation; // $421,500
-  const buyerAppreciationShare = totalAppreciation * 0.5; // 50% split = $135,750
-  const buyerTotalEquity = propertyValue + buyerAppreciationShare; // $285,750
+  const totalAppreciation = propertyData.propertyValue * (appreciationPercent / 100);
+  const tenYearPropertyValue = propertyData.propertyValue + totalAppreciation;
+  const buyerAppreciationShare = totalAppreciation * 0.5; // 50% split
+  const buyerTotalEquity = propertyData.propertyValue + buyerAppreciationShare;
   const annualAppreciationBenefit = buyerAppreciationShare / 10; // Annualized
   
   // Calculate total annual benefit (cash flow + interest savings + appreciation)
   const annualInterestSavings = totalInterestSaved / 10; // Annual portion of total savings
   const totalAnnualBenefit = annualProfit + annualInterestSavings + annualAppreciationBenefit;
   
-  // True ROI: Total annual benefit divided by total investment
-  const trueAnnualROI = (totalAnnualBenefit / investmentAmount) * 100;
+  // True ROI: Total annual benefit divided by total investment (including platform fee)
+  const trueAnnualROI = (totalAnnualBenefit / totalInvestment) * 100;
   
-  // Total wealth actually created (profit calculation)
-  const totalCashFlow = annualProfit * 10;
-  const actualWealthCreated = totalCashFlow + buyerTotalEquity - investmentAmount; // True profit: cash flow + equity - investment
+  // Total wealth actually created using corrected calculation
+  const totalCashFlow = metrics.totalCashFlowProfit;
+  const actualWealthCreated = metrics.totalProfit; // Already accounts for platform fee in finance.ts
   
-  // Calculate total 10-year ROI based on actual profit
-  const total10YearROI = (actualWealthCreated / investmentAmount) * 100;
+  // Calculate total 10-year ROI based on actual profit and total investment
+  const total10YearROI = (actualWealthCreated / totalInvestment) * 100;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -133,7 +125,7 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
                   <span className="font-medium">Monthly Cash Flow</span>
                 </div>
                 <div className="text-2xl font-bold text-green-600">
-                  ${Math.round(monthlyProfit).toLocaleString()}
+                  ${Math.round(metrics.monthlyProfit).toLocaleString()}
                 </div>
                 <div className="text-sm text-muted-foreground">
                   ${Math.round(annualProfit).toLocaleString()}/year
@@ -198,7 +190,7 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
               <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 text-center">
                 <div>
                   <div className="text-sm text-muted-foreground">Total Investment</div>
-                  <div className="text-lg font-bold">${investmentAmount.toLocaleString()}</div>
+                  <div className="text-lg font-bold">${totalInvestment.toLocaleString()}</div>
                   <div className="text-xs text-muted-foreground">(includes 3% fee)</div>
                 </div>
                 <div>
@@ -233,7 +225,7 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-center text-sm">
                   <div>
                     <div className="text-muted-foreground">Starting Value</div>
-                    <div className="font-semibold">${propertyValue.toLocaleString()}</div>
+                    <div className="font-semibold">${propertyData.propertyValue.toLocaleString()}</div>
                   </div>
                   <div>
                     <div className="text-muted-foreground">Final Value (Year 10)</div>
@@ -287,7 +279,7 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
             className="w-full" 
             size="lg"
             onClick={() => {
-              purchaseTokens(investmentAmount);
+              purchaseTokens(totalInvestment);
               onOpenChange(false);
             }}
             disabled={isPurchasing || !isConnected}
@@ -296,7 +288,7 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
               ? "Processing..." 
               : !isConnected 
                 ? "Connect Wallet to Secure Investment"
-                : `Secure $${investmentAmount.toLocaleString()} Investment`
+                : `Secure $${totalInvestment.toLocaleString()} Investment`
             }
           </Button>
         </div>
