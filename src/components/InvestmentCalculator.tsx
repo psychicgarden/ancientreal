@@ -16,21 +16,23 @@ const InvestmentCalculator = ({ open, onOpenChange }: InvestmentCalculatorProps)
   const [investment, setInvestment] = useState([30000]);
   const { isConnected, purchaseTokens, isPurchasing } = useWallet();
 
-  // Investment calculations using centralized finance service with platform fee
+  // Investment calculations using Art Deco Loft Mazunte data
   const investmentAmount = investment[0];
-  const platformFee = investmentAmount * 0.03; // 3% platform fee for property purchases
-  const totalInvestment = investmentAmount + platformFee; // Total out-of-pocket cost
-  const netInvestment = investmentAmount; // Actual amount going to property
   
-  // Property data for calculation
+  // Property data for Art Deco Loft calculation
   const propertyData = {
-    propertyValue: 150000, // Oceanview Loft property value
-    downPayment: netInvestment,
+    propertyValue: 129000, // Art Deco Loft Mazunte value
+    downPayment: investmentAmount,
     aprBps: 800, // 8% APR
     termMonths: 120, // 10 years
-    monthlyRent: 2266, // Correct rent from database
-    platformFeePercent: 0.03
+    monthlyRent: 1969, // Art Deco Loft rent
+    platformFeePercent: 0.03 // 3% of property value
   };
+  
+  // Platform fee: 3% of property value (not investment amount)
+  const platformFee = propertyData.propertyValue * 0.03; // $3,870
+  const totalInvestment = investmentAmount + platformFee; // Total out-of-pocket cost
+  const netInvestment = investmentAmount; // Actual amount going to property
   
   // Calculate metrics using centralized service
   const metrics = calculateInvestmentMetrics(investmentAmount, propertyData);

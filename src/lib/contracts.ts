@@ -68,13 +68,13 @@ export const CONTRACTS = {
 // Re-export network config from centralized location
 export const NETWORK_CONFIG = CHAIN_CONFIG;
 
-// Mazunte Property Constants
+// Art Deco Loft Mazunte Property Constants
 export const MAZUNTE_PROPERTY = {
   // Production values
   PRODUCTION: {
-    VALUE: 150000, // $150,000 USD
-    MIN_DOWN_PAYMENT: 30000, // $30,000 USD minimum
-    MONTHLY_RENT: 2050, // $2,050 USD
+    VALUE: 129000, // $129,000 USD
+    MIN_DOWN_PAYMENT: 29670, // $29,670 USD minimum
+    MONTHLY_RENT: 1969, // $1,969 USD
     MORTGAGE_RATE: 8, // 8% APR
     MORTGAGE_TERM_YEARS: 10,
     MANAGEMENT_FEE: 10, // 10%
@@ -82,9 +82,9 @@ export const MAZUNTE_PROPERTY = {
   },
   // Demo values (1000x reduced)
   DEMO: {
-    VALUE: 150, // $150 USD
-    MIN_DOWN_PAYMENT: 30, // $30 USD minimum
-    MONTHLY_RENT: 2.05, // $2.05 USD
+    VALUE: 129, // $129 USD
+    MIN_DOWN_PAYMENT: 29.67, // $29.67 USD minimum
+    MONTHLY_RENT: 1.969, // $1.969 USD
     MORTGAGE_RATE: 8, // 8% APR
     MORTGAGE_TERM_YEARS: 10,
     MANAGEMENT_FEE: 10, // 10%

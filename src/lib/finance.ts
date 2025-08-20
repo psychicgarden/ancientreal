@@ -57,8 +57,8 @@ export function calculateInvestmentMetrics(
   investmentAmount: number,
   propertyData: PropertyMortgageData
 ): InvestmentCalculation {
-  // Calculate platform fee - separate upfront cost
-  const platformFee = propertyData.platformFeePercent ? investmentAmount * propertyData.platformFeePercent : 0;
+  // Calculate platform fee - 3% of property value, not investment amount
+  const platformFee = propertyData.platformFeePercent ? propertyData.propertyValue * propertyData.platformFeePercent : 0;
   const totalInvestment = investmentAmount + platformFee; // Total out-of-pocket cost
   const netInvestment = investmentAmount; // Amount going to property equity
   

@@ -11,6 +11,7 @@ export interface CatalogProperty {
   totalShares?: number;
   availableShares?: number;
   expectedReturn?: number;
+  monthlyRent?: number; // monthly rental income
 }
 
 // Import images from centralized assets
@@ -20,13 +21,14 @@ export const PROPERTIES_CATALOG: CatalogProperty[] = [
   {
     id: "art-deco-loft-mexico",
     name: "Art Deco Loft",
-    location: "Mazunte, Mexico",
+    location: "Mazunte, Mexico", 
     image: ASSETS.ART_DECO_LOFT_MEXICO,
     totalValue: 129000,
     sharePrice: 129,
     totalShares: 1000,
     availableShares: 240,
     expectedReturn: 17.4, // Based on $1969 monthly rent
+    monthlyRent: 1969, // Monthly rental income
   },
   {
     id: "bahia-brazil-villa",
