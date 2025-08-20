@@ -60,11 +60,9 @@ export class Web3Integration {
     const addressKey = contractName.replace('_', '_').toUpperCase();
     const contractAddress = freshAddresses[addressKey];
     
-    // Critical validation - prevent fallback address usage
-    if (contractName === 'VILLAGE_CITIZENSHIP') {
-      if (!contractAddress || contractAddress === '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0') {
-        throw new Error(`CRITICAL: Cannot use fallback address for ${contractName}. Expected database address: 0x8f8d4b2b8d4f4a9b8d4f4a9b8d4f4a9b8d4f4a9b, got: ${contractAddress}`);
-      }
+    // Validate address exists
+    if (!contractAddress) {
+      throw new Error(`No contract address found for ${contractName}`);
     }
     
     this.ensureAddressConfigured(contractAddress, contractName);

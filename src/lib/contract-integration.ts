@@ -83,14 +83,14 @@ export async function fetchRealContractAddresses(): Promise<Record<string, strin
       throw new Error('VillageCitizenship contract not found in database - this is required');
     }
 
-    // Use database addresses with config fallbacks for compatibility
+    // Use database addresses directly
     cachedContracts = {
-      MAZUNTE_MORTGAGE: contractMap.MAZUNTE_MORTGAGE || CONTRACTS.MAZUNTE_MORTGAGE,
-      USDT: contractMap.USDT || CONTRACTS.USDT,
-      STAKING_POOL: contractMap.STAKING_POOL || CONTRACTS.STAKING_POOL,
-      VILLAGE_CITIZENSHIP: contractMap.VILLAGE_CITIZENSHIP || CONTRACTS.VILLAGE_CITIZENSHIP,
-      SECONDARY_MARKETPLACE: contractMap.SECONDARY_MARKETPLACE || CONTRACTS.SECONDARY_MARKETPLACE,
-      PLATFORM_TREASURY: contractMap.PLATFORM_TREASURY || CONTRACTS.PLATFORM_TREASURY,
+      MAZUNTE_MORTGAGE: contractMap.MAZUNTE_MORTGAGE,
+      USDT: contractMap.USDT,
+      STAKING_POOL: contractMap.STAKING_POOL,
+      VILLAGE_CITIZENSHIP: contractMap.VILLAGE_CITIZENSHIP,
+      SECONDARY_MARKETPLACE: contractMap.SECONDARY_MARKETPLACE,
+      PLATFORM_TREASURY: contractMap.PLATFORM_TREASURY,
     };
 
     // Final validation - ensure no undefined addresses
