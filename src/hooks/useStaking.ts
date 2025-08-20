@@ -37,53 +37,44 @@ export const useStaking = () => {
     }
 
     try {
-      // In demo mode, provide fallback wallet address if needed
-      const walletAddress = isDemoMode() ? DEMO_CONFIG.testWalletAddress : account;
+      // Always use the actual account, only fall back to demo address if no account
+      const walletAddress = account || (isDemoMode() ? DEMO_CONFIG.testWalletAddress : '');
+      if (!walletAddress) {
+        setLoading(false);
+        return;
+      }
+
       const result = await api.supabase.getUserStaking(walletAddress);
       
       if (result.success && result.data) {
         // Handle both array and object responses
         const stakingInfo = Array.isArray(result.data) ? result.data[0] : result.data;
         if (stakingInfo) {
+          // Use the real data from API
           setStakingData(stakingInfo);
-        } else {
-          // In demo mode, create default data if none exists
-          if (isDemoMode()) {
-            setStakingData({
-              id: 'demo-staking',
-              total_staked: 5000,
-              total_earned: 245.50,
-              current_apy: 8.0,
-              last_yield_calculation: new Date().toISOString(),
-              is_active: true
-            });
-          } else {
-            handleError(new Error('No staking data found'), {
-              operation: 'load_staking_data',
-              component: 'useStaking'
-            });
-          }
-        }
-      } else {
-        // In demo mode, create default data if none exists
-        if (isDemoMode()) {
-          setStakingData({
-            id: 'demo-staking',
-            total_staked: 5000,
-            total_earned: 245.50,
-            current_apy: 8.0,
-            last_yield_calculation: new Date().toISOString(),
-            is_active: true
-          });
-        } else {
-          handleError(new Error(result.error || 'No staking data found'), {
-            operation: 'load_staking_data',
-            component: 'useStaking'
-          });
+          setLoading(false);
+          return;
         }
       }
+      
+      // Only use demo data if truly no data exists and we're in demo mode
+      if (isDemoMode() && (!result.success || !result.data)) {
+        setStakingData({
+          id: 'demo-staking',
+          total_staked: 5000,
+          total_earned: 245.50,
+          current_apy: 8.0,
+          last_yield_calculation: new Date().toISOString(),
+          is_active: true
+        });
+      } else if (!isDemoMode()) {
+        handleError(new Error(result.error || 'No staking data found'), {
+          operation: 'load_staking_data',
+          component: 'useStaking'
+        });
+      }
     } catch (error) {
-      // In demo mode, provide fallback data
+      // Only provide demo fallback if in demo mode and no real data
       if (isDemoMode()) {
         setStakingData({
           id: 'demo-staking',
@@ -108,14 +99,20 @@ export const useStaking = () => {
     if (!account) return;
 
     try {
-      // In demo mode, provide fallback wallet address if needed
-      const walletAddress = isDemoMode() ? DEMO_CONFIG.testWalletAddress : account;
+      // Always use the actual account, only fall back to demo address if no account
+      const walletAddress = account || (isDemoMode() ? DEMO_CONFIG.testWalletAddress : '');
+      if (!walletAddress) return;
+
       const result = await api.supabase.getUserStakingTransactions(walletAddress);
       
       if (result.success && result.data) {
+        // Use real transaction data
         setTransactions(result.data);
-      } else if (isDemoMode()) {
-        // Provide demo transactions
+        return;
+      }
+      
+      // Only use demo transactions if truly no data exists and we're in demo mode
+      if (isDemoMode() && (!result.success || !result.data || result.data.length === 0)) {
         setTransactions([
           {
             id: 'demo-tx-1',
@@ -137,7 +134,7 @@ export const useStaking = () => {
       }
     } catch (error) {
       if (isDemoMode()) {
-        // Provide demo transactions as fallback
+        // Provide demo transactions as fallback only in demo mode
         setTransactions([
           {
             id: 'demo-tx-1',
@@ -160,8 +157,8 @@ export const useStaking = () => {
   const createStakingTransaction = async (type: string, amount: number) => {
     if (!account) throw new Error('Wallet not connected');
 
-    // In demo mode, use demo wallet address and simulate transaction
-    const walletAddress = isDemoMode() ? DEMO_CONFIG.testWalletAddress : account;
+    // Use actual account address, fall back to demo only if no account
+    const walletAddress = account || (isDemoMode() ? DEMO_CONFIG.testWalletAddress : '');
     
     const result = await api.supabase.createStakingTransaction({
       user_wallet_address: walletAddress.toLowerCase(),
