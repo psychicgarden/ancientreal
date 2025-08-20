@@ -29,6 +29,7 @@ import { PlatformAnalytics } from '@/components/PlatformAnalytics';
 import { LendingPoolOperations } from '@/components/LendingPoolOperations';
 import { ContractDeployment } from '@/components/ContractDeployment';
 import { VillageCitizenshipDeployment } from '@/components/VillageCitizenshipDeployment';
+import { DeployRealContracts } from '@/components/DeployRealContracts';
 // Remove wallet dependency for admin pages - not needed
 // import { WalletContext } from '@/contexts/WalletContext';
 // import { useContext } from 'react';
@@ -360,6 +361,7 @@ const AdminProjects = () => {
         {/* Conditional Content Based on Active Tab */}
         {activeTab === 'contracts' ? (
           <div className="space-y-6">
+            <DeployRealContracts />
             <ContractDeployment />
             <VillageCitizenshipDeployment />
           </div>
