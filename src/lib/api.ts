@@ -122,6 +122,43 @@ export class SupabaseApi {
     }
   }
 
+  static async updateStakingTransaction(transactionId: string, updates: any): Promise<ApiResponse> {
+    try {
+      const { data, error } = await supabase
+        .from('staking_transactions')
+        .update(updates)
+        .eq('id', transactionId)
+        .select()
+        .single();
+      
+      if (error) {
+        return { data: null, error: error.message, success: false };
+      }
+      
+      return { data, error: null, success: true };
+    } catch (error: any) {
+      return { data: null, error: error.message || 'Unknown error', success: false };
+    }
+  }
+
+  static async upsertUserStaking(stakingData: any): Promise<ApiResponse> {
+    try {
+      const { data, error } = await supabase
+        .from('user_staking')
+        .upsert(stakingData)
+        .select()
+        .single();
+      
+      if (error) {
+        return { data: null, error: error.message, success: false };
+      }
+      
+      return { data, error: null, success: true };
+    } catch (error: any) {
+      return { data: null, error: error.message || 'Unknown error', success: false };
+    }
+  }
+
   // Projects API
   static async getDeveloperProjects(): Promise<ApiResponse> {
     try {

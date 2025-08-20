@@ -31,18 +31,15 @@ export const useStaking = () => {
   const [loading, setLoading] = useState(true);
 
   const loadStakingData = async () => {
-    if (!account) {
+    // In demo mode, always use demo wallet; otherwise require account
+    const walletAddress = isDemoMode() ? DEMO_CONFIG.testWalletAddress : account;
+    
+    if (!walletAddress) {
       setLoading(false);
       return;
     }
 
     try {
-      // Always use the actual account, only fall back to demo address if no account
-      const walletAddress = account || (isDemoMode() ? DEMO_CONFIG.testWalletAddress : '');
-      if (!walletAddress) {
-        setLoading(false);
-        return;
-      }
 
       const result = await api.supabase.getUserStaking(walletAddress);
       
@@ -96,12 +93,12 @@ export const useStaking = () => {
   };
 
   const loadTransactions = async () => {
-    if (!account) return;
+    // In demo mode, always use demo wallet; otherwise require account
+    const walletAddress = isDemoMode() ? DEMO_CONFIG.testWalletAddress : account;
+    
+    if (!walletAddress) return;
 
     try {
-      // Always use the actual account, only fall back to demo address if no account
-      const walletAddress = account || (isDemoMode() ? DEMO_CONFIG.testWalletAddress : '');
-      if (!walletAddress) return;
 
       const result = await api.supabase.getUserStakingTransactions(walletAddress);
       
@@ -155,11 +152,14 @@ export const useStaking = () => {
   };
 
   const createStakingTransaction = async (type: string, amount: number) => {
-    if (!account) throw new Error('Wallet not connected');
-
-    // Use actual account address, fall back to demo only if no account
-    const walletAddress = account || (isDemoMode() ? DEMO_CONFIG.testWalletAddress : '');
+    // In demo mode, always allow transactions even without wallet connection
+    const walletAddress = isDemoMode() ? DEMO_CONFIG.testWalletAddress : account;
     
+    if (!walletAddress) {
+      throw new Error('Wallet not connected');
+    }
+
+    // Create the initial transaction
     const result = await api.supabase.createStakingTransaction({
       user_wallet_address: walletAddress.toLowerCase(),
       transaction_type: type,
@@ -171,7 +171,59 @@ export const useStaking = () => {
       throw new Error(result.error || 'Failed to create transaction');
     }
 
-    return result.data;
+    const transaction = result.data;
+
+    // Immediately complete the transaction (simulating successful blockchain tx)
+    const mockTxHash = `0x${Math.random().toString(16).substring(2)}${Date.now().toString(16)}`;
+    
+    const updateResult = await api.supabase.updateStakingTransaction(transaction.id, {
+      status: 'completed',
+      transaction_hash: mockTxHash
+    });
+
+    if (!updateResult.success) {
+      console.warn('Failed to update transaction status:', updateResult.error);
+    }
+
+    // Update user staking balance
+    if (type === 'deposit') {
+      await updateUserStakingBalance(walletAddress, amount);
+    } else if (type === 'withdraw') {
+      await updateUserStakingBalance(walletAddress, -amount);
+    }
+
+    // Reload data to reflect changes
+    await loadStakingData();
+    await loadTransactions();
+
+    return { ...transaction, status: 'completed', transaction_hash: mockTxHash };
+  };
+
+  const updateUserStakingBalance = async (walletAddress: string, amountDelta: number) => {
+    try {
+      // Get current staking data
+      const currentResult = await api.supabase.getUserStaking(walletAddress);
+      let currentStaking = null;
+
+      if (currentResult.success && currentResult.data) {
+        currentStaking = Array.isArray(currentResult.data) ? currentResult.data[0] : currentResult.data;
+      }
+
+      const newTotalStaked = (currentStaking?.total_staked || 0) + amountDelta;
+      
+      const stakingData = {
+        user_wallet_address: walletAddress.toLowerCase(),
+        total_staked: Math.max(0, newTotalStaked), // Don't allow negative balances
+        total_earned: currentStaking?.total_earned || 0,
+        current_apy: currentStaking?.current_apy || 8.0,
+        is_active: true,
+        last_yield_calculation: new Date().toISOString()
+      };
+
+      await api.supabase.upsertUserStaking(stakingData);
+    } catch (error) {
+      console.error('Failed to update staking balance:', error);
+    }
   };
 
   useEffect(() => {
