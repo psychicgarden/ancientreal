@@ -23,14 +23,29 @@ export const MortgagePropertyCard = ({
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isAnalyticsModalOpen, setIsAnalyticsModalOpen] = useState(false);
 
-  // Hardcoded correct values to match Calculate Network Returns card
-  const monthlyNetworkYield = property.name === "Art Deco Loft" ? 764 : Math.round(property.monthlyRent - property.monthlyPayment);
-  const mortgagePayment = property.name === "Art Deco Loft" ? 1205 : property.monthlyPayment;
-  const monthlyProfit = property.name === "Art Deco Loft" ? 764 : Math.round(property.monthlyRent - property.monthlyPayment);
-  const totalReturn10Year = property.name === "Art Deco Loft" ? 10.1 : 9.06;
-  
-  const platformFee = property.totalValue * 0.03;
+  // Calculate investment metrics using the proper calculation that includes platform fee
+  const platformFee = property.downPayment * 0.03;
   const totalInvestment = property.downPayment + platformFee;
+  
+  // Calculate monthly profit and 10-year projections
+  const monthlyProfit = Math.round(property.monthlyRent - property.monthlyPayment);
+  const monthlyNetworkYield = monthlyProfit;
+  const mortgagePayment = property.monthlyPayment;
+  
+  // Calculate 10-year cash flow
+  const totalCashFlow = monthlyProfit * 120; // 10 years
+  
+  // Calculate property appreciation (same logic as PropertyInvestmentCalculator)
+  const appreciationPercent = 181;
+  const buyerShare = 0.5;
+  const totalAppreciation = property.totalValue * (appreciationPercent / 100);
+  const buyerAppreciationShare = totalAppreciation * buyerShare;
+  
+  // Total profit over 10 years
+  const totalProfit = totalCashFlow + buyerAppreciationShare;
+  
+  // Calculate proper 10-year return: (totalProfit / totalInvestment) + 1
+  const totalReturn10Year = (totalProfit / totalInvestment) + 1;
   
   // Calculate return range
   const returnLow = Math.floor(property.expectedReturn - 1.5);
