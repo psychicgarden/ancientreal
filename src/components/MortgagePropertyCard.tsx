@@ -24,9 +24,16 @@ export const MortgagePropertyCard = ({
 
   // Calculate financial metrics
   const monthlyProfit = Math.round(property.monthlyRent - property.monthlyPayment);
-  const totalReturn10Year = Math.round(
-    ((monthlyProfit * 120) + (property.networkValue - property.downPayment) + property.downPayment) / property.downPayment * 10
-  ) / 10;
+  
+  // Calculate platform fee (3% of property value) and total investment
+  const platformFee = property.totalValue * 0.03;
+  const totalInvestment = property.downPayment + platformFee;
+  
+  // Calculate 10-year ROI: (Total Cash Flow + Final Equity - Total Investment) / Total Investment
+  const totalCashFlow = monthlyProfit * 120;
+  const finalEquity = property.networkValue;
+  const totalReturn = (totalCashFlow + finalEquity - totalInvestment) / totalInvestment;
+  const totalReturn10Year = Math.round(totalReturn * 100) / 100;
   
   // Calculate return range
   const returnLow = Math.floor(property.expectedReturn - 1.5);
@@ -90,21 +97,27 @@ export const MortgagePropertyCard = ({
                   <span className="text-lg font-semibold">${property.totalValue.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Down Payment:</span>
+                  <span className="text-sm text-muted-foreground">
+                    {property.id === "art-deco-loft-mexico" ? "Citizenship Cost:" : "Down Payment:"}
+                  </span>
                   <div className="text-right">
                     <div className="text-lg font-bold text-primary">${property.downPayment.toLocaleString()}</div>
-                    <div className="text-xs text-muted-foreground">(20% down payment)</div>
+                    <div className="text-xs text-muted-foreground">
+                      {property.id === "art-deco-loft-mexico" ? "(founding member rate)" : "(20% down payment)"}
+                    </div>
                   </div>
                 </div>
                 <div className="h-px bg-gradient-to-r from-border/50 to-transparent my-3" />
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">Monthly Profit:</span>
+                  <span className="text-sm text-muted-foreground">Monthly Network Yield:</span>
                   <span className="text-lg font-bold text-green-600">
                     ${monthlyProfit > 0 ? '+' : ''}${monthlyProfit.toLocaleString()}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">10-Year Property Value:</span>
+                  <span className="text-sm text-muted-foreground">
+                    {property.id === "art-deco-loft-mexico" ? "10-Year Village Value:" : "10-Year Property Value:"}
+                  </span>
                   <span className="text-lg font-bold">${property.networkValue.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -172,7 +185,7 @@ export const MortgagePropertyCard = ({
               size="lg" 
               onClick={onInvest}
             >
-              Purchase with 20% Down
+              {property.id === "art-deco-loft-mexico" ? "Purchase with 20% Down" : "Purchase with 20% Down"}
             </Button>
             <Button 
               className="w-full h-11 font-medium" 
