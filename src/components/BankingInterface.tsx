@@ -152,17 +152,8 @@ const BankingInterface = () => {
         return;
       }
 
-      // Create pending transaction record using centralized API
-      const txData = await createStakingTransaction('deposit', amount);
-
-      // Simulate blockchain transaction - in real implementation, this would interact with YieldFarmingManager contract
-      // For now, we'll always proceed in demo mode since the contracts aren't deployed
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // TODO: Move staking balance updates to the centralized API
-      // For now, simulate successful completion
-      const mockTxHash = `0x${Math.random().toString(16).substr(2, 64)}`;
-      console.log('Deposit completed with mock hash:', mockTxHash);
+      // Create and complete transaction using centralized API
+      await createStakingTransaction('deposit', amount);
 
       toast({
         title: "Deposit Successful!",
@@ -170,7 +161,6 @@ const BankingInterface = () => {
       });
 
       setDepositAmount('');
-      loadStakingData();
 
     } catch (error) {
       console.error('Deposit error:', error);
@@ -217,17 +207,8 @@ const BankingInterface = () => {
     setIsLoading(true);
 
     try {
-      // Create pending withdrawal transaction using centralized API
-      const txData = await createStakingTransaction('withdrawal', amount);
-
-      // Simulate blockchain transaction
-      await new Promise(resolve => setTimeout(resolve, 3000));
-
-      // TODO: Move these operations to the centralized API
-      // For now, simulating successful withdrawal completion
-      
-      const mockTxHash = `0x${Math.random().toString(16).substr(2, 64)}`;
-      console.log('Withdrawal completed with mock hash:', mockTxHash);
+      // Create and complete withdrawal transaction using centralized API
+      await createStakingTransaction('withdraw', amount);
 
       toast({
         title: "Withdrawal Successful!",
@@ -235,7 +216,6 @@ const BankingInterface = () => {
       });
 
       setWithdrawAmount('');
-      loadStakingData();
 
     } catch (error) {
       console.error('Withdrawal error:', error);

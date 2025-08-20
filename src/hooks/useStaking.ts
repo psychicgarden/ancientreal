@@ -40,53 +40,32 @@ export const useStaking = () => {
     }
 
     try {
-
+      console.log('Loading staking data for wallet:', walletAddress);
       const result = await api.supabase.getUserStaking(walletAddress);
       
       if (result.success && result.data) {
         // Handle both array and object responses
         const stakingInfo = Array.isArray(result.data) ? result.data[0] : result.data;
         if (stakingInfo) {
-          // Use the real data from API
+          console.log('Staking data loaded successfully:', stakingInfo);
           setStakingData(stakingInfo);
           setLoading(false);
           return;
         }
       }
       
-      // Only use demo data if truly no data exists and we're in demo mode
-      if (isDemoMode() && (!result.success || !result.data)) {
-        setStakingData({
-          id: 'demo-staking',
-          total_staked: 5000,
-          total_earned: 245.50,
-          current_apy: 8.0,
-          last_yield_calculation: new Date().toISOString(),
-          is_active: true
-        });
-      } else if (!isDemoMode()) {
-        handleError(new Error(result.error || 'No staking data found'), {
-          operation: 'load_staking_data',
-          component: 'useStaking'
-        });
-      }
+      console.log('No staking data found, result:', result);
+      // Set to null if no data found
+      setStakingData(null);
+      
     } catch (error) {
-      // Only provide demo fallback if in demo mode and no real data
-      if (isDemoMode()) {
-        setStakingData({
-          id: 'demo-staking',
-          total_staked: 5000,
-          total_earned: 245.50,
-          current_apy: 8.0,
-          last_yield_calculation: new Date().toISOString(),
-          is_active: true
-        });
-      } else {
-        handleError(error, {
-          operation: 'load_staking_data',
-          component: 'useStaking'
-        });
-      }
+      console.error('Error loading staking data:', error);
+      // Set to null on error
+      setStakingData(null);
+      handleError(error, {
+        operation: 'load_staking_data',
+        component: 'useStaking'
+      });
     } finally {
       setLoading(false);
     }
@@ -99,55 +78,25 @@ export const useStaking = () => {
     if (!walletAddress) return;
 
     try {
-
+      console.log('Loading transactions for wallet:', walletAddress);
       const result = await api.supabase.getUserStakingTransactions(walletAddress);
       
       if (result.success && result.data) {
-        // Use real transaction data
+        console.log('Transactions loaded successfully:', result.data);
         setTransactions(result.data);
         return;
       }
       
-      // Only use demo transactions if truly no data exists and we're in demo mode
-      if (isDemoMode() && (!result.success || !result.data || result.data.length === 0)) {
-        setTransactions([
-          {
-            id: 'demo-tx-1',
-            transaction_type: 'deposit',
-            amount: 5000,
-            transaction_hash: null,
-            status: 'completed',
-            created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
-          },
-          {
-            id: 'demo-tx-2',
-            transaction_type: 'yield',
-            amount: 12.25,
-            transaction_hash: null,
-            status: 'completed',
-            created_at: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString()
-          }
-        ]);
-      }
+      console.log('No transactions found, setting empty array');
+      setTransactions([]);
+      
     } catch (error) {
-      if (isDemoMode()) {
-        // Provide demo transactions as fallback only in demo mode
-        setTransactions([
-          {
-            id: 'demo-tx-1',
-            transaction_type: 'deposit',
-            amount: 5000,
-            transaction_hash: null,
-            status: 'completed',
-            created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
-          }
-        ]);
-      } else {
-        handleError(error, {
-          operation: 'load_staking_transactions',
-          component: 'useStaking'
-        });
-      }
+      console.error('Error loading transactions:', error);
+      setTransactions([]);
+      handleError(error, {
+        operation: 'load_staking_transactions',
+        component: 'useStaking'
+      });
     }
   };
 
