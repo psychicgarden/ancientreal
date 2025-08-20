@@ -9,10 +9,10 @@ import { useWallet } from '@/contexts/WalletContext';
 import { ethers } from 'ethers';
 import { Home, DollarSign, Calendar, CheckCircle, AlertCircle } from 'lucide-react';
 
-// Hard-coded addresses for simplicity
+// Real contract addresses from database
 const CONTRACTS = {
-  SIMPLE_MORTGAGE: '0x8C123e5F3B4cD1234567890ABCDEFfedcba54321', // Will be updated after deployment
-  TEST_USDT: '0x43eCed1b7C1BDc6522Db5a2F39905Cc0E3CE7F28'
+  SIMPLE_MORTGAGE: null, // Will be deployed via deployment tab
+  TEST_USDT: '0xc29837e2f495d8f04c5e7aca7d378baa8765dd36' // Real USDT contract from database
 };
 
 // Minimal ABIs for mortgage operations only
@@ -86,6 +86,15 @@ export const SimpleMortgageInterface = () => {
   // Purchase property with mortgage
   const handlePurchaseProperty = async () => {
     if (!isConnected || !window.ethereum) return;
+    
+    if (!CONTRACTS.SIMPLE_MORTGAGE) {
+      toast({
+        title: "❌ Contract Not Deployed",
+        description: "SimpleMortgage contract needs to be deployed first. Use the Deploy tab above.",
+        variant: "destructive"
+      });
+      return;
+    }
 
     setIsLoading(true);
     try {
