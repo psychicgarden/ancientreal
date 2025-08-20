@@ -81,10 +81,10 @@ export const AncientMortgageTestFlow = () => {
 
         case 'purchase':
           // Purchase property with real down payment
-          const { web3Integration: web3 } = await import('@/lib/web3-integration');
-          await web3.initialize();
+          const { web3Integration: web3Purchase } = await import('@/lib/web3-integration');
+          await web3Purchase.initialize();
           
-          const { transaction } = await web3.purchaseProperty(30000); // $30K down payment
+          const { transaction } = await web3Purchase.purchaseProperty(30000); // $30K down payment
           const purchaseReceipt = await transaction.wait();
           txHash = purchaseReceipt.hash;
           break;
@@ -92,13 +92,13 @@ export const AncientMortgageTestFlow = () => {
         case 'stake':
           // Stake USDT in staking pool - use wallet context method
           const { useWallet } = await import('@/contexts/WalletContext');
-          const { web3 } = useWallet();
+          const { web3: web3Stake } = useWallet();
           
-          const stakingPoolContract = await web3.getContract('MAZUNTE_MORTGAGE');
-          const stakeAmount = web3.parseUSDT('1000');
+          const stakingPoolContract = await web3Stake.getContract('MAZUNTE_MORTGAGE');
+          const stakeAmount = web3Stake.parseUSDT('1000');
           
           // For now, just approve USDT (staking pool integration needed)
-          await web3.approveUSDT(stakingPoolContract.target as string, '1000');
+          await web3Stake.approveUSDT(stakingPoolContract.target as string, '1000');
           
           // Simulate staking transaction
           const stakeTx = await stakingPoolContract.purchaseProperty(stakeAmount);

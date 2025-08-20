@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { ethers } from 'ethers';
 import { useToast } from '@/hooks/use-toast';
 import { CONTRACTS, NETWORK_CONFIG, VILLAGE_MEMBERSHIP_FEE, MAZUNTE_PROPERTY } from '@/lib/contracts';
 import { web3Integration, Web3Integration } from '@/lib/web3-integration';
@@ -34,6 +35,8 @@ interface WalletContextType {
   isPurchasingProperty: boolean;
   isMakingPayment: boolean;
   web3: Web3Integration;
+  web3Integration: Web3Integration;
+  executeContractCall: (contractConfig: any, method: string, params?: any[], value?: string) => Promise<{ hash: string; success: boolean; receipt?: any }>;
   // Demo Mode
   isDemoMode: boolean;
   toggleDemoMode: () => void;
@@ -287,12 +290,31 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const executeContractCall = async (contractConfig: any, method: string, params: any[] = [], value?: string) => {
     try {
-      // For this demo, we'll simulate the contract calls
-      const txHash = "0x" + Math.random().toString(16).slice(2, 66);
-      await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 3000));
-      return { hash: txHash, success: true };
+      // Initialize Web3 integration if not already done
+      await web3Integration.initialize();
+
+      // Get the contract instance
+      const contractAddress = typeof contractConfig === 'string' ? contractConfig : contractConfig.address;
+      const contract = web3Integration.getContract('MAZUNTE_MORTGAGE');
+      
+      // Execute the real contract call
+      let tx;
+      if (value && value !== '0') {
+        tx = await contract[method](...params, { value: ethers.parseEther(value) });
+      } else {
+        tx = await contract[method](...params);
+      }
+      
+      // Wait for transaction confirmation
+      const receipt = await tx.wait();
+      
+      return { 
+        hash: receipt.transactionHash, 
+        success: true,
+        receipt: receipt
+      };
     } catch (error) {
-      console.error('Contract call failed:', error);
+      console.error('Real contract call failed:', error);
       throw error;
     }
   };
@@ -914,6 +936,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         isPurchasingProperty,
         isMakingPayment,
         web3: web3Integration,
+        web3Integration: web3Integration,
+        executeContractCall,
         // Demo Mode
         isDemoMode,
         toggleDemoMode,
