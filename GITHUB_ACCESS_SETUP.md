@@ -1,8 +1,10 @@
-# GitHub Access Setup Guide
+# Git Repository Switch Guide
 
-## Issue: 404 Error with Private Repository
+## Switching to Public Repository
 
-You're getting 404 errors because your repository `https://github.com/psychicgarden/boho-shares-01.git` is **private**. Here are several solutions:
+The project has been switched to the **public** repository for easier access and development.
+
+**New Repository:** `https://github.com/psychicgarden/boho-shares-01-main.git`
 
 ## Solution 1: Make Repository Public (Temporary)
 
