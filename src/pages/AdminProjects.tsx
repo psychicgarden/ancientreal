@@ -28,7 +28,7 @@ import {
  } from 'lucide-react';
 import { PlatformAnalytics } from '@/components/PlatformAnalytics';
 import { LendingPoolOperations } from '@/components/LendingPoolOperations';
-import { SimpleAvaxMortgageInterface } from '@/components/SimpleAvaxMortgageInterface';
+import { PropertyInvestmentInterface } from '@/components/PropertyInvestmentInterface';
 import { SimpleMortgageDashboard } from '@/components/SimpleMortgageDashboard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 // Remove wallet dependency for admin pages - not needed
@@ -380,7 +380,7 @@ const AdminProjects = () => {
               </TabsList>
               
               <TabsContent value="interface" className="space-y-6">
-                <SimpleAvaxMortgageInterface />
+                <PropertyInvestmentInterface />
               </TabsContent>
               
               <TabsContent value="dashboard" className="space-y-6">
