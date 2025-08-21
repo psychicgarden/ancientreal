@@ -36,11 +36,9 @@ export const PropertyInvestmentInterface = () => {
   const termMonths = "120"; // Fixed 10 years
   const FIXED_INTEREST_RATE = 8.0;
   
-  // USD conversion for display (assuming 1 AVAX ≈ $100,000 for demo)
-  const AVAX_TO_USD = 100000;
-  const propertyValueUSD = parseFloat(propertyValueAVAX) * AVAX_TO_USD;
-  const downPaymentUSD = parseFloat(suggestedDownPayment) * AVAX_TO_USD;
-  const balanceUSD = parseFloat(balance) * AVAX_TO_USD;
+  // USD display values from property catalog
+  const propertyValueUSD = featuredProperty.totalValue; // $129,000
+  const downPaymentUSD = Math.round(featuredProperty.totalValue * 0.2); // 20% = $25,800
 
   useEffect(() => {
     loadContractAddress();
@@ -253,8 +251,8 @@ export const PropertyInvestmentInterface = () => {
             </div>
             <div className="text-center p-3 bg-muted/50 rounded-lg">
               <Calendar className="w-4 h-4 text-muted-foreground mx-auto mb-1" />
-              <div className="text-sm text-muted-foreground">Monthly Rent</div>
-              <div className="font-semibold">${featuredProperty.monthlyRent?.toLocaleString()}</div>
+              <div className="text-sm text-muted-foreground">Monthly Mortgage</div>
+              <div className="font-semibold">$1,252</div>
             </div>
           </div>
         </CardContent>
@@ -294,10 +292,6 @@ export const PropertyInvestmentInterface = () => {
               <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
                 <span>Interest Rate</span>
                 <span className="font-semibold">{FIXED_INTEREST_RATE}%</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-primary/10 rounded-lg border border-primary/20">
-                <span>Your Balance</span>
-                <span className="font-semibold">~${balanceUSD.toLocaleString()} <span className="text-sm text-muted-foreground">({parseFloat(balance).toFixed(4)} AVAX)</span></span>
               </div>
             </div>
 
