@@ -152,7 +152,7 @@ export const SimpleAvaxMortgageInterface = () => {
           remainingBalance: latestProperty.remaining_balance?.toString() || '0',
           interestRate: '8.0',
           termMonths: latestProperty.term_months?.toString() || '120',
-          monthsPaid: '0', // Calculate from payment history if needed
+          monthsPaid: calculateMonthsPaid(latestProperty.created_at),
           nextPaymentDue: new Date(),
           isActive: latestProperty.is_active
         };
@@ -297,6 +297,14 @@ export const SimpleAvaxMortgageInterface = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Calculate months paid based on elapsed time since purchase
+  const calculateMonthsPaid = (purchaseDate: string): string => {
+    const startDate = new Date(purchaseDate);
+    const currentDate = new Date();
+    const monthsDiff = Math.floor((currentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 30));
+    return Math.max(0, monthsDiff).toString();
   };
 
   // USD to AVAX conversion using test ratio: 129K USD = 0.00129 AVAX
@@ -639,7 +647,7 @@ export const SimpleAvaxMortgageInterface = () => {
                         <div>
                           <span className="text-muted-foreground text-sm">Your Investment Value</span>
                           <div className="font-semibold text-xl">
-                            ${(parseFloat(mortgageDetails.propertyValue) * AVAX_USD_RATE).toFixed(0)}
+                            ${parseFloat(mortgageDetails.propertyValue).toFixed(0)}
                           </div>
                           <div className="text-sm text-muted-foreground">
                             {parseFloat(mortgageDetails.propertyValue).toFixed(3)} AVAX
@@ -649,7 +657,7 @@ export const SimpleAvaxMortgageInterface = () => {
                         <div>
                           <span className="text-muted-foreground text-sm">Your Equity Position</span>
                           <div className="font-semibold text-lg text-green-600">
-                            ${(parseFloat(mortgageDetails.downPayment) * AVAX_USD_RATE).toFixed(0)}
+                            ${parseFloat(mortgageDetails.downPayment).toFixed(0)}
                           </div>
                           <div className="text-sm text-muted-foreground">
                             {parseFloat(mortgageDetails.downPayment).toFixed(3)} AVAX initial
@@ -661,7 +669,7 @@ export const SimpleAvaxMortgageInterface = () => {
                         <div>
                           <span className="text-muted-foreground text-sm">Outstanding Loan</span>
                           <div className="font-semibold text-xl">
-                            ${(parseFloat(mortgageDetails.remainingBalance) * AVAX_USD_RATE).toFixed(0)}
+                            ${parseFloat(mortgageDetails.remainingBalance).toFixed(0)}
                           </div>
                           <div className="text-sm text-muted-foreground">
                             {parseFloat(mortgageDetails.remainingBalance).toFixed(3)} AVAX remaining
@@ -671,7 +679,7 @@ export const SimpleAvaxMortgageInterface = () => {
                         <div>
                           <span className="text-muted-foreground text-sm">Property Ownership</span>
                           <div className="font-semibold text-lg">
-                            {((parseFloat(mortgageDetails.propertyValue) * AVAX_USD_RATE / featuredProperty.totalValue) * 100).toFixed(2)}%
+                            {((parseFloat(mortgageDetails.propertyValue) / featuredProperty.totalValue) * 100).toFixed(2)}%
                           </div>
                           <div className="text-sm text-muted-foreground">
                             of total property
@@ -699,7 +707,7 @@ export const SimpleAvaxMortgageInterface = () => {
                         <div>
                           <span className="text-muted-foreground">Projected Rental Income:</span>
                           <div className="font-semibold text-green-600">
-                            ${((featuredProperty.monthlyRent || 0) * (parseFloat(mortgageDetails.propertyValue) * AVAX_USD_RATE / featuredProperty.totalValue)).toFixed(0)}/month
+                            ${((featuredProperty.monthlyRent || 0) * (parseFloat(mortgageDetails.propertyValue) / featuredProperty.totalValue)).toFixed(0)}/month
                           </div>
                         </div>
                       </div>
@@ -711,8 +719,8 @@ export const SimpleAvaxMortgageInterface = () => {
                           <div>
                             <h3 className="font-semibold">Next Monthly Payment</h3>
                             <p className="text-sm text-muted-foreground">
-                              ${(parseFloat(mortgageDetails.monthlyPayment) * AVAX_USD_RATE).toFixed(0)} 
-                              <span className="text-xs ml-1">({parseFloat(mortgageDetails.monthlyPayment).toFixed(3)} AVAX)</span>
+                              ${parseFloat(mortgageDetails.monthlyPayment).toFixed(0)} USD
+                              <span className="text-xs ml-1">({convertUSDToAVAX(parseFloat(mortgageDetails.monthlyPayment))} AVAX)</span>
                             </p>
                           </div>
                           <Button 
