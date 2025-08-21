@@ -35,6 +35,12 @@ export const PropertyInvestmentInterface = () => {
   const downPayment = suggestedDownPayment;
   const termMonths = "120"; // Fixed 10 years
   const FIXED_INTEREST_RATE = 8.0;
+  
+  // USD conversion for display (assuming 1 AVAX ≈ $100,000 for demo)
+  const AVAX_TO_USD = 100000;
+  const propertyValueUSD = parseFloat(propertyValueAVAX) * AVAX_TO_USD;
+  const downPaymentUSD = parseFloat(suggestedDownPayment) * AVAX_TO_USD;
+  const balanceUSD = parseFloat(balance) * AVAX_TO_USD;
 
   useEffect(() => {
     loadContractAddress();
@@ -274,12 +280,12 @@ export const PropertyInvestmentInterface = () => {
           <CardContent className="space-y-6">
             <div className="space-y-4">
               <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                <span>Property Value (AVAX)</span>
-                <span className="font-semibold">{propertyValue}</span>
+                <span>Property Value</span>
+                <span className="font-semibold">${propertyValueUSD.toLocaleString()}</span>
               </div>
               <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
                 <span>Down Payment (20%)</span>
-                <span className="font-semibold">{downPayment} AVAX</span>
+                <span className="font-semibold">${downPaymentUSD.toLocaleString()} <span className="text-sm text-muted-foreground">(paid in AVAX)</span></span>
               </div>
               <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
                 <span>Loan Term</span>
@@ -290,8 +296,8 @@ export const PropertyInvestmentInterface = () => {
                 <span className="font-semibold">{FIXED_INTEREST_RATE}%</span>
               </div>
               <div className="flex justify-between items-center p-3 bg-primary/10 rounded-lg border border-primary/20">
-                <span>Your AVAX Balance</span>
-                <span className="font-semibold">{parseFloat(balance).toFixed(4)} AVAX</span>
+                <span>Your Balance</span>
+                <span className="font-semibold">~${balanceUSD.toLocaleString()} <span className="text-sm text-muted-foreground">({parseFloat(balance).toFixed(4)} AVAX)</span></span>
               </div>
             </div>
 
@@ -304,7 +310,7 @@ export const PropertyInvestmentInterface = () => {
               {isLoading 
                 ? "Processing Purchase..." 
                 : parseFloat(balance) < parseFloat(downPayment)
-                ? "Insufficient AVAX Balance"
+                ? "Insufficient Balance"
                 : "Purchase Property"
               }
             </Button>
