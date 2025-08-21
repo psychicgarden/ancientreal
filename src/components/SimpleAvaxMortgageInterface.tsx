@@ -42,14 +42,14 @@ export const SimpleAvaxMortgageInterface = () => {
   // AVAX to USD conversion (approximate)
   const AVAX_USD_RATE = 43; // $43 per AVAX (approximate)
   
-  // Convert property values to AVAX equivalent
-  const propertyValueAVAX = (featuredProperty.totalValue / AVAX_USD_RATE).toFixed(2);
-  const suggestedDownPayment = (parseFloat(propertyValueAVAX) * 0.20).toFixed(2);
+  // Fixed property values - simplified interface
+  const propertyValueAVAX = "0.00129"; // Fixed at $129K equivalent
+  const suggestedDownPayment = "0.000258"; // Fixed 20% down payment
 
-  // Form states - using realistic property values
-  const [propertyValue, setPropertyValue] = useState(propertyValueAVAX);
-  const [downPayment, setDownPayment] = useState(suggestedDownPayment);
-  const [termMonths, setTermMonths] = useState('360'); // 30 years standard
+  // Fixed form values - no user input needed
+  const propertyValue = propertyValueAVAX;
+  const downPayment = suggestedDownPayment;
+  const termMonths = "120"; // Fixed 10 years
   
   // Fixed 8% interest rate
   const FIXED_INTEREST_RATE = 8.0;
@@ -340,31 +340,25 @@ export const SimpleAvaxMortgageInterface = () => {
               <CardContent className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="propertyValue">Investment Amount (AVAX)</Label>
-                    <Input
-                      id="propertyValue"
-                      type="number"
-                      step="0.1"
-                      value={propertyValue}
-                      onChange={(e) => setPropertyValue(e.target.value)}
-                      placeholder={propertyValueAVAX}
-                    />
+                    <Label>Investment Amount</Label>
+                    <div className="flex items-center h-10 px-3 py-2 border border-input bg-background rounded-md text-sm">
+                      <Badge variant="secondary" className="mr-2">Fixed</Badge>
+                      <span className="font-semibold">{propertyValue} AVAX</span>
+                      <span className="text-muted-foreground ml-2">($129K)</span>
+                    </div>
                     <p className="text-xs text-muted-foreground mt-1">
-                      ≈ ${(parseFloat(propertyValue || '0') * AVAX_USD_RATE).toFixed(0)} USD
+                      Full property ownership amount
                     </p>
                   </div>
                   <div>
-                    <Label htmlFor="downPayment">Initial Payment (AVAX)</Label>
-                    <Input
-                      id="downPayment"
-                      type="number"
-                      step="0.1"
-                      value={downPayment}
-                      onChange={(e) => setDownPayment(e.target.value)}
-                      placeholder={suggestedDownPayment}
-                    />
+                    <Label>Initial 20% Down Payment</Label>
+                    <div className="flex items-center h-10 px-3 py-2 border border-input bg-background rounded-md text-sm">
+                      <Badge variant="secondary" className="mr-2">Fixed</Badge>
+                      <span className="font-semibold text-green-600">{downPayment} AVAX</span>
+                      <span className="text-muted-foreground ml-2">(${(parseFloat(downPayment) * AVAX_USD_RATE).toFixed(0)})</span>
+                    </div>
                     <p className="text-xs text-muted-foreground mt-1">
-                      {((parseFloat(downPayment || '0') / parseFloat(propertyValue || '1')) * 100).toFixed(1)}% down payment
+                      Required down payment to start
                     </p>
                   </div>
                 </div>
@@ -381,16 +375,14 @@ export const SimpleAvaxMortgageInterface = () => {
                     </p>
                   </div>
                   <div>
-                    <Label htmlFor="termMonths">Loan Term (Years)</Label>
-                    <Input
-                      id="termMonths"
-                      type="number"
-                      value={Math.round(parseInt(termMonths || '360') / 12)}
-                      onChange={(e) => setTermMonths((parseInt(e.target.value) * 12).toString())}
-                      placeholder="30"
-                    />
+                    <Label>Loan Term</Label>
+                    <div className="flex items-center h-10 px-3 py-2 border border-input bg-background rounded-md text-sm">
+                      <Badge variant="secondary" className="mr-2">Fixed</Badge>
+                      <span className="font-semibold">10 years</span>
+                      <span className="text-muted-foreground ml-2">(120 months)</span>
+                    </div>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Standard mortgage terms
+                      Fixed investment term
                     </p>
                   </div>
                 </div>
