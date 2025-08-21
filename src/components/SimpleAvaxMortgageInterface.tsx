@@ -299,6 +299,15 @@ export const SimpleAvaxMortgageInterface = () => {
     }
   };
 
+  // USD to AVAX conversion using test ratio: 129K USD = 0.00129 AVAX
+  const convertUSDToAVAX = (usdAmount: number): string => {
+    // Test ratio: 129,000 USD = 0.00129 AVAX
+    // So 1 USD = 0.00129 / 129,000 = 0.00000001 AVAX
+    const conversionRate = 0.00129 / 129000;
+    const avaxAmount = usdAmount * conversionRate;
+    return avaxAmount.toFixed(18); // Use high precision for small amounts
+  };
+
   // Make mortgage payment
   const handleMakePayment = async () => {
     if (!isConnected || !mortgageDetails || !contractAddress) return;
@@ -309,11 +318,16 @@ export const SimpleAvaxMortgageInterface = () => {
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(contractAddress, AVAX_MORTGAGE_ABI, signer);
 
-      const paymentAmount = ethers.parseEther(mortgageDetails.monthlyPayment);
+      // Convert USD monthly payment to AVAX using test ratio
+      const usdPayment = parseFloat(mortgageDetails.monthlyPayment);
+      const avaxPaymentAmount = convertUSDToAVAX(usdPayment);
+      const paymentAmount = ethers.parseEther(avaxPaymentAmount);
+
+      console.log(`💰 Payment conversion: $${usdPayment} USD → ${avaxPaymentAmount} AVAX`);
 
       toast({
         title: "💰 Processing Payment",
-        description: "Submitting your monthly investment payment...",
+        description: `Submitting $${usdPayment.toFixed(2)} USD (${parseFloat(avaxPaymentAmount).toFixed(8)} AVAX) payment...`,
       });
 
       const tx = await contract.makePayment({ value: paymentAmount });
