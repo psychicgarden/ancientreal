@@ -1,5 +1,5 @@
 import React from 'react';
-import { SimpleMortgageInterface } from '@/components/SimpleMortgageInterface';
+import { SimpleAvaxMortgageInterface } from '@/components/SimpleAvaxMortgageInterface';
 import { SimpleMortgageDeployment } from '@/components/SimpleMortgageDeployment';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,10 +11,10 @@ export default function SimpleMortgage() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
-            Simple Mortgage System
+            Simple AVAX Mortgage
           </h1>
           <p className="text-lg text-muted-foreground">
-            Clean, focused mortgage payments on blockchain
+            Native AVAX mortgage payments - no tokens, no approvals, just simple transfers
           </p>
         </div>
 
@@ -31,25 +31,34 @@ export default function SimpleMortgage() {
           </TabsList>
           
           <TabsContent value="interface" className="space-y-6">
-            <SimpleMortgageInterface />
+            <SimpleAvaxMortgageInterface />
           </TabsContent>
           
           <TabsContent value="deployment" className="space-y-6">
-            <SimpleMortgageDeployment />
             
             <Card className="mt-6">
               <CardHeader>
-                <CardTitle>📋 Current Status</CardTitle>
+                <CardTitle>⚡ AVAX Native Benefits</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 text-sm">
-                <div>
-                  <strong>Test USDT:</strong> 0x43eCed1b7C1BDc6522Db5a2F39905Cc0E3CE7F28 ✅
+                <div className="flex items-center gap-2">
+                  <span className="text-green-500">✅</span>
+                  <span>No ERC20 token approvals needed</span>
                 </div>
-                <div>
-                  <strong>SimpleMortgage:</strong> Not deployed (use deployment tab)
+                <div className="flex items-center gap-2">
+                  <span className="text-green-500">✅</span>
+                  <span>No faucet required - use testnet AVAX</span>
                 </div>
-                <div className="text-muted-foreground">
-                  Deploy the SimpleMortgage contract first, then use the interface tab.
+                <div className="flex items-center gap-2">
+                  <span className="text-green-500">✅</span>
+                  <span>Simple payable functions</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-green-500">✅</span>
+                  <span>Instant transfers with msg.value</span>
+                </div>
+                <div className="text-muted-foreground mt-3">
+                  <strong>Note:</strong> SimpleAvaxMortgage contract needs to be deployed to test this version.
                 </div>
               </CardContent>
             </Card>
