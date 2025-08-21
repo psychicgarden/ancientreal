@@ -8,6 +8,7 @@ import { Separator } from './ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { ethers } from 'ethers';
 import { ContractDatabaseIntegration } from '@/lib/contract-database-integration';
+import { usePaymentSync } from '@/hooks/usePaymentSync';
 import { Home, DollarSign, Calendar, CheckCircle, AlertCircle, MapPin, TrendingUp, Users } from 'lucide-react';
 import { PROPERTIES_CATALOG } from '@/lib/propertiesCatalog';
 
@@ -31,6 +32,9 @@ export const SimpleAvaxMortgageInterface = () => {
   const [hasMortgage, setHasMortgage] = useState(false);
   const [mortgageDetails, setMortgageDetails] = useState<any>(null);
   const [contractAddress, setContractAddress] = useState<string>('');
+  
+  // Initialize payment sync hook
+  usePaymentSync(contractAddress, account);
 
   // Featured property from catalog
   const featuredProperty = PROPERTIES_CATALOG[0]; // Art Deco Loft in Mazunte, Mexico
@@ -217,13 +221,14 @@ export const SimpleAvaxMortgageInterface = () => {
         description: "Processing payment...",
       });
 
-      await tx.wait();
+      const receipt = await tx.wait();
       
       toast({
         title: "✅ Payment Complete!",
         description: `Your equity in ${featuredProperty.name} has increased`,
       });
 
+      // Event listener will automatically sync to database
       await checkMortgageStatus(account);
       await updateBalance(account);
 
