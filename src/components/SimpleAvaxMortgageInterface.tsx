@@ -7,10 +7,8 @@ import { Badge } from './ui/badge';
 import { Separator } from './ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { ethers } from 'ethers';
+import { ContractDatabaseIntegration } from '@/lib/contract-database-integration';
 import { Home, DollarSign, Calendar, CheckCircle, AlertCircle, Zap } from 'lucide-react';
-
-// Simple AVAX mortgage contract address (to be deployed)
-const CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000001'; // Will be updated
 
 // Minimal ABI for AVAX mortgage operations
 const AVAX_MORTGAGE_ABI = [
@@ -31,12 +29,33 @@ export const SimpleAvaxMortgageInterface = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasMortgage, setHasMortgage] = useState(false);
   const [mortgageDetails, setMortgageDetails] = useState<any>(null);
+  const [contractAddress, setContractAddress] = useState<string>('');
 
   // Form states
   const [propertyValue, setPropertyValue] = useState('100');
   const [downPayment, setDownPayment] = useState('20');
   const [interestRate, setInterestRate] = useState('8');
   const [termMonths, setTermMonths] = useState('120');
+
+  useEffect(() => {
+    loadContractAddress();
+  }, []);
+
+  useEffect(() => {
+    if (isConnected && account && contractAddress) {
+      updateBalance(account);
+      checkMortgageStatus(account);
+    }
+  }, [isConnected, account, contractAddress]);
+
+  const loadContractAddress = async () => {
+    try {
+      const address = await ContractDatabaseIntegration.getContractAddress('SimpleAvaxMortgage');
+      setContractAddress(address);
+    } catch (error) {
+      console.error('Failed to load contract address:', error);
+    }
+  };
 
   // Connect wallet
   const connectWallet = async () => {
@@ -53,8 +72,6 @@ export const SimpleAvaxMortgageInterface = () => {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
       setAccount(accounts[0]);
       setIsConnected(true);
-      await updateBalance(accounts[0]);
-      await checkMortgageStatus(accounts[0]);
       
       toast({
         title: "✅ Wallet Connected",
@@ -83,11 +100,11 @@ export const SimpleAvaxMortgageInterface = () => {
 
   // Check if user has a mortgage
   const checkMortgageStatus = async (address: string) => {
-    if (CONTRACT_ADDRESS === '0x0000000000000000000000000000000000000001') return;
+    if (!contractAddress) return;
     
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, AVAX_MORTGAGE_ABI, provider);
+      const contract = new ethers.Contract(contractAddress, AVAX_MORTGAGE_ABI, provider);
       
       const hasActiveMortgage = await contract.hasMortgage(address);
       setHasMortgage(hasActiveMortgage);
@@ -114,13 +131,13 @@ export const SimpleAvaxMortgageInterface = () => {
 
   // Purchase property with AVAX
   const handlePurchaseProperty = async () => {
-    if (!isConnected || !window.ethereum) return;
+    if (!isConnected || !window.ethereum || !contractAddress) return;
 
     setIsLoading(true);
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, AVAX_MORTGAGE_ABI, signer);
+      const contract = new ethers.Contract(contractAddress, AVAX_MORTGAGE_ABI, signer);
 
       const propertyValueWei = ethers.parseEther(propertyValue);
       const downPaymentWei = ethers.parseEther(downPayment);
@@ -167,13 +184,13 @@ export const SimpleAvaxMortgageInterface = () => {
 
   // Make mortgage payment
   const handleMakePayment = async () => {
-    if (!isConnected || !mortgageDetails) return;
+    if (!isConnected || !mortgageDetails || !contractAddress) return;
 
     setIsLoading(true);
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, AVAX_MORTGAGE_ABI, signer);
+      const contract = new ethers.Contract(contractAddress, AVAX_MORTGAGE_ABI, signer);
 
       const paymentAmount = ethers.parseEther(mortgageDetails.monthlyPayment);
 
@@ -244,7 +261,7 @@ export const SimpleAvaxMortgageInterface = () => {
       {isConnected && (
         <>
           {/* Contract Status */}
-          {CONTRACT_ADDRESS === '0x0000000000000000000000000000000000000001' && (
+          {!contractAddress && (
             <Card className="border-yellow-200 bg-yellow-50 dark:bg-yellow-950 dark:border-yellow-800">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-2 text-yellow-700 dark:text-yellow-300">
@@ -252,7 +269,7 @@ export const SimpleAvaxMortgageInterface = () => {
                   <span className="font-medium">Contract Not Deployed</span>
                 </div>
                 <p className="text-sm text-yellow-600 dark:text-yellow-400 mt-2">
-                  The SimpleAvaxMortgage contract needs to be deployed first. This would use native AVAX instead of USDT.
+                  The SimpleAvaxMortgage contract needs to be deployed first. Use the "Deploy Contract" tab to deploy it.
                 </p>
               </CardContent>
             </Card>
@@ -333,7 +350,7 @@ export const SimpleAvaxMortgageInterface = () => {
 
                 <Button 
                   onClick={handlePurchaseProperty}
-                  disabled={isLoading || CONTRACT_ADDRESS === '0x0000000000000000000000000000000000000001'}
+                  disabled={isLoading || !contractAddress}
                   className="w-full"
                   size="lg"
                 >

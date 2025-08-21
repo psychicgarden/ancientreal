@@ -1,6 +1,6 @@
 import React from 'react';
 import { SimpleAvaxMortgageInterface } from '@/components/SimpleAvaxMortgageInterface';
-import { SimpleMortgageDeployment } from '@/components/SimpleMortgageDeployment';
+import { SimpleAvaxMortgageDeployment } from '@/components/SimpleAvaxMortgageDeployment';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Home, Wrench } from 'lucide-react';
@@ -35,6 +35,7 @@ export default function SimpleMortgage() {
           </TabsContent>
           
           <TabsContent value="deployment" className="space-y-6">
+            <SimpleAvaxMortgageDeployment />
             
             <Card className="mt-6">
               <CardHeader>
