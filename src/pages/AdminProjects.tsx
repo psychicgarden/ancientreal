@@ -23,13 +23,14 @@ import {
   FileText,
   Home,
   DollarSign,
-  Wallet
+  Wallet,
+  BarChart3
  } from 'lucide-react';
 import { PlatformAnalytics } from '@/components/PlatformAnalytics';
 import { LendingPoolOperations } from '@/components/LendingPoolOperations';
-import { ContractDeployment } from '@/components/ContractDeployment';
-import { VillageCitizenshipDeployment } from '@/components/VillageCitizenshipDeployment';
-import { DeployRealContracts } from '@/components/DeployRealContracts';
+import { SimpleAvaxMortgageInterface } from '@/components/SimpleAvaxMortgageInterface';
+import { SimpleMortgageDashboard } from '@/components/SimpleMortgageDashboard';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 // Remove wallet dependency for admin pages - not needed
 // import { WalletContext } from '@/contexts/WalletContext';
 // import { useContext } from 'react';
@@ -282,10 +283,6 @@ const AdminProjects = () => {
             <p className="text-muted-foreground mt-1">Review projects and monitor platform analytics</p>
           </div>
           <div className="flex gap-2">
-            <Button onClick={() => window.location.href = '/mortgage'} variant="default" className="self-start md:self-auto">
-              <Wallet className="w-4 h-4 mr-2" />
-              Go to Mortgage Platform
-            </Button>
             <Button onClick={() => window.location.href = '/'} variant="outline" className="self-start md:self-auto">
               <Home className="w-4 h-4 mr-2" />
               Return to Home
@@ -361,9 +358,35 @@ const AdminProjects = () => {
         {/* Conditional Content Based on Active Tab */}
         {activeTab === 'contracts' ? (
           <div className="space-y-6">
-            <DeployRealContracts />
-            <ContractDeployment />
-            <VillageCitizenshipDeployment />
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
+                Fractional Real Estate Investment
+              </h2>
+              <p className="text-lg text-muted-foreground">
+                Own premium real estate through blockchain-powered fractional ownership
+              </p>
+            </div>
+
+            <Tabs defaultValue="interface" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="interface" className="flex items-center gap-2">
+                  <Home className="w-4 h-4" />
+                  Investment Platform
+                </TabsTrigger>
+                <TabsTrigger value="dashboard" className="flex items-center gap-2">
+                  <BarChart3 className="w-4 h-4" />
+                  Mortgage Dashboard
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="interface" className="space-y-6">
+                <SimpleAvaxMortgageInterface />
+              </TabsContent>
+              
+              <TabsContent value="dashboard" className="space-y-6">
+                <SimpleMortgageDashboard />
+              </TabsContent>
+            </Tabs>
           </div>
         ) : activeTab === 'analytics' ? (
           <PlatformAnalytics />
