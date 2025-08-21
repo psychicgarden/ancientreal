@@ -11,10 +11,10 @@ export default function SimpleMortgage() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
-            Simple AVAX Mortgage
+            Fractional Real Estate Investment
           </h1>
           <p className="text-lg text-muted-foreground">
-            Native AVAX mortgage payments - no tokens, no approvals, just simple transfers
+            Own premium real estate through blockchain-powered fractional ownership
           </p>
         </div>
 
@@ -22,11 +22,11 @@ export default function SimpleMortgage() {
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="interface" className="flex items-center gap-2">
               <Home className="w-4 h-4" />
-              Mortgage Interface
+              Investment Platform
             </TabsTrigger>
             <TabsTrigger value="deployment" className="flex items-center gap-2">
               <Wrench className="w-4 h-4" />
-              Deploy Contract
+              Platform Setup
             </TabsTrigger>
           </TabsList>
           
@@ -39,27 +39,27 @@ export default function SimpleMortgage() {
             
             <Card className="mt-6">
               <CardHeader>
-                <CardTitle>⚡ AVAX Native Benefits</CardTitle>
+                <CardTitle>🏠 Blockchain Real Estate Benefits</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 text-sm">
                 <div className="flex items-center gap-2">
                   <span className="text-green-500">✅</span>
-                  <span>No ERC20 token approvals needed</span>
+                  <span>Fractional ownership of premium properties</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-green-500">✅</span>
-                  <span>No faucet required - use testnet AVAX</span>
+                  <span>Transparent blockchain-secured investments</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-green-500">✅</span>
-                  <span>Simple payable functions</span>
+                  <span>Direct AVAX payments - no intermediaries</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-green-500">✅</span>
-                  <span>Instant transfers with msg.value</span>
+                  <span>Real-time portfolio tracking</span>
                 </div>
                 <div className="text-muted-foreground mt-3">
-                  <strong>Note:</strong> SimpleAvaxMortgage contract needs to be deployed to test this version.
+                  <strong>Note:</strong> Investment platform requires blockchain infrastructure deployment for full functionality.
                 </div>
               </CardContent>
             </Card>

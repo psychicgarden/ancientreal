@@ -8,7 +8,8 @@ import { Separator } from './ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { ethers } from 'ethers';
 import { ContractDatabaseIntegration } from '@/lib/contract-database-integration';
-import { Home, DollarSign, Calendar, CheckCircle, AlertCircle, Zap } from 'lucide-react';
+import { Home, DollarSign, Calendar, CheckCircle, AlertCircle, MapPin, TrendingUp, Users } from 'lucide-react';
+import { PROPERTIES_CATALOG } from '@/lib/propertiesCatalog';
 
 // Minimal ABI for AVAX mortgage operations
 const AVAX_MORTGAGE_ABI = [
@@ -31,11 +32,21 @@ export const SimpleAvaxMortgageInterface = () => {
   const [mortgageDetails, setMortgageDetails] = useState<any>(null);
   const [contractAddress, setContractAddress] = useState<string>('');
 
-  // Form states
-  const [propertyValue, setPropertyValue] = useState('100');
-  const [downPayment, setDownPayment] = useState('20');
-  const [interestRate, setInterestRate] = useState('8');
-  const [termMonths, setTermMonths] = useState('120');
+  // Featured property from catalog
+  const featuredProperty = PROPERTIES_CATALOG[0]; // Art Deco Loft in Mazunte, Mexico
+  
+  // AVAX to USD conversion (approximate)
+  const AVAX_USD_RATE = 43; // $43 per AVAX (approximate)
+  
+  // Convert property values to AVAX equivalent
+  const propertyValueAVAX = (featuredProperty.totalValue / AVAX_USD_RATE).toFixed(2);
+  const suggestedDownPayment = (parseFloat(propertyValueAVAX) * 0.20).toFixed(2);
+
+  // Form states - using realistic property values
+  const [propertyValue, setPropertyValue] = useState(propertyValueAVAX);
+  const [downPayment, setDownPayment] = useState(suggestedDownPayment);
+  const [interestRate, setInterestRate] = useState('6.5');
+  const [termMonths, setTermMonths] = useState('360'); // 30 years standard
 
   useEffect(() => {
     loadContractAddress();
@@ -75,7 +86,7 @@ export const SimpleAvaxMortgageInterface = () => {
       
       toast({
         title: "✅ Wallet Connected",
-        description: `Connected to ${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`,
+        description: `Ready to invest in ${featuredProperty.name}`,
       });
     } catch (error) {
       console.error('Connection failed:', error);
@@ -144,8 +155,8 @@ export const SimpleAvaxMortgageInterface = () => {
       const interestRateBps = parseInt(interestRate) * 100; // Convert % to basis points
 
       toast({
-        title: "🏠 Creating Mortgage",
-        description: "Submitting property purchase transaction...",
+        title: "🏠 Processing Investment",
+        description: "Creating your fractional real estate investment...",
       });
 
       const tx = await contract.purchaseProperty(
@@ -163,8 +174,8 @@ export const SimpleAvaxMortgageInterface = () => {
       await tx.wait();
       
       toast({
-        title: "✅ Property Purchased!",
-        description: `Successfully created mortgage for ${propertyValue} AVAX property`,
+        title: "🎉 Investment Successful!",
+        description: `You now own equity in ${featuredProperty.name}`,
       });
 
       await checkMortgageStatus(account);
@@ -173,7 +184,7 @@ export const SimpleAvaxMortgageInterface = () => {
     } catch (error: any) {
       console.error('Purchase failed:', error);
       toast({
-        title: "❌ Purchase Failed",
+        title: "❌ Investment Failed",
         description: error.message || 'Transaction failed',
         variant: "destructive"
       });
@@ -195,8 +206,8 @@ export const SimpleAvaxMortgageInterface = () => {
       const paymentAmount = ethers.parseEther(mortgageDetails.monthlyPayment);
 
       toast({
-        title: "💰 Making Payment",
-        description: "Submitting mortgage payment...",
+        title: "💰 Processing Payment",
+        description: "Submitting your monthly investment payment...",
       });
 
       const tx = await contract.makePayment({ value: paymentAmount });
@@ -209,8 +220,8 @@ export const SimpleAvaxMortgageInterface = () => {
       await tx.wait();
       
       toast({
-        title: "✅ Payment Successful!",
-        description: `Paid ${mortgageDetails.monthlyPayment} AVAX`,
+        title: "✅ Payment Complete!",
+        description: `Your equity in ${featuredProperty.name} has increased`,
       });
 
       await checkMortgageStatus(account);
@@ -230,28 +241,62 @@ export const SimpleAvaxMortgageInterface = () => {
 
   return (
     <div className="space-y-6">
-      {/* Wallet Connection */}
-      <Card>
+      {/* Property Featured Card */}
+      <Card className="overflow-hidden">
+        <div className="relative">
+          <img
+            src={featuredProperty.image}
+            alt={featuredProperty.name}
+            className="w-full h-64 object-cover"
+          />
+          <div className="absolute bottom-4 left-4">
+            <Badge className="bg-primary/90 text-primary-foreground backdrop-blur-sm">
+              Featured Investment
+            </Badge>
+          </div>
+        </div>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Zap className="w-5 h-5 text-yellow-500" />
-            Native AVAX Mortgage
+            <Home className="w-6 h-6 text-primary" />
+            {featuredProperty.name}
           </CardTitle>
+          <div className="flex items-center text-muted-foreground">
+            <MapPin className="w-4 h-4 mr-2" />
+            {featuredProperty.location}
+          </div>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <div className="text-muted-foreground">Total Property Value</div>
+              <div className="font-semibold text-lg">${featuredProperty.totalValue.toLocaleString()}</div>
+              <div className="text-muted-foreground text-xs">≈ {propertyValueAVAX} AVAX</div>
+            </div>
+            <div>
+              <div className="text-muted-foreground">Expected Annual Return</div>
+              <div className="font-semibold text-lg text-green-600">{featuredProperty.expectedReturn}%</div>
+              <div className="text-muted-foreground text-xs">${featuredProperty.monthlyRent}/month rent</div>
+            </div>
+          </div>
+          
           {!isConnected ? (
-            <Button onClick={connectWallet} className="w-full">
-              Connect Wallet
-            </Button>
+            <div className="pt-4">
+              <Button onClick={connectWallet} className="w-full" size="lg">
+                Connect Wallet to Invest
+              </Button>
+            </div>
           ) : (
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Account:</span>
+            <div className="space-y-2 pt-4 border-t">
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-muted-foreground">Your Wallet:</span>
                 <Badge variant="outline">{account.slice(0, 6)}...{account.slice(-4)}</Badge>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">AVAX Balance:</span>
-                <span className="font-mono">{parseFloat(balance).toFixed(4)} AVAX</span>
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-muted-foreground">Available Balance:</span>
+                <div className="text-right">
+                  <div className="font-mono">{parseFloat(balance).toFixed(4)} AVAX</div>
+                  <div className="text-xs text-muted-foreground">≈ ${(parseFloat(balance) * AVAX_USD_RATE).toFixed(0)}</div>
+                </div>
               </div>
             </div>
           )}
@@ -260,162 +305,273 @@ export const SimpleAvaxMortgageInterface = () => {
 
       {isConnected && (
         <>
-          {/* Contract Status */}
+          {/* Platform Status */}
           {!contractAddress && (
-            <Card className="border-yellow-200 bg-yellow-50 dark:bg-yellow-950 dark:border-yellow-800">
+            <Card className="border-orange-200 bg-orange-50 dark:bg-orange-950 dark:border-orange-800">
               <CardContent className="pt-6">
-                <div className="flex items-center gap-2 text-yellow-700 dark:text-yellow-300">
+                <div className="flex items-center gap-2 text-orange-700 dark:text-orange-300">
                   <AlertCircle className="w-5 h-5" />
-                  <span className="font-medium">Contract Not Deployed</span>
+                  <span className="font-medium">Investment Platform Initializing</span>
                 </div>
-                <p className="text-sm text-yellow-600 dark:text-yellow-400 mt-2">
-                  The SimpleAvaxMortgage contract needs to be deployed first. Use the "Deploy Contract" tab to deploy it.
+                <p className="text-sm text-orange-600 dark:text-orange-400 mt-2">
+                  The blockchain investment infrastructure is being prepared. Use the "Deploy Contract" tab to activate fractional real estate investments.
                 </p>
               </CardContent>
             </Card>
           )}
 
           {!hasMortgage ? (
-            // Property Purchase Form
+            // Investment Form
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Home className="w-5 h-5" />
-                  Purchase Property with AVAX
+                  <TrendingUp className="w-5 h-5 text-green-600" />
+                  Fractional Investment Calculator
                 </CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  Secure your share of {featuredProperty.name} with blockchain-powered fractional ownership
+                </p>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="propertyValue">Property Value (AVAX)</Label>
+                    <Label htmlFor="propertyValue">Investment Amount (AVAX)</Label>
                     <Input
                       id="propertyValue"
                       type="number"
+                      step="0.1"
                       value={propertyValue}
                       onChange={(e) => setPropertyValue(e.target.value)}
-                      placeholder="100"
+                      placeholder={propertyValueAVAX}
                     />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      ≈ ${(parseFloat(propertyValue || '0') * AVAX_USD_RATE).toFixed(0)} USD
+                    </p>
                   </div>
                   <div>
-                    <Label htmlFor="downPayment">Down Payment (AVAX)</Label>
+                    <Label htmlFor="downPayment">Initial Payment (AVAX)</Label>
                     <Input
                       id="downPayment"
                       type="number"
+                      step="0.1"
                       value={downPayment}
                       onChange={(e) => setDownPayment(e.target.value)}
-                      placeholder="20"
+                      placeholder={suggestedDownPayment}
                     />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {((parseFloat(downPayment || '0') / parseFloat(propertyValue || '1')) * 100).toFixed(1)}% down payment
+                    </p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="interestRate">Interest Rate (%)</Label>
+                    <Label htmlFor="interestRate">Annual Interest Rate (%)</Label>
                     <Input
                       id="interestRate"
                       type="number"
+                      step="0.1"
                       value={interestRate}
                       onChange={(e) => setInterestRate(e.target.value)}
-                      placeholder="8"
+                      placeholder="6.5"
                     />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Competitive real estate financing
+                    </p>
                   </div>
                   <div>
-                    <Label htmlFor="termMonths">Term (Months)</Label>
+                    <Label htmlFor="termMonths">Loan Term (Years)</Label>
                     <Input
                       id="termMonths"
                       type="number"
-                      value={termMonths}
-                      onChange={(e) => setTermMonths(e.target.value)}
-                      placeholder="120"
+                      value={Math.round(parseInt(termMonths || '360') / 12)}
+                      onChange={(e) => setTermMonths((parseInt(e.target.value) * 12).toString())}
+                      placeholder="30"
                     />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Standard mortgage terms
+                    </p>
                   </div>
                 </div>
 
-                <div className="p-4 bg-muted rounded-lg">
-                  <div className="text-sm space-y-1">
+                <div className="p-4 bg-gradient-to-br from-primary/5 to-accent/5 rounded-lg border">
+                  <h4 className="font-semibold mb-3 flex items-center gap-2">
+                    <Users className="w-4 h-4" />
+                    Investment Summary
+                  </h4>
+                  <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span>Property Value:</span>
-                      <span>{propertyValue} AVAX</span>
+                      <span className="text-muted-foreground">Property Share:</span>
+                      <span className="font-semibold">
+                        {((parseFloat(propertyValue || '0') * AVAX_USD_RATE / featuredProperty.totalValue) * 100).toFixed(2)}%
+                      </span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Down Payment:</span>
-                      <span>{downPayment} AVAX ({((parseFloat(downPayment) / parseFloat(propertyValue)) * 100).toFixed(1)}%)</span>
+                      <span className="text-muted-foreground">Initial Investment:</span>
+                      <div className="text-right">
+                        <div className="font-semibold">{downPayment} AVAX</div>
+                        <div className="text-xs text-muted-foreground">
+                          ${(parseFloat(downPayment || '0') * AVAX_USD_RATE).toFixed(0)} USD
+                        </div>
+                      </div>
                     </div>
                     <div className="flex justify-between">
-                      <span>Loan Amount:</span>
-                      <span>{(parseFloat(propertyValue) - parseFloat(downPayment)).toFixed(2)} AVAX</span>
+                      <span className="text-muted-foreground">Financed Amount:</span>
+                      <div className="text-right">
+                        <div className="font-semibold">{(parseFloat(propertyValue || '0') - parseFloat(downPayment || '0')).toFixed(2)} AVAX</div>
+                        <div className="text-xs text-muted-foreground">
+                          ${((parseFloat(propertyValue || '0') - parseFloat(downPayment || '0')) * AVAX_USD_RATE).toFixed(0)} USD
+                        </div>
+                      </div>
+                    </div>
+                    <Separator className="my-2" />
+                    <div className="flex justify-between font-semibold">
+                      <span>Projected Monthly Income:</span>
+                      <span className="text-green-600">
+                        ${((featuredProperty.monthlyRent || 0) * (parseFloat(propertyValue || '0') * AVAX_USD_RATE / featuredProperty.totalValue)).toFixed(0)}
+                      </span>
                     </div>
                   </div>
                 </div>
 
                 <Button 
                   onClick={handlePurchaseProperty}
-                  disabled={isLoading || !contractAddress}
-                  className="w-full"
+                  disabled={isLoading || !contractAddress || parseFloat(balance) < parseFloat(downPayment)}
+                  className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90"
                   size="lg"
                 >
-                  {isLoading ? "Processing..." : `Purchase Property (${downPayment} AVAX)`}
+                  {isLoading ? "Processing Investment..." : 
+                   parseFloat(balance) < parseFloat(downPayment) ? "Insufficient AVAX Balance" :
+                   `Invest ${downPayment} AVAX in ${featuredProperty.name}`}
                 </Button>
+                
+                {parseFloat(balance) < parseFloat(downPayment) && (
+                  <p className="text-xs text-orange-600 text-center">
+                    You need {(parseFloat(downPayment) - parseFloat(balance)).toFixed(2)} more AVAX to make this investment
+                  </p>
+                )}
               </CardContent>
             </Card>
           ) : (
-            // Mortgage Dashboard
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Home className="w-5 h-5" />
-                  Your Mortgage
-                  {mortgageDetails?.isActive && <Badge className="bg-green-100 text-green-800">Active</Badge>}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
+            // Property Investment Dashboard
+            <Card className="overflow-hidden">
+              <div className="relative">
+                <img
+                  src={featuredProperty.image}
+                  alt={featuredProperty.name}
+                  className="w-full h-32 object-cover opacity-20"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-accent/90" />
+                <div className="absolute inset-0 flex items-center">
+                  <CardHeader className="text-white relative z-10">
+                    <CardTitle className="flex items-center gap-2 text-white">
+                      <Home className="w-6 h-6" />
+                      Your Investment Portfolio
+                      {mortgageDetails?.isActive && (
+                        <Badge className="bg-white/20 text-white border-white/30">
+                          <CheckCircle className="w-3 h-3 mr-1" />
+                          Active
+                        </Badge>
+                      )}
+                    </CardTitle>
+                    <p className="text-white/90 text-sm">
+                      {featuredProperty.name}, {featuredProperty.location}
+                    </p>
+                  </CardHeader>
+                </div>
+              </div>
+              
+              <CardContent className="space-y-6 pt-6">
                 {mortgageDetails && (
                   <>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <span className="text-muted-foreground">Property Value:</span>
-                        <div className="font-mono">{parseFloat(mortgageDetails.propertyValue).toFixed(4)} AVAX</div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-4">
+                        <div>
+                          <span className="text-muted-foreground text-sm">Your Investment Value</span>
+                          <div className="font-semibold text-xl">
+                            ${(parseFloat(mortgageDetails.propertyValue) * AVAX_USD_RATE).toFixed(0)}
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {parseFloat(mortgageDetails.propertyValue).toFixed(3)} AVAX
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <span className="text-muted-foreground text-sm">Your Equity Position</span>
+                          <div className="font-semibold text-lg text-green-600">
+                            ${(parseFloat(mortgageDetails.downPayment) * AVAX_USD_RATE).toFixed(0)}
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {parseFloat(mortgageDetails.downPayment).toFixed(3)} AVAX initial
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <span className="text-muted-foreground">Down Payment:</span>
-                        <div className="font-mono">{parseFloat(mortgageDetails.downPayment).toFixed(4)} AVAX</div>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Loan Amount:</span>
-                        <div className="font-mono">{parseFloat(mortgageDetails.loanAmount).toFixed(4)} AVAX</div>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Remaining Balance:</span>
-                        <div className="font-mono">{parseFloat(mortgageDetails.remainingBalance).toFixed(4)} AVAX</div>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Monthly Payment:</span>
-                        <div className="font-mono">{parseFloat(mortgageDetails.monthlyPayment).toFixed(4)} AVAX</div>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground">Payments Made:</span>
-                        <div className="font-mono">{mortgageDetails.monthsPaid} / {mortgageDetails.termMonths}</div>
+
+                      <div className="space-y-4">
+                        <div>
+                          <span className="text-muted-foreground text-sm">Outstanding Loan</span>
+                          <div className="font-semibold text-xl">
+                            ${(parseFloat(mortgageDetails.remainingBalance) * AVAX_USD_RATE).toFixed(0)}
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {parseFloat(mortgageDetails.remainingBalance).toFixed(3)} AVAX remaining
+                          </div>
+                        </div>
+
+                        <div>
+                          <span className="text-muted-foreground text-sm">Property Ownership</span>
+                          <div className="font-semibold text-lg">
+                            {((parseFloat(mortgageDetails.propertyValue) * AVAX_USD_RATE / featuredProperty.totalValue) * 100).toFixed(2)}%
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            of total property
+                          </div>
+                        </div>
                       </div>
                     </div>
 
-                    <Separator />
+                    <div className="p-4 bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20 rounded-lg border">
+                      <h4 className="font-semibold mb-2 flex items-center gap-2">
+                        <TrendingUp className="w-4 h-4 text-green-600" />
+                        Monthly Investment Performance
+                      </h4>
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <span className="text-muted-foreground">Payment Progress:</span>
+                          <div className="font-semibold">{mortgageDetails.monthsPaid} / {mortgageDetails.termMonths} payments</div>
+                          <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                            <div 
+                              className="bg-gradient-to-r from-primary to-accent h-2 rounded-full" 
+                              style={{ width: `${(mortgageDetails.monthsPaid / mortgageDetails.termMonths) * 100}%` }}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <span className="text-muted-foreground">Projected Rental Income:</span>
+                          <div className="font-semibold text-green-600">
+                            ${((featuredProperty.monthlyRent || 0) * (parseFloat(mortgageDetails.propertyValue) * AVAX_USD_RATE / featuredProperty.totalValue)).toFixed(0)}/month
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
                     {mortgageDetails.isActive && (
-                      <div className="space-y-4">
+                      <div className="space-y-4 pt-2 border-t">
                         <div className="flex items-center justify-between">
                           <div>
-                            <h3 className="font-medium">Next Payment</h3>
+                            <h3 className="font-semibold">Next Monthly Payment</h3>
                             <p className="text-sm text-muted-foreground">
-                              {parseFloat(mortgageDetails.monthlyPayment).toFixed(4)} AVAX
+                              ${(parseFloat(mortgageDetails.monthlyPayment) * AVAX_USD_RATE).toFixed(0)} 
+                              <span className="text-xs ml-1">({parseFloat(mortgageDetails.monthlyPayment).toFixed(3)} AVAX)</span>
                             </p>
                           </div>
                           <Button 
                             onClick={handleMakePayment}
                             disabled={isLoading}
-                            className="flex items-center gap-2"
+                            className="flex items-center gap-2 bg-gradient-to-r from-primary to-accent"
                           >
                             <DollarSign className="w-4 h-4" />
-                            {isLoading ? "Processing..." : "Make Payment"}
+                            {isLoading ? "Processing..." : "Pay Now"}
                           </Button>
                         </div>
                       </div>
