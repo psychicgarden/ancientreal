@@ -109,9 +109,13 @@ export const SimpleMortgageDashboard = () => {
   };
 
   const getPropertyImage = (property: MortgageProperty) => {
-    // Map broken database URLs to correct assets
-    if (property.image_url?.includes('boho-art-deco-loft-mexico') || 
-        property.property_name?.toLowerCase().includes('art deco')) {
+    // Map broken database URLs to correct assets - catch all Art Deco Loft variations
+    const imageUrl = property.image_url?.toLowerCase() || '';
+    const propertyName = property.property_name?.toLowerCase() || '';
+    
+    if (imageUrl.includes('art-deco-loft') || 
+        imageUrl.includes('boho-art-deco') ||
+        propertyName.includes('art deco')) {
       return artDecoLoftMexico;
     }
     return property.image_url || artDecoLoftMexico; // Fallback
