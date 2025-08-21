@@ -1,5 +1,5 @@
 import React from 'react';
-import { SimpleAvaxMortgageInterface } from '@/components/SimpleAvaxMortgageInterface';
+import { PropertyInvestmentInterface } from '@/components/PropertyInvestmentInterface';
 import { SimpleMortgageDashboard } from '@/components/SimpleMortgageDashboard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Home, BarChart3 } from 'lucide-react';
@@ -30,7 +30,7 @@ export default function SimpleMortgage() {
           </TabsList>
           
           <TabsContent value="interface" className="space-y-6">
-            <SimpleAvaxMortgageInterface />
+            <PropertyInvestmentInterface />
           </TabsContent>
           
           <TabsContent value="dashboard" className="space-y-6">

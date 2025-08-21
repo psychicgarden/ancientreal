@@ -5,9 +5,13 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { TrendingUp, Calendar, DollarSign, Home, PiggyBank } from 'lucide-react';
+import { ethers } from 'ethers';
+import { ContractDatabaseIntegration } from '@/lib/contract-database-integration';
+import { usePaymentSync } from '@/hooks/usePaymentSync';
+import { TrendingUp, Calendar, DollarSign, Home, PiggyBank, RefreshCw } from 'lucide-react';
 import { OptimizedImage } from '@/components/ui/optimized-image';
 import { getPropertyImage } from '@/lib/propertyImageMapping';
+import { PROPERTIES_CATALOG } from '@/lib/propertiesCatalog';
 
 interface MortgageProperty {
   id: string;
@@ -32,16 +36,42 @@ interface PaymentHistory {
   tx_hash: string;
 }
 
+// Minimal ABI for AVAX mortgage payment operations
+const AVAX_MORTGAGE_ABI = [
+  'function makePayment() external payable',
+  'function getMortgageDetails(address _borrower) external view returns (tuple(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,bool,address))',
+  'function hasMortgage(address) external view returns (bool)',
+  'event PaymentMade(address indexed borrower, uint256 paymentAmount, uint256 principalPaid, uint256 interestPaid, uint256 remainingBalance)'
+];
+
 export const SimpleMortgageDashboard = () => {
   const [properties, setProperties] = useState<MortgageProperty[]>([]);
   const [payments, setPayments] = useState<PaymentHistory[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
   const [account, setAccount] = useState<string>('');
+  const [contractAddress, setContractAddress] = useState<string>('');
+  const [mortgageDetails, setMortgageDetails] = useState<any>(null);
   const { toast } = useToast();
+  
+  // Featured property from catalog for payment context
+  const featuredProperty = PROPERTIES_CATALOG[0];
+  
+  // Initialize payment sync hook
+  usePaymentSync(contractAddress, account);
 
-  // Get connected wallet address
+  // Load contract address and get connected wallet address
   useEffect(() => {
-    const getAccount = async () => {
+    const initialize = async () => {
+      // Load contract address
+      try {
+        const address = await ContractDatabaseIntegration.getContractAddress('SimpleAvaxMortgage');
+        setContractAddress(address);
+      } catch (error) {
+        console.error('Failed to load contract address:', error);
+      }
+      
+      // Get connected wallet address
       if (typeof window.ethereum !== 'undefined') {
         try {
           const accounts = await window.ethereum.request({ method: 'eth_accounts' });
@@ -53,7 +83,7 @@ export const SimpleMortgageDashboard = () => {
         }
       }
     };
-    getAccount();
+    initialize();
   }, []);
 
   // Load user properties and payment history
@@ -61,6 +91,36 @@ export const SimpleMortgageDashboard = () => {
     if (account) {
       loadUserData();
     }
+  }, [account]);
+
+  // Real-time subscription to payment updates
+  useEffect(() => {
+    if (!account) return;
+
+    const channel = supabase
+      .channel('payment-updates-dashboard')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'mortgage_payments_ledger',
+          filter: `user_address=eq.${account.toLowerCase()}`
+        },
+        (payload) => {
+          console.log('🔄 Dashboard: New payment detected, refreshing data:', payload);
+          loadUserData();
+          toast({
+            title: "✅ Payment Updated",
+            description: "Your dashboard has been updated with the latest payment!",
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [account]);
 
   const loadUserData = async () => {
@@ -106,6 +166,88 @@ export const SimpleMortgageDashboard = () => {
     const loanAmount = property.purchase_price - property.down_payment;
     const progress = Math.min((totalPaid / loanAmount) * 100, 100);
     return progress;
+  };
+
+  // USD to AVAX conversion using test ratio: 129K USD = 0.00129 AVAX
+  const convertUSDToAVAX = (usdAmount: number): string => {
+    const conversionRate = 0.00129 / 129000;
+    const avaxAmount = usdAmount * conversionRate;
+    return avaxAmount.toFixed(18);
+  };
+
+  // Calculate actual months paid by querying database
+  const calculateMonthsPaid = async (userAddress: string): Promise<number> => {
+    try {
+      const { data: payments, error } = await supabase
+        .from('mortgage_payments_ledger')
+        .select('id')
+        .eq('user_address', userAddress.toLowerCase())
+        .eq('property_id', 1);
+
+      if (error) {
+        console.error('Error fetching payment count:', error);
+        return 0;
+      }
+
+      return payments?.length || 0;
+    } catch (error) {
+      console.error('Error calculating months paid:', error);
+      return 0;
+    }
+  };
+
+  // Make mortgage payment
+  const handleMakePayment = async () => {
+    if (!account || !contractAddress || properties.length === 0) return;
+
+    setIsPaymentLoading(true);
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(contractAddress, AVAX_MORTGAGE_ABI, signer);
+
+      const property = properties[0]; // Use first property
+      const usdPayment = property.monthly_payment;
+      const avaxPaymentAmount = convertUSDToAVAX(usdPayment);
+      const paymentAmount = ethers.parseEther(avaxPaymentAmount);
+
+      console.log(`💰 Payment conversion: $${usdPayment} USD → ${avaxPaymentAmount} AVAX`);
+
+      toast({
+        title: "💰 Processing Payment",
+        description: `Submitting $${usdPayment.toFixed(2)} USD payment...`,
+      });
+
+      const tx = await contract.makePayment({ value: paymentAmount });
+      
+      toast({
+        title: "⏳ Transaction Pending",
+        description: "Processing payment...",
+      });
+
+      const receipt = await tx.wait();
+      
+      toast({
+        title: "✅ Payment Complete!",
+        description: `Your equity in ${property.property_name} has increased`,
+      });
+
+      // Auto-refresh data after payment
+      setTimeout(async () => {
+        console.log('🔄 Auto-refreshing after payment...');
+        await loadUserData();
+      }, 3000);
+
+    } catch (error: any) {
+      console.error('Payment failed:', error);
+      toast({
+        title: "❌ Payment Failed",
+        description: error.message || 'Payment transaction failed',
+        variant: "destructive"
+      });
+    } finally {
+      setIsPaymentLoading(false);
+    }
   };
 
 
@@ -204,6 +346,21 @@ export const SimpleMortgageDashboard = () => {
                   <span>${(property.remaining_balance || 0).toLocaleString()} remaining</span>
                 </div>
               </div>
+
+              {/* Payment Action */}
+              <div className="pt-4 border-t">
+                <Button 
+                  onClick={handleMakePayment}
+                  disabled={isPaymentLoading}
+                  className="w-full"
+                  size="lg"
+                >
+                  {isPaymentLoading 
+                    ? "Processing Payment..." 
+                    : `Pay $${property.monthly_payment?.toLocaleString()} Monthly Payment`
+                  }
+                </Button>
+              </div>
             </CardContent>
           </Card>
         );
@@ -244,7 +401,9 @@ export const SimpleMortgageDashboard = () => {
           onClick={loadUserData} 
           disabled={isLoading}
           variant="outline"
+          className="flex items-center gap-2"
         >
+          <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
           {isLoading ? "Loading..." : "Refresh Data"}
         </Button>
       </div>
