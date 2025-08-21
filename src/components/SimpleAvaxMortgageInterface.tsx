@@ -32,6 +32,7 @@ export const SimpleAvaxMortgageInterface = () => {
   const [hasMortgage, setHasMortgage] = useState(false);
   const [mortgageDetails, setMortgageDetails] = useState<any>(null);
   const [contractAddress, setContractAddress] = useState<string>('');
+  const [isRefreshing, setIsRefreshing] = useState(false);
   
   // Initialize payment sync hook
   usePaymentSync(contractAddress, account);
@@ -115,20 +116,32 @@ export const SimpleAvaxMortgageInterface = () => {
     }
   };
 
-  // Check if user has a mortgage
+  // Check if user has a mortgage with enhanced debugging
   const checkMortgageStatus = async (address: string) => {
-    if (!contractAddress) return;
+    if (!contractAddress) {
+      console.log('❌ Cannot check mortgage: No contract address');
+      return;
+    }
+    
+    console.log('🔍 Checking mortgage status for:', address);
+    console.log('📄 Using contract address:', contractAddress);
     
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const contract = new ethers.Contract(contractAddress, AVAX_MORTGAGE_ABI, provider);
       
+      console.log('📞 Calling hasMortgage on contract...');
       const hasActiveMortgage = await contract.hasMortgage(address);
+      console.log('✅ hasMortgage result:', hasActiveMortgage);
+      
       setHasMortgage(hasActiveMortgage);
       
       if (hasActiveMortgage) {
+        console.log('📋 Fetching mortgage details...');
         const details = await contract.getMortgageDetails(address);
-        setMortgageDetails({
+        console.log('📊 Raw mortgage details:', details);
+        
+        const mortgageData = {
           propertyValue: ethers.formatEther(details[0]),
           downPayment: ethers.formatEther(details[1]),
           loanAmount: ethers.formatEther(details[2]),
@@ -139,10 +152,26 @@ export const SimpleAvaxMortgageInterface = () => {
           monthsPaid: details[7].toString(),
           nextPaymentDue: new Date(Number(details[8]) * 1000),
           isActive: details[9]
+        };
+        
+        console.log('✅ Processed mortgage details:', mortgageData);
+        setMortgageDetails(mortgageData);
+        
+        toast({
+          title: "🏠 Property Investment Found",
+          description: `Successfully loaded your investment in ${featuredProperty.name}`,
         });
+      } else {
+        console.log('ℹ️ No active mortgage found for this address');
+        setMortgageDetails(null);
       }
     } catch (error) {
-      console.error('Failed to check mortgage status:', error);
+      console.error('❌ Failed to check mortgage status:', error);
+      toast({
+        title: "⚠️ Status Check Failed", 
+        description: "Unable to check mortgage status. Check console for details.",
+        variant: "destructive"
+      });
     }
   };
 
@@ -182,8 +211,12 @@ export const SimpleAvaxMortgageInterface = () => {
         description: `You now own equity in ${featuredProperty.name}`,
       });
 
-      await checkMortgageStatus(account);
-      await updateBalance(account);
+      // Force refresh with small delay to ensure blockchain state is updated
+      setTimeout(async () => {
+        console.log('🔄 Force refreshing mortgage status after purchase...');
+        await checkMortgageStatus(account);
+        await updateBalance(account);
+      }, 2000);
 
     } catch (error: any) {
       console.error('Purchase failed:', error);
@@ -241,6 +274,33 @@ export const SimpleAvaxMortgageInterface = () => {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Manual refresh function for debugging
+  const handleManualRefresh = async () => {
+    if (!isConnected || !account) return;
+    
+    setIsRefreshing(true);
+    console.log('🔄 Manual refresh triggered by user');
+    
+    try {
+      await checkMortgageStatus(account);
+      await updateBalance(account);
+      
+      toast({
+        title: "✅ Status Refreshed",
+        description: "Mortgage status and balance updated",
+      });
+    } catch (error) {
+      console.error('Manual refresh failed:', error);
+      toast({
+        title: "❌ Refresh Failed",
+        description: "Could not refresh status. Check console for details.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsRefreshing(false);
     }
   };
 
@@ -302,6 +362,20 @@ export const SimpleAvaxMortgageInterface = () => {
                   <div className="font-mono">{parseFloat(balance).toFixed(4)} AVAX</div>
                   <div className="text-xs text-muted-foreground">≈ ${(parseFloat(balance) * AVAX_USD_RATE).toFixed(0)}</div>
                 </div>
+              </div>
+              
+              {/* Debug & Refresh Controls */}
+              <div className="flex justify-between items-center text-sm pt-2 border-t">
+                <span className="text-muted-foreground">Debug Controls:</span>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={handleManualRefresh}
+                  disabled={isRefreshing}
+                  className="text-xs"
+                >
+                  {isRefreshing ? "Refreshing..." : "Refresh Status"}
+                </Button>
               </div>
             </div>
           )}
