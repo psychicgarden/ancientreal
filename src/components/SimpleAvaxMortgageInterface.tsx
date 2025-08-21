@@ -351,14 +351,14 @@ export const SimpleAvaxMortgageInterface = () => {
                     </p>
                   </div>
                   <div>
-                    <Label>Initial 20% Down Payment</Label>
+                    <Label>Initial down payment 20% of $129K</Label>
                     <div className="flex items-center h-10 px-3 py-2 border border-input bg-background rounded-md text-sm">
                       <Badge variant="secondary" className="mr-2">Fixed</Badge>
                       <span className="font-semibold text-green-600">{downPayment} AVAX</span>
-                      <span className="text-muted-foreground ml-2">(${(parseFloat(downPayment) * AVAX_USD_RATE).toFixed(0)})</span>
+                      <span className="text-muted-foreground ml-2">($25,800)</span>
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Required down payment to start
+                      which equals $25,800 USD
                     </p>
                   </div>
                 </div>
