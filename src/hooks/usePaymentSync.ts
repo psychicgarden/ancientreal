@@ -32,19 +32,34 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
         interestPaidUSD: interestPaidUSD.toFixed(2)
       });
 
+      // Convert to 6-decimal base units for database storage (USDC-6 format)
+      const principalPaidBase = Math.round(principalPaidUSD * 1_000_000);
+      const interestPaidBase = Math.round(interestPaidUSD * 1_000_000);
+
+      console.log('💾 Database conversion:', {
+        principalPaidUSD: principalPaidUSD.toFixed(2),
+        principalPaidBase,
+        interestPaidUSD: interestPaidUSD.toFixed(2),
+        interestPaidBase
+      });
+
       // Insert payment into mortgage_payments_ledger
-      await supabase
+      const { error: ledgerError } = await supabase
         .from('mortgage_payments_ledger')
         .insert({
           user_address: eventData.borrower.toLowerCase(),
           property_id: 1, // Using property ID 1 for AVAX mortgage
-          principal_delta_base: Number(eventData.principalPaid),
-          interest_delta_base: Number(eventData.interestPaid),
+          principal_delta_base: principalPaidBase,
+          interest_delta_base: interestPaidBase,
           tx_hash: eventData.transactionHash
         });
 
+      if (ledgerError) {
+        throw new Error(`Ledger insert failed: ${ledgerError.message}`);
+      }
+
       // Insert transaction record
-      await supabase
+      const { error: transactionError } = await supabase
         .from('user_transactions')
         .insert({
           user_wallet_address: eventData.borrower.toLowerCase(),
@@ -60,8 +75,12 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
           }
         });
 
+      if (transactionError) {
+        throw new Error(`Transaction insert failed: ${transactionError.message}`);
+      }
+
       // Update user_properties remaining balance (if exists)
-      await supabase
+      const { error: propertyError } = await supabase
         .from('user_properties')
         .update({
           remaining_balance: remainingBalanceUSD,
@@ -70,10 +89,15 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
         .eq('user_address', eventData.borrower.toLowerCase())
         .eq('property_id', 1);
 
+      if (propertyError) {
+        console.warn('Property update failed (non-critical):', propertyError.message);
+      }
+
       console.log('✅ Payment synced to database:', {
         borrower: eventData.borrower,
         paymentAmount: paymentAmountUSD.toFixed(2),
-        remainingBalance: remainingBalanceUSD.toFixed(2)
+        remainingBalance: remainingBalanceUSD.toFixed(2),
+        transactionHash: eventData.transactionHash
       });
 
       toast({

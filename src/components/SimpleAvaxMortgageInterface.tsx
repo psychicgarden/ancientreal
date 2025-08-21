@@ -68,6 +68,40 @@ export const SimpleAvaxMortgageInterface = () => {
     }
   }, [isConnected, account, contractAddress]);
 
+  // Real-time subscription to payment updates
+  useEffect(() => {
+    if (!account) return;
+
+    const channel = supabase
+      .channel('payment-updates')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'mortgage_payments_ledger',
+          filter: `user_address=eq.${account.toLowerCase()}`
+        },
+        (payload) => {
+          console.log('🔄 New payment detected, refreshing mortgage status:', payload);
+          // Refresh mortgage status to update payment count
+          checkMortgageStatus(account);
+          toast({
+            title: "✅ Payment Updated",
+            description: "Your payment has been recorded successfully!",
+          });
+        }
+      )
+      .subscribe();
+
+    console.log('🎧 Real-time payment subscription activated for:', account);
+
+    return () => {
+      supabase.removeChannel(channel);
+      console.log('🧹 Payment subscription cleaned up');
+    };
+  }, [account]);
+
   const loadContractAddress = async () => {
     try {
       const address = await ContractDatabaseIntegration.getContractAddress('SimpleAvaxMortgage');
