@@ -9,9 +9,9 @@ import { useWallet } from '@/contexts/WalletContext';
 import { ethers } from 'ethers';
 import { Home, DollarSign, Calendar, CheckCircle, AlertCircle } from 'lucide-react';
 
-// Real contract addresses from database
+// Real deployed contract addresses
 const CONTRACTS = {
-  SIMPLE_MORTGAGE: null, // Will be deployed via deployment tab
+  SIMPLE_MORTGAGE: '0x8A791620dd6260079BF849Dc5567aDC3F2FdC318', // Deployed SimpleMortgage contract
   TEST_USDT: '0xc29837e2f495d8f04c5e7aca7d378baa8765dd36' // Real USDT contract from database
 };
 
@@ -87,14 +87,6 @@ export const SimpleMortgageInterface = () => {
   const handlePurchaseProperty = async () => {
     if (!isConnected || !window.ethereum) return;
     
-    if (!CONTRACTS.SIMPLE_MORTGAGE) {
-      toast({
-        title: "❌ Contract Not Deployed",
-        description: "SimpleMortgage contract needs to be deployed first. Use the Deploy tab above.",
-        variant: "destructive"
-      });
-      return;
-    }
 
     setIsLoading(true);
     try {
