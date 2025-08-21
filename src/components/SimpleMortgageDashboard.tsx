@@ -7,7 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { TrendingUp, Calendar, DollarSign, Home, PiggyBank } from 'lucide-react';
 import { OptimizedImage } from '@/components/ui/optimized-image';
-import artDecoLoftMexico from '@/assets/art-deco-loft-mexico.jpg';
+import artDecoLoftMexico from '@/assets/boho-art-deco-loft-mexico.jpg';
 
 interface MortgageProperty {
   id: string;
