@@ -126,34 +126,35 @@ export const SimpleAvaxMortgageInterface = () => {
     try {
       console.log('🔍 Checking mortgage status for address:', address);
       
-      // First check database for immediate response
+      // First check database for immediate response - handle multiple properties
       const { data: dbProperties, error: dbError } = await supabase
         .from('user_properties')
         .select('*')
         .eq('user_address', address.toLowerCase())
         .eq('is_active', true)
-        .maybeSingle();
+        .order('created_at', { ascending: false });
 
       if (dbError) {
         console.warn('⚠️ Database check failed:', dbError);
-      }
-
-      if (dbProperties) {
-        console.log('✅ Found property in database:', dbProperties);
+        // Continue to blockchain fallback
+      } else if (dbProperties && dbProperties.length > 0) {
+        // Use the most recent property if multiple exist
+        const latestProperty = dbProperties[0];
+        console.log(`✅ Found ${dbProperties.length} properties in database, using latest:`, latestProperty);
         setHasMortgage(true);
         
         // Convert database property to mortgage details format
         const details = {
-          propertyValue: dbProperties.purchase_price?.toString() || '0',
-          downPayment: dbProperties.down_payment?.toString() || '0', 
-          loanAmount: (dbProperties.purchase_price - dbProperties.down_payment)?.toString() || '0',
-          monthlyPayment: dbProperties.monthly_payment?.toString() || '0',
-          remainingBalance: dbProperties.remaining_balance?.toString() || '0',
+          propertyValue: latestProperty.purchase_price?.toString() || '0',
+          downPayment: latestProperty.down_payment?.toString() || '0', 
+          loanAmount: (latestProperty.purchase_price - latestProperty.down_payment)?.toString() || '0',
+          monthlyPayment: latestProperty.monthly_payment?.toString() || '0',
+          remainingBalance: latestProperty.remaining_balance?.toString() || '0',
           interestRate: '8.0',
-          termMonths: dbProperties.term_months?.toString() || '120',
+          termMonths: latestProperty.term_months?.toString() || '120',
           monthsPaid: '0', // Calculate from payment history if needed
           nextPaymentDue: new Date(),
-          isActive: dbProperties.is_active
+          isActive: latestProperty.is_active
         };
         
         console.log('🏠 Database mortgage details:', details);
@@ -191,12 +192,9 @@ export const SimpleAvaxMortgageInterface = () => {
           }
         } catch (contractError) {
           console.warn('⚠️ Contract call failed:', contractError);
+          // Don't show error toast if we have database records to fall back on
           setHasMortgage(false);
           setMortgageDetails(null);
-          toast({
-            title: "ℹ️ Checking Status...",
-            description: "Contract connection issue. Try the refresh button below.",
-          });
         }
       } else {
         console.log('❌ No contract address and no database record found');
