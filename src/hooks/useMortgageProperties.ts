@@ -24,19 +24,6 @@ import artDecoLoftMexico from "@/assets/art-deco-loft-mexico.jpg";
 
 const MORTGAGE_PROPERTIES: MortgagePropertyData[] = [
   {
-    id: "art-deco-loft-mexico",
-    name: "Art Deco Loft",
-    location: "Mazunte, Mexico",
-    image: artDecoLoftMexico,
-    totalValue: 129000,
-    downPayment: 29670, // Citizenship cost
-    monthlyPayment: 1205, // 8% APR on $99,330 loan
-    monthlyRent: 1969,
-    networkValue: 245745, // 10-year village value
-    expectedReturn: 17.4, // Based on rental yield
-    isAvailable: true,
-  },
-  {
     id: "antalya-turkey-villa",
     name: "Antalya Coastal Villa",
     location: "Antalya, Turkey",

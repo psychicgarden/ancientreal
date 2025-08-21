@@ -6,6 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { TrendingUp, Calendar, DollarSign, Home, PiggyBank } from 'lucide-react';
+import { OptimizedImage } from '@/components/ui/optimized-image';
+import artDecoLoftMexico from '@/assets/art-deco-loft-mexico.jpg';
 
 interface MortgageProperty {
   id: string;
@@ -106,6 +108,15 @@ export const SimpleMortgageDashboard = () => {
     return progress;
   };
 
+  const getPropertyImage = (property: MortgageProperty) => {
+    // Map broken database URLs to correct assets
+    if (property.image_url?.includes('boho-art-deco-loft-mexico') || 
+        property.property_name?.toLowerCase().includes('art deco')) {
+      return artDecoLoftMexico;
+    }
+    return property.image_url || artDecoLoftMexico; // Fallback
+  };
+
   if (!account) {
     return (
       <Card>
@@ -141,12 +152,19 @@ export const SimpleMortgageDashboard = () => {
           <Card key={property.id}>
             <CardHeader>
               <div className="flex items-start justify-between">
-                <div>
-                  <CardTitle className="flex items-center gap-2">
-                    <Home className="w-5 h-5 text-primary" />
-                    {property.property_name}
-                  </CardTitle>
-                  <p className="text-muted-foreground text-sm mt-1">{property.property_location}</p>
+                <div className="flex items-center gap-4">
+                  <OptimizedImage
+                    src={getPropertyImage(property)}
+                    alt={property.property_name}
+                    className="w-16 h-16 rounded-lg object-cover"
+                  />
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <Home className="w-5 h-5 text-primary" />
+                      {property.property_name}
+                    </CardTitle>
+                    <p className="text-muted-foreground text-sm mt-1">{property.property_location}</p>
+                  </div>
                 </div>
                 <Badge variant="outline" className="bg-primary/10">
                   Active Investment
