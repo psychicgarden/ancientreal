@@ -14,7 +14,7 @@ import { PROPERTIES_CATALOG } from '@/lib/propertiesCatalog';
 
 // Minimal ABI for AVAX mortgage operations
 const AVAX_MORTGAGE_ABI = [
-  'function purchaseProperty(uint256 _propertyValue, uint256 _interestRate, uint256 _termMonths) external payable',
+  'function purchaseProperty(uint256 _propertyValue, uint256 _termMonths) external payable',
   'function makePayment() external payable',
   'function getMortgageDetails(address _borrower) external view returns (tuple(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,bool,address))',
   'function hasMortgage(address) external view returns (bool)',
@@ -49,8 +49,10 @@ export const SimpleAvaxMortgageInterface = () => {
   // Form states - using realistic property values
   const [propertyValue, setPropertyValue] = useState(propertyValueAVAX);
   const [downPayment, setDownPayment] = useState(suggestedDownPayment);
-  const [interestRate, setInterestRate] = useState('6.5');
   const [termMonths, setTermMonths] = useState('360'); // 30 years standard
+  
+  // Fixed 8% interest rate
+  const FIXED_INTEREST_RATE = 8.0;
 
   useEffect(() => {
     loadContractAddress();
@@ -156,7 +158,6 @@ export const SimpleAvaxMortgageInterface = () => {
 
       const propertyValueWei = ethers.parseEther(propertyValue);
       const downPaymentWei = ethers.parseEther(downPayment);
-      const interestRateBps = parseInt(interestRate) * 100; // Convert % to basis points
 
       toast({
         title: "🏠 Processing Investment",
@@ -165,7 +166,6 @@ export const SimpleAvaxMortgageInterface = () => {
 
       const tx = await contract.purchaseProperty(
         propertyValueWei,
-        interestRateBps,
         parseInt(termMonths),
         { value: downPaymentWei }
       );
@@ -371,17 +371,13 @@ export const SimpleAvaxMortgageInterface = () => {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="interestRate">Annual Interest Rate (%)</Label>
-                    <Input
-                      id="interestRate"
-                      type="number"
-                      step="0.1"
-                      value={interestRate}
-                      onChange={(e) => setInterestRate(e.target.value)}
-                      placeholder="6.5"
-                    />
+                    <Label>Fixed Interest Rate</Label>
+                    <div className="flex items-center h-10 px-3 py-2 border border-input bg-background rounded-md text-sm">
+                      <Badge variant="secondary" className="mr-2">Fixed</Badge>
+                      <span className="font-semibold text-green-600">{FIXED_INTEREST_RATE}% APR</span>
+                    </div>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Competitive real estate financing
+                      Guaranteed fixed rate for entire term
                     </p>
                   </div>
                   <div>

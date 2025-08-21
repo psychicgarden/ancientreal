@@ -48,20 +48,19 @@ contract SimpleAvaxMortgage is Ownable, ReentrancyGuard {
     
     function purchaseProperty(
         uint256 _propertyValue,
-        uint256 _interestRate, // in basis points
         uint256 _termMonths
     ) external payable nonReentrant {
         require(!hasMortgage[msg.sender], "Already has active mortgage");
         require(msg.value >= (_propertyValue * 2000) / BASIS_POINTS, "Minimum 20% down payment required");
-        require(_interestRate >= 200 && _interestRate <= 3000, "Interest rate must be between 2% and 30%");
         require(_termMonths >= 12 && _termMonths <= 360, "Term must be between 1 and 30 years");
         
+        uint256 fixedInterestRate = 800; // Fixed 8% APR in basis points
         uint256 downPayment = msg.value;
         uint256 loanAmount = _propertyValue - downPayment;
         require(loanAmount > 0, "Invalid loan amount");
         
         // Calculate monthly payment using amortization formula
-        uint256 monthlyPayment = calculateMonthlyPayment(loanAmount, _interestRate, _termMonths);
+        uint256 monthlyPayment = calculateMonthlyPayment(loanAmount, fixedInterestRate, _termMonths);
         
         // Create mortgage
         mortgages[msg.sender] = Mortgage({
@@ -70,7 +69,7 @@ contract SimpleAvaxMortgage is Ownable, ReentrancyGuard {
             loanAmount: loanAmount,
             monthlyPayment: monthlyPayment,
             remainingBalance: loanAmount,
-            interestRate: _interestRate,
+            interestRate: fixedInterestRate,
             termMonths: _termMonths,
             monthsPaid: 0,
             nextPaymentDue: block.timestamp + PAYMENT_INTERVAL,
