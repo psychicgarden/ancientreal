@@ -131,8 +131,20 @@ export const SimpleAvaxMortgageInterface = () => {
       const contract = new ethers.Contract(contractAddress, AVAX_MORTGAGE_ABI, provider);
       
       console.log('📞 Calling hasMortgage on contract...');
-      const hasActiveMortgage = await contract.hasMortgage(address);
-      console.log('✅ hasMortgage result:', hasActiveMortgage);
+      
+      let hasActiveMortgage = false;
+      try {
+        hasActiveMortgage = await contract.hasMortgage(address);
+        console.log('✅ hasMortgage result:', hasActiveMortgage);
+      } catch (contractError) {
+        console.warn('⚠️ Contract call failed, using fallback detection:', contractError);
+        // If contract call fails, we'll assume false but show a helpful message
+        hasActiveMortgage = false;
+        toast({
+          title: "ℹ️ Checking Status...",
+          description: "Contract connection issue. Try the refresh button below.",
+        });
+      }
       
       setHasMortgage(hasActiveMortgage);
       
@@ -168,8 +180,8 @@ export const SimpleAvaxMortgageInterface = () => {
     } catch (error) {
       console.error('❌ Failed to check mortgage status:', error);
       toast({
-        title: "⚠️ Status Check Failed", 
-        description: "Unable to check mortgage status. Check console for details.",
+        title: "⚠️ Connection Issue", 
+        description: "Contract connection failed. Try refreshing status manually.",
         variant: "destructive"
       });
     }
