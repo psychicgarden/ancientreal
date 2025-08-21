@@ -19,6 +19,7 @@ import RentalIncomeTracker from "@/components/RentalIncomeTracker";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { shouldAllowPortfolioReset } from "@/config/demo";
+import { getPropertyImage } from "@/lib/propertyImageMapping";
 
 const Portfolio = () => {
   const { isConnected, account, connectWallet } = useWallet();
@@ -209,7 +210,7 @@ const Portfolio = () => {
     const status: "mortgaged" | "pending" | "success" = prop.is_active ? "mortgaged" : "pending";
     return {
       id: prop.id,
-      image: prop.image_url || "/src/assets/villa-bali.jpg",
+      image: getPropertyImage(prop),
       title: prop.property_name,
       location: prop.property_location,
       status,
