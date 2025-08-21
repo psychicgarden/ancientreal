@@ -17,10 +17,20 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
 
   const syncPaymentToDatabase = async (eventData: PaymentEventData) => {
     try {
-      const paymentAmountUSD = parseFloat(ethers.formatEther(eventData.paymentAmount));
-      const principalPaidUSD = parseFloat(ethers.formatEther(eventData.principalPaid));
-      const interestPaidUSD = parseFloat(ethers.formatEther(eventData.interestPaid));
-      const remainingBalanceUSD = parseFloat(ethers.formatEther(eventData.remainingBalance));
+      // Convert AVAX back to USD using the test ratio: 0.00129 AVAX = $129,000
+      const AVAX_TO_USD_RATIO = 129000 / 0.00129; // ~100,000,000
+      
+      const paymentAmountUSD = parseFloat(ethers.formatEther(eventData.paymentAmount)) * AVAX_TO_USD_RATIO;
+      const principalPaidUSD = parseFloat(ethers.formatEther(eventData.principalPaid)) * AVAX_TO_USD_RATIO;
+      const interestPaidUSD = parseFloat(ethers.formatEther(eventData.interestPaid)) * AVAX_TO_USD_RATIO;
+      const remainingBalanceUSD = parseFloat(ethers.formatEther(eventData.remainingBalance)) * AVAX_TO_USD_RATIO;
+
+      console.log('💰 Converting AVAX to USD:', {
+        paymentAmountAVAX: ethers.formatEther(eventData.paymentAmount),
+        paymentAmountUSD: paymentAmountUSD.toFixed(2),
+        principalPaidUSD: principalPaidUSD.toFixed(2),
+        interestPaidUSD: interestPaidUSD.toFixed(2)
+      });
 
       // Insert payment into mortgage_payments_ledger
       await supabase
@@ -62,8 +72,13 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
 
       console.log('✅ Payment synced to database:', {
         borrower: eventData.borrower,
-        paymentAmount: paymentAmountUSD,
-        remainingBalance: remainingBalanceUSD
+        paymentAmount: paymentAmountUSD.toFixed(2),
+        remainingBalance: remainingBalanceUSD.toFixed(2)
+      });
+
+      toast({
+        title: "✅ Payment Synced",
+        description: `Payment of $${paymentAmountUSD.toFixed(2)} synced to database`,
       });
 
     } catch (error) {

@@ -119,18 +119,19 @@ export const SimpleAvaxMortgageInterface = () => {
   };
 
   // Check if user has active mortgage - database first, blockchain as backup
-  const checkMortgageStatus = async (address: string) => {
-    if (!address) return;
+  const checkMortgageStatus = async (address?: string) => {
+    const targetAddress = address || account;
+    if (!targetAddress) return;
     
     setIsStatusChecking(true);
     try {
-      console.log('🔍 Checking mortgage status for address:', address);
+      console.log('🔍 Checking mortgage status for address:', targetAddress);
       
       // First check database for immediate response - handle multiple properties
       const { data: dbProperties, error: dbError } = await supabase
         .from('user_properties')
         .select('*')
-        .eq('user_address', address.toLowerCase())
+        .eq('user_address', targetAddress.toLowerCase())
         .eq('is_active', true)
         .order('created_at', { ascending: false });
 
@@ -143,6 +144,9 @@ export const SimpleAvaxMortgageInterface = () => {
         console.log(`✅ Found ${dbProperties.length} properties in database, using latest:`, latestProperty);
         setHasMortgage(true);
         
+        // Get actual payment count from database
+        const monthsPaid = await calculateMonthsPaid(targetAddress);
+        
         // Convert database property to mortgage details format
         const details = {
           propertyValue: latestProperty.purchase_price?.toString() || '0',
@@ -152,12 +156,12 @@ export const SimpleAvaxMortgageInterface = () => {
           remainingBalance: latestProperty.remaining_balance?.toString() || '0',
           interestRate: '8.0',
           termMonths: latestProperty.term_months?.toString() || '120',
-          monthsPaid: calculateMonthsPaid(latestProperty.created_at),
+          monthsPaid: monthsPaid.toString(),
           nextPaymentDue: new Date(),
           isActive: latestProperty.is_active
         };
         
-        console.log('🏠 Database mortgage details:', details);
+        console.log('🏠 Database mortgage details with payment count:', details);
         setMortgageDetails(details);
         setIsStatusChecking(false);
         return;
@@ -299,12 +303,28 @@ export const SimpleAvaxMortgageInterface = () => {
     }
   };
 
-  // Calculate months paid based on elapsed time since purchase
-  const calculateMonthsPaid = (purchaseDate: string): string => {
-    const startDate = new Date(purchaseDate);
-    const currentDate = new Date();
-    const monthsDiff = Math.floor((currentDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 30));
-    return Math.max(0, monthsDiff).toString();
+  // Calculate actual months paid by querying database
+  const calculateMonthsPaid = async (userAddress: string): Promise<number> => {
+    try {
+      // Count actual payments made by this user for property ID 1 (AVAX mortgage)
+      const { data: payments, error } = await supabase
+        .from('mortgage_payments_ledger')
+        .select('id')
+        .eq('user_address', userAddress.toLowerCase())
+        .eq('property_id', 1);
+
+      if (error) {
+        console.error('Error fetching payment count:', error);
+        return 0;
+      }
+
+      const paymentCount = payments?.length || 0;
+      console.log('📊 Actual payments made:', paymentCount);
+      return paymentCount;
+    } catch (error) {
+      console.error('Error calculating months paid:', error);
+      return 0;
+    }
   };
 
   // USD to AVAX conversion using test ratio: 129K USD = 0.00129 AVAX
@@ -352,9 +372,12 @@ export const SimpleAvaxMortgageInterface = () => {
         description: `Your equity in ${featuredProperty.name} has increased`,
       });
 
-      // Event listener will automatically sync to database
-      await checkMortgageStatus(account);
-      await updateBalance(account);
+      // Event listener will automatically sync to database and refresh status
+      setTimeout(async () => {
+        console.log('🔄 Auto-refreshing after payment...');
+        await checkMortgageStatus();
+        await updateBalance(account);
+      }, 3000); // Wait 3 seconds for event sync
 
     } catch (error: any) {
       console.error('Payment failed:', error);
