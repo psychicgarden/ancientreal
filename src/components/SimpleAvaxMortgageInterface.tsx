@@ -7,6 +7,7 @@ import { Badge } from './ui/badge';
 import { Separator } from './ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { ethers } from 'ethers';
+import { supabase } from '@/integrations/supabase/client';
 import { ContractDatabaseIntegration } from '@/lib/contract-database-integration';
 import { usePaymentSync } from '@/hooks/usePaymentSync';
 import { Home, DollarSign, Calendar, CheckCircle, AlertCircle, MapPin, TrendingUp, Users } from 'lucide-react';
@@ -33,6 +34,7 @@ export const SimpleAvaxMortgageInterface = () => {
   const [mortgageDetails, setMortgageDetails] = useState<any>(null);
   const [contractAddress, setContractAddress] = useState<string>('');
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isStatusChecking, setIsStatusChecking] = useState(false);
   
   // Initialize payment sync hook
   usePaymentSync(contractAddress, account);
@@ -116,74 +118,97 @@ export const SimpleAvaxMortgageInterface = () => {
     }
   };
 
-  // Check if user has a mortgage with enhanced debugging
+  // Check if user has active mortgage - database first, blockchain as backup
   const checkMortgageStatus = async (address: string) => {
-    if (!contractAddress) {
-      console.log('❌ Cannot check mortgage: No contract address');
-      return;
-    }
+    if (!address) return;
     
-    console.log('🔍 Checking mortgage status for:', address);
-    console.log('📄 Using contract address:', contractAddress);
-    
+    setIsStatusChecking(true);
     try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const contract = new ethers.Contract(contractAddress, AVAX_MORTGAGE_ABI, provider);
+      console.log('🔍 Checking mortgage status for address:', address);
       
-      console.log('📞 Calling hasMortgage on contract...');
-      
-      let hasActiveMortgage = false;
-      try {
-        hasActiveMortgage = await contract.hasMortgage(address);
-        console.log('✅ hasMortgage result:', hasActiveMortgage);
-      } catch (contractError) {
-        console.warn('⚠️ Contract call failed, using fallback detection:', contractError);
-        // If contract call fails, we'll assume false but show a helpful message
-        hasActiveMortgage = false;
-        toast({
-          title: "ℹ️ Checking Status...",
-          description: "Contract connection issue. Try the refresh button below.",
-        });
+      // First check database for immediate response
+      const { data: dbProperties, error: dbError } = await supabase
+        .from('user_properties')
+        .select('*')
+        .eq('user_address', address.toLowerCase())
+        .eq('is_active', true)
+        .maybeSingle();
+
+      if (dbError) {
+        console.warn('⚠️ Database check failed:', dbError);
       }
-      
-      setHasMortgage(hasActiveMortgage);
-      
-      if (hasActiveMortgage) {
-        console.log('📋 Fetching mortgage details...');
-        const details = await contract.getMortgageDetails(address);
-        console.log('📊 Raw mortgage details:', details);
+
+      if (dbProperties) {
+        console.log('✅ Found property in database:', dbProperties);
+        setHasMortgage(true);
         
-        const mortgageData = {
-          propertyValue: ethers.formatEther(details[0]),
-          downPayment: ethers.formatEther(details[1]),
-          loanAmount: ethers.formatEther(details[2]),
-          monthlyPayment: ethers.formatEther(details[3]),
-          remainingBalance: ethers.formatEther(details[4]),
-          interestRate: details[5].toString(),
-          termMonths: details[6].toString(),
-          monthsPaid: details[7].toString(),
-          nextPaymentDue: new Date(Number(details[8]) * 1000),
-          isActive: details[9]
+        // Convert database property to mortgage details format
+        const details = {
+          propertyValue: dbProperties.purchase_price?.toString() || '0',
+          downPayment: dbProperties.down_payment?.toString() || '0', 
+          loanAmount: (dbProperties.purchase_price - dbProperties.down_payment)?.toString() || '0',
+          monthlyPayment: dbProperties.monthly_payment?.toString() || '0',
+          remainingBalance: dbProperties.remaining_balance?.toString() || '0',
+          interestRate: '8.0',
+          termMonths: dbProperties.term_months?.toString() || '120',
+          monthsPaid: '0', // Calculate from payment history if needed
+          nextPaymentDue: new Date(),
+          isActive: dbProperties.is_active
         };
         
-        console.log('✅ Processed mortgage details:', mortgageData);
-        setMortgageDetails(mortgageData);
+        console.log('🏠 Database mortgage details:', details);
+        setMortgageDetails(details);
+        setIsStatusChecking(false);
+        return;
+      }
+
+      // Fallback to blockchain if no database record found  
+      if (contractAddress) {
+        console.log('📋 Checking blockchain as fallback...');
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const contract = new ethers.Contract(contractAddress, AVAX_MORTGAGE_ABI, provider);
         
-        toast({
-          title: "🏠 Property Investment Found",
-          description: `Successfully loaded your investment in ${featuredProperty.name}`,
-        });
+        try {
+          const hasActiveMortgage = await contract.hasMortgage(address);
+          console.log('✅ Blockchain hasMortgage result:', hasActiveMortgage);
+          setHasMortgage(hasActiveMortgage);
+
+          if (hasActiveMortgage) {
+            const details = await contract.getMortgageDetails(address);
+            const mortgageData = {
+              propertyValue: ethers.formatEther(details[0]),
+              downPayment: ethers.formatEther(details[1]),
+              loanAmount: ethers.formatEther(details[2]),
+              monthlyPayment: ethers.formatEther(details[3]),
+              remainingBalance: ethers.formatEther(details[4]),
+              interestRate: details[5].toString(),
+              termMonths: details[6].toString(),
+              monthsPaid: details[7].toString(),
+              nextPaymentDue: new Date(Number(details[8]) * 1000),
+              isActive: details[9]
+            };
+            setMortgageDetails(mortgageData);
+          }
+        } catch (contractError) {
+          console.warn('⚠️ Contract call failed:', contractError);
+          setHasMortgage(false);
+          setMortgageDetails(null);
+          toast({
+            title: "ℹ️ Checking Status...",
+            description: "Contract connection issue. Try the refresh button below.",
+          });
+        }
       } else {
-        console.log('ℹ️ No active mortgage found for this address');
+        console.log('❌ No contract address and no database record found');
+        setHasMortgage(false);
         setMortgageDetails(null);
       }
     } catch (error) {
       console.error('❌ Failed to check mortgage status:', error);
-      toast({
-        title: "⚠️ Connection Issue", 
-        description: "Contract connection failed. Try refreshing status manually.",
-        variant: "destructive"
-      });
+      setHasMortgage(false);
+      setMortgageDetails(null);
+    } finally {
+      setIsStatusChecking(false);
     }
   };
 
@@ -216,19 +241,53 @@ export const SimpleAvaxMortgageInterface = () => {
         description: "Waiting for blockchain confirmation...",
       });
 
-      await tx.wait();
+      const receipt = await tx.wait();
+      
+      // Record purchase in database immediately
+      try {
+        console.log('💾 Recording purchase in database...');
+        const { error: dbError } = await supabase
+          .from('user_properties')
+          .insert({
+            user_wallet_address: account,
+            user_address: account.toLowerCase(),
+            property_name: featuredProperty.name,
+            property_location: featuredProperty.location,
+            image_url: featuredProperty.image,
+            purchase_price: parseFloat(propertyValue),
+            down_payment: parseFloat(downPayment),
+            remaining_balance: parseFloat(propertyValue) - parseFloat(downPayment),
+            monthly_payment: (parseFloat(propertyValue) - parseFloat(downPayment)) * 0.01, // Rough estimate
+            current_value: parseFloat(propertyValue),
+            equity_percentage: (parseFloat(downPayment) / parseFloat(propertyValue)) * 100,
+            is_active: true,
+            purchase_price_base: Math.floor(parseFloat(propertyValue) * 1000000),
+            down_payment_base: Math.floor(parseFloat(downPayment) * 1000000),
+            loan_amount_base: Math.floor((parseFloat(propertyValue) - parseFloat(downPayment)) * 1000000),
+            apr_bps: 800,
+            term_months: parseInt(termMonths),
+            property_id: 1, // Featured property ID
+            currency: 'AVAX',
+            unique_purchase_key: receipt.hash
+          });
+
+        if (dbError) {
+          console.error('❌ Database insert failed:', dbError);
+        } else {
+          console.log('✅ Purchase recorded in database');
+        }
+      } catch (dbError) {
+        console.error('❌ Failed to record purchase:', dbError);
+      }
       
       toast({
         title: "🎉 Investment Successful!",
         description: `You now own equity in ${featuredProperty.name}`,
       });
 
-      // Force refresh with small delay to ensure blockchain state is updated
-      setTimeout(async () => {
-        console.log('🔄 Force refreshing mortgage status after purchase...');
-        await checkMortgageStatus(account);
-        await updateBalance(account);
-      }, 2000);
+      // Refresh status immediately
+      await checkMortgageStatus(account);
+      await updateBalance(account);
 
     } catch (error: any) {
       console.error('Purchase failed:', error);

@@ -1,9 +1,8 @@
 import React from 'react';
 import { SimpleAvaxMortgageInterface } from '@/components/SimpleAvaxMortgageInterface';
-import { SimpleAvaxMortgageDeployment } from '@/components/SimpleAvaxMortgageDeployment';
+import { SimpleMortgageDashboard } from '@/components/SimpleMortgageDashboard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Home, Wrench } from 'lucide-react';
+import { Home, BarChart3 } from 'lucide-react';
 
 export default function SimpleMortgage() {
   return (
@@ -24,9 +23,9 @@ export default function SimpleMortgage() {
               <Home className="w-4 h-4" />
               Investment Platform
             </TabsTrigger>
-            <TabsTrigger value="deployment" className="flex items-center gap-2">
-              <Wrench className="w-4 h-4" />
-              Platform Setup
+            <TabsTrigger value="dashboard" className="flex items-center gap-2">
+              <BarChart3 className="w-4 h-4" />
+              Mortgage Dashboard
             </TabsTrigger>
           </TabsList>
           
@@ -34,35 +33,8 @@ export default function SimpleMortgage() {
             <SimpleAvaxMortgageInterface />
           </TabsContent>
           
-          <TabsContent value="deployment" className="space-y-6">
-            <SimpleAvaxMortgageDeployment />
-            
-            <Card className="mt-6">
-              <CardHeader>
-                <CardTitle>🏠 Blockchain Real Estate Benefits</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2 text-sm">
-                <div className="flex items-center gap-2">
-                  <span className="text-green-500">✅</span>
-                  <span>Fractional ownership of premium properties</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-green-500">✅</span>
-                  <span>Transparent blockchain-secured investments</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-green-500">✅</span>
-                  <span>Direct AVAX payments - no intermediaries</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-green-500">✅</span>
-                  <span>Real-time portfolio tracking</span>
-                </div>
-                <div className="text-muted-foreground mt-3">
-                  <strong>Note:</strong> Investment platform requires blockchain infrastructure deployment for full functionality.
-                </div>
-              </CardContent>
-            </Card>
+          <TabsContent value="dashboard" className="space-y-6">
+            <SimpleMortgageDashboard />
           </TabsContent>
         </Tabs>
       </div>
