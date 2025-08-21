@@ -282,9 +282,9 @@ const AdminProjects = () => {
             <p className="text-muted-foreground mt-1">Review projects and monitor platform analytics</p>
           </div>
           <div className="flex gap-2">
-            <Button onClick={() => window.location.href = '/test'} variant="default" className="self-start md:self-auto">
+            <Button onClick={() => window.location.href = '/mortgage'} variant="default" className="self-start md:self-auto">
               <Wallet className="w-4 h-4 mr-2" />
-              Go to Testing Page
+              Go to Mortgage Platform
             </Button>
             <Button onClick={() => window.location.href = '/'} variant="outline" className="self-start md:self-auto">
               <Home className="w-4 h-4 mr-2" />
