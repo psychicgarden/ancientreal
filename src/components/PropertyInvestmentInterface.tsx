@@ -22,7 +22,7 @@ export const PropertyInvestmentInterface = () => {
   const [account, setAccount] = useState('');
   const [balance, setBalance] = useState('0');
   const [isLoading, setIsLoading] = useState(false);
-  const [hasMortgage, setHasMortgage] = useState(false);
+  
   const [contractAddress, setContractAddress] = useState<string>('');
   
   // Featured property from catalog
@@ -44,7 +44,6 @@ export const PropertyInvestmentInterface = () => {
   useEffect(() => {
     if (isConnected && account && contractAddress) {
       updateBalance(account);
-      checkMortgageStatus(account);
     }
   }, [isConnected, account, contractAddress]);
 
@@ -88,7 +87,7 @@ export const PropertyInvestmentInterface = () => {
       
       toast({
         title: "✅ Wallet Connected",
-        description: `Ready to invest in ${featuredProperty.name}`,
+        description: `Ready to purchase ${featuredProperty.name}`,
       });
     } catch (error) {
       console.error('Connection failed:', error);
@@ -110,41 +109,6 @@ export const PropertyInvestmentInterface = () => {
     }
   };
 
-  const checkMortgageStatus = async (address?: string) => {
-    const targetAddress = address || account;
-    if (!targetAddress) return;
-    
-    try {
-      // Check database first for immediate response
-      const { data: dbProperties, error: dbError } = await supabase
-        .from('user_properties')
-        .select('*')
-        .eq('user_address', targetAddress.toLowerCase())
-        .eq('is_active', true);
-
-      if (!dbError && dbProperties && dbProperties.length > 0) {
-        setHasMortgage(true);
-        return;
-      }
-
-      // Fallback to blockchain check
-      if (contractAddress) {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const contract = new ethers.Contract(contractAddress, AVAX_MORTGAGE_ABI, provider);
-        
-        try {
-          const hasActiveMortgage = await contract.hasMortgage(targetAddress);
-          setHasMortgage(hasActiveMortgage);
-        } catch (contractError) {
-          console.warn('Contract call failed:', contractError);
-          setHasMortgage(false);
-        }
-      }
-    } catch (error) {
-      console.error('Failed to check mortgage status:', error);
-      setHasMortgage(false);
-    }
-  };
 
   const handlePurchaseProperty = async () => {
     if (!isConnected || !window.ethereum || !contractAddress) return;
@@ -159,8 +123,8 @@ export const PropertyInvestmentInterface = () => {
       const downPaymentWei = ethers.parseEther(downPayment);
 
       toast({
-        title: "🏠 Processing Investment",
-        description: "Creating your fractional real estate investment...",
+        title: "🏠 Processing Purchase",
+        description: "Creating your property purchase transaction...",
       });
 
       const tx = await contract.purchaseProperty(
@@ -214,18 +178,17 @@ export const PropertyInvestmentInterface = () => {
       }
       
       toast({
-        title: "🎉 Investment Successful!",
-        description: `You now own equity in ${featuredProperty.name}. Go to Mortgage Dashboard to manage payments.`,
+        title: "🎉 Purchase Successful!",
+        description: `Property purchase completed! Transaction recorded to SnowTrace.`,
       });
 
-      // Update status
-      await checkMortgageStatus(account);
+      // Update balance
       await updateBalance(account);
 
     } catch (error: any) {
       console.error('Purchase failed:', error);
       toast({
-        title: "❌ Investment Failed",
+        title: "❌ Purchase Failed",
         description: error.message || 'Transaction failed',
         variant: "destructive"
       });
@@ -238,7 +201,7 @@ export const PropertyInvestmentInterface = () => {
     return (
       <Card>
         <CardContent className="pt-6 text-center">
-          <p className="text-muted-foreground">Investment Platform Initializing...</p>
+          <p className="text-muted-foreground">Property Purchase Platform Initializing...</p>
         </CardContent>
       </Card>
     );
@@ -256,7 +219,7 @@ export const PropertyInvestmentInterface = () => {
           />
           <div className="absolute bottom-4 left-4">
             <Badge className="bg-primary/90 text-primary-foreground backdrop-blur-sm">
-              Featured Investment
+              Featured Property
             </Badge>
           </div>
         </div>
@@ -271,7 +234,7 @@ export const PropertyInvestmentInterface = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="text-center p-3 bg-muted/50 rounded-lg">
               <DollarSign className="w-4 h-4 text-muted-foreground mx-auto mb-1" />
               <div className="text-sm text-muted-foreground">Total Value</div>
@@ -287,20 +250,15 @@ export const PropertyInvestmentInterface = () => {
               <div className="text-sm text-muted-foreground">Monthly Rent</div>
               <div className="font-semibold">${featuredProperty.monthlyRent?.toLocaleString()}</div>
             </div>
-            <div className="text-center p-3 bg-muted/50 rounded-lg">
-              <Users className="w-4 h-4 text-muted-foreground mx-auto mb-1" />
-              <div className="text-sm text-muted-foreground">Available Shares</div>
-              <div className="font-semibold">{featuredProperty.availableShares}</div>
-            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Investment Interface */}
+      {/* Property Purchase Interface */}
       {!isConnected ? (
         <Card>
           <CardHeader>
-            <CardTitle>Connect Wallet to Invest</CardTitle>
+            <CardTitle>Connect Wallet to Purchase Property</CardTitle>
           </CardHeader>
           <CardContent>
             <Button onClick={connectWallet} className="w-full">
@@ -308,29 +266,10 @@ export const PropertyInvestmentInterface = () => {
             </Button>
           </CardContent>
         </Card>
-      ) : hasMortgage ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>Investment Status</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-center space-y-4">
-              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                ✅ Investment Active
-              </Badge>
-              <p className="text-muted-foreground">
-                You already have an active investment in {featuredProperty.name}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Go to the Mortgage Dashboard tab to manage payments and view details
-              </p>
-            </div>
-          </CardContent>
-        </Card>
       ) : (
         <Card>
           <CardHeader>
-            <CardTitle>Invest in {featuredProperty.name}</CardTitle>
+            <CardTitle>Purchase {featuredProperty.name}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-4">
@@ -363,16 +302,12 @@ export const PropertyInvestmentInterface = () => {
               size="lg"
             >
               {isLoading 
-                ? "Processing Investment..." 
+                ? "Processing Purchase..." 
                 : parseFloat(balance) < parseFloat(downPayment)
                 ? "Insufficient AVAX Balance"
-                : "Invest Now"
+                : "Purchase Property"
               }
             </Button>
-            
-            <p className="text-xs text-muted-foreground text-center">
-              By investing, you agree to the terms and conditions of fractional real estate ownership
-            </p>
           </CardContent>
         </Card>
       )}
