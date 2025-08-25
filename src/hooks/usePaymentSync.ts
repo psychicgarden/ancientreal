@@ -25,11 +25,16 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
       const interestPaidUSD = parseFloat(ethers.formatEther(eventData.interestPaid)) * AVAX_TO_USD_RATIO;
       const remainingBalanceUSD = parseFloat(ethers.formatEther(eventData.remainingBalance)) * AVAX_TO_USD_RATIO;
 
+      // Determine property ID dynamically based on payment amount
+      // Bahia property (ID: 2) has higher monthly payments (~$1,261), Art Deco Loft (ID: 1) has lower payments (~$700)
+      const propertyId = paymentAmountUSD > 1000 ? 2 : 1;
+
       console.log('💰 Converting AVAX to USD:', {
         paymentAmountAVAX: ethers.formatEther(eventData.paymentAmount),
         paymentAmountUSD: paymentAmountUSD.toFixed(2),
         principalPaidUSD: principalPaidUSD.toFixed(2),
-        interestPaidUSD: interestPaidUSD.toFixed(2)
+        interestPaidUSD: interestPaidUSD.toFixed(2),
+        detectedPropertyId: propertyId
       });
 
       // Convert to 6-decimal base units for database storage (USDC-6 format)
@@ -48,7 +53,7 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
         .from('mortgage_payments_ledger')
         .insert({
           user_address: eventData.borrower.toLowerCase(),
-          property_id: 1, // Using property ID 1 for AVAX mortgage
+          property_id: propertyId, // Dynamic property ID detection
           principal_delta_base: principalPaidBase,
           interest_delta_base: interestPaidBase,
           tx_hash: eventData.transactionHash
@@ -61,7 +66,7 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
       // Apply payment to user_properties using database function
       const { error: applyError } = await supabase.rpc('apply_mortgage_payment', {
         p_user_address: eventData.borrower.toLowerCase(),
-        p_property_id: 1,
+        p_property_id: propertyId, // Dynamic property ID
         p_principal_delta_base: principalPaidBase,
         p_interest_delta_base: interestPaidBase,
         p_tx_hash: eventData.transactionHash
@@ -104,7 +109,7 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
           updated_at: new Date().toISOString()
         })
         .eq('user_address', eventData.borrower.toLowerCase())
-        .eq('property_id', 1);
+        .eq('property_id', propertyId); // Dynamic property ID
 
       if (balanceError) {
         console.warn('⚠️ Balance update failed (non-critical):', balanceError.message);
