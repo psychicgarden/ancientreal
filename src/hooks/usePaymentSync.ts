@@ -135,7 +135,10 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
   };
 
   useEffect(() => {
-    if (!contractAddress || !account || !window.ethereum) return;
+    if (!contractAddress || !account || !window.ethereum) {
+      console.log('🔇 Payment sync not initialized:', { contractAddress, account, ethereum: !!window.ethereum });
+      return;
+    }
 
     let contract: ethers.Contract | null = null;
 
@@ -148,32 +151,45 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
         
         contract = new ethers.Contract(contractAddress, ABI, provider);
         
-        // Listen for PaymentMade events from this user
-        const filter = contract.filters.PaymentMade(account);
-        
-        contract.on(filter, async (borrower, paymentAmount, principalPaid, interestPaid, remainingBalance, event) => {
-          console.log('📨 Payment event received:', {
-            borrower,
+        console.log('🔧 Setting up payment listeners for:', {
+          contractAddress,
+          account: account.toLowerCase(),
+          provider: provider.constructor.name
+        });
+
+        // Listen for ALL PaymentMade events first to debug
+        contract.on('PaymentMade', async (borrower, paymentAmount, principalPaid, interestPaid, remainingBalance, event) => {
+          console.log('📨 ANY Payment event received:', {
+            borrower: borrower.toLowerCase(),
+            currentAccount: account.toLowerCase(),
             paymentAmount: ethers.formatEther(paymentAmount),
             principalPaid: ethers.formatEther(principalPaid),
             interestPaid: ethers.formatEther(interestPaid),
-            remainingBalance: ethers.formatEther(remainingBalance)
+            remainingBalance: ethers.formatEther(remainingBalance),
+            txHash: event.transactionHash,
+            isForCurrentUser: borrower.toLowerCase() === account.toLowerCase()
           });
 
-          await syncPaymentToDatabase({
-            borrower,
-            paymentAmount,
-            principalPaid,
-            interestPaid,
-            remainingBalance,
-            transactionHash: event.transactionHash
-          });
+          // Only process if it's for the current user
+          if (borrower.toLowerCase() === account.toLowerCase()) {
+            console.log('✅ Processing payment for current user');
+            await syncPaymentToDatabase({
+              borrower,
+              paymentAmount,
+              principalPaid,
+              interestPaid,
+              remainingBalance,
+              transactionHash: event.transactionHash
+            });
+          } else {
+            console.log('⏭️ Skipping payment for different user');
+          }
         });
 
-        console.log('🎧 Payment event listener activated for contract:', contractAddress);
+        console.log('🎧 Payment event listener activated for contract:', contractAddress, 'account:', account);
 
       } catch (error) {
-        console.error('Failed to setup payment event listener:', error);
+        console.error('❌ Failed to setup payment event listener:', error);
       }
     };
 
