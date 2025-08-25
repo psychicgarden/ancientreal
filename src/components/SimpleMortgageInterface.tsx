@@ -36,11 +36,11 @@ export const SimpleMortgageInterface = () => {
   const { isConnected, connectWallet, account } = useWallet();
   const { toast } = useToast();
   
-  // State
-  const [propertyValue, setPropertyValue] = useState('100000');
-  const [downPayment, setDownPayment] = useState('20000');
+  // State - Using exact values for 10-year mortgage with AVAX ratio
+  const [propertyValue, setPropertyValue] = useState('129000');
+  const [downPayment, setDownPayment] = useState('25800');
   const [interestRate, setInterestRate] = useState('800'); // 8% in basis points
-  const [termMonths, setTermMonths] = useState('360'); // 30 years
+  const [termMonths, setTermMonths] = useState('120'); // 10 years
   const [usdtBalance, setUsdtBalance] = useState('0');
   const [mortgageDetails, setMortgageDetails] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -310,7 +310,7 @@ export const SimpleMortgageInterface = () => {
                 <Input 
                   value={propertyValue} 
                   onChange={(e) => setPropertyValue(e.target.value)}
-                  placeholder="100000"
+                  placeholder="129000"
                 />
               </div>
               <div>
@@ -318,7 +318,7 @@ export const SimpleMortgageInterface = () => {
                 <Input 
                   value={downPayment} 
                   onChange={(e) => setDownPayment(e.target.value)}
-                  placeholder="20000"
+                  placeholder="25800"
                 />
               </div>
               <div>
@@ -334,7 +334,7 @@ export const SimpleMortgageInterface = () => {
                 <Input 
                   value={termMonths} 
                   onChange={(e) => setTermMonths(e.target.value)}
-                  placeholder="360"
+                  placeholder="120"
                 />
               </div>
             </div>
