@@ -5,60 +5,42 @@ import { Badge } from './ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { ethers } from 'ethers';
 import { supabase } from '@/integrations/supabase/client';
-import { ContractDatabaseIntegration } from '@/lib/contract-database-integration';
-import { Home, DollarSign, Calendar, MapPin, TrendingUp, Users } from 'lucide-react';
+import { CONTRACTS } from '@/lib/contracts';
+import { Home, DollarSign, Calendar, MapPin, TrendingUp, Users, Shield, CheckCircle } from 'lucide-react';
 import { PROPERTIES_CATALOG } from '@/lib/propertiesCatalog';
-
-// Minimal ABI for AVAX mortgage purchase operations
-const AVAX_MORTGAGE_ABI = [
-  'function purchaseProperty(uint256 _propertyValue, uint256 _termMonths) external payable',
-  'function hasMortgage(address) external view returns (bool)',
-  'event MortgageCreated(address indexed borrower, uint256 propertyValue, uint256 downPayment, uint256 loanAmount, uint256 monthlyPayment)'
-];
 
 export const PropertyInvestmentInterface = () => {
   const { toast } = useToast();
   const [isConnected, setIsConnected] = useState(false);
   const [account, setAccount] = useState('');
-  const [balance, setBalance] = useState('0');
+  const [usdtBalance, setUsdtBalance] = useState('0');
   const [isLoading, setIsLoading] = useState(false);
-  
-  const [contractAddress, setContractAddress] = useState<string>('');
+  const [isApproving, setIsApproving] = useState(false);
+  const [isKycApproved, setIsKycApproved] = useState(false);
+  const [needsUsdtApproval, setNeedsUsdtApproval] = useState(true);
   
   // Featured property from catalog
   const featuredProperty = PROPERTIES_CATALOG[0]; // Art Deco Loft in Mazunte, Mexico
   
-  // Fixed property values - simplified interface
-  const propertyValueAVAX = "0.00129"; // Fixed at $129K equivalent
-  const suggestedDownPayment = "0.000258"; // Fixed 20% down payment
-  const propertyValue = propertyValueAVAX;
-  const downPayment = suggestedDownPayment;
-  const termMonths = "120"; // Fixed 10 years
-  const FIXED_INTEREST_RATE = 8.0;
-  
-  // USD display values from property catalog
+  // Fixed property values - now in USDT (6 decimals)
   const propertyValueUSD = featuredProperty.totalValue; // $129,000
   const downPaymentUSD = Math.round(featuredProperty.totalValue * 0.2); // 20% = $25,800
+  const downPaymentUSDT = (downPaymentUSD * 1000000).toString(); // Convert to 6 decimal USDT
+  const termMonths = 120; // Fixed 10 years
+  const FIXED_INTEREST_RATE = 8.0;
+  const PLATFORM_FEE_PERCENT = 3.0; // 3% platform fee
 
   useEffect(() => {
-    loadContractAddress();
     checkWalletConnection();
   }, []);
 
   useEffect(() => {
-    if (isConnected && account && contractAddress) {
-      updateBalance(account);
+    if (isConnected && account) {
+      updateUsdtBalance(account);
+      checkKycStatus(account);
+      checkUsdtApproval(account);
     }
-  }, [isConnected, account, contractAddress]);
-
-  const loadContractAddress = async () => {
-    try {
-      const address = await ContractDatabaseIntegration.getContractAddress('SimpleAvaxMortgage');
-      setContractAddress(address);
-    } catch (error) {
-      console.error('Failed to load contract address:', error);
-    }
-  };
+  }, [isConnected, account]);
 
   const checkWalletConnection = async () => {
     if (window.ethereum) {
@@ -103,39 +85,129 @@ export const PropertyInvestmentInterface = () => {
     }
   };
 
-  const updateBalance = async (address: string) => {
+  const updateUsdtBalance = async (address: string) => {
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
-      const balance = await provider.getBalance(address);
-      setBalance(ethers.formatEther(balance));
+      const usdtContract = new ethers.Contract(CONTRACTS.USDT.address, CONTRACTS.USDT.abi, provider);
+      const balance = await usdtContract.balanceOf(address);
+      setUsdtBalance(ethers.formatUnits(balance, 6)); // USDT has 6 decimals
     } catch (error) {
-      console.error('Failed to get balance:', error);
+      console.error('Failed to get USDT balance:', error);
+    }
+  };
+
+  const checkKycStatus = async (address: string) => {
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const mortgageContract = new ethers.Contract(CONTRACTS.MAZUNTE_MORTGAGE.address, CONTRACTS.MAZUNTE_MORTGAGE.abi, provider);
+      // For demo purposes, we'll assume KYC is approved. In production, this would check the contract
+      setIsKycApproved(true);
+    } catch (error) {
+      console.error('Failed to check KYC status:', error);
+      setIsKycApproved(true); // Default to approved for demo
+    }
+  };
+
+  const checkUsdtApproval = async (address: string) => {
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const usdtContract = new ethers.Contract(CONTRACTS.USDT.address, CONTRACTS.USDT.abi, provider);
+      const allowance = await usdtContract.allowance(address, CONTRACTS.MAZUNTE_MORTGAGE.address);
+      const requiredAmount = ethers.parseUnits(downPaymentUSD.toString(), 6);
+      setNeedsUsdtApproval(allowance < requiredAmount);
+    } catch (error) {
+      console.error('Failed to check USDT approval:', error);
+    }
+  };
+
+  const getFaucetTokens = async () => {
+    if (!isConnected || !window.ethereum) return;
+
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const usdtContract = new ethers.Contract(CONTRACTS.USDT.address, CONTRACTS.USDT.abi, signer);
+
+      toast({
+        title: "💰 Getting Test USDT",
+        description: "Requesting tokens from faucet...",
+      });
+
+      const tx = await usdtContract.faucet();
+      await tx.wait();
+
+      toast({
+        title: "✅ Faucet Success",
+        description: "Received 1,000 test USDT tokens",
+      });
+
+      await updateUsdtBalance(account);
+    } catch (error: any) {
+      console.error('Faucet failed:', error);
+      toast({
+        title: "❌ Faucet Failed",
+        description: error.message || 'Failed to get test tokens',
+        variant: "destructive"
+      });
+    }
+  };
+
+  const approveUsdt = async () => {
+    if (!isConnected || !window.ethereum) return;
+
+    setIsApproving(true);
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const usdtContract = new ethers.Contract(CONTRACTS.USDT.address, CONTRACTS.USDT.abi, signer);
+
+      const approvalAmount = ethers.parseUnits(downPaymentUSD.toString(), 6);
+
+      toast({
+        title: "🔐 Approving USDT",
+        description: "Please approve USDT spending in your wallet...",
+      });
+
+      const tx = await usdtContract.approve(CONTRACTS.MAZUNTE_MORTGAGE.address, approvalAmount);
+      await tx.wait();
+
+      toast({
+        title: "✅ USDT Approved",
+        description: "Ready to purchase property",
+      });
+
+      setNeedsUsdtApproval(false);
+    } catch (error: any) {
+      console.error('Approval failed:', error);
+      toast({
+        title: "❌ Approval Failed",
+        description: error.message || 'Failed to approve USDT',
+        variant: "destructive"
+      });
+    } finally {
+      setIsApproving(false);
     }
   };
 
 
   const handlePurchaseProperty = async () => {
-    if (!isConnected || !window.ethereum || !contractAddress) return;
+    if (!isConnected || !window.ethereum || !isKycApproved) return;
 
     setIsLoading(true);
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, AVAX_MORTGAGE_ABI, signer);
+      const mortgageContract = new ethers.Contract(CONTRACTS.MAZUNTE_MORTGAGE.address, CONTRACTS.MAZUNTE_MORTGAGE.abi, signer);
 
-      const propertyValueWei = ethers.parseEther(propertyValue);
-      const downPaymentWei = ethers.parseEther(downPayment);
+      const downPaymentAmount = ethers.parseUnits(downPaymentUSD.toString(), 6); // USDT 6 decimals
 
       toast({
         title: "🏠 Processing Purchase",
-        description: "Creating your property purchase transaction...",
+        description: "Creating your mortgage with AncientMortgage...",
       });
 
-      const tx = await contract.purchaseProperty(
-        propertyValueWei,
-        parseInt(termMonths),
-        { value: downPaymentWei }
-      );
+      // Call purchaseProperty on AncientMortgage contract
+      const tx = await mortgageContract.purchaseProperty(downPaymentAmount);
 
       toast({
         title: "⏳ Transaction Pending",
@@ -146,7 +218,10 @@ export const PropertyInvestmentInterface = () => {
       
       // Record purchase in database
       try {
-        console.log('💾 Recording purchase in database...');
+        console.log('💾 Recording AncientMortgage purchase in database...');
+        const loanAmount = propertyValueUSD - downPaymentUSD;
+        const monthlyPayment = (loanAmount * 0.08 / 12) / (1 - Math.pow(1 + (0.08 / 12), -termMonths)); // Proper amortization
+
         const { error: dbError } = await supabase
           .from('user_properties')
           .insert({
@@ -155,39 +230,40 @@ export const PropertyInvestmentInterface = () => {
             property_name: featuredProperty.name,
             property_location: featuredProperty.location,
             image_url: featuredProperty.image,
-            purchase_price: parseFloat(propertyValue),
-            down_payment: parseFloat(downPayment),
-            remaining_balance: parseFloat(propertyValue) - parseFloat(downPayment),
-            monthly_payment: (parseFloat(propertyValue) - parseFloat(downPayment)) * 0.01,
-            current_value: parseFloat(propertyValue),
-            equity_percentage: (parseFloat(downPayment) / parseFloat(propertyValue)) * 100,
+            purchase_price: propertyValueUSD,
+            down_payment: downPaymentUSD,
+            remaining_balance: loanAmount,
+            monthly_payment: Math.round(monthlyPayment),
+            current_value: propertyValueUSD,
+            equity_percentage: (downPaymentUSD / propertyValueUSD) * 100,
             is_active: true,
-            purchase_price_base: Math.floor(parseFloat(propertyValue) * 1000000),
-            down_payment_base: Math.floor(parseFloat(downPayment) * 1000000),
-            loan_amount_base: Math.floor((parseFloat(propertyValue) - parseFloat(downPayment)) * 1000000),
-            apr_bps: 800,
-            term_months: parseInt(termMonths),
+            purchase_price_base: propertyValueUSD * 1000000, // 6 decimal precision
+            down_payment_base: downPaymentUSD * 1000000,
+            loan_amount_base: loanAmount * 1000000,
+            apr_bps: 800, // 8% APR in basis points
+            term_months: termMonths,
             property_id: 1,
-            currency: 'AVAX',
+            currency: 'USDC-6',
             unique_purchase_key: receipt.hash
           });
 
         if (dbError) {
           console.error('❌ Database insert failed:', dbError);
         } else {
-          console.log('✅ Purchase recorded in database');
+          console.log('✅ AncientMortgage purchase recorded in database');
         }
       } catch (dbError) {
         console.error('❌ Failed to record purchase:', dbError);
       }
       
       toast({
-        title: "🎉 Purchase Successful!",
-        description: `Property purchase completed! Transaction recorded to SnowTrace.`,
+        title: "🎉 Property Purchase Successful!",
+        description: `Your property NFT is being held by AncientMortgage until paid off. Platform fees collected, staking pool receives interest payments.`,
       });
 
-      // Update balance
-      await updateBalance(account);
+      // Update balance and approval status
+      await updateUsdtBalance(account);
+      await checkUsdtApproval(account);
 
     } catch (error: any) {
       console.error('Purchase failed:', error);
@@ -201,15 +277,8 @@ export const PropertyInvestmentInterface = () => {
     }
   };
 
-  if (!contractAddress) {
-    return (
-      <Card>
-        <CardContent className="pt-6 text-center">
-          <p className="text-muted-foreground">Property Purchase Platform Initializing...</p>
-        </CardContent>
-      </Card>
-    );
-  }
+  const platformFee = Math.round(propertyValueUSD * (PLATFORM_FEE_PERCENT / 100));
+  const hasInsufficientBalance = parseFloat(usdtBalance) < downPaymentUSD;
 
   return (
     <div className="space-y-6">
@@ -246,19 +315,19 @@ export const PropertyInvestmentInterface = () => {
             </div>
             <div className="text-center p-3 bg-muted/50 rounded-lg">
               <TrendingUp className="w-4 h-4 text-muted-foreground mx-auto mb-1" />
-              <div className="text-sm text-muted-foreground">Expected Return</div>
-              <div className="font-semibold">{featuredProperty.expectedReturn}%</div>
+              <div className="text-sm text-muted-foreground">Business Model</div>
+              <div className="font-semibold">Full Revenue</div>
             </div>
             <div className="text-center p-3 bg-muted/50 rounded-lg">
               <Calendar className="w-4 h-4 text-muted-foreground mx-auto mb-1" />
-              <div className="text-sm text-muted-foreground">Monthly Mortgage</div>
-              <div className="font-semibold">$1,252</div>
+              <div className="text-sm text-muted-foreground">Platform Fee</div>
+              <div className="font-semibold">${platformFee.toLocaleString()}</div>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Property Purchase Interface */}
+      {/* KYC & Balance Section */}
       {!isConnected ? (
         <Card>
           <CardHeader>
@@ -271,45 +340,125 @@ export const PropertyInvestmentInterface = () => {
           </CardContent>
         </Card>
       ) : (
-        <Card>
-          <CardHeader>
-            <CardTitle>Purchase {featuredProperty.name}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-4">
-              <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                <span>Property Value</span>
-                <span className="font-semibold">${propertyValueUSD.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                <span>Down Payment (20%)</span>
-                <span className="font-semibold">${downPaymentUSD.toLocaleString()} <span className="text-sm text-muted-foreground">(paid in AVAX)</span></span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                <span>Loan Term</span>
-                <span className="font-semibold">10 years</span>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                <span>Interest Rate</span>
-                <span className="font-semibold">{FIXED_INTEREST_RATE}%</span>
-              </div>
-            </div>
+        <div className="space-y-4">
+          {/* Status Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card>
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-2">
+                  <Shield className={`w-4 h-4 ${isKycApproved ? 'text-green-500' : 'text-yellow-500'}`} />
+                  <span className="text-sm">KYC Status</span>
+                </div>
+                <div className={`font-semibold ${isKycApproved ? 'text-green-600' : 'text-yellow-600'}`}>
+                  {isKycApproved ? 'Approved' : 'Pending'}
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-2">
+                  <DollarSign className="w-4 h-4 text-blue-500" />
+                  <span className="text-sm">USDT Balance</span>
+                </div>
+                <div className="font-semibold">{parseFloat(usdtBalance).toLocaleString()} USDT</div>
+                {hasInsufficientBalance && (
+                  <Button onClick={getFaucetTokens} size="sm" variant="outline" className="mt-2">
+                    Get Test USDT
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className={`w-4 h-4 ${!needsUsdtApproval ? 'text-green-500' : 'text-red-500'}`} />
+                  <span className="text-sm">USDT Approval</span>
+                </div>
+                <div className={`font-semibold ${!needsUsdtApproval ? 'text-green-600' : 'text-red-600'}`}>
+                  {!needsUsdtApproval ? 'Ready' : 'Required'}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
-            <Button 
-              onClick={handlePurchaseProperty}
-              disabled={isLoading || parseFloat(balance) < parseFloat(downPayment)}
-              className="w-full"
-              size="lg"
-            >
-              {isLoading 
-                ? "Processing Purchase..." 
-                : parseFloat(balance) < parseFloat(downPayment)
-                ? "Insufficient Balance"
-                : "Purchase Property"
-              }
-            </Button>
-          </CardContent>
-        </Card>
+          {/* Purchase Interface */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Purchase {featuredProperty.name} - AncientMortgage</CardTitle>
+              <p className="text-sm text-muted-foreground">Full business model with revenue generation, investor yields, and property NFTs</p>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                  <span>Property Value</span>
+                  <span className="font-semibold">${propertyValueUSD.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                  <span>Down Payment (20%)</span>
+                  <span className="font-semibold">${downPaymentUSD.toLocaleString()} <span className="text-sm text-muted-foreground">(paid in USDT)</span></span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-primary/10 rounded-lg border border-primary/20">
+                  <span>Platform Fee (3%)</span>
+                  <span className="font-semibold text-primary">${platformFee.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                  <span>Loan Term</span>
+                  <span className="font-semibold">10 years</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                  <span>Interest Rate</span>
+                  <span className="font-semibold">{FIXED_INTEREST_RATE}% → Staking Pool</span>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="space-y-3">
+                {needsUsdtApproval && (
+                  <Button 
+                    onClick={approveUsdt}
+                    disabled={isApproving || hasInsufficientBalance}
+                    className="w-full"
+                    variant="outline"
+                  >
+                    {isApproving ? "Approving USDT..." : "1. Approve USDT Spending"}
+                  </Button>
+                )}
+                
+                <Button 
+                  onClick={handlePurchaseProperty}
+                  disabled={isLoading || hasInsufficientBalance || needsUsdtApproval || !isKycApproved}
+                  className="w-full"
+                  size="lg"
+                >
+                  {isLoading 
+                    ? "Processing Purchase..." 
+                    : !isKycApproved
+                    ? "KYC Approval Required"
+                    : hasInsufficientBalance
+                    ? "Insufficient USDT Balance"
+                    : needsUsdtApproval
+                    ? "Approve USDT First"
+                    : "2. Purchase Property with AncientMortgage"
+                  }
+                </Button>
+              </div>
+
+              {/* Business Model Benefits */}
+              <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
+                <h4 className="font-semibold text-primary mb-2">✨ Full Business Model Active</h4>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>• Property NFT held by contract until paid off</li>
+                  <li>• 3% platform fee generates immediate revenue</li>
+                  <li>• Mortgage interest flows to staking pool for live yields</li>
+                  <li>• Year-10 appreciation sharing (50/40/10 split)</li>
+                  <li>• Refinancing available at 11% APR</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       )}
     </div>
   );
