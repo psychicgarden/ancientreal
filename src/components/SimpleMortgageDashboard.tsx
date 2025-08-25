@@ -220,7 +220,7 @@ export const SimpleMortgageDashboard = () => {
     }
   };
 
-  // Make mortgage payment - send the amount the contract expects ($700)
+  // Make mortgage payment - send the actual monthly payment amount
   const handleMakePayment = async () => {
     if (!account || !contractAddress || properties.length === 0) return;
 
@@ -230,9 +230,9 @@ export const SimpleMortgageDashboard = () => {
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(contractAddress, AVAX_MORTGAGE_ABI, signer);
 
-      // The smart contract processes $700 payments (not the full $1,252)
-      // This maintains the 100,000,000:1 AVAX:USD ratio: $700 = 0.000007 AVAX
-      const contractPaymentUSD = 700;
+      // Use the actual monthly payment amount from the property record
+      // This maintains the 100,000,000:1 AVAX:USD ratio: $1,252 = 0.00001252 AVAX
+      const contractPaymentUSD = properties[0].monthly_payment;
       const avaxPaymentAmount = convertUSDToAVAX(contractPaymentUSD);
       const paymentAmount = ethers.parseEther(avaxPaymentAmount);
 
@@ -376,7 +376,7 @@ export const SimpleMortgageDashboard = () => {
               {/* Payment Action */}
               <div className="pt-4 border-t">
                 <div className="text-center mb-3 text-sm text-muted-foreground">
-                  Contract Payment: $700 USD (0.000007 AVAX)
+                  Contract Payment: ${property.monthly_payment?.toLocaleString()} USD ({convertUSDToAVAX(property.monthly_payment || 0)} AVAX)
                 </div>
                 <Button 
                   onClick={handleMakePayment}
@@ -386,7 +386,7 @@ export const SimpleMortgageDashboard = () => {
                 >
                   {isPaymentLoading 
                     ? "Processing Payment..." 
-                    : "Make Monthly Payment ($700)"
+                    : `Make Monthly Payment ($${property.monthly_payment?.toLocaleString()})`
                   }
                 </Button>
               </div>
