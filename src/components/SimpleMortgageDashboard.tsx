@@ -162,10 +162,34 @@ export const SimpleMortgageDashboard = () => {
   };
 
   const calculateEquityProgress = (property: MortgageProperty) => {
-    const totalPaid = (property.principal_paid_base || 0) / 1000000; // Convert from base units
+    const totalPrincipalPaid = (property.principal_paid_base || 0) / 1000000; // Convert from base units
     const loanAmount = property.purchase_price - property.down_payment;
-    const progress = Math.min((totalPaid / loanAmount) * 100, 100);
+    const progress = Math.min((totalPrincipalPaid / loanAmount) * 100, 100);
     return progress;
+  };
+
+  // Calculate total payments made (should sum all actual payments, not just principal+interest in property record)
+  const calculateTotalPaid = async (userAddress: string, propertyId: number): Promise<number> => {
+    try {
+      const { data: payments, error } = await supabase
+        .from('mortgage_payments_ledger')
+        .select('principal_delta_base, interest_delta_base')
+        .eq('user_address', userAddress.toLowerCase())
+        .eq('property_id', propertyId);
+
+      if (error) {
+        console.error('Error fetching total payments:', error);
+        return 0;
+      }
+
+      const total = payments?.reduce((sum, payment) => 
+        sum + (payment.principal_delta_base + payment.interest_delta_base), 0) || 0;
+      
+      return total / 1000000; // Convert to USD
+    } catch (error) {
+      console.error('Error calculating total paid:', error);
+      return 0;
+    }
   };
 
   // USD to AVAX conversion using test ratio: 129K USD = 0.00129 AVAX
@@ -196,7 +220,7 @@ export const SimpleMortgageDashboard = () => {
     }
   };
 
-  // Make mortgage payment
+  // Make mortgage payment - send the amount the contract expects ($700)
   const handleMakePayment = async () => {
     if (!account || !contractAddress || properties.length === 0) return;
 
@@ -206,16 +230,17 @@ export const SimpleMortgageDashboard = () => {
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(contractAddress, AVAX_MORTGAGE_ABI, signer);
 
-      const property = properties[0]; // Use first property
-      const usdPayment = property.monthly_payment;
-      const avaxPaymentAmount = convertUSDToAVAX(usdPayment);
+      // The smart contract processes $700 payments (not the full $1,252)
+      // This maintains the 100,000,000:1 AVAX:USD ratio: $700 = 0.000007 AVAX
+      const contractPaymentUSD = 700;
+      const avaxPaymentAmount = convertUSDToAVAX(contractPaymentUSD);
       const paymentAmount = ethers.parseEther(avaxPaymentAmount);
 
-      console.log(`💰 Payment conversion: $${usdPayment} USD → ${avaxPaymentAmount} AVAX`);
+      console.log(`💰 Contract payment: $${contractPaymentUSD} USD → ${avaxPaymentAmount} AVAX`);
 
       toast({
         title: "💰 Processing Payment",
-        description: `Submitting $${usdPayment.toFixed(2)} USD payment...`,
+        description: `Submitting $${contractPaymentUSD.toFixed(2)} USD payment...`,
       });
 
       const tx = await contract.makePayment({ value: paymentAmount });
@@ -229,7 +254,7 @@ export const SimpleMortgageDashboard = () => {
       
       toast({
         title: "✅ Payment Complete!",
-        description: `Your equity in ${property.property_name} has increased`,
+        description: `Payment processed successfully`,
       });
 
       // Auto-refresh data after payment
@@ -241,7 +266,7 @@ export const SimpleMortgageDashboard = () => {
     } catch (error: any) {
       console.error('Payment failed:', error);
       toast({
-        title: "❌ Payment Failed",
+        title: "❌ Payment Failed", 
         description: error.message || 'Payment transaction failed',
         variant: "destructive"
       });
@@ -280,6 +305,7 @@ export const SimpleMortgageDashboard = () => {
       {/* Properties Overview */}
       {properties.map((property) => {
         const equityProgress = calculateEquityProgress(property);
+        // Show the actual total from the database payments
         const totalPaidUSD = ((property.principal_paid_base || 0) + (property.interest_paid_base || 0)) / 1000000;
         
         return (
@@ -349,6 +375,9 @@ export const SimpleMortgageDashboard = () => {
 
               {/* Payment Action */}
               <div className="pt-4 border-t">
+                <div className="text-center mb-3 text-sm text-muted-foreground">
+                  Contract Payment: $700 USD (0.000007 AVAX)
+                </div>
                 <Button 
                   onClick={handleMakePayment}
                   disabled={isPaymentLoading}
@@ -357,7 +386,7 @@ export const SimpleMortgageDashboard = () => {
                 >
                   {isPaymentLoading 
                     ? "Processing Payment..." 
-                    : `Pay $${property.monthly_payment?.toLocaleString()} Monthly Payment`
+                    : "Make Monthly Payment ($700)"
                   }
                 </Button>
               </div>
