@@ -58,6 +58,22 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
         throw new Error(`Ledger insert failed: ${ledgerError.message}`);
       }
 
+      // Apply payment to user_properties using database function
+      const { error: applyError } = await supabase.rpc('apply_mortgage_payment', {
+        p_user_address: eventData.borrower.toLowerCase(),
+        p_property_id: 1,
+        p_principal_delta_base: principalPaidBase,
+        p_interest_delta_base: interestPaidBase,
+        p_tx_hash: eventData.transactionHash
+      });
+
+      if (applyError) {
+        console.error('⚠️ Failed to apply payment to user_properties:', applyError);
+        // Don't throw - payment is already recorded in ledger
+      } else {
+        console.log('✅ Payment applied to user_properties successfully');
+      }
+
       // Insert transaction record
       const { error: transactionError } = await supabase
         .from('user_transactions')
@@ -79,18 +95,21 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
         throw new Error(`Transaction insert failed: ${transactionError.message}`);
       }
 
-      // Update user_properties remaining balance (if exists)
-      const { error: propertyError } = await supabase
+      // Update remaining balance in user_properties (if exists)
+      const newRemainingBalance = remainingBalanceUSD;
+      const { error: balanceError } = await supabase
         .from('user_properties')
         .update({
-          remaining_balance: remainingBalanceUSD,
+          remaining_balance: newRemainingBalance,
           updated_at: new Date().toISOString()
         })
         .eq('user_address', eventData.borrower.toLowerCase())
         .eq('property_id', 1);
 
-      if (propertyError) {
-        console.warn('Property update failed (non-critical):', propertyError.message);
+      if (balanceError) {
+        console.warn('⚠️ Balance update failed (non-critical):', balanceError.message);
+      } else {
+        console.log('✅ Updated remaining balance to:', newRemainingBalance);
       }
 
       console.log('✅ Payment synced to database:', {
