@@ -140,32 +140,24 @@ export const MultiPropertyMortgageDashboard = ({
               purchaseDate: property.purchase_date
             };
 
-            // Calculate accurate mortgage metrics
+            // Calculate metrics as backup, but prefer stored database values
             const metrics = calculateMortgageMetrics(mortgageData, purchasePrice);
             
-            console.log('🧮 DETAILED Mortgage calculation for', property.property_name, ':', {
-              // Input data
-              purchasePrice,
-              purchasePriceBase: (property as any).purchase_price_base,
-              loanAmountBase: actualLoanAmountBase.toString(),
-              actualLoanAmount,
-              expectedLoanAmount,
-              aprBps: mortgageData.aprBps,
-              termMonths: mortgageData.termMonths,
-              
-              // Calculated outputs
+            // Use stored monthly payment if it exists and is reasonable, otherwise use calculated
+            const storedMonthlyPayment = Number(property.monthly_payment || 0);
+            const finalMonthlyPayment = storedMonthlyPayment > 0 ? storedMonthlyPayment : metrics.monthlyPayment;
+            
+            // Use stored remaining balance if it exists, otherwise use calculated
+            const storedRemainingBalance = Number(property.remaining_balance || 0);
+            const finalRemainingBalance = storedRemainingBalance >= 0 ? storedRemainingBalance : metrics.remainingBalance;
+            
+            console.log('💰 Mortgage payment for', property.property_name, ':', {
+              storedMonthlyPayment,
               calculatedMonthlyPayment: metrics.monthlyPayment,
-              remainingBalance: metrics.remainingBalance,
-              equityBuilt: metrics.equityBuilt,
-              ownershipPercentage: metrics.ownershipPercentage,
-              
-              // Stored values (for comparison)
-              storedMonthlyPayment: property.monthly_payment,
-              storedRemainingBalance: property.remaining_balance,
-              
-              // Demo detection fields
-              uniquePurchaseKey: property.unique_purchase_key,
-              mortgageId: property.mortgage_id
+              finalMonthlyPayment,
+              storedRemainingBalance,
+              calculatedRemainingBalance: metrics.remainingBalance,
+              finalRemainingBalance
             });
             
             // Get property details from catalog
@@ -181,8 +173,8 @@ export const MultiPropertyMortgageDashboard = ({
               image: catalogProperty?.image || '/placeholder.svg',
               purchasePrice,
               downPayment: purchasePrice - actualLoanAmount,
-              remainingBalance: metrics.remainingBalance,
-              monthlyPayment: metrics.monthlyPayment, // Use calculated value from proper amortization
+              remainingBalance: finalRemainingBalance,
+              monthlyPayment: finalMonthlyPayment, // Use stored value first, calculated as fallback
               nextPaymentDue: metrics.nextPaymentDue,
               equity: metrics.equityBuilt,
               isOverdue: false, // TODO: Calculate based on payment history
