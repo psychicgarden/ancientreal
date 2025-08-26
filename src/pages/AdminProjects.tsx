@@ -31,11 +31,10 @@ import { LendingPoolOperations } from '@/components/LendingPoolOperations';
 import { PropertyInvestmentInterface } from '@/components/PropertyInvestmentInterface';
 import { SimpleMortgageDashboard } from '@/components/SimpleMortgageDashboard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-// Remove wallet dependency for admin pages - not needed
-// import { WalletContext } from '@/contexts/WalletContext';
-// import { useContext } from 'react';
+import { useWallet } from '@/contexts/WalletContext';
 import { resetPortfolio } from '@/lib/admin/resetPortfolio';
 import { shouldAllowPortfolioReset } from '@/config/demo';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface ProjectSubmission {
   id: string;
@@ -67,8 +66,8 @@ interface ProjectSubmission {
 }
 
 const AdminProjects = () => {
-  // Admin pages don't require wallet connection
-  const account = null; // Wallet not needed for admin functionality
+  // Enable wallet connection for smart contracts functionality
+  const { account, isConnected, connectWallet } = useWallet();
   const [submissions, setSubmissions] = useState<ProjectSubmission[]>([]);
   const [filteredSubmissions, setFilteredSubmissions] = useState<ProjectSubmission[]>([]);
   const [loading, setLoading] = useState(true);
@@ -296,6 +295,7 @@ const AdminProjects = () => {
               variant="destructive" 
               className="self-start md:self-auto"
               disabled={resetting || !account || !shouldAllowPortfolioReset()}
+              title={!shouldAllowPortfolioReset() ? "Portfolio reset only available in demo mode" : ""}
             >
               {resetting ? (
                 <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
@@ -366,6 +366,19 @@ const AdminProjects = () => {
                 Own premium real estate through blockchain-powered fractional ownership
               </p>
             </div>
+
+            {/* Wallet Connection Notice */}
+            {!isConnected && (
+              <Alert>
+                <Wallet className="h-4 w-4" />
+                <AlertDescription className="flex items-center justify-between">
+                  <span>Smart contracts functionality requires wallet connection</span>
+                  <Button onClick={connectWallet} size="sm" variant="outline">
+                    Connect Wallet
+                  </Button>
+                </AlertDescription>
+              </Alert>
+            )}
 
             <Tabs defaultValue="interface" className="w-full">
               <TabsList className="grid w-full grid-cols-2">

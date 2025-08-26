@@ -8,7 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { ethers } from 'ethers';
 import { ContractDatabaseIntegration } from '@/lib/contract-database-integration';
 import { usePaymentSync } from '@/hooks/usePaymentSync';
-import { TrendingUp, Calendar, DollarSign, Home, PiggyBank, RefreshCw } from 'lucide-react';
+import { TrendingUp, Calendar, DollarSign, Home, PiggyBank, RefreshCw, AlertTriangle } from 'lucide-react';
 import { OptimizedImage } from '@/components/ui/optimized-image';
 import { getPropertyImage } from '@/lib/propertyImageMapping';
 import { PROPERTIES_CATALOG } from '@/lib/propertiesCatalog';
@@ -63,12 +63,18 @@ export const SimpleMortgageDashboard = () => {
   // Load contract address and get connected wallet address
   useEffect(() => {
     const initialize = async () => {
-      // Load contract address
+      // Load contract address - use existing SIMPLE_MORTGAGE contract
       try {
-        const address = await ContractDatabaseIntegration.getContractAddress('SimpleAvaxMortgage');
+        const address = await ContractDatabaseIntegration.getContractAddress('SIMPLE_MORTGAGE');
         setContractAddress(address);
+        console.log('✅ Contract address loaded:', address);
       } catch (error) {
-        console.error('Failed to load contract address:', error);
+        console.error('❌ Failed to load SIMPLE_MORTGAGE contract address:', error);
+        toast({
+          title: "Contract Loading Failed",
+          description: "Could not load smart contract address. Please ensure contracts are deployed.",
+          variant: "destructive"
+        });
       }
       
       // Get connected wallet address
@@ -279,8 +285,44 @@ export const SimpleMortgageDashboard = () => {
   if (!account) {
     return (
       <Card>
-        <CardContent className="pt-6 text-center">
-          <p className="text-muted-foreground">Connect your wallet to view mortgage dashboard</p>
+        <CardContent className="pt-6 text-center space-y-4">
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
+              <DollarSign className="w-6 h-6 text-muted-foreground" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Wallet Connection Required</h3>
+              <p className="text-muted-foreground mb-4">
+                Connect your wallet to view and manage your mortgage dashboard
+              </p>
+              <Button onClick={() => window.location.reload()} variant="outline">
+                Refresh Page
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (!contractAddress) {
+    return (
+      <Card>
+        <CardContent className="pt-6 text-center space-y-4">
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center">
+              <AlertTriangle className="w-6 h-6 text-destructive" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Contract Not Available</h3>
+              <p className="text-muted-foreground mb-4">
+                SIMPLE_MORTGAGE contract address not found. Please ensure contracts are deployed.
+              </p>
+              <Button onClick={() => window.location.reload()} variant="outline">
+                Retry Loading Contract
+              </Button>
+            </div>
+          </div>
         </CardContent>
       </Card>
     );
