@@ -162,8 +162,34 @@ export const EnhancedPropertyInterface = () => {
 
       if (mortgageCreatedEvent) {
         const decodedEvent = mortgageContract.interface.parseLog(mortgageCreatedEvent);
-        setPropertyId(decodedEvent.args[1].toString());
-        setNftTokenId(decodedEvent.args[2].toString());
+        const extractedPropertyId = decodedEvent.args[1].toString();
+        const extractedTokenId = decodedEvent.args[2].toString();
+        
+        setPropertyId(extractedPropertyId);
+        setNftTokenId(extractedTokenId);
+
+        // Manual database sync as fallback to ensure data is captured
+        try {
+          const mortgageData = {
+            borrower: userAddress,
+            propertyId: Number(extractedPropertyId),
+            tokenId: Number(extractedTokenId),
+            propertyValue: ethers.parseEther(propertyValueUSD.toString()).toString(),
+            downPayment: totalPaymentAmount.toString(),
+            loanAmount: (ethers.parseEther(propertyValueUSD.toString()) - totalPaymentAmount).toString(),
+            monthlyPayment: ethers.parseEther("100").toString(), // Placeholder monthly payment
+            termMonths: termMonths,
+            interestRate: FIXED_INTEREST_RATE,
+            transactionHash: receipt.hash,
+            blockNumber: receipt.blockNumber,
+            createdAt: new Date()
+          };
+
+          await blockchainSync.syncMortgageCreation(mortgageData);
+          console.log('✅ Manual database sync completed');
+        } catch (syncError) {
+          console.error('⚠️ Manual database sync failed (but transaction succeeded):', syncError);
+        }
       }
 
       toast({

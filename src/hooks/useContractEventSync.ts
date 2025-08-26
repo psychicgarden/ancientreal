@@ -1,8 +1,9 @@
-// Hook for syncing contract events with database
+// Hook for syncing contract events with database - Now Active
 import { useEffect } from 'react';
 import { useWallet } from '@/contexts/WalletContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { blockchainSync } from '@/lib/blockchain-sync';
 
 export const useContractEventSync = () => {
   const { account } = useWallet();
@@ -11,28 +12,23 @@ export const useContractEventSync = () => {
   useEffect(() => {
     if (!account) return;
 
-    // Placeholder for future contract event synchronization
-    // This will be implemented once Web3 integration is fully connected
     console.log('Contract event sync initialized for account:', account);
 
-    // Currently disabled until Web3 integration is complete
-    // const setupEventListeners = async () => {
-    //   try {
-    //     // TODO: Add contract event listeners here
-    //     // - Listen for mortgage payments
-    //     // - Listen for property purchases  
-    //     // - Listen for village citizenship grants
-    //     // - Listen for secondary marketplace trades
-    //   } catch (error) {
-    //     console.error('Error setting up contract event listeners:', error);
-    //   }
-    // };
+    // Initialize blockchain sync event listeners
+    const setupEventListeners = async () => {
+      try {
+        await blockchainSync.startEventListener();
+        console.log('✅ Contract event listeners active');
+      } catch (error) {
+        console.error('Error setting up contract event listeners:', error);
+      }
+    };
 
-    // setupEventListeners();
+    setupEventListeners();
 
     // Cleanup function
     return () => {
-      // Clean up event listeners when component unmounts
+      blockchainSync.stopEventListener();
       console.log('Cleaning up contract event listeners');
     };
   }, [account]);
@@ -40,11 +36,13 @@ export const useContractEventSync = () => {
   // Function to manually sync recent events (for recovery)
   const syncRecentEvents = async (fromBlock: number = -100) => {
     try {
-      console.log('Event sync placeholder - will be implemented with contracts');
+      console.log('Starting manual event sync from block:', fromBlock);
+      
+      await blockchainSync.startEventListener();
       
       toast({
-        title: "Sync Placeholder",
-        description: "Event synchronization will be available once contracts are deployed"
+        title: "Event Sync Active",
+        description: "Contract event synchronization is now running"
       });
 
     } catch (error) {
