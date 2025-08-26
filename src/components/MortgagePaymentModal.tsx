@@ -49,22 +49,17 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
   const { account } = useWallet();
   const { toast } = useToast();
   
-  // Debug logging to help understand property type detection
-  console.log('MortgagePaymentModal - Full property object:', {
-    property,
-    userProperty: property.userProperty,
-    userPropertyKeys: property.userProperty ? Object.keys(property.userProperty) : 'undefined',
-    userPropertyMortgageId: property.userProperty?.mortgage_id,
-    userPropertyUniqueKey: property.userProperty?.unique_purchase_key
-  });
-  
   // Determine if this is a demo property payment using the correct detection logic
-  const isDemoProperty = checkIsDemoProperty(property);
+  // Pass the userProperty object directly to the detection function
+  const isDemoProperty = checkIsDemoProperty(property.userProperty || property);
   
   console.log('MortgagePaymentModal - Property type detection result:', {
     isDemoProperty,
     propertyId: property.id,
-    propertyTitle: property.title
+    propertyTitle: property.title,
+    userPropertyExists: !!property.userProperty,
+    uniquePurchaseKey: property.userProperty?.unique_purchase_key,
+    mortgageId: property.userProperty?.mortgage_id
   });
   
   // Initialize payment sync hook only for real properties
@@ -108,16 +103,6 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
       toast({
         title: "Terms Required",
         description: `Please confirm you understand this is a ${isDemoProperty ? 'demo' : 'blockchain'} transaction.`,
-        variant: "destructive"
-      });
-      return;
-    }
-
-    // For demo properties, we don't need wallet connection
-    if (!isDemoProperty && !account) {
-      toast({
-        title: "Wallet Required",
-        description: "Please connect your wallet to make a payment.",
         variant: "destructive"
       });
       return;
@@ -167,6 +152,16 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
           description: "Your demo mortgage payment has been processed! Balance updated.",
         });
       } else {
+        // For real properties, require wallet connection
+        if (!account) {
+          toast({
+            title: "Wallet Required",
+            description: "Please connect your wallet to make a payment.",
+            variant: "destructive"
+          });
+          return;
+        }
+
         // Handle real on-chain payment
         if (!contractAddress) {
           toast({

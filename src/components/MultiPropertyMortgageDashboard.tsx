@@ -296,7 +296,27 @@ export const MultiPropertyMortgageDashboard = ({
   };
 
   const handleMakePayment = (property: PropertyMortgageData) => {
-    setSelectedProperty(property);
+    // Ensure userProperty data is properly passed for demo detection
+    const propertyWithUserData = {
+      id: property.id,
+      title: property.name,
+      location: property.location,
+      image: property.image,
+      value: property.purchasePrice,
+      monthlyPayment: property.monthlyPayment,
+      remainingBalance: property.remainingBalance,
+      userProperty: property.userProperty // This contains the database fields needed for demo detection
+    };
+    
+    console.log('🔧 handleMakePayment - Passing property with userProperty:', {
+      propertyId: property.id,
+      propertyName: property.name,
+      userProperty: property.userProperty,
+      uniquePurchaseKey: property.userProperty?.unique_purchase_key,
+      mortgageId: property.userProperty?.mortgage_id
+    });
+    
+    setSelectedProperty(propertyWithUserData as any);
     setPaymentModalOpen(true);
   };
 

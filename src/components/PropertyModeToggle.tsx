@@ -87,10 +87,14 @@ export const isOnChainProperty = (property: any): boolean => {
 };
 
 export const isDemoProperty = (property: any): boolean => {
+  if (!property) {
+    console.log('isDemoProperty - No property provided');
+    return false;
+  }
+
   // Handle both raw property objects and transformed PropertyMortgageData objects
   const rawProperty = property.userProperty || property;
   
-  // Add comprehensive logging to debug the issue
   console.log('isDemoProperty - Analysis:', {
     originalProperty: property,
     rawProperty: rawProperty,
@@ -110,13 +114,13 @@ export const isDemoProperty = (property: any): boolean => {
   console.log('isDemoProperty - Key analysis:', {
     uniqueKey,
     mortgageId,
-    uniqueKeyStartsWithDemo: uniqueKey ? uniqueKey.startsWith("demo_") : false,
-    mortgageIdStartsWithDemo: mortgageId ? mortgageId.startsWith("demo_") : false
+    uniqueKeyStartsWithDemo: uniqueKey ? String(uniqueKey).startsWith("demo_") : false,
+    mortgageIdStartsWithDemo: mortgageId ? String(mortgageId).startsWith("demo_") : false
   });
   
   // Demo if unique_purchase_key OR mortgage_id starts with "demo_"
-  const isDemo = (uniqueKey && uniqueKey.startsWith("demo_")) || 
-         (mortgageId && mortgageId.startsWith("demo_"));
+  const isDemo = (uniqueKey && String(uniqueKey).startsWith("demo_")) || 
+         (mortgageId && String(mortgageId).startsWith("demo_"));
          
   console.log('isDemoProperty - Final result:', isDemo);
   return isDemo;
