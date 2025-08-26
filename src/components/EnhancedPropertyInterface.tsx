@@ -117,14 +117,10 @@ export const EnhancedPropertyInterface = () => {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       
-      // Use enhanced contract (once deployed)
+      // Use enhanced contract with platform fee support
       const mortgageContract = new ethers.Contract(
-        CONTRACTS.SIMPLE_MORTGAGE.address, // Will be updated to enhanced contract
-        [
-          "function purchaseProperty(uint256 _propertyId, uint256 _termMonths) external payable",
-          "function addProperty(string memory _name, string memory _location, string memory _imageUrl, uint256 _totalValue) external returns (uint256)",
-          "function getProperty(uint256 _propertyId) external view returns (tuple(uint256 propertyId, string name, string location, string imageUrl, uint256 totalValue, bool isActive))"
-        ],
+        CONTRACTS.SIMPLE_MORTGAGE.address,
+        CONTRACTS.SIMPLE_MORTGAGE.abi,
         signer
       );
 
