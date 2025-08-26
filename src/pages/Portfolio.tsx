@@ -13,6 +13,7 @@ import { EnhancedPortfolioAnalytics } from "@/components/EnhancedPortfolioAnalyt
 import { DeveloperInvestmentsAnalytics } from "@/components/DeveloperInvestmentsAnalytics";
 import { TrustSignals } from "@/components/TrustSignals";
 import { CompetitorComparison } from "@/components/CompetitorComparison";
+import { PropertyModeToggle, usePropertyMode, filterPropertiesByMode, getPropertyCounts } from "@/components/PropertyModeToggle";
 
 import OneTimeReset from "@/components/admin/OneTimeReset";
 import RentalIncomeTracker from "@/components/RentalIncomeTracker";
@@ -32,6 +33,7 @@ const Portfolio = () => {
   // Removed fractional investments - focusing on mortgage-only functionality
   const [loading, setLoading] = useState(true);
   const [showAllProperties, setShowAllProperties] = useState(false);
+  const [propertyMode, setPropertyMode] = usePropertyMode();
 
   // Debug logging for state changes
   useEffect(() => {
@@ -204,8 +206,13 @@ const Portfolio = () => {
     return Array.from(map.values());
   }, [userProperties]);
 
+  // Filter properties based on selected mode
+  const filteredUniqueProperties = useMemo(() => {
+    return filterPropertiesByMode(uniqueUserProperties, propertyMode);
+  }, [uniqueUserProperties, propertyMode]);
+
   // Convert database properties to display format with proper status logic  
-  const displayProperties = uniqueUserProperties.length > 0 ? uniqueUserProperties.map(prop => {
+  const displayProperties = filteredUniqueProperties.length > 0 ? filteredUniqueProperties.map(prop => {
     console.log('Processing property:', prop.property_name, 'is_active:', prop.is_active);
     const status: "mortgaged" | "pending" | "success" = prop.is_active ? "mortgaged" : "pending";
     return {
@@ -226,6 +233,12 @@ const Portfolio = () => {
       failureReason: status === "pending" ? "Smart contract deployment required" : null
     };
   }) : [];
+
+  // Get property counts for the toggle
+  const { onChainCount, demoCount } = useMemo(() => 
+    getPropertyCounts(uniqueUserProperties), 
+    [uniqueUserProperties]
+  );
 
   const visibleProperties = displayProperties.slice(0, showAllProperties ? displayProperties.length : 7);
   if (!isConnected) {
@@ -405,6 +418,14 @@ const Portfolio = () => {
 
           {/* Properties Tab */}
           <TabsContent value="properties" className="space-y-6">
+            {/* Property Mode Toggle */}
+            <PropertyModeToggle
+              mode={propertyMode}
+              onModeChange={setPropertyMode}
+              onChainCount={onChainCount}
+              demoCount={demoCount}
+            />
+
             {/* Enhanced Portfolio Summary with Tier Status */}
             <PortfolioSummary portfolioData={portfolioData} />
             
@@ -480,14 +501,19 @@ const Portfolio = () => {
                   <Button>Add Property</Button>
                 </div>
               </div>
-              {userProperties.length === 0 ? (
+              {filteredUniqueProperties.length === 0 ? (
                 <Card className="p-8 text-center">
                   <div className="space-y-4">
                     <Home className="h-12 w-12 text-muted-foreground mx-auto" />
                     <div>
-                      <h3 className="text-lg font-semibold">No Whole Properties Yet</h3>
+                      <h3 className="text-lg font-semibold">
+                        No {propertyMode === "onchain" ? "On-Chain" : "Demo"} Properties Yet
+                      </h3>
                       <p className="text-muted-foreground">
-                        Visit Investment Access to purchase your first property
+                        {propertyMode === "onchain" 
+                          ? "Visit Investment Access to purchase your first property" 
+                          : "Demo properties will appear here for testing purposes"
+                        }
                       </p>
                     </div>
                     <Link to="/investor">

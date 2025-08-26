@@ -11,6 +11,7 @@ import { MortgagePaymentModal } from "@/components/MortgagePaymentModal";
 import { fmtUSD, fromBase } from "@/lib/money";
 import { PROPERTIES_CATALOG } from "@/lib/propertiesCatalog";
 import { calculateMortgageMetrics, calculatePortfolioMetrics, MortgageData } from "@/lib/mortgageCalculations";
+import { PropertyModeToggle, usePropertyMode, filterPropertiesByMode, getPropertyCounts } from "@/components/PropertyModeToggle";
 import { 
   Building2, 
   DollarSign, 
@@ -79,6 +80,7 @@ export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onN
   const [selectedProperty, setSelectedProperty] = useState<PropertyMortgageData | null>(null);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   const [activeTab, setActiveTab] = useState("overview");
+  const [propertyMode, setPropertyMode] = usePropertyMode();
 
   useEffect(() => {
     const fetchMortgageData = async () => {
@@ -190,8 +192,14 @@ export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onN
     };
   }, [isConnected, account, toast]);
 
-  // Group properties by location
-  const propertyGroups: PropertyGroup[] = properties.reduce((groups, property) => {
+  // Filter properties based on selected mode
+  const filteredProperties = filterPropertiesByMode(properties, propertyMode);
+  
+  // Get property counts for the toggle
+  const { onChainCount, demoCount } = getPropertyCounts(properties);
+
+  // Group filtered properties by location
+  const propertyGroups: PropertyGroup[] = filteredProperties.reduce((groups, property) => {
     const existingGroup = groups.find(g => g.location === property.location);
     
     if (existingGroup) {
@@ -217,7 +225,7 @@ export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onN
   }, [] as PropertyGroup[]);
 
   // Calculate professional portfolio metrics
-  const mortgageData = properties.map(p => ({
+  const mortgageData = filteredProperties.map(p => ({
     loanAmountBase: BigInt((p.userProperty as any).loan_amount_base || 0),
     principalPaidBase: BigInt((p.userProperty as any).principal_paid_base || 0),
     interestPaidBase: BigInt((p.userProperty as any).interest_paid_base || 0),
@@ -276,19 +284,40 @@ export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onN
     );
   }
 
-  if (properties.length === 0) {
+  if (filteredProperties.length === 0 && !loading) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>No Active Mortgages</CardTitle>
-          <CardDescription>You don't have any active mortgages. Consider purchasing a property!</CardDescription>
-        </CardHeader>
-      </Card>
+      <div className="space-y-6">
+        {/* Property Mode Toggle */}
+        <PropertyModeToggle
+          mode={propertyMode}
+          onModeChange={setPropertyMode}
+          onChainCount={onChainCount}
+          demoCount={demoCount}
+        />
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>No {propertyMode === "onchain" ? "On-Chain" : "Demo"} Mortgages</CardTitle>
+            <CardDescription>
+              You don't have any {propertyMode === "onchain" ? "on-chain" : "demo"} mortgages. 
+              {propertyMode === "onchain" ? " Consider purchasing a property!" : " Demo mortgages will appear here for testing."}
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
     );
   }
 
   return (
     <div className="space-y-6">
+      {/* Property Mode Toggle */}
+      <PropertyModeToggle
+        mode={propertyMode}
+        onModeChange={setPropertyMode}
+        onChainCount={onChainCount}
+        demoCount={demoCount}
+      />
+      
       {/* Portfolio Summary Header */}
       <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-background via-muted/30 to-primary/5 border">
         <div className="absolute inset-0 bg-grid-white/10" />
@@ -299,7 +328,7 @@ export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onN
                 Mortgage Portfolio
               </h1>
               <p className="text-muted-foreground mb-6">
-                Managing {properties.length} properties across {propertyGroups.length} locations
+                Managing {filteredProperties.length} {propertyMode === "onchain" ? "on-chain" : "demo"} properties across {propertyGroups.length} locations
               </p>
               
               {/* Professional Portfolio Metrics */}
@@ -384,7 +413,7 @@ export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onN
                 <Home className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{properties.length}</div>
+                <div className="text-2xl font-bold">{filteredProperties.length}</div>
                 <p className="text-xs text-muted-foreground">
                   {propertyGroups.length} locations • 10-year mortgages
                 </p>
@@ -442,7 +471,7 @@ export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onN
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {properties.map((property) => (
+                {filteredProperties.map((property) => (
                   <div key={property.id} className="space-y-2">
                     <div className="flex justify-between items-center">
                       <div>
@@ -599,7 +628,7 @@ export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onN
         {/* Individual Properties Tab */}
         <TabsContent value="individual" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {properties.map((property, index) => (
+            {filteredProperties.map((property, index) => (
               <Card key={property.id} className="overflow-hidden">
                 <CardHeader>
                   <div className="flex items-start gap-4">
