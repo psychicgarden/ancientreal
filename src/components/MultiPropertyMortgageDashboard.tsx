@@ -318,6 +318,13 @@ export const MultiPropertyMortgageDashboard = ({
   };
 
   const handleMakePayment = (property: PropertyMortgageData) => {
+    console.log('🚀 PAYMENT BUTTON CLICKED - Property data received:', {
+      propertyId: property.id,
+      propertyName: property.name,
+      monthlyPayment: property.monthlyPayment,
+      propertyMonthlyPaymentType: typeof property.monthlyPayment
+    });
+    
     // Ensure userProperty data is properly passed for demo detection
     const propertyWithUserData = {
       id: property.id,
@@ -325,10 +332,17 @@ export const MultiPropertyMortgageDashboard = ({
       location: property.location,
       image: property.image,
       value: property.purchasePrice,
-      monthlyPayment: property.monthlyPayment,
+      monthlyPayment: property.monthlyPayment, // This should be the correct $1,252 value
       remainingBalance: property.remainingBalance,
       userProperty: property.userProperty // This contains the database fields needed for demo detection
     };
+    
+    console.log('💰 FINAL property data passed to modal:', {
+      monthlyPayment: propertyWithUserData.monthlyPayment,
+      title: propertyWithUserData.title,
+      value: propertyWithUserData.value,
+      remainingBalance: propertyWithUserData.remainingBalance
+    });
     
     console.log('🔧 handleMakePayment - Passing property with userProperty:', {
       propertyId: property.id,
