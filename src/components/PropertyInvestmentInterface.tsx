@@ -138,10 +138,13 @@ export const PropertyInvestmentInterface = () => {
 
       toast({
         title: "✅ Faucet Success",
-        description: "Received 1,000 test USDT tokens",
+        description: "Received 50,000 test USDT tokens",
       });
 
-      await updateUsdtBalance(account);
+      // Wait for transaction confirmation and refresh balance with delay
+      setTimeout(async () => {
+        await updateUsdtBalance(account);
+      }, 2000);
     } catch (error: any) {
       console.error('Faucet failed:', error);
       toast({

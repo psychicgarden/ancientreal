@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  */
 contract TestUSDT is ERC20, Ownable {
     uint8 private _decimals = 6; // Match USDT decimals
-    uint256 public faucetAmount = 1000 * 10**6; // 1,000 test USDT
+    uint256 public faucetAmount = 50000 * 10**6; // 50,000 test USDT
     mapping(address => uint256) public lastFaucetClaim;
     uint256 public faucetCooldown = 1 hours;
 
