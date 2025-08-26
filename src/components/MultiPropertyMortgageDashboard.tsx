@@ -748,6 +748,9 @@ export const MultiPropertyMortgageDashboard = ({
             remainingBalance: selectedProperty.remainingBalance,
             userProperty: selectedProperty.userProperty
           }}
+          onSuccess={() => {
+            onRefresh?.(); // Trigger parent refresh
+          }}
         />
       )}
     </div>

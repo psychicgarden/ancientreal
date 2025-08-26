@@ -16,7 +16,7 @@ import { NETWORK_CONFIG } from "@/lib/contracts";
 import { web3Integration } from "@/lib/web3-integration";
 import { usePaymentSync } from "@/hooks/usePaymentSync";
 import { fetchRealContractAddresses } from "@/lib/contract-integration";
-import { isDemoMode, DEMO_CONFIG } from "@/config/demo";
+import { isDemoProperty as checkIsDemoProperty } from "@/components/PropertyModeToggle";
 
 interface MortgagePaymentModalProps {
   isOpen: boolean;
@@ -31,7 +31,12 @@ interface MortgagePaymentModalProps {
     monthlyPayment: number;
     remainingBalance: number;
     userProperty?: {
+      id?: string;
       user_wallet_address?: string;
+      principal_paid_base?: number;
+      interest_paid_base?: number;
+      unique_purchase_key?: string;
+      mortgage_id?: string;
     };
   };
 }
@@ -44,10 +49,18 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
   const { account } = useWallet();
   const { toast } = useToast();
   
-  // Determine if this is a demo property payment
-  const isDemoProperty = isDemoMode() && 
-    (property.userProperty?.user_wallet_address?.toLowerCase() === DEMO_CONFIG.testWalletAddress.toLowerCase() ||
-     account?.toLowerCase() === DEMO_CONFIG.testWalletAddress.toLowerCase());
+  // Determine if this is a demo property payment using the correct detection logic
+  const isDemoProperty = checkIsDemoProperty(property);
+  
+  // Debug logging to help understand property type detection
+  console.log('MortgagePaymentModal - Property type detection:', {
+    isDemoProperty,
+    property: {
+      id: property.id,
+      title: property.title,
+      userProperty: property.userProperty
+    }
+  });
   
   // Initialize payment sync hook only for real properties
   usePaymentSync(isDemoProperty ? '' : contractAddress, account || '');
@@ -130,17 +143,18 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
             payment_type: 'demo_payment'
           });
 
-        // Update user property with new balance
-        await supabase
-          .from('user_properties')
-          .update({
-            remaining_balance: Math.max(0, property.remainingBalance - mortgageDetails.principalAmount),
-            principal_paid_base: Number(toBase(mortgageDetails.principalAmount)),
-            interest_paid_base: Number(toBase(mortgageDetails.interestAmount)),
-            updated_at: new Date().toISOString()
-          })
-          .eq('user_wallet_address', account.toLowerCase())
-          .eq('property_name', property.title);
+        // Update user property with new balance using the ID from userProperty
+        if (property.userProperty?.id) {
+          await supabase
+            .from('user_properties')
+            .update({
+              remaining_balance: Math.max(0, property.remainingBalance - mortgageDetails.principalAmount),
+              principal_paid_base: (property.userProperty.principal_paid_base || 0) + Number(toBase(mortgageDetails.principalAmount)),
+              interest_paid_base: (property.userProperty.interest_paid_base || 0) + Number(toBase(mortgageDetails.interestAmount)),
+              updated_at: new Date().toISOString()
+            })
+            .eq('id', property.userProperty.id);
+        }
 
         toast({
           title: "Demo Payment Successful",
