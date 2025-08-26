@@ -72,6 +72,13 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
     termRemaining: "9 years, 2 months" // Approximate
   };
 
+  console.log('💰 MortgagePaymentModal - Payment Details:', {
+    propertyTitle: property.title,
+    monthlyPayment: property.monthlyPayment,
+    totalAmount: mortgageDetails.monthlyPayment,
+    isDemoProperty
+  });
+
   const transactionFee = 0.0023; // AVAX
   const totalAmount = mortgageDetails.monthlyPayment;
 

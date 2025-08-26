@@ -227,7 +227,7 @@ export const MortgagePropertyCard = ({
           location: property.location,
           image: property.image,
           value: property.totalValue,
-          monthlyPayment: property.monthlyPayment,
+          monthlyPayment: mortgagePayment,
           remainingBalance: property.totalValue - property.downPayment
         }}
       />
