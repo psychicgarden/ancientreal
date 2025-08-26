@@ -53,17 +53,22 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
   // Pass the userProperty object directly to the detection function
   const isDemoProperty = checkIsDemoProperty(property.userProperty || property);
   
-  console.log('MortgagePaymentModal - Property type detection result:', {
+  console.log('🔍 MortgagePaymentModal - Full property analysis:', {
     isDemoProperty,
     propertyId: property.id,
     propertyTitle: property.title,
     userPropertyExists: !!property.userProperty,
     uniquePurchaseKey: property.userProperty?.unique_purchase_key,
-    mortgageId: property.userProperty?.mortgage_id
+    mortgageId: property.userProperty?.mortgage_id,
+    propertyStructure: {
+      hasUserProperty: !!property.userProperty,
+      userPropertyKeys: property.userProperty ? Object.keys(property.userProperty) : null,
+    }
   });
   
-  // Initialize payment sync hook only for real properties
-  usePaymentSync(isDemoProperty ? '' : contractAddress, account || '');
+  // Only initialize payment sync for real properties - completely skip for demo
+  const shouldInitializePaymentSync = !isDemoProperty && contractAddress && account;
+  usePaymentSync(shouldInitializePaymentSync ? contractAddress : '', shouldInitializePaymentSync ? account : '');
 
   // Get contract address on component mount (only for real properties)
   React.useEffect(() => {

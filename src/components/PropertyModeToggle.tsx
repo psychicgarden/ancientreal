@@ -87,15 +87,22 @@ export const isOnChainProperty = (property: any): boolean => {
 };
 
 export const isDemoProperty = (property: any): boolean => {
+  console.log('🔍 isDemoProperty called with:', {
+    property,
+    propertyType: typeof property,
+    propertyKeys: property ? Object.keys(property) : null,
+    propertyName: property?.property_name || property?.title || 'Unknown'
+  });
+
   if (!property) {
-    console.log('isDemoProperty - No property provided');
+    console.log('🚫 isDemoProperty - No property provided');
     return false;
   }
 
   // Handle both raw property objects and transformed PropertyMortgageData objects
   const rawProperty = property.userProperty || property;
   
-  console.log('isDemoProperty - Analysis:', {
+  console.log('🔍 isDemoProperty - Analysis for', property.property_name || property.title || 'Unknown', ':', {
     originalProperty: property,
     rawProperty: rawProperty,
     hasUserProperty: !!property.userProperty,
@@ -104,14 +111,14 @@ export const isDemoProperty = (property: any): boolean => {
   });
   
   if (!rawProperty) {
-    console.log('isDemoProperty - No rawProperty found, returning false');
+    console.log('🚫 isDemoProperty - No rawProperty found for', property.property_name || property.title, ', returning false');
     return false;
   }
   
   const uniqueKey = rawProperty.unique_purchase_key || rawProperty.uniquePurchaseKey;
   const mortgageId = rawProperty.mortgage_id || rawProperty.mortgageId;
   
-  console.log('isDemoProperty - Key analysis:', {
+  console.log('🔍 isDemoProperty - Key analysis for', property.property_name || property.title, ':', {
     uniqueKey,
     mortgageId,
     uniqueKeyStartsWithDemo: uniqueKey ? String(uniqueKey).startsWith("demo_") : false,
@@ -122,7 +129,7 @@ export const isDemoProperty = (property: any): boolean => {
   const isDemo = (uniqueKey && String(uniqueKey).startsWith("demo_")) || 
          (mortgageId && String(mortgageId).startsWith("demo_"));
          
-  console.log('isDemoProperty - Final result:', isDemo);
+  console.log('🎯 isDemoProperty - Final result for', property.property_name || property.title, ':', isDemo);
   return isDemo;
 };
 
