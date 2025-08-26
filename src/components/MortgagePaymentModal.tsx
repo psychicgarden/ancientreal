@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
-import { Shield, AlertTriangle, CreditCard, Home, Clock, DollarSign } from "lucide-react";
+import { Shield, AlertTriangle, CreditCard, Home, Clock, DollarSign, Zap } from "lucide-react";
 import { useWallet } from "@/contexts/WalletContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,6 +16,7 @@ import { NETWORK_CONFIG } from "@/lib/contracts";
 import { web3Integration } from "@/lib/web3-integration";
 import { usePaymentSync } from "@/hooks/usePaymentSync";
 import { fetchRealContractAddresses } from "@/lib/contract-integration";
+import { isDemoMode, DEMO_CONFIG } from "@/config/demo";
 
 interface MortgagePaymentModalProps {
   isOpen: boolean;
@@ -29,6 +30,9 @@ interface MortgagePaymentModalProps {
     value: number;
     monthlyPayment: number;
     remainingBalance: number;
+    userProperty?: {
+      user_wallet_address?: string;
+    };
   };
 }
 
@@ -40,11 +44,18 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
   const { account } = useWallet();
   const { toast } = useToast();
   
-  // Initialize payment sync hook
-  usePaymentSync(contractAddress, account || '');
+  // Determine if this is a demo property payment
+  const isDemoProperty = isDemoMode() && 
+    (property.userProperty?.user_wallet_address?.toLowerCase() === DEMO_CONFIG.testWalletAddress.toLowerCase() ||
+     account?.toLowerCase() === DEMO_CONFIG.testWalletAddress.toLowerCase());
+  
+  // Initialize payment sync hook only for real properties
+  usePaymentSync(isDemoProperty ? '' : contractAddress, account || '');
 
-  // Get contract address on component mount
+  // Get contract address on component mount (only for real properties)
   React.useEffect(() => {
+    if (isDemoProperty) return;
+    
     const getContractAddress = async () => {
       try {
         const addresses = await fetchRealContractAddresses();
@@ -57,7 +68,7 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
       }
     };
     getContractAddress();
-  }, []);
+  }, [isDemoProperty]);
 
   // Use real property data for payment details
   const mortgageDetails = {
@@ -78,7 +89,7 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
     if (!hasAcceptedTerms) {
       toast({
         title: "Terms Required",
-        description: "Please confirm you understand this is a blockchain transaction.",
+        description: `Please confirm you understand this is a ${isDemoProperty ? 'demo' : 'blockchain'} transaction.`,
         variant: "destructive"
       });
       return;
@@ -93,61 +104,104 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
       return;
     }
 
-    if (!contractAddress) {
-      toast({
-        title: "Contract Loading",
-        description: "Please wait for contract initialization.",
-        variant: "destructive"
-      });
-      return;
-    }
-
     setIsProcessing(true);
+    
     try {
-      toast({
-        title: "Processing Payment",
-        description: "Please confirm the transaction in your wallet...",
-      });
-
-      // Initialize web3Integration if needed
-      await web3Integration.initialize();
-      
-      // Make the on-chain payment - this will emit PaymentMade event
-      const tx = await web3Integration.makePayment();
-      
-      toast({
-        title: "Transaction Submitted",
-        description: "Waiting for blockchain confirmation...",
-      });
-      
-      // Wait for transaction confirmation
-      const receipt = await tx.wait();
-      
-      console.log('✅ Payment transaction confirmed:', {
-        hash: receipt.hash,
-        blockNumber: receipt.blockNumber
-      });
-
-      toast({
-        title: "Payment Successful",
-        description: "Your mortgage payment has been processed on-chain. Database sync in progress...",
-      });
-
-      // The usePaymentSync hook will automatically sync the payment to database
-      // when it detects the PaymentMade event from the blockchain
-      
-      // Add payment to local payment history for immediate UI feedback
-      const mappedId = PROPERTY_ID_MAP[property.id] ?? 1;
-      await supabase
-        .from('payment_history')
-        .insert({
-          user_wallet_address: account.toLowerCase(),
-          property_id: mappedId.toString(),
-          payment_amount: property.monthlyPayment,
-          remaining_balance_after: Math.max(0, property.remainingBalance - mortgageDetails.principalAmount),
-          status: 'completed',
-          transaction_hash: receipt.hash
+      if (isDemoProperty) {
+        // Handle demo payment
+        toast({
+          title: "Processing Demo Payment",
+          description: "Simulating mortgage payment...",
         });
+
+        // Simulate processing delay
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        // Update payment history for demo
+        const mappedId = PROPERTY_ID_MAP[property.id] ?? 1;
+        await supabase
+          .from('payment_history')
+          .insert({
+            user_wallet_address: account.toLowerCase(),
+            property_id: mappedId.toString(),
+            payment_amount: property.monthlyPayment,
+            remaining_balance_after: Math.max(0, property.remainingBalance - mortgageDetails.principalAmount),
+            status: 'completed',
+            payment_type: 'demo_payment'
+          });
+
+        // Update user property with new balance
+        await supabase
+          .from('user_properties')
+          .update({
+            remaining_balance: Math.max(0, property.remainingBalance - mortgageDetails.principalAmount),
+            principal_paid_base: Number(toBase(mortgageDetails.principalAmount)),
+            interest_paid_base: Number(toBase(mortgageDetails.interestAmount)),
+            updated_at: new Date().toISOString()
+          })
+          .eq('user_wallet_address', account.toLowerCase())
+          .eq('property_name', property.title);
+
+        toast({
+          title: "Demo Payment Successful",
+          description: "Your demo mortgage payment has been processed!",
+        });
+      } else {
+        // Handle real on-chain payment
+        if (!contractAddress) {
+          toast({
+            title: "Contract Loading",
+            description: "Please wait for contract initialization.",
+            variant: "destructive"
+          });
+          return;
+        }
+
+        toast({
+          title: "Processing Payment",
+          description: "Please confirm the transaction in your wallet...",
+        });
+
+        // Initialize web3Integration if needed
+        await web3Integration.initialize();
+        
+        // Make the on-chain payment - this will emit PaymentMade event
+        const tx = await web3Integration.makePayment();
+        
+        toast({
+          title: "Transaction Submitted",
+          description: "Waiting for blockchain confirmation...",
+        });
+        
+        // Wait for transaction confirmation
+        const receipt = await tx.wait();
+        
+        console.log('✅ Payment transaction confirmed:', {
+          hash: receipt.hash,
+          blockNumber: receipt.blockNumber
+        });
+
+        toast({
+          title: "Payment Successful",
+          description: "Your mortgage payment has been processed on-chain. Database sync in progress...",
+        });
+
+        // The usePaymentSync hook will automatically sync the payment to database
+        // when it detects the PaymentMade event from the blockchain
+        
+        // Add payment to local payment history for immediate UI feedback
+        const mappedId = PROPERTY_ID_MAP[property.id] ?? 1;
+        await supabase
+          .from('payment_history')
+          .insert({
+            user_wallet_address: account.toLowerCase(),
+            property_id: mappedId.toString(),
+            payment_amount: property.monthlyPayment,
+            remaining_balance_after: Math.max(0, property.remainingBalance - mortgageDetails.principalAmount),
+            status: 'completed',
+            transaction_hash: receipt.hash
+          });
+      }
 
       // Close modal and trigger refresh
       resetAndClose();
@@ -187,12 +241,19 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Shield className="h-5 w-5 text-primary" />
+            {isDemoProperty ? (
+              <Zap className="h-5 w-5 text-orange-500" />
+            ) : (
+              <Shield className="h-5 w-5 text-primary" />
+            )}
             Mortgage Payment Confirmation
+            <Badge variant={isDemoProperty ? "secondary" : "default"} className="ml-2">
+              {isDemoProperty ? "Demo" : "On-Chain"}
+            </Badge>
           </DialogTitle>
         </DialogHeader>
 
-        <NetworkGuard />
+        {!isDemoProperty && <NetworkGuard />}
 
         <div className="space-y-6">
           {/* Property Information */}
@@ -251,38 +312,56 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
               
               <div className="flex justify-between items-center">
                 <span className="text-lg font-semibold">Total Payment</span>
-                <span className="text-lg font-bold text-primary">${totalAmount.toFixed(2)} USDT</span>
+                <span className="text-lg font-bold text-primary">
+                  ${totalAmount.toFixed(2)} {isDemoProperty ? "Demo Tokens" : "USDT"}
+                </span>
               </div>
             </CardContent>
           </Card>
 
-          {/* Security Information */}
-          <Card className="border-orange-200 bg-orange-50/50">
+          {/* Transaction Information */}
+          <Card className={isDemoProperty ? "border-orange-200 bg-orange-50/50" : "border-blue-200 bg-blue-50/50"}>
             <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-lg text-orange-800">
-                <AlertTriangle className="h-4 w-4" />
-                Transaction Security
+              <CardTitle className={`flex items-center gap-2 text-lg ${isDemoProperty ? "text-orange-800" : "text-blue-800"}`}>
+                {isDemoProperty ? (
+                  <Zap className="h-4 w-4" />
+                ) : (
+                  <AlertTriangle className="h-4 w-4" />
+                )}
+                {isDemoProperty ? "Demo Payment" : "Transaction Security"}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Payment Method:</span>
-                  <span className="font-mono">Wallet ({account?.slice(0, 6)}...{account?.slice(-4)})</span>
+                  <span className="font-mono">
+                    {isDemoProperty ? "Demo Wallet" : "Blockchain Wallet"} ({account?.slice(0, 6)}...{account?.slice(-4)})
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Network:</span>
-                  <span>{NETWORK_CONFIG.chainName}</span>
+                  <span>{isDemoProperty ? "Demo Network" : NETWORK_CONFIG.chainName}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Est. Gas Fee:</span>
-                  <span>{transactionFee} AVAX</span>
-                </div>
+                {!isDemoProperty && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Est. Gas Fee:</span>
+                    <span>{transactionFee} AVAX</span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Next Due Date:</span>
                   <span>{new Date(mortgageDetails.nextDueDate).toLocaleDateString()}</span>
                 </div>
               </div>
+              {isDemoProperty && (
+                <div className="mt-3 p-3 bg-orange-100 rounded-lg">
+                  <p className="text-sm text-orange-800">
+                    <strong>Demo Mode:</strong> This is a simulated payment for demonstration purposes. 
+                    No real cryptocurrency will be transferred.
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -296,7 +375,7 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
                   onCheckedChange={(checked) => setHasAcceptedTerms(!!checked)}
                 />
                 <label htmlFor="terms" className="text-sm leading-5">
-                  I understand this is a blockchain transaction that cannot be reversed. 
+                  I understand this is a {isDemoProperty ? "demo" : "blockchain"} transaction{!isDemoProperty ? " that cannot be reversed" : ""}. 
                   I have verified the payment amount and property details above.
                 </label>
               </div>
@@ -319,11 +398,16 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
           {/* Final Confirmation */}
           {step === 'confirm' && (
             <div className="space-y-4">
-              <div className="bg-primary/10 p-4 rounded-lg border border-primary/20">
-                <h4 className="font-semibold text-primary mb-2">Final Confirmation</h4>
+              <div className={`p-4 rounded-lg border ${isDemoProperty ? "bg-orange-50 border-orange-200" : "bg-primary/10 border-primary/20"}`}>
+                <h4 className={`font-semibold mb-2 ${isDemoProperty ? "text-orange-800" : "text-primary"}`}>Final Confirmation</h4>
                 <p className="text-sm">
-                  You are about to send <strong>${totalAmount.toFixed(2)} USDT</strong> for your monthly mortgage payment. 
-                  This transaction will be processed immediately and cannot be undone.
+                  You are about to {isDemoProperty ? "simulate sending" : "send"} <strong>
+                    ${totalAmount.toFixed(2)} {isDemoProperty ? "Demo Tokens" : "USDT"}
+                  </strong> for your monthly mortgage payment. 
+                  {isDemoProperty ? 
+                    "This demo transaction will update your portfolio instantly." :
+                    "This transaction will be processed immediately and cannot be undone."
+                  }
                 </p>
               </div>
               

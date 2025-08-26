@@ -745,7 +745,8 @@ export const MultiPropertyMortgageDashboard = ({
             image: selectedProperty.image,
             value: selectedProperty.purchasePrice,
             monthlyPayment: selectedProperty.monthlyPayment,
-            remainingBalance: selectedProperty.remainingBalance
+            remainingBalance: selectedProperty.remainingBalance,
+            userProperty: selectedProperty.userProperty
           }}
         />
       )}
