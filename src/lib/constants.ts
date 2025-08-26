@@ -13,12 +13,12 @@ export const PROPERTY_ID_REVERSE_MAP: Record<number, string> = {
   3: "ericeira-portugal-villa",
 };
 
-// Realistic exchange rate: 1 AVAX = $40 USD for better UX
+// Testing exchange rate: $129,000 USD = 0.00129 AVAX (1 AVAX = $100,000,000 USD)
 export const TESTING_EXCHANGE_RATE = {
-  USD_PER_AVAX: 40, // $40 per AVAX for realistic amounts
-  AVAX_PER_USD: 1 / 40, // 0.025 AVAX per USD
+  USD_PER_AVAX: 100000000, // $100M per AVAX for testing
+  AVAX_PER_USD: 0.00129 / 129000, // Conversion factor
   REFERENCE_USD: 129000, // Reference amount in USD
-  REFERENCE_AVAX: 129000 / 40, // 3225 AVAX equivalent
+  REFERENCE_AVAX: 0.00129, // Equivalent amount in AVAX
 } as const;
 
 // Currency conversion utilities
