@@ -125,18 +125,48 @@ export const MultiPropertyMortgageDashboard = ({
               fromBase((property as any).purchase_price_base) : 
               Number(property.purchase_price || 0);
             
+            // Get expected loan amount (80% of purchase price for most demos)
+            const expectedLoanAmount = purchasePrice * 0.8;
+            const actualLoanAmountBase = BigInt((property as any).loan_amount_base || Math.floor(expectedLoanAmount * 1000000));
+            const actualLoanAmount = fromBase(actualLoanAmountBase);
+            
             // Create mortgage data object for calculations
             const mortgageData: MortgageData = {
-              loanAmountBase: BigInt((property as any).loan_amount_base || 0),
+              loanAmountBase: actualLoanAmountBase,
               principalPaidBase: BigInt((property as any).principal_paid_base || 0),
               interestPaidBase: BigInt((property as any).interest_paid_base || 0),
-              aprBps: Number((property as any).apr_bps || 800),
-              termMonths: Number((property as any).term_months || 120),
+              aprBps: Number((property as any).apr_bps || 800), // 8% APR
+              termMonths: Number((property as any).term_months || 120), // 10 years
               purchaseDate: property.purchase_date
             };
 
             // Calculate accurate mortgage metrics
             const metrics = calculateMortgageMetrics(mortgageData, purchasePrice);
+            
+            console.log('🧮 DETAILED Mortgage calculation for', property.property_name, ':', {
+              // Input data
+              purchasePrice,
+              purchasePriceBase: (property as any).purchase_price_base,
+              loanAmountBase: actualLoanAmountBase.toString(),
+              actualLoanAmount,
+              expectedLoanAmount,
+              aprBps: mortgageData.aprBps,
+              termMonths: mortgageData.termMonths,
+              
+              // Calculated outputs
+              calculatedMonthlyPayment: metrics.monthlyPayment,
+              remainingBalance: metrics.remainingBalance,
+              equityBuilt: metrics.equityBuilt,
+              ownershipPercentage: metrics.ownershipPercentage,
+              
+              // Stored values (for comparison)
+              storedMonthlyPayment: property.monthly_payment,
+              storedRemainingBalance: property.remaining_balance,
+              
+              // Demo detection fields
+              uniquePurchaseKey: property.unique_purchase_key,
+              mortgageId: property.mortgage_id
+            });
             
             // Get property details from catalog
             const catalogProperty = PROPERTIES_CATALOG.find(p => 
@@ -150,9 +180,9 @@ export const MultiPropertyMortgageDashboard = ({
               location: property.property_location,
               image: catalogProperty?.image || '/placeholder.svg',
               purchasePrice,
-              downPayment: purchasePrice - fromBase(mortgageData.loanAmountBase),
+              downPayment: purchasePrice - actualLoanAmount,
               remainingBalance: metrics.remainingBalance,
-              monthlyPayment: metrics.monthlyPayment, // Use calculated value, not stored value
+              monthlyPayment: metrics.monthlyPayment, // Use calculated value from proper amortization
               nextPaymentDue: metrics.nextPaymentDue,
               equity: metrics.equityBuilt,
               isOverdue: false, // TODO: Calculate based on payment history
