@@ -47,36 +47,35 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
   // Pass the userProperty object directly to the detection function
   const isDemoProperty = checkIsDemoProperty(property.userProperty || property);
   
-  console.log('🔍 MortgagePaymentModal - Full property analysis:', {
-    isDemoProperty,
-    propertyId: property.id,
+  console.log('🔍 MortgagePaymentModal - DEBUGGING INPUT DATA:', {
     propertyTitle: property.title,
-    userPropertyExists: !!property.userProperty,
-    uniquePurchaseKey: property.userProperty?.unique_purchase_key,
-    mortgageId: property.userProperty?.mortgage_id,
-    propertyStructure: {
-      hasUserProperty: !!property.userProperty,
-      userPropertyKeys: property.userProperty ? Object.keys(property.userProperty) : null,
-    }
+    propertyMonthlyPayment: property.monthlyPayment,
+    propertyMonthlyPaymentType: typeof property.monthlyPayment,
+    propertyValue: property.value,
+    propertyRemainingBalance: property.remainingBalance,
+    isDemoProperty,
+    userPropertyData: property.userProperty,
+    rawProperty: property
   });
 
   // Use real property data for payment details
   const mortgageDetails = {
-    monthlyPayment: property.monthlyPayment,
+    monthlyPayment: property.monthlyPayment, // This MUST be 1252 for Art Deco Loft
     principalAmount: property.monthlyPayment * 0.65, // Approximate principal portion
     interestAmount: property.monthlyPayment * 0.35, // Approximate interest portion
     remainingBalance: property.remainingBalance,
     nextDueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Next month
     loanAmount: property.remainingBalance + 50000, // Approximate original loan
-    interestRate: 8.0,
-    termRemaining: "9 years, 2 months" // Approximate
+    interestRate: 8.0
   };
 
-  console.log('💰 MortgagePaymentModal - Payment Details:', {
+  console.log('💰 MortgagePaymentModal - FINAL CALCULATION:', {
     propertyTitle: property.title,
-    monthlyPayment: property.monthlyPayment,
-    totalAmount: mortgageDetails.monthlyPayment,
-    isDemoProperty
+    inputMonthlyPayment: property.monthlyPayment,
+    calculatedMonthlyPayment: mortgageDetails.monthlyPayment,
+    principalAmount: mortgageDetails.principalAmount,
+    interestAmount: mortgageDetails.interestAmount,
+    totalPaymentAmount: mortgageDetails.monthlyPayment
   });
 
   const transactionFee = 0.0023; // AVAX
@@ -218,10 +217,6 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
                 <div>
                   <p className="text-sm text-muted-foreground">Remaining Balance</p>
                   <p className="font-semibold">${mortgageDetails.remainingBalance.toLocaleString()}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Term Remaining</p>
-                  <p className="font-semibold">{mortgageDetails.termRemaining}</p>
                 </div>
               </div>
               
