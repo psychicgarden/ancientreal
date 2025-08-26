@@ -143,21 +143,31 @@ export const MultiPropertyMortgageDashboard = ({
             // Calculate metrics as backup, but prefer stored database values
             const metrics = calculateMortgageMetrics(mortgageData, purchasePrice);
             
-            // Use stored monthly payment if it exists and is reasonable, otherwise use calculated
+            // CRITICAL FIX: Always prioritize database values over calculations
             const storedMonthlyPayment = Number(property.monthly_payment || 0);
-            const finalMonthlyPayment = storedMonthlyPayment > 0 ? storedMonthlyPayment : metrics.monthlyPayment;
+            const calculatedMonthlyPayment = metrics.monthlyPayment;
+            
+            // For Art Deco Loft and other properties, trust the database value completely
+            // Only use calculated if stored is clearly wrong (exactly 0)
+            let finalMonthlyPayment;
+            if (storedMonthlyPayment > 10) { // Any reasonable mortgage payment should be > $10
+              finalMonthlyPayment = storedMonthlyPayment;
+              console.log(`✅ Using STORED monthly payment for ${property.property_name}: $${storedMonthlyPayment}`);
+            } else {
+              finalMonthlyPayment = calculatedMonthlyPayment;
+              console.log(`⚠️ Using CALCULATED monthly payment for ${property.property_name}: $${calculatedMonthlyPayment} (stored was: $${storedMonthlyPayment})`);
+            }
             
             // Use stored remaining balance if it exists, otherwise use calculated
             const storedRemainingBalance = Number(property.remaining_balance || 0);
             const finalRemainingBalance = storedRemainingBalance >= 0 ? storedRemainingBalance : metrics.remainingBalance;
             
-            console.log('💰 Mortgage payment for', property.property_name, ':', {
-              storedMonthlyPayment,
-              calculatedMonthlyPayment: metrics.monthlyPayment,
-              finalMonthlyPayment,
-              storedRemainingBalance,
-              calculatedRemainingBalance: metrics.remainingBalance,
-              finalRemainingBalance
+            console.log('🔍 PAYMENT DEBUG for', property.property_name, ':', {
+              'Database monthly_payment': property.monthly_payment,
+              'Parsed storedMonthlyPayment': storedMonthlyPayment,
+              'Calculated monthlyPayment': calculatedMonthlyPayment,
+              'FINAL monthlyPayment': finalMonthlyPayment,
+              'Will use': finalMonthlyPayment === storedMonthlyPayment ? 'STORED' : 'CALCULATED'
             });
             
             // Get property details from catalog

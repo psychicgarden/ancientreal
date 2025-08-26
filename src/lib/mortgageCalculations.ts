@@ -52,6 +52,14 @@ export function calculateMortgageMetrics(
     ? loanAmount * (monthlyRate / (1 - Math.pow(1 + monthlyRate, -mortgage.termMonths)))
     : loanAmount / mortgage.termMonths;
   
+  console.log('🧮 Mortgage calculation inputs:', {
+    loanAmount,
+    aprBps: mortgage.aprBps,
+    termMonths: mortgage.termMonths,
+    monthlyRate,
+    calculatedMonthlyPayment: monthlyPayment
+  });
+  
   // Next payment due date
   const nextPaymentDue = new Date(purchaseDate);
   nextPaymentDue.setMonth(nextPaymentDue.getMonth() + monthsElapsed + 1);
