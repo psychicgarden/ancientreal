@@ -171,7 +171,15 @@ export const MultiPropertyMortgageDashboard = ({
               daysPastDue: 0,
               mortgageProgress: metrics.ownershipPercentage,
               purchaseDate: new Date(property.purchase_date),
-              userProperty: property,
+              userProperty: {
+                ...property, // Include all original property fields
+                id: property.id,
+                user_wallet_address: property.user_wallet_address,
+                unique_purchase_key: property.unique_purchase_key,
+                mortgage_id: property.mortgage_id,
+                principal_paid_base: property.principal_paid_base,
+                interest_paid_base: property.interest_paid_base
+              },
               metrics: {
                 ownershipPercentage: metrics.ownershipPercentage,
                 timeToPayoff: metrics.timeToPayoff,

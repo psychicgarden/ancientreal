@@ -90,12 +90,36 @@ export const isDemoProperty = (property: any): boolean => {
   // Handle both raw property objects and transformed PropertyMortgageData objects
   const rawProperty = property.userProperty || property;
   
+  // Add comprehensive logging to debug the issue
+  console.log('isDemoProperty - Analysis:', {
+    originalProperty: property,
+    rawProperty: rawProperty,
+    hasUserProperty: !!property.userProperty,
+    rawPropertyType: typeof rawProperty,
+    rawPropertyKeys: rawProperty ? Object.keys(rawProperty) : 'no keys'
+  });
+  
+  if (!rawProperty) {
+    console.log('isDemoProperty - No rawProperty found, returning false');
+    return false;
+  }
+  
   const uniqueKey = rawProperty.unique_purchase_key || rawProperty.uniquePurchaseKey;
   const mortgageId = rawProperty.mortgage_id || rawProperty.mortgageId;
   
+  console.log('isDemoProperty - Key analysis:', {
+    uniqueKey,
+    mortgageId,
+    uniqueKeyStartsWithDemo: uniqueKey ? uniqueKey.startsWith("demo_") : false,
+    mortgageIdStartsWithDemo: mortgageId ? mortgageId.startsWith("demo_") : false
+  });
+  
   // Demo if unique_purchase_key OR mortgage_id starts with "demo_"
-  return (uniqueKey && uniqueKey.startsWith("demo_")) || 
+  const isDemo = (uniqueKey && uniqueKey.startsWith("demo_")) || 
          (mortgageId && mortgageId.startsWith("demo_"));
+         
+  console.log('isDemoProperty - Final result:', isDemo);
+  return isDemo;
 };
 
 export const filterPropertiesByMode = (properties: any[], mode: PropertyMode): any[] => {

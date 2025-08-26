@@ -49,17 +49,22 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
   const { account } = useWallet();
   const { toast } = useToast();
   
+  // Debug logging to help understand property type detection
+  console.log('MortgagePaymentModal - Full property object:', {
+    property,
+    userProperty: property.userProperty,
+    userPropertyKeys: property.userProperty ? Object.keys(property.userProperty) : 'undefined',
+    userPropertyMortgageId: property.userProperty?.mortgage_id,
+    userPropertyUniqueKey: property.userProperty?.unique_purchase_key
+  });
+  
   // Determine if this is a demo property payment using the correct detection logic
   const isDemoProperty = checkIsDemoProperty(property);
   
-  // Debug logging to help understand property type detection
-  console.log('MortgagePaymentModal - Property type detection:', {
+  console.log('MortgagePaymentModal - Property type detection result:', {
     isDemoProperty,
-    property: {
-      id: property.id,
-      title: property.title,
-      userProperty: property.userProperty
-    }
+    propertyId: property.id,
+    propertyTitle: property.title
   });
   
   // Initialize payment sync hook only for real properties
@@ -108,7 +113,8 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
       return;
     }
 
-    if (!account) {
+    // For demo properties, we don't need wallet connection
+    if (!isDemoProperty && !account) {
       toast({
         title: "Wallet Required",
         description: "Please connect your wallet to make a payment.",
@@ -121,21 +127,21 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
     
     try {
       if (isDemoProperty) {
-        // Handle demo payment
+        // Handle demo payment - completely isolated from blockchain
         toast({
           title: "Processing Demo Payment",
           description: "Simulating mortgage payment...",
         });
 
         // Simulate processing delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        await new Promise(resolve => setTimeout(resolve, 1500));
 
         // Update payment history for demo
         const mappedId = PROPERTY_ID_MAP[property.id] ?? 1;
         await supabase
           .from('payment_history')
           .insert({
-            user_wallet_address: account.toLowerCase(),
+            user_wallet_address: (account || 'demo-wallet').toLowerCase(),
             property_id: mappedId.toString(),
             payment_amount: property.monthlyPayment,
             remaining_balance_after: Math.max(0, property.remainingBalance - mortgageDetails.principalAmount),
@@ -157,8 +163,8 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
         }
 
         toast({
-          title: "Demo Payment Successful",
-          description: "Your demo mortgage payment has been processed!",
+          title: "Demo Payment Successful! 🎉",
+          description: "Your demo mortgage payment has been processed! Balance updated.",
         });
       } else {
         // Handle real on-chain payment
@@ -208,7 +214,7 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
         await supabase
           .from('payment_history')
           .insert({
-            user_wallet_address: account.toLowerCase(),
+            user_wallet_address: account!.toLowerCase(),
             property_id: mappedId.toString(),
             payment_amount: property.monthlyPayment,
             remaining_balance_after: Math.max(0, property.remainingBalance - mortgageDetails.principalAmount),
@@ -267,7 +273,11 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
           </DialogTitle>
         </DialogHeader>
 
-        {!isDemoProperty && <NetworkGuard />}
+        {!isDemoProperty && (
+          <div className="mb-4">
+            <NetworkGuard />
+          </div>
+        )}
 
         <div className="space-y-6">
           {/* Property Information */}
