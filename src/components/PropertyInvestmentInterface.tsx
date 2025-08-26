@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { CONTRACTS } from '@/lib/contracts';
 import { Home, DollarSign, Calendar, MapPin, TrendingUp, Users, Shield, CheckCircle } from 'lucide-react';
 import { PROPERTIES_CATALOG } from '@/lib/propertiesCatalog';
+import { convertUSDToAVAX, formatAVAXAmount } from '@/lib/constants';
 
 export const PropertyInvestmentInterface = () => {
   const { toast } = useToast();
@@ -23,7 +24,7 @@ export const PropertyInvestmentInterface = () => {
   // Fixed property values - now in AVAX
   const propertyValueUSD = featuredProperty.totalValue; // $129,000
   const downPaymentUSD = Math.round(featuredProperty.totalValue * 0.2); // 20% = $25,800
-  const downPaymentAVAX = "0.5"; // Fixed AVAX amount for demo
+  const downPaymentAVAX = convertUSDToAVAX(downPaymentUSD); // Using testing rate: 0.000258 AVAX
   const termMonths = 120; // Fixed 10 years
   const FIXED_INTEREST_RATE = 8.0;
   const PLATFORM_FEE_PERCENT = 3.0; // 3% platform fee
@@ -281,10 +282,10 @@ export const PropertyInvestmentInterface = () => {
                   <DollarSign className="w-4 h-4 text-blue-500" />
                   <span className="text-sm">AVAX Balance</span>
                 </div>
-                <div className="font-semibold">{parseFloat(avaxBalance).toFixed(4)} AVAX</div>
+                <div className="font-semibold">{formatAVAXAmount(avaxBalance)} AVAX</div>
                 {hasInsufficientBalance && (
                   <div className="text-sm text-red-500 mt-1">
-                    Need {downPaymentAVAX} AVAX to purchase
+                    Need {formatAVAXAmount(downPaymentAVAX)} AVAX to purchase
                   </div>
                 )}
               </CardContent>
@@ -303,9 +304,12 @@ export const PropertyInvestmentInterface = () => {
                   <span>Property Value</span>
                   <span className="font-semibold">${propertyValueUSD.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                <div className="flex justify-between">
                   <span>Down Payment</span>
-                  <span className="font-semibold">{downPaymentAVAX} AVAX</span>
+                  <span className="font-semibold">
+                    {formatAVAXAmount(downPaymentAVAX)} AVAX
+                    <div className="text-xs text-muted-foreground">${downPaymentUSD.toLocaleString()} USD</div>
+                  </span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-primary/10 rounded-lg border border-primary/20">
                   <span>Platform Fee (3%)</span>
@@ -333,8 +337,8 @@ export const PropertyInvestmentInterface = () => {
                   : !isKycApproved
                   ? "KYC Approval Required"
                   : hasInsufficientBalance
-                  ? `Insufficient AVAX Balance (need ${downPaymentAVAX})`
-                  : `Purchase Property with ${downPaymentAVAX} AVAX`
+                  ? `Insufficient AVAX Balance (need ${formatAVAXAmount(downPaymentAVAX)})`
+                  : `Purchase Property with ${formatAVAXAmount(downPaymentAVAX)} AVAX`
                 }
               </Button>
 
