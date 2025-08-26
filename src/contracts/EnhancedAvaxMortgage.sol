@@ -43,6 +43,7 @@ contract EnhancedAvaxMortgage is Ownable, ReentrancyGuard, ERC721 {
     uint256 public nextTokenId = 1;
     uint256 public constant PAYMENT_INTERVAL = 30 days;
     uint256 public constant BASIS_POINTS = 10000;
+    uint256 public constant PLATFORM_FEE_BPS = 300; // 3% platform fee
     
     event PropertyAdded(
         uint256 indexed propertyId,
@@ -58,7 +59,14 @@ contract EnhancedAvaxMortgage is Ownable, ReentrancyGuard, ERC721 {
         uint256 propertyValue,
         uint256 downPayment,
         uint256 loanAmount,
-        uint256 monthlyPayment
+        uint256 monthlyPayment,
+        uint256 platformFee
+    );
+    
+    event PlatformFeeCollected(
+        address indexed borrower,
+        uint256 indexed propertyId,
+        uint256 feeAmount
     );
     
     event PaymentMade(
@@ -110,11 +118,16 @@ contract EnhancedAvaxMortgage is Ownable, ReentrancyGuard, ERC721 {
         Property memory property = properties[_propertyId];
         uint256 propertyValue = property.totalValue;
         
-        require(msg.value >= (propertyValue * 2000) / BASIS_POINTS, "Minimum 20% down payment required");
+        // Calculate required amounts
+        uint256 minDownPayment = (propertyValue * 2000) / BASIS_POINTS; // 20%
+        uint256 platformFee = (propertyValue * PLATFORM_FEE_BPS) / BASIS_POINTS; // 3%
+        uint256 totalRequired = minDownPayment + platformFee;
+        
+        require(msg.value >= totalRequired, "Insufficient payment: need down payment + platform fee");
         require(_termMonths >= 12 && _termMonths <= 360, "Term must be between 1 and 30 years");
         
         uint256 fixedInterestRate = 800; // Fixed 8% APR in basis points
-        uint256 downPayment = msg.value;
+        uint256 downPayment = msg.value - platformFee; // Actual down payment after platform fee
         uint256 loanAmount = propertyValue - downPayment;
         require(loanAmount > 0, "Invalid loan amount");
         
@@ -146,6 +159,9 @@ contract EnhancedAvaxMortgage is Ownable, ReentrancyGuard, ERC721 {
         
         hasMortgage[msg.sender] = true;
         
+        // Emit platform fee collection event
+        emit PlatformFeeCollected(msg.sender, _propertyId, platformFee);
+        
         emit MortgageCreated(
             msg.sender, 
             _propertyId, 
@@ -153,7 +169,8 @@ contract EnhancedAvaxMortgage is Ownable, ReentrancyGuard, ERC721 {
             propertyValue, 
             downPayment, 
             loanAmount, 
-            monthlyPayment
+            monthlyPayment,
+            platformFee
         );
     }
     

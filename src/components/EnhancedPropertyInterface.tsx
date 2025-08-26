@@ -29,7 +29,11 @@ export const EnhancedPropertyInterface = () => {
   // Fixed property values - now in AVAX with proper exchange rate
   const propertyValueUSD = featuredProperty.totalValue; // $129,000
   const downPaymentUSD = Math.round(featuredProperty.totalValue * 0.2); // 20% = $25,800
-  const downPaymentAVAX = convertUSDToAVAX(downPaymentUSD); // Using testing rate: 0.000258 AVAX
+  const platformFeeUSD = Math.round(featuredProperty.totalValue * 0.03); // 3% = $3,870
+  const totalPaymentUSD = downPaymentUSD + platformFeeUSD; // Total payment needed
+  const downPaymentAVAX = convertUSDToAVAX(downPaymentUSD);
+  const platformFeeAVAX = convertUSDToAVAX(platformFeeUSD);
+  const totalPaymentAVAX = convertUSDToAVAX(totalPaymentUSD);
   const termMonths = 120; // Fixed 10 years
   const FIXED_INTEREST_RATE = 8.0;
   const PLATFORM_FEE_PERCENT = 3.0; // 3% platform fee
@@ -124,14 +128,14 @@ export const EnhancedPropertyInterface = () => {
         signer
       );
 
-      const downPaymentAmount = ethers.parseEther(downPaymentAVAX); // AVAX in wei
+      const totalPaymentAmount = ethers.parseEther(totalPaymentAVAX); // Total payment (down payment + platform fee) in wei
       
       // For demo, we'll use property ID 1 (should be pre-added by owner)
       const demoPropertyId = 1;
 
       toast({
         title: "🏠 Processing Purchase",
-        description: "Creating your mortgage with property ownership NFT...",
+        description: `Paying ${formatAVAXAmount(totalPaymentAVAX)} AVAX (down payment + platform fee)...`,
       });
 
       // Call purchaseProperty with property ID and term
@@ -139,7 +143,7 @@ export const EnhancedPropertyInterface = () => {
         demoPropertyId,       // Property ID
         termMonths,           // Term in months (120 = 10 years)
         { 
-          value: downPaymentAmount // Down payment in wei
+          value: totalPaymentAmount // Total payment (down payment + platform fee) in wei
         }
       );
 
@@ -186,8 +190,7 @@ export const EnhancedPropertyInterface = () => {
     }
   };
 
-  const platformFee = Math.round(propertyValueUSD * (PLATFORM_FEE_PERCENT / 100));
-  const hasInsufficientBalance = parseFloat(avaxBalance) < parseFloat(downPaymentAVAX);
+  const hasInsufficientBalance = parseFloat(avaxBalance) < parseFloat(totalPaymentAVAX);
 
   return (
     <div className="space-y-6">
@@ -238,7 +241,7 @@ export const EnhancedPropertyInterface = () => {
             <div className="text-center p-3 bg-muted/50 rounded-lg">
               <Calendar className="w-4 h-4 text-muted-foreground mx-auto mb-1" />
               <div className="text-sm text-muted-foreground">Platform Fee</div>
-              <div className="font-semibold">${platformFee.toLocaleString()}</div>
+              <div className="font-semibold">${platformFeeUSD.toLocaleString()}</div>
             </div>
           </div>
         </CardContent>
@@ -272,7 +275,7 @@ export const EnhancedPropertyInterface = () => {
                   <div className="font-semibold">{formatAVAXAmount(avaxBalance)} AVAX</div>
                   {hasInsufficientBalance && (
                     <div className="text-sm text-red-500 mt-1">
-                      Need {formatAVAXAmount(downPaymentAVAX)} AVAX to purchase
+                      Need {formatAVAXAmount(totalPaymentAVAX)} AVAX to purchase
                     </div>
                   )}
                 </div>
@@ -302,7 +305,17 @@ export const EnhancedPropertyInterface = () => {
             </div>
             <div className="flex justify-between items-center p-3 bg-primary/10 rounded-lg border border-primary/20">
               <span>Platform Fee (3%)</span>
-              <span className="font-semibold">${platformFee.toLocaleString()}</span>
+              <span className="font-semibold">
+                {formatAVAXAmount(platformFeeAVAX)} AVAX
+                <div className="text-xs text-muted-foreground">${platformFeeUSD.toLocaleString()} USD</div>
+              </span>
+            </div>
+            <div className="flex justify-between items-center p-3 bg-accent/10 rounded-lg border border-accent/20">
+              <span className="font-medium">Total Payment</span>
+              <span className="font-bold">
+                {formatAVAXAmount(totalPaymentAVAX)} AVAX
+                <div className="text-xs text-muted-foreground">${totalPaymentUSD.toLocaleString()} USD</div>
+              </span>
             </div>
             <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
               <span>Interest Rate</span>
@@ -334,8 +347,8 @@ export const EnhancedPropertyInterface = () => {
               : !isKycApproved
               ? "KYC Approval Required"
               : hasInsufficientBalance
-              ? `Insufficient AVAX Balance (need ${formatAVAXAmount(downPaymentAVAX)})`
-              : `Purchase Property with ${formatAVAXAmount(downPaymentAVAX)} AVAX + Get NFT`
+              ? `Insufficient AVAX Balance (need ${formatAVAXAmount(totalPaymentAVAX)})`
+              : `Purchase Property with ${formatAVAXAmount(totalPaymentAVAX)} AVAX + Get NFT`
             }
           </Button>
 
