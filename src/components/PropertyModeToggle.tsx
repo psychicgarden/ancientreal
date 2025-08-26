@@ -73,8 +73,11 @@ export const PropertyModeToggle = ({
 
 // Utility functions to identify property types
 export const isOnChainProperty = (property: any): boolean => {
-  const uniqueKey = property.unique_purchase_key || property.uniquePurchaseKey;
-  const mortgageId = property.mortgage_id || property.mortgageId;
+  // Handle both raw property objects and transformed PropertyMortgageData objects
+  const rawProperty = property.userProperty || property;
+  
+  const uniqueKey = rawProperty.unique_purchase_key || rawProperty.uniquePurchaseKey;
+  const mortgageId = rawProperty.mortgage_id || rawProperty.mortgageId;
   
   // On-chain if unique_purchase_key starts with "0x" (transaction hash)
   // OR mortgage_id doesn't start with "demo_" (or is null/undefined)
@@ -84,8 +87,11 @@ export const isOnChainProperty = (property: any): boolean => {
 };
 
 export const isDemoProperty = (property: any): boolean => {
-  const uniqueKey = property.unique_purchase_key || property.uniquePurchaseKey;
-  const mortgageId = property.mortgage_id || property.mortgageId;
+  // Handle both raw property objects and transformed PropertyMortgageData objects
+  const rawProperty = property.userProperty || property;
+  
+  const uniqueKey = rawProperty.unique_purchase_key || rawProperty.uniquePurchaseKey;
+  const mortgageId = rawProperty.mortgage_id || rawProperty.mortgageId;
   
   // Demo if unique_purchase_key OR mortgage_id starts with "demo_"
   return (uniqueKey && uniqueKey.startsWith("demo_")) || 
