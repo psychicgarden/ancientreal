@@ -5,8 +5,10 @@ import { useWallet } from "@/contexts/WalletContext";
 import { NETWORK_CONFIG } from "@/lib/contracts";
 
 const NetworkGuard: React.FC = () => {
-  const { isConnected, chainId, networkName } = useWallet();
+  const { isConnected, chainId, networkName, isDemoMode } = useWallet();
 
+  // Skip network validation in demo mode
+  if (isDemoMode) return null;
   if (!isConnected) return null;
   if (!chainId || chainId.toLowerCase() === NETWORK_CONFIG.chainId.toLowerCase()) return null;
 
