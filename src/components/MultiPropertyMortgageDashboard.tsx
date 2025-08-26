@@ -121,8 +121,16 @@ export const MultiPropertyMortgageDashboard = ({
           })));
 
           const transformedProperties: PropertyMortgageData[] = userProperties.map((property) => {
+            console.log('🚨 RAW DATABASE PROPERTY:', {
+              name: property.property_name,
+              rawMonthlyPayment: property.monthly_payment,
+              monthlyPaymentType: typeof property.monthly_payment,
+              uniqueKey: property.unique_purchase_key,
+              mortgageId: property.mortgage_id
+            });
+            
             const purchasePrice = (property as any).purchase_price_base ? 
-              fromBase((property as any).purchase_price_base) : 
+              fromBase((property as any).purchase_price_base) :
               Number(property.purchase_price || 0);
             
             // Get expected loan amount (80% of purchase price for most demos)
