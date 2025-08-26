@@ -103,9 +103,23 @@ export const MultiPropertyMortgageDashboard = ({
           .eq('is_active', true)
           .order('created_at', { ascending: false });
 
+        console.log('🔍 MultiPropertyMortgageDashboard - Database query result:', {
+          account: account.toLowerCase(),
+          userProperties,
+          error,
+          propertiesCount: userProperties?.length || 0
+        });
+
         if (error) throw error;
 
         if (userProperties && userProperties.length > 0) {
+          console.log('🎯 Found properties in database:', userProperties.map(p => ({
+            name: p.property_name,
+            uniquePurchaseKey: p.unique_purchase_key,
+            mortgageId: p.mortgage_id,
+            isDemo: p.unique_purchase_key?.startsWith('demo_') || p.mortgage_id?.startsWith('demo_')
+          })));
+
           const transformedProperties: PropertyMortgageData[] = userProperties.map((property) => {
             const purchasePrice = (property as any).purchase_price_base ? 
               fromBase((property as any).purchase_price_base) : 
@@ -138,7 +152,7 @@ export const MultiPropertyMortgageDashboard = ({
               purchasePrice,
               downPayment: purchasePrice - fromBase(mortgageData.loanAmountBase),
               remainingBalance: metrics.remainingBalance,
-              monthlyPayment: metrics.monthlyPayment,
+              monthlyPayment: metrics.monthlyPayment, // Use calculated value, not stored value
               nextPaymentDue: metrics.nextPaymentDue,
               equity: metrics.equityBuilt,
               isOverdue: false, // TODO: Calculate based on payment history
@@ -146,13 +160,15 @@ export const MultiPropertyMortgageDashboard = ({
               mortgageProgress: metrics.ownershipPercentage,
               purchaseDate: new Date(property.purchase_date),
               userProperty: {
-                ...property, // Include all original property fields
+                ...property, // Include ALL original property fields for demo detection
                 id: property.id,
                 user_wallet_address: property.user_wallet_address,
                 unique_purchase_key: property.unique_purchase_key,
                 mortgage_id: property.mortgage_id,
                 principal_paid_base: property.principal_paid_base,
-                interest_paid_base: property.interest_paid_base
+                interest_paid_base: property.interest_paid_base,
+                property_name: property.property_name,
+                property_location: property.property_location
               },
               metrics: {
                 ownershipPercentage: metrics.ownershipPercentage,
