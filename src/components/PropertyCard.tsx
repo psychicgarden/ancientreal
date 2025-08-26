@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Heart, MapPin, TrendingUp, Users, Calendar, DollarSign } from "lucide-react";
+import { Heart, MapPin, TrendingUp, Users, Calendar, DollarSign, Link as ChainIcon, FlaskConical } from "lucide-react";
 import { useState } from "react";
 import { MortgagePaymentModal } from "@/components/MortgagePaymentModal";
 import { PropertyAnalyticsModal } from "@/components/PropertyAnalyticsModal";
@@ -18,6 +18,8 @@ interface PropertyCardProps {
   occupancyRate?: number;
   isPending?: boolean;
   failureReason?: string | null;
+  uniquePurchaseKey?: string;
+  mortgageId?: string;
   onManage?: () => void;
   onListForTravel?: () => void;
   onMakePayment?: () => void;
@@ -36,6 +38,8 @@ export const PropertyCard = ({
   occupancyRate,
   isPending,
   failureReason,
+  uniquePurchaseKey,
+  mortgageId,
   onManage,
   onListForTravel,
   onMakePayment,
@@ -44,6 +48,10 @@ export const PropertyCard = ({
   const [isLiked, setIsLiked] = useState(false);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isAnalyticsModalOpen, setIsAnalyticsModalOpen] = useState(false);
+
+  // Determine property source (smart contract vs demo)
+  const isSmartContract = uniquePurchaseKey?.startsWith('0x') || (mortgageId && !mortgageId.startsWith('demo_'));
+  const isDemo = uniquePurchaseKey?.startsWith('demo_') || mortgageId?.startsWith('demo_');
 
   const getStatusBadge = () => {
     switch (status) {
@@ -133,7 +141,10 @@ export const PropertyCard = ({
   };
 
   return (
-    <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300">
+    <Card className={`group overflow-hidden hover:shadow-lg transition-all duration-300 ${
+      isSmartContract ? 'border-green-200 dark:border-green-800' : 
+      isDemo ? 'border-gray-200 dark:border-gray-700 opacity-90' : ''
+    }`}>
       <div className="relative">
         <img
           src={image}
@@ -144,8 +155,20 @@ export const PropertyCard = ({
             e.currentTarget.src = '/placeholder.svg';
           }}
         />
-        <div className="absolute bottom-3 left-3">
+        <div className="absolute bottom-3 left-3 flex gap-2">
           {getStatusBadge()}
+          {isSmartContract && (
+            <Badge className="bg-green-600/95 text-white font-semibold border border-green-400/50 shadow-lg backdrop-blur-sm px-2 py-1">
+              <ChainIcon className="h-3 w-3 mr-1" />
+              On-Chain
+            </Badge>
+          )}
+          {isDemo && (
+            <Badge className="bg-gray-600/95 text-white font-semibold border border-gray-400/50 shadow-lg backdrop-blur-sm px-2 py-1">
+              <FlaskConical className="h-3 w-3 mr-1" />
+              Demo
+            </Badge>
+          )}
         </div>
         <button
           onClick={() => setIsLiked(!isLiked)}

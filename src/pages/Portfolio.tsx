@@ -220,6 +220,7 @@ const Portfolio = () => {
       occupancyRate: 85,
       downPayment: prop.down_payment,
       mortgageId: prop.mortgage_id,
+      uniquePurchaseKey: prop.unique_purchase_key,
       remainingBalance: prop.remaining_balance,
       isPending: status === "pending",
       failureReason: status === "pending" ? "Smart contract deployment required" : null
@@ -500,6 +501,8 @@ const Portfolio = () => {
                     <PropertyCard
                       key={property.id}
                       {...property}
+                      uniquePurchaseKey={property.uniquePurchaseKey}
+                      mortgageId={property.mortgageId}
                       onManage={() => handlePropertyAction("Manage", property.id)}
                       onListForTravel={() => handlePropertyAction("List for Travel", property.id)}
                       onMakePayment={() => handlePropertyAction("Make Payment", property.id)}

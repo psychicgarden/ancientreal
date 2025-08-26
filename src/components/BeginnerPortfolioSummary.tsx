@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TrendingUp, DollarSign, Home, Building, Target } from "lucide-react";
+import { TrendingUp, DollarSign, Home, Building, Target, Link as ChainIcon, FlaskConical } from "lucide-react";
 import { InvestorTierStatus } from "./InvestorTierStatus";
 
 import { useWallet } from "@/contexts/WalletContext";
@@ -69,12 +69,18 @@ export const BeginnerPortfolioSummary: React.FC<PortfolioSummaryProps> = ({
       totalInvested,
       totalGains,
       monthlyIncome,
-      properties: uniqueUserProperties.map(prop => ({
-        name: prop.property_name,
-        value: prop.current_value || 0,
-        equity: ((prop.current_value || 0) * (prop.equity_percentage || 0)) / 100,
-        monthlyReturn: (prop.monthly_payment || 0) * 0.7
-      })),
+      properties: uniqueUserProperties.map(prop => {
+        const isSmartContract = prop.unique_purchase_key?.startsWith('0x') || (prop.mortgage_id && !prop.mortgage_id.startsWith('demo_'));
+        const isDemo = prop.unique_purchase_key?.startsWith('demo_') || prop.mortgage_id?.startsWith('demo_');
+        return {
+          name: prop.property_name,
+          value: prop.current_value || 0,
+          equity: ((prop.current_value || 0) * (prop.equity_percentage || 0)) / 100,
+          monthlyReturn: (prop.monthly_payment || 0) * 0.7,
+          isSmartContract,
+          isDemo
+        };
+      }),
       developerInvestments: actualDeveloperInvestments.map(inv => ({
         name: inv.developer_projects?.title || 'Development Project',
         invested: inv.investment_amount || 0,
@@ -177,9 +183,26 @@ export const BeginnerPortfolioSummary: React.FC<PortfolioSummaryProps> = ({
               <CardContent>
                 <div className="space-y-4">
                   {portfolioData.properties.map((property, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div key={index} className={`flex items-center justify-between p-3 border rounded-lg ${
+                      property.isDemo ? 'opacity-80 border-gray-200 dark:border-gray-700' : 
+                      property.isSmartContract ? 'border-green-200 dark:border-green-800' : ''
+                    }`}>
                       <div className="flex-1">
-                        <div className="font-medium">{property.name || 'Property Investment'}</div>
+                        <div className="flex items-center gap-2">
+                          <div className="font-medium">{property.name || 'Property Investment'}</div>
+                          {property.isSmartContract && (
+                            <Badge variant="secondary" className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 text-xs">
+                              <ChainIcon className="h-3 w-3 mr-1" />
+                              On-Chain
+                            </Badge>
+                          )}
+                          {property.isDemo && (
+                            <Badge variant="secondary" className="bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 text-xs">
+                              <FlaskConical className="h-3 w-3 mr-1" />
+                              Demo
+                            </Badge>
+                          )}
+                        </div>
                         <div className="text-sm text-muted-foreground">
                           ${property.equity.toLocaleString()} equity built
                         </div>
