@@ -117,19 +117,28 @@ export const PropertyInvestmentInterface = () => {
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const mortgageContract = new ethers.Contract(CONTRACTS.MAZUNTE_MORTGAGE.address, CONTRACTS.MAZUNTE_MORTGAGE.abi, signer);
+      // Switch to SimpleAvaxMortgage contract which has the correct signature
+      const mortgageContract = new ethers.Contract(CONTRACTS.SIMPLE_MORTGAGE.address, CONTRACTS.SIMPLE_MORTGAGE.abi, signer);
 
       const downPaymentAmount = ethers.parseEther(downPaymentAVAX); // AVAX in wei
+      
+      // Convert property value to AVAX wei using our testing exchange rate
+      const propertyValueAVAX = convertUSDToAVAX(propertyValueUSD);
+      const propertyValueAmount = ethers.parseEther(propertyValueAVAX); // Property value in wei
+      const interestRateBps = 800; // 8% APR in basis points
 
       toast({
         title: "🏠 Processing Purchase",
-        description: "Creating your mortgage with AncientMortgage...",
+        description: "Creating your mortgage with correct property value...",
       });
 
-      // Call purchaseProperty with AVAX value
-      const tx = await mortgageContract.purchaseProperty(0, { 
-        value: downPaymentAmount 
-      });
+      // Call purchaseProperty with proper parameters: propertyValue, downPayment, interestRate, termMonths
+      const tx = await mortgageContract.purchaseProperty(
+        propertyValueAmount, // Total property value in wei
+        downPaymentAmount,   // Down payment in wei  
+        interestRateBps,     // Interest rate in basis points (800 = 8%)
+        termMonths           // Term in months (120 = 10 years)
+      );
 
       toast({
         title: "⏳ Transaction Pending",
