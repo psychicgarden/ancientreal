@@ -13,19 +13,17 @@ export const PropertyInvestmentInterface = () => {
   const { toast } = useToast();
   const [isConnected, setIsConnected] = useState(false);
   const [account, setAccount] = useState('');
-  const [usdtBalance, setUsdtBalance] = useState('0');
+  const [avaxBalance, setAvaxBalance] = useState('0');
   const [isLoading, setIsLoading] = useState(false);
-  const [isApproving, setIsApproving] = useState(false);
   const [isKycApproved, setIsKycApproved] = useState(false);
-  const [needsUsdtApproval, setNeedsUsdtApproval] = useState(true);
   
   // Featured property from catalog
   const featuredProperty = PROPERTIES_CATALOG[0]; // Art Deco Loft in Mazunte, Mexico
   
-  // Fixed property values - now in USDT (6 decimals)
+  // Fixed property values - now in AVAX
   const propertyValueUSD = featuredProperty.totalValue; // $129,000
   const downPaymentUSD = Math.round(featuredProperty.totalValue * 0.2); // 20% = $25,800
-  const downPaymentUSDT = (downPaymentUSD * 1000000).toString(); // Convert to 6 decimal USDT
+  const downPaymentAVAX = "0.5"; // Fixed AVAX amount for demo
   const termMonths = 120; // Fixed 10 years
   const FIXED_INTEREST_RATE = 8.0;
   const PLATFORM_FEE_PERCENT = 3.0; // 3% platform fee
@@ -36,9 +34,8 @@ export const PropertyInvestmentInterface = () => {
 
   useEffect(() => {
     if (isConnected && account) {
-      updateUsdtBalance(account);
+      updateAvaxBalance(account);
       checkKycStatus(account);
-      checkUsdtApproval(account);
     }
   }, [isConnected, account]);
 
@@ -85,32 +82,18 @@ export const PropertyInvestmentInterface = () => {
     }
   };
 
-  const updateUsdtBalance = async (address: string) => {
+  const updateAvaxBalance = async (address: string) => {
     try {
-      console.log('🔍 Updating USDT balance for:', address);
-      console.log('🔍 USDT contract address:', CONTRACTS.USDT.address);
+      console.log('🔍 Updating AVAX balance for:', address);
       
       const provider = new ethers.BrowserProvider(window.ethereum);
-      const usdtContract = new ethers.Contract(CONTRACTS.USDT.address, CONTRACTS.USDT.abi, provider);
-      
-      // Check if contract exists
-      const code = await provider.getCode(CONTRACTS.USDT.address);
-      console.log('🔍 Contract bytecode length:', code.length);
-      
-      if (code === '0x') {
-        console.error('❌ No contract deployed at USDT address:', CONTRACTS.USDT.address);
-        setUsdtBalance('0');
-        return;
-      }
-      
-      const balance = await usdtContract.balanceOf(address);
-      console.log('✅ Raw USDT balance:', balance.toString());
-      const formattedBalance = ethers.formatUnits(balance, 6);
-      console.log('✅ Formatted USDT balance:', formattedBalance);
-      setUsdtBalance(formattedBalance);
+      const balance = await provider.getBalance(address);
+      const formattedBalance = ethers.formatEther(balance);
+      console.log('✅ AVAX balance:', formattedBalance);
+      setAvaxBalance(formattedBalance);
     } catch (error) {
-      console.error('❌ Failed to get USDT balance:', error);
-      setUsdtBalance('0');
+      console.error('❌ Failed to get AVAX balance:', error);
+      setAvaxBalance('0');
     }
   };
 
@@ -126,137 +109,6 @@ export const PropertyInvestmentInterface = () => {
     }
   };
 
-  const checkUsdtApproval = async (address: string) => {
-    try {
-      console.log('🔍 Checking USDT approval for:', address);
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const usdtContract = new ethers.Contract(CONTRACTS.USDT.address, CONTRACTS.USDT.abi, provider);
-      
-      // Check if contract exists first
-      const code = await provider.getCode(CONTRACTS.USDT.address);
-      if (code === '0x') {
-        console.error('❌ No contract deployed at USDT address:', CONTRACTS.USDT.address);
-        setNeedsUsdtApproval(true);
-        return;
-      }
-      
-      const allowance = await usdtContract.allowance(address, CONTRACTS.MAZUNTE_MORTGAGE.address);
-      const requiredAmount = ethers.parseUnits(downPaymentUSD.toString(), 6);
-      console.log('✅ USDT allowance:', allowance.toString());
-      console.log('✅ Required amount:', requiredAmount.toString());
-      setNeedsUsdtApproval(allowance < requiredAmount);
-    } catch (error) {
-      console.error('❌ Failed to check USDT approval:', error);
-      setNeedsUsdtApproval(true);
-    }
-  };
-
-  const getFaucetTokens = async () => {
-    if (!isConnected || !window.ethereum) return;
-
-    try {
-      console.log('💰 Starting faucet request...');
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const usdtContract = new ethers.Contract(CONTRACTS.USDT.address, CONTRACTS.USDT.abi, signer);
-
-      // Check if contract exists first
-      const code = await provider.getCode(CONTRACTS.USDT.address);
-      if (code === '0x') {
-        console.error('❌ No contract deployed at USDT address:', CONTRACTS.USDT.address);
-        toast({
-          title: "❌ Contract Not Found",
-          description: "USDT contract not deployed at expected address",
-          variant: "destructive"
-        });
-        return;
-      }
-
-      toast({
-        title: "💰 Getting Test USDT",
-        description: "Requesting tokens from faucet...",
-      });
-
-      console.log('💰 Calling faucet function...');
-      const tx = await usdtContract.faucet();
-      console.log('💰 Faucet transaction sent:', tx.hash);
-      
-      const receipt = await tx.wait();
-      console.log('💰 Faucet transaction confirmed:', receipt);
-
-      toast({
-        title: "✅ Faucet Success",
-        description: "Received 50,000 test USDT tokens",
-      });
-
-      // Wait for blockchain state to settle, then refresh balance
-      setTimeout(async () => {
-        console.log('💰 Refreshing balance after faucet...');
-        await updateUsdtBalance(account);
-        await checkUsdtApproval(account);
-      }, 3000); // Increased delay to 3 seconds
-    } catch (error: any) {
-      console.error('❌ Faucet failed:', error);
-      toast({
-        title: "❌ Faucet Failed",
-        description: error.message || 'Failed to get test tokens',
-        variant: "destructive"
-      });
-    }
-  };
-
-  const approveUsdt = async () => {
-    if (!isConnected || !window.ethereum) return;
-
-    setIsApproving(true);
-    try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const usdtContract = new ethers.Contract(CONTRACTS.USDT.address, CONTRACTS.USDT.abi, signer);
-
-      const approvalAmount = ethers.parseUnits(downPaymentUSD.toString(), 6);
-
-      toast({
-        title: "🔐 Approving USDT",
-        description: "Please approve USDT spending in your wallet...",
-      });
-
-      const tx = await usdtContract.approve(CONTRACTS.MAZUNTE_MORTGAGE.address, approvalAmount);
-      await tx.wait();
-
-      toast({
-        title: "✅ USDT Approved",
-        description: "Verifying approval status...",
-      });
-
-      // Wait for blockchain state to settle, then verify approval
-      setTimeout(async () => {
-        try {
-          await checkUsdtApproval(account);
-          toast({
-            title: "🎉 Approval Confirmed",
-            description: "Ready to purchase property",
-          });
-        } catch (error) {
-          console.error('Failed to verify approval:', error);
-          // Retry verification once more
-          setTimeout(() => checkUsdtApproval(account), 1000);
-        }
-      }, 2000);
-
-    } catch (error: any) {
-      console.error('Approval failed:', error);
-      toast({
-        title: "❌ Approval Failed",
-        description: error.message || 'Failed to approve USDT',
-        variant: "destructive"
-      });
-    } finally {
-      setIsApproving(false);
-    }
-  };
-
-
   const handlePurchaseProperty = async () => {
     if (!isConnected || !window.ethereum || !isKycApproved) return;
 
@@ -266,15 +118,17 @@ export const PropertyInvestmentInterface = () => {
       const signer = await provider.getSigner();
       const mortgageContract = new ethers.Contract(CONTRACTS.MAZUNTE_MORTGAGE.address, CONTRACTS.MAZUNTE_MORTGAGE.abi, signer);
 
-      const downPaymentAmount = ethers.parseUnits(downPaymentUSD.toString(), 6); // USDT 6 decimals
+      const downPaymentAmount = ethers.parseEther(downPaymentAVAX); // AVAX in wei
 
       toast({
         title: "🏠 Processing Purchase",
         description: "Creating your mortgage with AncientMortgage...",
       });
 
-      // Call purchaseProperty on AncientMortgage contract
-      const tx = await mortgageContract.purchaseProperty(downPaymentAmount);
+      // Call purchaseProperty with AVAX value
+      const tx = await mortgageContract.purchaseProperty(0, { 
+        value: downPaymentAmount 
+      });
 
       toast({
         title: "⏳ Transaction Pending",
@@ -287,7 +141,7 @@ export const PropertyInvestmentInterface = () => {
       try {
         console.log('💾 Recording AncientMortgage purchase in database...');
         const loanAmount = propertyValueUSD - downPaymentUSD;
-        const monthlyPayment = (loanAmount * 0.08 / 12) / (1 - Math.pow(1 + (0.08 / 12), -termMonths)); // Proper amortization
+        const monthlyPayment = (loanAmount * 0.08 / 12) / (1 - Math.pow(1 + (0.08 / 12), -termMonths));
 
         const { error: dbError } = await supabase
           .from('user_properties')
@@ -304,13 +158,13 @@ export const PropertyInvestmentInterface = () => {
             current_value: propertyValueUSD,
             equity_percentage: (downPaymentUSD / propertyValueUSD) * 100,
             is_active: true,
-            purchase_price_base: propertyValueUSD * 1000000, // 6 decimal precision
+            purchase_price_base: propertyValueUSD * 1000000,
             down_payment_base: downPaymentUSD * 1000000,
             loan_amount_base: loanAmount * 1000000,
-            apr_bps: 800, // 8% APR in basis points
+            apr_bps: 800,
             term_months: termMonths,
             property_id: 1,
-            currency: 'USDC-6',
+            currency: 'AVAX-18',
             unique_purchase_key: receipt.hash
           });
 
@@ -325,12 +179,11 @@ export const PropertyInvestmentInterface = () => {
       
       toast({
         title: "🎉 Property Purchase Successful!",
-        description: `Your property NFT is being held by AncientMortgage until paid off. Platform fees collected, staking pool receives interest payments.`,
+        description: `Your property NFT is being held by AncientMortgage until paid off.`,
       });
 
-      // Update balance and approval status
-      await updateUsdtBalance(account);
-      await checkUsdtApproval(account);
+      // Update balance
+      await updateAvaxBalance(account);
 
     } catch (error: any) {
       console.error('Purchase failed:', error);
@@ -345,7 +198,7 @@ export const PropertyInvestmentInterface = () => {
   };
 
   const platformFee = Math.round(propertyValueUSD * (PLATFORM_FEE_PERCENT / 100));
-  const hasInsufficientBalance = parseFloat(usdtBalance) < downPaymentUSD;
+  const hasInsufficientBalance = parseFloat(avaxBalance) < parseFloat(downPaymentAVAX);
 
   return (
     <div className="space-y-6">
@@ -409,7 +262,7 @@ export const PropertyInvestmentInterface = () => {
       ) : (
         <div className="space-y-4">
           {/* Status Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card>
               <CardContent className="pt-4">
                 <div className="flex items-center gap-2">
@@ -426,26 +279,14 @@ export const PropertyInvestmentInterface = () => {
               <CardContent className="pt-4">
                 <div className="flex items-center gap-2">
                   <DollarSign className="w-4 h-4 text-blue-500" />
-                  <span className="text-sm">USDT Balance</span>
+                  <span className="text-sm">AVAX Balance</span>
                 </div>
-                <div className="font-semibold">{parseFloat(usdtBalance).toLocaleString()} USDT</div>
+                <div className="font-semibold">{parseFloat(avaxBalance).toFixed(4)} AVAX</div>
                 {hasInsufficientBalance && (
-                  <Button onClick={getFaucetTokens} size="sm" variant="outline" className="mt-2">
-                    Get Test USDT
-                  </Button>
+                  <div className="text-sm text-red-500 mt-1">
+                    Need {downPaymentAVAX} AVAX to purchase
+                  </div>
                 )}
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardContent className="pt-4">
-                <div className="flex items-center gap-2">
-                  <CheckCircle className={`w-4 h-4 ${!needsUsdtApproval ? 'text-green-500' : 'text-red-500'}`} />
-                  <span className="text-sm">USDT Approval</span>
-                </div>
-                <div className={`font-semibold ${!needsUsdtApproval ? 'text-green-600' : 'text-red-600'}`}>
-                  {!needsUsdtApproval ? 'Ready' : 'Required'}
-                </div>
               </CardContent>
             </Card>
           </div>
@@ -463,8 +304,8 @@ export const PropertyInvestmentInterface = () => {
                   <span className="font-semibold">${propertyValueUSD.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                  <span>Down Payment (20%)</span>
-                  <span className="font-semibold">${downPaymentUSD.toLocaleString()} <span className="text-sm text-muted-foreground">(paid in USDT)</span></span>
+                  <span>Down Payment</span>
+                  <span className="font-semibold">{downPaymentAVAX} AVAX</span>
                 </div>
                 <div className="flex justify-between items-center p-3 bg-primary/10 rounded-lg border border-primary/20">
                   <span>Platform Fee (3%)</span>
@@ -480,37 +321,22 @@ export const PropertyInvestmentInterface = () => {
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="space-y-3">
-                {needsUsdtApproval && (
-                  <Button 
-                    onClick={approveUsdt}
-                    disabled={isApproving || hasInsufficientBalance}
-                    className="w-full"
-                    variant="outline"
-                  >
-                    {isApproving ? "Approving USDT..." : "1. Approve USDT Spending"}
-                  </Button>
-                )}
-                
-                <Button 
-                  onClick={handlePurchaseProperty}
-                  disabled={isLoading || hasInsufficientBalance || needsUsdtApproval || !isKycApproved}
-                  className="w-full"
-                  size="lg"
-                >
-                  {isLoading 
-                    ? "Processing Purchase..." 
-                    : !isKycApproved
-                    ? "KYC Approval Required"
-                    : hasInsufficientBalance
-                    ? "Insufficient USDT Balance"
-                    : needsUsdtApproval
-                    ? "Approve USDT First"
-                    : "2. Purchase Property with AncientMortgage"
-                  }
-                </Button>
-              </div>
+              {/* Action Button */}
+              <Button 
+                onClick={handlePurchaseProperty}
+                disabled={isLoading || hasInsufficientBalance || !isKycApproved}
+                className="w-full"
+                size="lg"
+              >
+                {isLoading 
+                  ? "Processing Purchase..." 
+                  : !isKycApproved
+                  ? "KYC Approval Required"
+                  : hasInsufficientBalance
+                  ? `Insufficient AVAX Balance (need ${downPaymentAVAX})`
+                  : `Purchase Property with ${downPaymentAVAX} AVAX`
+                }
+              </Button>
 
               {/* Business Model Benefits */}
               <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
