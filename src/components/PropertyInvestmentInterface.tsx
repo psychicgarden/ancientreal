@@ -87,12 +87,30 @@ export const PropertyInvestmentInterface = () => {
 
   const updateUsdtBalance = async (address: string) => {
     try {
+      console.log('🔍 Updating USDT balance for:', address);
+      console.log('🔍 USDT contract address:', CONTRACTS.USDT.address);
+      
       const provider = new ethers.BrowserProvider(window.ethereum);
       const usdtContract = new ethers.Contract(CONTRACTS.USDT.address, CONTRACTS.USDT.abi, provider);
+      
+      // Check if contract exists
+      const code = await provider.getCode(CONTRACTS.USDT.address);
+      console.log('🔍 Contract bytecode length:', code.length);
+      
+      if (code === '0x') {
+        console.error('❌ No contract deployed at USDT address:', CONTRACTS.USDT.address);
+        setUsdtBalance('0');
+        return;
+      }
+      
       const balance = await usdtContract.balanceOf(address);
-      setUsdtBalance(ethers.formatUnits(balance, 6)); // USDT has 6 decimals
+      console.log('✅ Raw USDT balance:', balance.toString());
+      const formattedBalance = ethers.formatUnits(balance, 6);
+      console.log('✅ Formatted USDT balance:', formattedBalance);
+      setUsdtBalance(formattedBalance);
     } catch (error) {
-      console.error('Failed to get USDT balance:', error);
+      console.error('❌ Failed to get USDT balance:', error);
+      setUsdtBalance('0');
     }
   };
 
@@ -110,13 +128,26 @@ export const PropertyInvestmentInterface = () => {
 
   const checkUsdtApproval = async (address: string) => {
     try {
+      console.log('🔍 Checking USDT approval for:', address);
       const provider = new ethers.BrowserProvider(window.ethereum);
       const usdtContract = new ethers.Contract(CONTRACTS.USDT.address, CONTRACTS.USDT.abi, provider);
+      
+      // Check if contract exists first
+      const code = await provider.getCode(CONTRACTS.USDT.address);
+      if (code === '0x') {
+        console.error('❌ No contract deployed at USDT address:', CONTRACTS.USDT.address);
+        setNeedsUsdtApproval(true);
+        return;
+      }
+      
       const allowance = await usdtContract.allowance(address, CONTRACTS.MAZUNTE_MORTGAGE.address);
       const requiredAmount = ethers.parseUnits(downPaymentUSD.toString(), 6);
+      console.log('✅ USDT allowance:', allowance.toString());
+      console.log('✅ Required amount:', requiredAmount.toString());
       setNeedsUsdtApproval(allowance < requiredAmount);
     } catch (error) {
-      console.error('Failed to check USDT approval:', error);
+      console.error('❌ Failed to check USDT approval:', error);
+      setNeedsUsdtApproval(true);
     }
   };
 
@@ -124,29 +155,48 @@ export const PropertyInvestmentInterface = () => {
     if (!isConnected || !window.ethereum) return;
 
     try {
+      console.log('💰 Starting faucet request...');
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const usdtContract = new ethers.Contract(CONTRACTS.USDT.address, CONTRACTS.USDT.abi, signer);
+
+      // Check if contract exists first
+      const code = await provider.getCode(CONTRACTS.USDT.address);
+      if (code === '0x') {
+        console.error('❌ No contract deployed at USDT address:', CONTRACTS.USDT.address);
+        toast({
+          title: "❌ Contract Not Found",
+          description: "USDT contract not deployed at expected address",
+          variant: "destructive"
+        });
+        return;
+      }
 
       toast({
         title: "💰 Getting Test USDT",
         description: "Requesting tokens from faucet...",
       });
 
+      console.log('💰 Calling faucet function...');
       const tx = await usdtContract.faucet();
-      await tx.wait();
+      console.log('💰 Faucet transaction sent:', tx.hash);
+      
+      const receipt = await tx.wait();
+      console.log('💰 Faucet transaction confirmed:', receipt);
 
       toast({
         title: "✅ Faucet Success",
         description: "Received 50,000 test USDT tokens",
       });
 
-      // Wait for transaction confirmation and refresh balance with delay
+      // Wait for blockchain state to settle, then refresh balance
       setTimeout(async () => {
+        console.log('💰 Refreshing balance after faucet...');
         await updateUsdtBalance(account);
-      }, 2000);
+        await checkUsdtApproval(account);
+      }, 3000); // Increased delay to 3 seconds
     } catch (error: any) {
-      console.error('Faucet failed:', error);
+      console.error('❌ Faucet failed:', error);
       toast({
         title: "❌ Faucet Failed",
         description: error.message || 'Failed to get test tokens',
