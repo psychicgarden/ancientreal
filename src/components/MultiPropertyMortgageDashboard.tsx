@@ -12,6 +12,8 @@ import { fmtUSD, fromBase } from "@/lib/money";
 import { PROPERTIES_CATALOG } from "@/lib/propertiesCatalog";
 import { calculateMortgageMetrics, calculatePortfolioMetrics, MortgageData } from "@/lib/mortgageCalculations";
 import { PropertyModeToggle, usePropertyMode, filterPropertiesByMode, getPropertyCounts } from "@/components/PropertyModeToggle";
+import { usePaymentSync } from "@/hooks/usePaymentSync";
+import { fetchRealContractAddresses } from "@/lib/contract-integration";
 import { 
   Building2, 
   DollarSign, 
@@ -70,9 +72,18 @@ interface PropertyMortgageData {
   };
 }
 
-export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onNavigateToProperties?: () => void }) => {
+export const MultiPropertyMortgageDashboard = ({ 
+  onNavigateToProperties, 
+  refreshTrigger = 0, 
+  onRefresh 
+}: { 
+  onNavigateToProperties?: () => void;
+  refreshTrigger?: number;
+  onRefresh?: () => void;
+}) => {
   const { isConnected, account } = useWallet();
   const { toast } = useToast();
+  const [contractAddress, setContractAddress] = useState<string>('');
   
   const [properties, setProperties] = useState<PropertyMortgageData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -81,6 +92,25 @@ export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onN
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   const [activeTab, setActiveTab] = useState("overview");
   const [propertyMode, setPropertyMode] = usePropertyMode();
+
+  // Initialize payment sync hook to auto-refresh when payments are made
+  usePaymentSync(contractAddress, account || '');
+
+  // Get contract address for payment sync
+  useEffect(() => {
+    const getContractAddress = async () => {
+      try {
+        const addresses = await fetchRealContractAddresses();
+        const mortgageAddress = addresses.MAZUNTE_MORTGAGE;
+        if (mortgageAddress) {
+          setContractAddress(mortgageAddress);
+        }
+      } catch (error) {
+        console.error('Failed to get contract address:', error);
+      }
+    };
+    getContractAddress();
+  }, []);
 
   useEffect(() => {
     const fetchMortgageData = async () => {
@@ -190,7 +220,7 @@ export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onN
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [isConnected, account, toast]);
+  }, [isConnected, account, toast, refreshTrigger]); // Add refreshTrigger to dependencies
 
   // Filter properties based on selected mode
   const filteredProperties = filterPropertiesByMode(properties, propertyMode);
@@ -706,6 +736,7 @@ export const MultiPropertyMortgageDashboard = ({ onNavigateToProperties }: { onN
           onClose={() => {
             setPaymentModalOpen(false);
             setSelectedProperty(null);
+            onRefresh?.(); // Trigger parent refresh
           }}
           property={{
             id: selectedProperty.id,

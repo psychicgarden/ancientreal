@@ -14,6 +14,8 @@ import { DeveloperInvestmentsAnalytics } from "@/components/DeveloperInvestments
 import { TrustSignals } from "@/components/TrustSignals";
 import { CompetitorComparison } from "@/components/CompetitorComparison";
 import { PropertyModeToggle, usePropertyMode, filterPropertiesByMode, getPropertyCounts } from "@/components/PropertyModeToggle";
+import { usePaymentSync } from "@/hooks/usePaymentSync";
+import { fetchRealContractAddresses } from "@/lib/contract-integration";
 
 import OneTimeReset from "@/components/admin/OneTimeReset";
 import RentalIncomeTracker from "@/components/RentalIncomeTracker";
@@ -34,6 +36,32 @@ const Portfolio = () => {
   const [loading, setLoading] = useState(true);
   const [showAllProperties, setShowAllProperties] = useState(false);
   const [propertyMode, setPropertyMode] = usePropertyMode();
+  const [contractAddress, setContractAddress] = useState<string>('');
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  // Initialize payment sync hook to auto-refresh data when payments are made
+  usePaymentSync(contractAddress, account || '');
+
+  // Get contract address for payment sync
+  useEffect(() => {
+    const getContractAddress = async () => {
+      try {
+        const addresses = await fetchRealContractAddresses();
+        const mortgageAddress = addresses.MAZUNTE_MORTGAGE;
+        if (mortgageAddress) {
+          setContractAddress(mortgageAddress);
+        }
+      } catch (error) {
+        console.error('Failed to get contract address:', error);
+      }
+    };
+    getContractAddress();
+  }, []);
+
+  // Force refresh function for components
+  const refreshPortfolioData = () => {
+    setRefreshTrigger(prev => prev + 1);
+  };
 
   // Debug logging for state changes
   useEffect(() => {
@@ -565,7 +593,11 @@ const Portfolio = () => {
 
           {/* Mortgage & Financing Tab */}
           <TabsContent value="mortgage" className="space-y-6">
-            <MultiPropertyMortgageDashboard onNavigateToProperties={handleNavigateToProperties} />
+            <MultiPropertyMortgageDashboard 
+              onNavigateToProperties={handleNavigateToProperties}
+              refreshTrigger={refreshTrigger}
+              onRefresh={refreshPortfolioData}
+            />
           </TabsContent>
 
           {/* Bookings & Revenue Tab */}

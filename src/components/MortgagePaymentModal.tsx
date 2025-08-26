@@ -13,6 +13,9 @@ import NetworkGuard from "@/components/NetworkGuard";
 import { toBase, fmtUSD, asUSD, principalBase } from "@/lib/money";
 import { PROPERTY_ID_MAP } from "@/lib/constants";
 import { NETWORK_CONFIG } from "@/lib/contracts";
+import { web3Integration } from "@/lib/web3-integration";
+import { usePaymentSync } from "@/hooks/usePaymentSync";
+import { fetchRealContractAddresses } from "@/lib/contract-integration";
 
 interface MortgagePaymentModalProps {
   isOpen: boolean;
@@ -33,8 +36,28 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
   const [step, setStep] = useState<'review' | 'confirm'>('review');
   const [isProcessing, setIsProcessing] = useState(false);
   const [hasAcceptedTerms, setHasAcceptedTerms] = useState(false);
-  const { account, makePayment } = useWallet();
+  const [contractAddress, setContractAddress] = useState<string>('');
+  const { account } = useWallet();
   const { toast } = useToast();
+  
+  // Initialize payment sync hook
+  usePaymentSync(contractAddress, account || '');
+
+  // Get contract address on component mount
+  React.useEffect(() => {
+    const getContractAddress = async () => {
+      try {
+        const addresses = await fetchRealContractAddresses();
+        const mortgageAddress = addresses.MAZUNTE_MORTGAGE;
+        if (mortgageAddress) {
+          setContractAddress(mortgageAddress);
+        }
+      } catch (error) {
+        console.error('Failed to get contract address:', error);
+      }
+    };
+    getContractAddress();
+  }, []);
 
   // Use real property data for payment details
   const mortgageDetails = {
@@ -70,79 +93,81 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
       return;
     }
 
+    if (!contractAddress) {
+      toast({
+        title: "Contract Loading",
+        description: "Please wait for contract initialization.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsProcessing(true);
     try {
-      // Use the makePayment from WalletContext
-      await makePayment();
-      
-      const mappedId = PROPERTY_ID_MAP[property.id] ?? 1;
-
-      const principalBase = Number(toBase(Number(mortgageDetails.principalAmount || 0)));
-      const interestBase  = Number(toBase(Number(mortgageDetails.interestAmount  || 0)));
-
-      const txHash = (mortgageDetails as any)?.txHash ?? null;
-
-      const { error: rpcErr } = await supabase.rpc('apply_mortgage_payment' as any, {
-        p_user_address: account?.toLowerCase(),
-        p_property_id: mappedId,
-        p_principal_delta_base: principalBase,
-        p_interest_delta_base: interestBase,
-        p_tx_hash: txHash
+      toast({
+        title: "Processing Payment",
+        description: "Please confirm the transaction in your wallet...",
       });
 
-      if (rpcErr) {
-        console.error('RPC failed', rpcErr);
-        toast({
-          title: "Payment failed",
-          description: "Please try again.",
-          variant: "destructive",
-        });
-        setIsProcessing(false);
-        return;
-      }
-
-      // success → refresh UI and close
-      // if you use a refetch, call it here; otherwise trigger your local refresh
-      // e.g., refetch?.();
-      setIsProcessing(false);
-      // toast.success('Payment recorded'); // if you use a toaster
-      onClose?.();
-
-      // Record payment in payment history using mappedId
-      await supabase
-        .from('payment_history')
-        .insert({
-          user_wallet_address: account?.toLowerCase(),
-          property_id: mappedId.toString(),
-          payment_amount: property.monthlyPayment,
-          remaining_balance_after: Math.max(0, property.remainingBalance - property.monthlyPayment),
-          status: 'completed'
-        });
+      // Initialize web3Integration if needed
+      await web3Integration.initialize();
+      
+      // Make the on-chain payment - this will emit PaymentMade event
+      const tx = await web3Integration.makePayment();
+      
+      toast({
+        title: "Transaction Submitted",
+        description: "Waiting for blockchain confirmation...",
+      });
+      
+      // Wait for transaction confirmation
+      const receipt = await tx.wait();
+      
+      console.log('✅ Payment transaction confirmed:', {
+        hash: receipt.hash,
+        blockNumber: receipt.blockNumber
+      });
 
       toast({
         title: "Payment Successful",
-        description: "Your mortgage payment has been processed successfully.",
+        description: "Your mortgage payment has been processed on-chain. Database sync in progress...",
       });
 
-      // Trigger success callback to refresh portfolio
+      // The usePaymentSync hook will automatically sync the payment to database
+      // when it detects the PaymentMade event from the blockchain
+      
+      // Add payment to local payment history for immediate UI feedback
+      const mappedId = PROPERTY_ID_MAP[property.id] ?? 1;
+      await supabase
+        .from('payment_history')
+        .insert({
+          user_wallet_address: account.toLowerCase(),
+          property_id: mappedId.toString(),
+          payment_amount: property.monthlyPayment,
+          remaining_balance_after: Math.max(0, property.remainingBalance - mortgageDetails.principalAmount),
+          status: 'completed',
+          transaction_hash: receipt.hash
+        });
+
+      // Close modal and trigger refresh
+      resetAndClose();
       onSuccess?.();
       
-      onClose();
-      setStep('review');
-      setHasAcceptedTerms(false);
+    } catch (error: any) {
+      console.error('❌ Payment failed:', error);
       
-      if (onSuccess) {
-        onSuccess();
-      } else {
-        // Refresh the page after a short delay
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
+      let errorMessage = "There was an error processing your payment.";
+      if (error.message?.includes("insufficient")) {
+        errorMessage = "Insufficient balance for payment.";
+      } else if (error.message?.includes("rejected")) {
+        errorMessage = "Transaction was rejected.";
+      } else if (error.message?.includes("network")) {
+        errorMessage = "Network error. Please check your connection.";
       }
-    } catch (error) {
+      
       toast({
         title: "Payment Failed",
-        description: "There was an error processing your payment. Please try again.",
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
