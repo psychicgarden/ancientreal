@@ -176,10 +176,24 @@ export const PropertyInvestmentInterface = () => {
 
       toast({
         title: "✅ USDT Approved",
-        description: "Ready to purchase property",
+        description: "Verifying approval status...",
       });
 
-      setNeedsUsdtApproval(false);
+      // Wait for blockchain state to settle, then verify approval
+      setTimeout(async () => {
+        try {
+          await checkUsdtApproval(account);
+          toast({
+            title: "🎉 Approval Confirmed",
+            description: "Ready to purchase property",
+          });
+        } catch (error) {
+          console.error('Failed to verify approval:', error);
+          // Retry verification once more
+          setTimeout(() => checkUsdtApproval(account), 1000);
+        }
+      }, 2000);
+
     } catch (error: any) {
       console.error('Approval failed:', error);
       toast({
