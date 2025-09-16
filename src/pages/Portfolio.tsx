@@ -226,7 +226,16 @@ const Portfolio = () => {
       downPayment: prop.down_payment,
       mortgageId: prop.mortgage_id,
       uniquePurchaseKey: prop.unique_purchase_key,
+      monthlyPayment: prop.monthly_payment,
       remainingBalance: prop.remaining_balance,
+      userProperty: {
+        id: prop.id,
+        user_wallet_address: prop.user_wallet_address,
+        principal_paid_base: prop.principal_paid_base,
+        interest_paid_base: prop.interest_paid_base,
+        unique_purchase_key: prop.unique_purchase_key,
+        mortgage_id: prop.mortgage_id
+      },
       isPending: status === "pending",
       failureReason: status === "pending" ? "Smart contract deployment required" : null
     };

@@ -20,6 +20,9 @@ interface PropertyCardProps {
   failureReason?: string | null;
   uniquePurchaseKey?: string;
   mortgageId?: string;
+  monthlyPayment?: number;
+  remainingBalance?: number;
+  userProperty?: any;
   onManage?: () => void;
   onListForTravel?: () => void;
   onMakePayment?: () => void;
@@ -40,6 +43,9 @@ export const PropertyCard = ({
   failureReason,
   uniquePurchaseKey,
   mortgageId,
+  monthlyPayment,
+  remainingBalance,
+  userProperty,
   onManage,
   onListForTravel,
   onMakePayment,
@@ -223,8 +229,9 @@ export const PropertyCard = ({
           location,
           image,
           value,
-          monthlyPayment: 2500, // Default value for PropertyCard usage
-          remainingBalance: 150000 // Default value for PropertyCard usage
+          monthlyPayment: monthlyPayment ?? 2500,
+          remainingBalance: remainingBalance ?? 150000,
+          userProperty: userProperty
         }}
       />
 
