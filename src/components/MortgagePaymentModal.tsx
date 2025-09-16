@@ -11,7 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { toBase } from "@/lib/money";
 import { PROPERTY_ID_MAP } from "@/lib/constants";
-import { isDemoProperty as checkIsDemoProperty } from "@/components/PropertyModeToggle";
+// Removed PropertyModeToggle - forcing demo mode for all payments
 
 interface MortgagePaymentModalProps {
   isOpen: boolean;
@@ -43,9 +43,8 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
   const { account } = useWallet();
   const { toast } = useToast();
   
-  // Determine if this is a demo property payment using the correct detection logic
-  // Pass the userProperty object directly to the detection function
-  const isDemoProperty = checkIsDemoProperty(property.userProperty || property);
+  // Force demo mode for all payments - website is demo-only now
+  const isDemoProperty = true;
   
   console.log('🔍 MortgagePaymentModal - DEBUGGING INPUT DATA:', {
     propertyTitle: property.title,

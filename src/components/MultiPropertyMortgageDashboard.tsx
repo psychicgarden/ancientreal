@@ -11,7 +11,7 @@ import { MortgagePaymentModal } from "@/components/MortgagePaymentModal";
 import { fmtUSD, fromBase } from "@/lib/money";
 import { PROPERTIES_CATALOG } from "@/lib/propertiesCatalog";
 import { calculateMortgageMetrics, calculatePortfolioMetrics, MortgageData } from "@/lib/mortgageCalculations";
-import { PropertyModeToggle, usePropertyMode, filterPropertiesByMode, getPropertyCounts } from "@/components/PropertyModeToggle";
+// Removed PropertyModeToggle - keeping demo-only experience
 import { 
   Building2, 
   DollarSign, 
@@ -84,7 +84,7 @@ export const MultiPropertyMortgageDashboard = ({
   const [selectedProperty, setSelectedProperty] = useState<PropertyMortgageData | null>(null);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   const [activeTab, setActiveTab] = useState("overview");
-  const [propertyMode, setPropertyMode] = usePropertyMode();
+  // Removed propertyMode - keeping demo-only experience
 
   useEffect(() => {
     const fetchMortgageData = async () => {
@@ -155,12 +155,9 @@ export const MultiPropertyMortgageDashboard = ({
             const storedMonthlyPayment = Number(property.monthly_payment || 0);
             const calculatedMonthlyPayment = metrics.monthlyPayment;
             
-            // HARDCODED FIX for Art Deco Loft - force correct payment amount
+            // Use stored monthly payment if reasonable, otherwise calculated
             let finalMonthlyPayment;
-            if (property.property_name === "Art Deco Loft") {
-              finalMonthlyPayment = 1252.10; // Force correct value from database
-              console.log(`🔧 HARDCODED FIX: Art Deco Loft monthly payment set to $${finalMonthlyPayment}`);
-            } else if (storedMonthlyPayment > 10) { // Any reasonable mortgage payment should be > $10
+            if (storedMonthlyPayment > 10) { // Any reasonable mortgage payment should be > $10
               finalMonthlyPayment = storedMonthlyPayment;
               console.log(`✅ Using STORED monthly payment for ${property.property_name}: $${storedMonthlyPayment}`);
             } else {
@@ -177,7 +174,7 @@ export const MultiPropertyMortgageDashboard = ({
               'Parsed storedMonthlyPayment': storedMonthlyPayment,
               'Calculated monthlyPayment': calculatedMonthlyPayment,
               'FINAL monthlyPayment': finalMonthlyPayment,
-              'Will use': property.property_name === "Art Deco Loft" ? 'HARDCODED' : (finalMonthlyPayment === storedMonthlyPayment ? 'STORED' : 'CALCULATED')
+              'Will use': finalMonthlyPayment === storedMonthlyPayment ? 'STORED' : 'CALCULATED'
             });
             
             // Get property details from catalog
@@ -262,11 +259,8 @@ export const MultiPropertyMortgageDashboard = ({
     };
   }, [isConnected, account, toast]); // Removed refreshTrigger
 
-  // Filter properties based on selected mode
-  const filteredProperties = filterPropertiesByMode(properties, propertyMode);
-  
-  // Get property counts for the toggle
-  const { onChainCount, demoCount } = getPropertyCounts(properties);
+  // Use all properties - demo-only experience
+  const filteredProperties = properties;
 
   // Group filtered properties by location
   const propertyGroups: PropertyGroup[] = filteredProperties.reduce((groups, property) => {
@@ -390,38 +384,19 @@ export const MultiPropertyMortgageDashboard = ({
 
   if (filteredProperties.length === 0 && !loading) {
     return (
-      <div className="space-y-6">
-        {/* Property Mode Toggle */}
-        <PropertyModeToggle
-          mode={propertyMode}
-          onModeChange={setPropertyMode}
-          onChainCount={onChainCount}
-          demoCount={demoCount}
-        />
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>No {propertyMode === "onchain" ? "On-Chain" : "Demo"} Mortgages</CardTitle>
-            <CardDescription>
-              You don't have any {propertyMode === "onchain" ? "on-chain" : "demo"} mortgages. 
-              {propertyMode === "onchain" ? " Consider purchasing a property!" : " Demo mortgages will appear here for testing."}
-            </CardDescription>
-          </CardHeader>
-        </Card>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>No Mortgages Found</CardTitle>
+          <CardDescription>
+            You don't have any mortgage properties yet. Consider purchasing a property to get started!
+          </CardDescription>
+        </CardHeader>
+      </Card>
     );
   }
 
   return (
     <div className="space-y-6">
-      {/* Property Mode Toggle */}
-      <PropertyModeToggle
-        mode={propertyMode}
-        onModeChange={setPropertyMode}
-        onChainCount={onChainCount}
-        demoCount={demoCount}
-      />
-      
       {/* Portfolio Summary Header */}
       <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-background via-muted/30 to-primary/5 border">
         <div className="absolute inset-0 bg-grid-white/10" />
@@ -432,7 +407,7 @@ export const MultiPropertyMortgageDashboard = ({
                 Mortgage Portfolio
               </h1>
               <p className="text-muted-foreground mb-6">
-                Managing {filteredProperties.length} {propertyMode === "onchain" ? "on-chain" : "demo"} properties across {propertyGroups.length} locations
+                Managing {filteredProperties.length} properties across {propertyGroups.length} locations
               </p>
               
               {/* Professional Portfolio Metrics */}
