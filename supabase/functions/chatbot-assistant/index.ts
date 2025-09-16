@@ -27,6 +27,13 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Simple health check endpoint
+  if (req.method === 'GET') {
+    return new Response(JSON.stringify({ ok: true, status: 'healthy' }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+
   try {
     const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
     if (!openAIApiKey) {
@@ -37,7 +44,21 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const { message, context, conversationHistory = [] }: ChatRequest = await req.json();
+    // Safe body parsing to allow health checks without full payload
+    let body: any = {};
+    try {
+      body = await req.json();
+    } catch (_) {
+      body = {};
+    }
+
+    if (body?.health) {
+      return new Response(JSON.stringify({ ok: true, status: 'healthy' }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const { message = '', context, conversationHistory = [] }: ChatRequest = body;
 
     // Offline fallback responses for common questions
     const offlineResponses: Record<string, string> = {
@@ -123,14 +144,14 @@ All backed by legal SPV structure and professional property management.`
     const messageLower = message.toLowerCase();
     
     // Skip offline responses for investor-level queries
-    const isInvestorQuery = /\$[\d,.]+m[illion]*|[\d,.]+\s*million|\$[\d,]+k[illion]*|\$[\d,]+,[\d,]+/i.test(messageLower) ||
+    const isInvestorQueryEarly = /\$[\d,.]+m[illion]*|[\d,.]+\s*million|\$[\d,]+k[illion]*|\$[\d,]+,[\d,]+/i.test(messageLower) ||
                            messageLower.includes('7m') || messageLower.includes('7.5m') ||
                            messageLower.includes('million') || messageLower.includes('$1m') ||
                            /investment.*get.*used|how.*money.*spent|capital.*deployment|funds.*allocation/i.test(messageLower) ||
                            /when.*returns|return.*timeline|returns.*hit|when.*profit|timeline.*returns/i.test(messageLower) ||
                            /business.*model|scaling.*strategy|investor.*returns/i.test(messageLower);
     
-    if (!isInvestorQuery) {
+    if (!isInvestorQueryEarly) {
       for (const [key, response] of Object.entries(offlineResponses)) {
         if (messageLower.includes(key) || 
             (key === 'tether' && (messageLower.includes('similar') || messageLower.includes('legal'))) ||

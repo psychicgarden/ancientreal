@@ -130,14 +130,26 @@ const ChatBot: React.FC = () => {
 
       setMessages(prev => [...prev, assistantMessage]);
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Chat error:', error);
+
+      let errorMessage = "I'm temporarily unavailable. Please try again shortly.";
+
+      // If it's a clear rate limit/quota error
+      if (error?.message?.includes('429') || error?.message?.toLowerCase?.().includes('quota')) {
+        errorMessage = "Our AI assistant is currently at capacity. Please try again in a few moments.";
+      } else {
+        // Try a quick health check to detect if Supabase is paused/unreachable
+        try {
+          const { data: healthData, error: healthError } = await supabase.functions.invoke('chatbot-assistant', { body: { health: true } });
+          if (healthError || !healthData?.ok) {
+            errorMessage = "Service unavailable right now (Supabase paused or unreachable). Please try again later.";
+          }
+        } catch (e) {
+          errorMessage = "Service unavailable right now (Supabase paused or unreachable). Please try again later.";
+        }
+      }
       
-      // Show specific error message for API quota issues
-      const errorMessage = error.message?.includes('429') || error.message?.includes('quota') 
-        ? "Our AI assistant is currently at capacity. Please try again in a few moments."
-        : "I'm temporarily unavailable. Please try again shortly.";
-        
       const assistantMessage: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',

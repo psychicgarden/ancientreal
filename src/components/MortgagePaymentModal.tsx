@@ -57,15 +57,20 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
     rawProperty: property
   });
 
-  // Use real property data for payment details
+  // Use real property data for payment details (accurate amortization)
+  const apr = 0.08; // 8% APR default used across the app
+  const monthlyRate = apr / 12;
+  const interestAmount = property.remainingBalance * monthlyRate;
+  const principalAmount = Math.max(0, property.monthlyPayment - interestAmount);
+
   const mortgageDetails = {
-    monthlyPayment: property.monthlyPayment, // This MUST be 1252 for Art Deco Loft
-    principalAmount: property.monthlyPayment * 0.65, // Approximate principal portion
-    interestAmount: property.monthlyPayment * 0.35, // Approximate interest portion
+    monthlyPayment: property.monthlyPayment,
+    principalAmount,
+    interestAmount,
     remainingBalance: property.remainingBalance,
-    nextDueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Next month
-    loanAmount: property.remainingBalance + 50000, // Approximate original loan
-    interestRate: 8.0
+    nextDueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    loanAmount: property.remainingBalance + principalAmount, // inferred original balance approx
+    interestRate: apr * 100
   };
 
   console.log('💰 MortgagePaymentModal - FINAL CALCULATION:', {
