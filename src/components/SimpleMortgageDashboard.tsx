@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { ethers } from 'ethers';
 import { ContractDatabaseIntegration } from '@/lib/contract-database-integration';
 import { usePaymentSync } from '@/hooks/usePaymentSync';
+import { ENHANCED_AVAX_MORTGAGE_ABI, ENHANCED_AVAX_MORTGAGE_CONFIG, convertUSDToAVAX, formatAVAXAmount } from '@/lib/enhanced-avax-mortgage-abi';
 import { TrendingUp, Calendar, DollarSign, Home, PiggyBank, RefreshCw, AlertTriangle } from 'lucide-react';
 import { OptimizedImage } from '@/components/ui/optimized-image';
 import { getPropertyImage } from '@/lib/propertyImageMapping';
@@ -36,19 +37,6 @@ interface PaymentHistory {
   tx_hash: string;
 }
 
-// Minimal ABI for AVAX mortgage payment operations
-const AVAX_MORTGAGE_ABI = [
-  'function makePayment() external payable',
-  'function getMortgageDetails(address _borrower) external view returns (tuple(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,bool,address))',
-  'function hasMortgage(address) external view returns (bool)',
-  'event PaymentMade(address indexed borrower, uint256 paymentAmount, uint256 principalPaid, uint256 interestPaid, uint256 remainingBalance)'
-];
-
-export const SimpleMortgageDashboard = () => {
-  const [properties, setProperties] = useState<MortgageProperty[]>([]);
-  const [payments, setPayments] = useState<PaymentHistory[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
   const [account, setAccount] = useState<string>('');
   const [contractAddress, setContractAddress] = useState<string>('');
   const [mortgageDetails, setMortgageDetails] = useState<any>(null);
@@ -63,16 +51,16 @@ export const SimpleMortgageDashboard = () => {
   // Load contract address and get connected wallet address
   useEffect(() => {
     const initialize = async () => {
-      // Load contract address - use existing SIMPLE_MORTGAGE contract
+      // Load Enhanced AVAX Mortgage contract address
       try {
-        const address = await ContractDatabaseIntegration.getContractAddress('SIMPLE_MORTGAGE');
+        const address = await ContractDatabaseIntegration.getContractAddress('ENHANCED_AVAX_MORTGAGE');
         setContractAddress(address);
-        console.log('✅ Contract address loaded:', address);
+        console.log('✅ Enhanced AVAX Mortgage contract address loaded:', address);
       } catch (error) {
-        console.error('❌ Failed to load SIMPLE_MORTGAGE contract address:', error);
+        console.error('❌ Failed to load ENHANCED_AVAX_MORTGAGE contract address:', error);
         toast({
           title: "Contract Loading Failed",
-          description: "Could not load smart contract address. Please ensure contracts are deployed.",
+          description: "Could not load Enhanced AVAX Mortgage contract address.",
           variant: "destructive"
         });
       }
@@ -198,11 +186,9 @@ export const SimpleMortgageDashboard = () => {
     }
   };
 
-  // USD to AVAX conversion using test ratio: 129K USD = 0.00129 AVAX
-  const convertUSDToAVAX = (usdAmount: number): string => {
-    const conversionRate = 0.00129 / 129000;
-    const avaxAmount = usdAmount * conversionRate;
-    return avaxAmount.toFixed(18);
+  // USD to AVAX conversion using enhanced config
+  const convertUSDToAVAXLocal = (usdAmount: number): string => {
+    return convertUSDToAVAX(usdAmount);
   };
 
   // Calculate actual months paid by querying database
@@ -226,7 +212,7 @@ export const SimpleMortgageDashboard = () => {
     }
   };
 
-  // Make mortgage payment - send the actual monthly payment amount
+  // Make mortgage payment using Enhanced AVAX Mortgage contract
   const handleMakePayment = async () => {
     if (!account || !contractAddress || properties.length === 0) return;
 
@@ -234,46 +220,45 @@ export const SimpleMortgageDashboard = () => {
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, AVAX_MORTGAGE_ABI, signer);
+      const contract = new ethers.Contract(contractAddress, ENHANCED_AVAX_MORTGAGE_ABI, signer);
 
-      // Use the actual monthly payment amount from the property record
-      // This maintains the 100,000,000:1 AVAX:USD ratio: $1,252 = 0.00001252 AVAX
-      const contractPaymentUSD = properties[0].monthly_payment;
-      const avaxPaymentAmount = convertUSDToAVAX(contractPaymentUSD);
-      const paymentAmount = ethers.parseEther(avaxPaymentAmount);
+      // Use the monthly payment from configuration
+      const monthlyPaymentUSD = 1252;
+      const monthlyPaymentAVAX = "0.00001252";
+      const paymentAmount = ethers.parseEther(monthlyPaymentAVAX);
 
-      console.log(`💰 Contract payment: $${contractPaymentUSD} USD → ${avaxPaymentAmount} AVAX`);
+      console.log(`💰 Enhanced Mortgage payment: $${monthlyPaymentUSD} USD → ${monthlyPaymentAVAX} AVAX`);
 
       toast({
         title: "💰 Processing Payment",
-        description: `Submitting $${contractPaymentUSD.toFixed(2)} USD payment...`,
+        description: `Submitting $${monthlyPaymentUSD.toFixed(2)} USD payment...`,
       });
 
       const tx = await contract.makePayment({ value: paymentAmount });
       
       toast({
         title: "⏳ Transaction Pending",
-        description: "Processing payment...",
+        description: "Processing Enhanced AVAX Mortgage payment...",
       });
 
       const receipt = await tx.wait();
       
       toast({
         title: "✅ Payment Complete!",
-        description: `Payment processed successfully`,
+        description: `Enhanced AVAX Mortgage payment processed successfully`,
       });
 
       // Auto-refresh data after payment
       setTimeout(async () => {
-        console.log('🔄 Auto-refreshing after payment...');
+        console.log('🔄 Auto-refreshing dashboard after payment...');
         await loadUserData();
       }, 3000);
 
     } catch (error: any) {
-      console.error('Payment failed:', error);
+      console.error('Enhanced AVAX Mortgage payment failed:', error);
       toast({
         title: "❌ Payment Failed", 
-        description: error.message || 'Payment transaction failed',
+        description: error.message || 'Enhanced AVAX Mortgage payment failed',
         variant: "destructive"
       });
     } finally {
@@ -418,7 +403,7 @@ export const SimpleMortgageDashboard = () => {
               {/* Payment Action */}
               <div className="pt-4 border-t">
                 <div className="text-center mb-3 text-sm text-muted-foreground">
-                  Contract Payment: ${property.monthly_payment?.toLocaleString()} USD ({convertUSDToAVAX(property.monthly_payment || 0)} AVAX)
+                  Enhanced AVAX Mortgage Payment: $1,252 USD (0.00001252 AVAX)
                 </div>
                 <Button 
                   onClick={handleMakePayment}
@@ -428,7 +413,7 @@ export const SimpleMortgageDashboard = () => {
                 >
                   {isPaymentLoading 
                     ? "Processing Payment..." 
-                    : `Make Monthly Payment ($${property.monthly_payment?.toLocaleString()})`
+                    : `Make Monthly Payment ($1,252)`
                   }
                 </Button>
               </div>

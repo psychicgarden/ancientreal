@@ -5,10 +5,10 @@ import { Badge } from './ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { ethers } from 'ethers';
 import { supabase } from '@/integrations/supabase/client';
-import { CONTRACTS } from '@/lib/contracts';
+import { ContractDatabaseIntegration } from '@/lib/contract-database-integration';
+import { ENHANCED_AVAX_MORTGAGE_ABI, ENHANCED_AVAX_MORTGAGE_CONFIG, convertUSDToAVAX, formatAVAXAmount } from '@/lib/enhanced-avax-mortgage-abi';
 import { Home, DollarSign, Calendar, MapPin, TrendingUp, Users, Shield, CheckCircle } from 'lucide-react';
 import { PROPERTIES_CATALOG } from '@/lib/propertiesCatalog';
-import { convertUSDToAVAX, formatAVAXAmount } from '@/lib/constants';
 
 export const PropertyInvestmentInterface = () => {
   const { toast } = useToast();
@@ -17,25 +17,42 @@ export const PropertyInvestmentInterface = () => {
   const [avaxBalance, setAvaxBalance] = useState('0');
   const [isLoading, setIsLoading] = useState(false);
   const [isKycApproved, setIsKycApproved] = useState(false);
+  const [contractAddress, setContractAddress] = useState<string>('');
   
   // Featured property from catalog
   const featuredProperty = PROPERTIES_CATALOG[0]; // Art Deco Loft in Mazunte, Mexico
   
-  // Fixed property values - now in AVAX with proper exchange rate
-  const propertyValueUSD = featuredProperty.totalValue; // $129,000
-  const downPaymentUSD = Math.round(featuredProperty.totalValue * 0.2); // 20% = $25,800
-  const platformFeeUSD = Math.round(featuredProperty.totalValue * 0.03); // 3% = $3,870
-  const totalPaymentUSD = downPaymentUSD + platformFeeUSD; // Total payment needed
-  const downPaymentAVAX = convertUSDToAVAX(downPaymentUSD);
-  const platformFeeAVAX = convertUSDToAVAX(platformFeeUSD);
-  const totalPaymentAVAX = convertUSDToAVAX(totalPaymentUSD);
-  const termMonths = 120; // Fixed 10 years
+  // Use enhanced mortgage configuration for consistent values
+  const propertyValueUSD = ENHANCED_AVAX_MORTGAGE_CONFIG.PROPERTY_VALUE_USD;
+  const downPaymentUSD = ENHANCED_AVAX_MORTGAGE_CONFIG.DOWN_PAYMENT_USD;
+  const platformFeeUSD = ENHANCED_AVAX_MORTGAGE_CONFIG.PLATFORM_FEE_USD;
+  const totalPaymentUSD = ENHANCED_AVAX_MORTGAGE_CONFIG.TOTAL_PAYMENT_USD;
+  const downPaymentAVAX = ENHANCED_AVAX_MORTGAGE_CONFIG.DOWN_PAYMENT_AVAX;
+  const platformFeeAVAX = ENHANCED_AVAX_MORTGAGE_CONFIG.PLATFORM_FEE_AVAX;
+  const totalPaymentAVAX = ENHANCED_AVAX_MORTGAGE_CONFIG.TOTAL_PAYMENT_AVAX;
+  const termMonths = ENHANCED_AVAX_MORTGAGE_CONFIG.TERM_MONTHS;
   const FIXED_INTEREST_RATE = 8.0;
-  const PLATFORM_FEE_PERCENT = 3.0; // 3% platform fee
+  const PLATFORM_FEE_PERCENT = 3.0;
 
   useEffect(() => {
     checkWalletConnection();
+    loadContractAddress();
   }, []);
+
+  const loadContractAddress = async () => {
+    try {
+      const address = await ContractDatabaseIntegration.getContractAddress('ENHANCED_AVAX_MORTGAGE');
+      setContractAddress(address);
+      console.log('✅ Enhanced AVAX Mortgage contract loaded:', address);
+    } catch (error) {
+      console.error('❌ Failed to load contract address:', error);
+      toast({
+        title: "Contract Loading Failed",
+        description: "Could not load Enhanced AVAX Mortgage contract",
+        variant: "destructive"
+      });
+    }
+  };
 
   useEffect(() => {
     if (isConnected && account) {
@@ -103,57 +120,48 @@ export const PropertyInvestmentInterface = () => {
   };
 
   const checkKycStatus = async (address: string) => {
-    try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const mortgageContract = new ethers.Contract(CONTRACTS.MAZUNTE_MORTGAGE.address, CONTRACTS.MAZUNTE_MORTGAGE.abi, provider);
-      // For demo purposes, we'll assume KYC is approved. In production, this would check the contract
-      setIsKycApproved(true);
-    } catch (error) {
-      console.error('Failed to check KYC status:', error);
-      setIsKycApproved(true); // Default to approved for demo
-    }
+    // For admin dashboard demo, always approve KYC
+    setIsKycApproved(true);
   };
 
   const handlePurchaseProperty = async () => {
-    if (!isConnected || !window.ethereum || !isKycApproved) return;
+    if (!isConnected || !window.ethereum || !isKycApproved || !contractAddress) return;
 
     setIsLoading(true);
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const mortgageContract = new ethers.Contract(CONTRACTS.SIMPLE_MORTGAGE.address, CONTRACTS.SIMPLE_MORTGAGE.abi, signer);
+      const mortgageContract = new ethers.Contract(contractAddress, ENHANCED_AVAX_MORTGAGE_ABI, signer);
 
-      const totalPaymentAmount = ethers.parseEther(totalPaymentAVAX); // Total payment (down payment + platform fee) in wei
-      
-      // For demo, we'll use property ID 1 (should be pre-added by owner)
-      const demoPropertyId = 1;
+      const totalPaymentAmount = ethers.parseEther(totalPaymentAVAX);
+      const propertyId = ENHANCED_AVAX_MORTGAGE_CONFIG.PROPERTY_ID;
 
       toast({
         title: "🏠 Processing Purchase",
-        description: `Paying ${formatAVAXAmount(totalPaymentAVAX)} AVAX (down payment + platform fee)...`,
+        description: `Paying ${formatAVAXAmount(totalPaymentAVAX)} AVAX for Art Deco Loft...`,
       });
 
-      // Call purchaseProperty with property ID and term
+      // Call purchaseProperty on EnhancedAvaxMortgage contract
       const tx = await mortgageContract.purchaseProperty(
-        demoPropertyId,       // Property ID
+        propertyId,           // Property ID (1 = Art Deco Loft)
         termMonths,           // Term in months (120 = 10 years)
         { 
-          value: totalPaymentAmount // Total payment (down payment + platform fee) in wei
+          value: totalPaymentAmount // Total payment in wei
         }
       );
 
       toast({
         title: "⏳ Transaction Pending",
-        description: "Waiting for blockchain confirmation...",
+        description: "Processing Enhanced AVAX Mortgage purchase...",
       });
 
       const receipt = await tx.wait();
       
       // Record purchase in database
       try {
-        console.log('💾 Recording AncientMortgage purchase in database...');
+        console.log('💾 Recording Enhanced AVAX Mortgage purchase in database...');
         const loanAmount = propertyValueUSD - downPaymentUSD;
-        const monthlyPayment = (loanAmount * 0.08 / 12) / (1 - Math.pow(1 + (0.08 / 12), -termMonths));
+        const monthlyPayment = ENHANCED_AVAX_MORTGAGE_CONFIG.MONTHLY_PAYMENT_USD;
 
         const { error: dbError } = await supabase
           .from('user_properties')
@@ -166,16 +174,16 @@ export const PropertyInvestmentInterface = () => {
             purchase_price: propertyValueUSD,
             down_payment: downPaymentUSD,
             remaining_balance: loanAmount,
-            monthly_payment: Math.round(monthlyPayment),
+            monthly_payment: monthlyPayment,
             current_value: propertyValueUSD,
             equity_percentage: (downPaymentUSD / propertyValueUSD) * 100,
             is_active: true,
             purchase_price_base: propertyValueUSD * 1000000,
             down_payment_base: downPaymentUSD * 1000000,
             loan_amount_base: loanAmount * 1000000,
-            apr_bps: 800,
+            apr_bps: ENHANCED_AVAX_MORTGAGE_CONFIG.APR_BPS,
             term_months: termMonths,
-            property_id: 1,
+            property_id: ENHANCED_AVAX_MORTGAGE_CONFIG.PROPERTY_ID,
             currency: 'AVAX-18',
             unique_purchase_key: receipt.hash
           });
@@ -183,7 +191,7 @@ export const PropertyInvestmentInterface = () => {
         if (dbError) {
           console.error('❌ Database insert failed:', dbError);
         } else {
-          console.log('✅ AncientMortgage purchase recorded in database');
+          console.log('✅ Enhanced AVAX Mortgage purchase recorded in database');
         }
       } catch (dbError) {
         console.error('❌ Failed to record purchase:', dbError);
@@ -191,7 +199,7 @@ export const PropertyInvestmentInterface = () => {
       
       toast({
         title: "🎉 Property Purchase Successful!",
-        description: `Your property NFT is being held by AncientMortgage until paid off.`,
+        description: `NFT ownership held in contract until mortgage completion.`,
       });
 
       // Update balance

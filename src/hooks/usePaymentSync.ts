@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { ethers } from 'ethers';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { ENHANCED_AVAX_MORTGAGE_CONFIG, convertAVAXToUSD } from '@/lib/enhanced-avax-mortgage-abi';
 
 interface PaymentEventData {
   borrower: string;
@@ -17,24 +18,21 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
 
   const syncPaymentToDatabase = async (eventData: PaymentEventData) => {
     try {
-      // Convert AVAX back to USD using the test ratio: 0.00129 AVAX = $129,000
-      const AVAX_TO_USD_RATIO = 129000 / 0.00129; // ~100,000,000
-      
-      const paymentAmountUSD = parseFloat(ethers.formatEther(eventData.paymentAmount)) * AVAX_TO_USD_RATIO;
-      const principalPaidUSD = parseFloat(ethers.formatEther(eventData.principalPaid)) * AVAX_TO_USD_RATIO;
-      const interestPaidUSD = parseFloat(ethers.formatEther(eventData.interestPaid)) * AVAX_TO_USD_RATIO;
-      const remainingBalanceUSD = parseFloat(ethers.formatEther(eventData.remainingBalance)) * AVAX_TO_USD_RATIO;
+      // Convert AVAX to USD using enhanced configuration
+      const paymentAmountUSD = convertAVAXToUSD(ethers.formatEther(eventData.paymentAmount));
+      const principalPaidUSD = convertAVAXToUSD(ethers.formatEther(eventData.principalPaid));
+      const interestPaidUSD = convertAVAXToUSD(ethers.formatEther(eventData.interestPaid));
+      const remainingBalanceUSD = convertAVAXToUSD(ethers.formatEther(eventData.remainingBalance));
 
-      // Determine property ID dynamically based on payment amount
-      // Bahia property (ID: 2) has higher monthly payments (~$1,261), Art Deco Loft (ID: 1) has lower payments (~$700)
-      const propertyId = paymentAmountUSD > 1000 ? 2 : 1;
+      // Use Enhanced AVAX Mortgage property ID
+      const propertyId = ENHANCED_AVAX_MORTGAGE_CONFIG.PROPERTY_ID;
 
-      console.log('💰 Converting AVAX to USD:', {
+      console.log('💰 Enhanced AVAX Mortgage - Converting to USD:', {
         paymentAmountAVAX: ethers.formatEther(eventData.paymentAmount),
         paymentAmountUSD: paymentAmountUSD.toFixed(2),
         principalPaidUSD: principalPaidUSD.toFixed(2),
         interestPaidUSD: interestPaidUSD.toFixed(2),
-        detectedPropertyId: propertyId
+        propertyId
       });
 
       // Convert to 6-decimal base units for database storage (USDC-6 format)
@@ -66,7 +64,7 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
       // Apply payment to user_properties using database function
       const { error: applyError } = await supabase.rpc('apply_mortgage_payment', {
         p_user_address: eventData.borrower.toLowerCase(),
-        p_property_id: propertyId, // Dynamic property ID
+        p_property_id: propertyId,
         p_principal_delta_base: principalPaidBase,
         p_interest_delta_base: interestPaidBase,
         p_tx_hash: eventData.transactionHash
@@ -109,7 +107,7 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
           updated_at: new Date().toISOString()
         })
         .eq('user_address', eventData.borrower.toLowerCase())
-        .eq('property_id', propertyId); // Dynamic property ID
+        .eq('property_id', propertyId);
 
       if (balanceError) {
         console.warn('⚠️ Balance update failed (non-critical):', balanceError.message);
@@ -117,7 +115,7 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
         console.log('✅ Updated remaining balance to:', newRemainingBalance);
       }
 
-      console.log('✅ Payment synced to database:', {
+      console.log('✅ Enhanced AVAX Mortgage payment synced to database:', {
         borrower: eventData.borrower,
         paymentAmount: paymentAmountUSD.toFixed(2),
         remainingBalance: remainingBalanceUSD.toFixed(2),
@@ -126,7 +124,7 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
 
       toast({
         title: "✅ Payment Synced",
-        description: `Payment of $${paymentAmountUSD.toFixed(2)} synced to database`,
+        description: `Enhanced AVAX Mortgage payment of $${paymentAmountUSD.toFixed(2)} synced to database`,
       });
 
     } catch (error) {
