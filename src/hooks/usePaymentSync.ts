@@ -6,6 +6,7 @@ import { ENHANCED_AVAX_MORTGAGE_CONFIG, convertAVAXToUSD } from '@/lib/enhanced-
 
 interface PaymentEventData {
   borrower: string;
+  propertyId: bigint;
   paymentAmount: bigint;
   principalPaid: bigint;
   interestPaid: bigint;
@@ -24,8 +25,8 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
       const interestPaidUSD = convertAVAXToUSD(ethers.formatEther(eventData.interestPaid));
       const remainingBalanceUSD = convertAVAXToUSD(ethers.formatEther(eventData.remainingBalance));
 
-      // Use Enhanced AVAX Mortgage property ID
-      const propertyId = ENHANCED_AVAX_MORTGAGE_CONFIG.PROPERTY_ID;
+      // Use property ID from event data
+      const propertyId = Number(eventData.propertyId);
 
       console.log('💰 Enhanced AVAX Mortgage - Converting to USD:', {
         paymentAmountAVAX: ethers.formatEther(eventData.paymentAmount),
@@ -149,7 +150,7 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
       try {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const ABI = [
-          'event PaymentMade(address indexed borrower, uint256 paymentAmount, uint256 principalPaid, uint256 interestPaid, uint256 remainingBalance)'
+          'event PaymentMade(address indexed borrower, uint256 indexed propertyId, uint256 paymentAmount, uint256 principalPaid, uint256 interestPaid, uint256 remainingBalance)'
         ];
         
         contract = new ethers.Contract(contractAddress, ABI, provider);
@@ -161,10 +162,11 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
         });
 
         // Listen for ALL PaymentMade events first to debug
-        contract.on('PaymentMade', async (borrower, paymentAmount, principalPaid, interestPaid, remainingBalance, event) => {
+        contract.on('PaymentMade', async (borrower, propertyId, paymentAmount, principalPaid, interestPaid, remainingBalance, event) => {
           console.log('📨 ANY Payment event received:', {
             borrower: borrower.toLowerCase(),
             currentAccount: account.toLowerCase(),
+            propertyId: propertyId.toString(),
             paymentAmount: ethers.formatEther(paymentAmount),
             principalPaid: ethers.formatEther(principalPaid),
             interestPaid: ethers.formatEther(interestPaid),
@@ -178,6 +180,7 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
             console.log('✅ Processing payment for current user');
             await syncPaymentToDatabase({
               borrower,
+              propertyId,
               paymentAmount,
               principalPaid,
               interestPaid,

@@ -127,6 +127,8 @@ export const SimpleMortgageDashboard = () => {
     
     setIsLoading(true);
     try {
+      console.log('🔄 Loading user data for account:', account);
+      
       // Load properties
       const { data: propertiesData, error: propertiesError } = await supabase
         .from('user_properties')
@@ -135,6 +137,8 @@ export const SimpleMortgageDashboard = () => {
         .eq('is_active', true);
 
       if (propertiesError) throw propertiesError;
+      
+      console.log('📊 Loaded properties data:', propertiesData);
       setProperties(propertiesData || []);
 
       // Load payment history
@@ -146,6 +150,8 @@ export const SimpleMortgageDashboard = () => {
         .limit(10);
 
       if (paymentsError) throw paymentsError;
+      
+      console.log('💳 Loaded payments data:', paymentsData);
       setPayments(paymentsData || []);
 
     } catch (error) {
@@ -164,6 +170,15 @@ export const SimpleMortgageDashboard = () => {
     const totalPrincipalPaid = (property.principal_paid_base || 0) / 1000000; // Convert from base units
     const loanAmount = property.purchase_price - property.down_payment;
     const progress = Math.min((totalPrincipalPaid / loanAmount) * 100, 100);
+    
+    console.log('🏠 Equity calculation for property:', {
+      propertyName: property.property_name,
+      principalPaidBase: property.principal_paid_base,
+      totalPrincipalPaid,
+      loanAmount,
+      progress: progress.toFixed(2) + '%'
+    });
+    
     return progress;
   };
 
