@@ -37,6 +37,11 @@ interface PaymentHistory {
   tx_hash: string;
 }
 
+export const SimpleMortgageDashboard = () => {
+  const [properties, setProperties] = useState<MortgageProperty[]>([]);
+  const [payments, setPayments] = useState<PaymentHistory[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPaymentLoading, setIsPaymentLoading] = useState(false);
   const [account, setAccount] = useState<string>('');
   const [contractAddress, setContractAddress] = useState<string>('');
   const [mortgageDetails, setMortgageDetails] = useState<any>(null);
