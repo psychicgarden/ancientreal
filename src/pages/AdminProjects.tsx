@@ -381,7 +381,7 @@ const AdminProjects = () => {
             )}
 
             <Tabs defaultValue="interface" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
+              <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="interface" className="flex items-center gap-2">
                   <Home className="w-4 h-4" />
                   Investment Platform
@@ -389,6 +389,10 @@ const AdminProjects = () => {
                 <TabsTrigger value="dashboard" className="flex items-center gap-2">
                   <BarChart3 className="w-4 h-4" />
                   Mortgage Dashboard
+                </TabsTrigger>
+                <TabsTrigger value="enhanced" className="flex items-center gap-2">
+                  <TrendingUp className="w-4 h-4" />
+                  Enhanced Mortgage
                 </TabsTrigger>
               </TabsList>
               
@@ -398,6 +402,10 @@ const AdminProjects = () => {
               
               <TabsContent value="dashboard" className="space-y-6">
                 <SimpleMortgageDashboard />
+              </TabsContent>
+              
+              <TabsContent value="enhanced" className="space-y-6">
+                <EnhancedMortgageSystem />
               </TabsContent>
             </Tabs>
           </div>

@@ -18,6 +18,19 @@ export const usePaymentSync = (contractAddress: string, account: string) => {
   const { toast } = useToast();
 
   const syncPaymentToDatabase = async (eventData: PaymentEventData) => {
+    // Check for existing payment with same tx hash to prevent duplicates
+    if (eventData.transactionHash) {
+      const { data: existingPayment } = await supabase
+        .from('mortgage_payments_ledger')
+        .select('id')
+        .eq('tx_hash', eventData.transactionHash)
+        .single();
+
+      if (existingPayment) {
+        console.log('⏭️ Payment already exists in ledger, skipping:', eventData.transactionHash);
+        return;
+      }
+    }
     try {
       // Convert AVAX to USD using enhanced configuration
       const paymentAmountUSD = convertAVAXToUSD(ethers.formatEther(eventData.paymentAmount));
