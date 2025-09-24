@@ -45,17 +45,16 @@ serve(async (req) => {
 
     console.log('📄 Mock contract deployed at:', mockDeployment.contractAddress);
 
-    // Store contract address in database
+    // Store contract address in database using upsert to handle existing entries
     const { error: contractError } = await supabase
       .from('contract_addresses')
-      .insert({
-        contract_name: 'ENHANCED_MORTGAGE',
+      .upsert({
+        contract_name: 'EnhancedAvaxMortgage',
         address: mockDeployment.contractAddress,
         network: 'fuji',
         deployment_status: 'deployed',
-        deployer_address: '0x966fed85116f6d283921a6ed176d7643a99cbf94', // Demo address
+        deployer_address: '0x966fed85116f6d283921a6ed176d7643a99cbf94',
         abi_json: {
-          // Enhanced contract ABI
           functions: [
             "function purchaseProperty(uint256 _propertyId, uint256 _termMonths) external payable",
             "function makePayment() external payable",
@@ -70,6 +69,8 @@ serve(async (req) => {
             "event MortgageCompleted(address indexed borrower, uint256 indexed propertyId, uint256 totalPaid)"
           ]
         }
+      }, {
+        onConflict: 'contract_name,network'
       });
 
     if (contractError) {
