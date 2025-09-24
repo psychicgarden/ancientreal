@@ -13,6 +13,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { ContractDatabaseIntegration } from '@/lib/contract-database-integration';
 import { ENHANCED_AVAX_MORTGAGE_ABI } from '@/lib/enhanced-avax-mortgage-abi';
+import { EnhancedContractDeployment } from '@/components/EnhancedContractDeployment';
 import { Wallet, Home, DollarSign, RefreshCw, CheckCircle, AlertCircle } from 'lucide-react';
 
 interface MortgageData {
@@ -60,6 +61,7 @@ export const EnhancedMortgageSystem: React.FC = () => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [contractAddress, setContractAddress] = useState<string>('');
+  const [contractNotFound, setContractNotFound] = useState<boolean>(false);
   const [mortgageData, setMortgageData] = useState<MortgageData | null>(null);
   const [userProperties, setUserProperties] = useState<UserProperty[]>([]);
   const [availableProperties, setAvailableProperties] = useState<Property[]>([]);
@@ -89,16 +91,14 @@ export const EnhancedMortgageSystem: React.FC = () => {
     try {
       const address = await ContractDatabaseIntegration.getContractAddress('EnhancedAvaxMortgage');
       if (!address) {
-        throw new Error('Contract address not found');
+        setContractNotFound(true);
+        return;
       }
       setContractAddress(address);
+      setContractNotFound(false);
     } catch (error) {
       console.error('Error loading contract address:', error);
-      toast({
-        title: "Contract Not Found",
-        description: "Enhanced AVAX Mortgage contract not deployed",
-        variant: "destructive"
-      });
+      setContractNotFound(true);
     }
   };
 
@@ -415,6 +415,30 @@ export const EnhancedMortgageSystem: React.FC = () => {
     const loanAmount = property.purchase_price - property.down_payment;
     return Math.min((totalPrincipalPaid / loanAmount) * 100, 100);
   };
+
+  // Show deployment component if no contract is found
+  if (contractNotFound) {
+    return (
+      <div className="space-y-6">
+        <Alert>
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Contract Not Deployed</AlertTitle>
+          <AlertDescription>
+            Enhanced AVAX Mortgage contract not deployed or address not found. Deploy the contract first to enable mortgage functionality.
+          </AlertDescription>
+        </Alert>
+        
+        <EnhancedContractDeployment />
+        
+        <div className="flex justify-center">
+          <Button onClick={loadContractAddress} variant="outline">
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Retry Loading Contract
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   if (!isConnected) {
     return (
