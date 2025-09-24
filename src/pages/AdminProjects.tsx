@@ -30,6 +30,7 @@ import { PlatformAnalytics } from '@/components/PlatformAnalytics';
 import { LendingPoolOperations } from '@/components/LendingPoolOperations';
 import { PropertyInvestmentInterface } from '@/components/PropertyInvestmentInterface';
 import { SimpleMortgageDashboard } from '@/components/SimpleMortgageDashboard';
+import { EnhancedMortgageSystem } from '@/components/EnhancedMortgageSystem';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useWallet } from '@/contexts/WalletContext';
 import { resetPortfolio } from '@/lib/admin/resetPortfolio';

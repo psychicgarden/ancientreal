@@ -226,15 +226,15 @@ export const EnhancedMortgageSystem: React.FC = () => {
       const { error: dbError } = await supabase
         .from('user_properties')
         .insert({
-          user_wallet_address: account!.toLowerCase(),
+          user_wallet_address: account!,
           user_address: account!.toLowerCase(),
           property_name: "Art Deco Loft Oceanview",
-          property_location: "Ericeira, Portugal",
+          property_location: "Ericeira, Portugal", 
           purchase_price: ENHANCED_AVAX_MORTGAGE_CONFIG.PROPERTY_VALUE_USD,
-          purchase_price_base: BigInt(ENHANCED_AVAX_MORTGAGE_CONFIG.PROPERTY_VALUE_USD * 1000000),
+          purchase_price_base: ENHANCED_AVAX_MORTGAGE_CONFIG.PROPERTY_VALUE_USD * 1000000,
           down_payment: ENHANCED_AVAX_MORTGAGE_CONFIG.DOWN_PAYMENT_USD,
-          down_payment_base: BigInt(ENHANCED_AVAX_MORTGAGE_CONFIG.DOWN_PAYMENT_USD * 1000000),
-          loan_amount_base: BigInt(ENHANCED_AVAX_MORTGAGE_CONFIG.LOAN_AMOUNT_USD * 1000000),
+          down_payment_base: ENHANCED_AVAX_MORTGAGE_CONFIG.DOWN_PAYMENT_USD * 1000000,
+          loan_amount_base: ENHANCED_AVAX_MORTGAGE_CONFIG.LOAN_AMOUNT_USD * 1000000,
           remaining_balance: ENHANCED_AVAX_MORTGAGE_CONFIG.LOAN_AMOUNT_USD,
           monthly_payment: ENHANCED_AVAX_MORTGAGE_CONFIG.MONTHLY_PAYMENT_USD,
           current_value: ENHANCED_AVAX_MORTGAGE_CONFIG.PROPERTY_VALUE_USD,
@@ -318,8 +318,8 @@ export const EnhancedMortgageSystem: React.FC = () => {
           .insert({
             user_address: account!.toLowerCase(),
             property_id: Number(args.propertyId),
-            principal_delta_base: BigInt(principalPaidUSD * 1000000),
-            interest_delta_base: BigInt(interestPaidUSD * 1000000),
+            principal_delta_base: Math.floor(principalPaidUSD * 1000000),
+            interest_delta_base: Math.floor(interestPaidUSD * 1000000),
             tx_hash: receipt.hash
           });
 
@@ -331,8 +331,8 @@ export const EnhancedMortgageSystem: React.FC = () => {
         const { error: rpcError } = await supabase.rpc('apply_mortgage_payment', {
           p_user_address: account!.toLowerCase(),
           p_property_id: Number(args.propertyId),
-          p_principal_delta_base: BigInt(principalPaidUSD * 1000000),
-          p_interest_delta_base: BigInt(interestPaidUSD * 1000000),
+          p_principal_delta_base: Math.floor(principalPaidUSD * 1000000),
+          p_interest_delta_base: Math.floor(interestPaidUSD * 1000000),
           p_tx_hash: receipt.hash
         });
 
