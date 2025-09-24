@@ -179,6 +179,36 @@ export type Database = {
         }
         Relationships: []
       }
+      contract_event_cursors: {
+        Row: {
+          contract_address: string
+          created_at: string | null
+          event_name: string
+          id: string
+          last_block_scanned: number
+          network: string
+          updated_at: string | null
+        }
+        Insert: {
+          contract_address: string
+          created_at?: string | null
+          event_name: string
+          id?: string
+          last_block_scanned?: number
+          network?: string
+          updated_at?: string | null
+        }
+        Update: {
+          contract_address?: string
+          created_at?: string | null
+          event_name?: string
+          id?: string
+          last_block_scanned?: number
+          network?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       developer_investments: {
         Row: {
           created_at: string

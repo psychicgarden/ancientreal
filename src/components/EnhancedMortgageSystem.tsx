@@ -5,13 +5,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { ContractDatabaseIntegration } from '@/lib/contract-database-integration';
-import { ENHANCED_AVAX_MORTGAGE_ABI, ENHANCED_AVAX_MORTGAGE_CONFIG, convertAVAXToUSD, convertUSDToAVAX } from '@/lib/enhanced-avax-mortgage-abi';
-import { Wallet, Home, DollarSign, TrendingUp, RefreshCw, CheckCircle, AlertCircle } from 'lucide-react';
+import { ENHANCED_AVAX_MORTGAGE_ABI } from '@/lib/enhanced-avax-mortgage-abi';
+import { Wallet, Home, DollarSign, RefreshCw, CheckCircle, AlertCircle } from 'lucide-react';
 
 interface MortgageData {
   propertyId: number;
@@ -24,10 +26,8 @@ interface MortgageData {
   termMonths: number;
   monthsPaid: number;
   nextPaymentDue: number;
-  totalPaid: number;
   isActive: boolean;
   borrower: string;
-  createdAt: number;
 }
 
 interface UserProperty {
@@ -46,6 +46,15 @@ interface UserProperty {
   property_id: number;
 }
 
+interface Property {
+  id: number;
+  name: string;
+  location: string;
+  imageUrl: string;
+  price: string;
+  isActive: boolean;
+}
+
 export const EnhancedMortgageSystem: React.FC = () => {
   const { account, isConnected, connectWallet } = useWallet();
   const { toast } = useToast();
@@ -53,219 +62,222 @@ export const EnhancedMortgageSystem: React.FC = () => {
   const [contractAddress, setContractAddress] = useState<string>('');
   const [mortgageData, setMortgageData] = useState<MortgageData | null>(null);
   const [userProperties, setUserProperties] = useState<UserProperty[]>([]);
-  const [totalProperties, setTotalProperties] = useState(0);
+  const [availableProperties, setAvailableProperties] = useState<Property[]>([]);
+  
+  // Purchase form state
+  const [selectedPropertyId, setSelectedPropertyId] = useState<number>(1);
+  const [propertyValue, setPropertyValue] = useState<string>('');
+  const [downPayment, setDownPayment] = useState<string>('');
+  const [interestRate] = useState<number>(800); // 8% APR in basis points
+  const [termMonths] = useState<number>(120); // 10 years
 
-  // Load contract address and data on mount
+  // Load contract address on mount
   useEffect(() => {
     loadContractAddress();
   }, []);
 
+  // Load data when wallet and contract are ready
   useEffect(() => {
     if (contractAddress && account) {
-      loadUserData();
-      loadContractData();
+      fetchUserProperties();
+      fetchMortgageData();
+      fetchAvailableProperties();
     }
   }, [contractAddress, account]);
 
   const loadContractAddress = async () => {
     try {
-      // Try NEW contract first, then fallback to existing name
-      let address = await ContractDatabaseIntegration.getContractAddress('ENHANCED_AVAX_MORTGAGE_NEW');
+      const address = await ContractDatabaseIntegration.getContractAddress('EnhancedAvaxMortgage');
       if (!address) {
-        address = await ContractDatabaseIntegration.getContractAddress('ENHANCED_AVAX_MORTGAGE');
-        if (address) {
-          console.log('Using fallback contract ENHANCED_AVAX_MORTGAGE:', address);
-        }
+        throw new Error('Contract address not found');
       }
       setContractAddress(address);
-      if (!address) {
-        toast({
-          title: "Contract Not Found",
-          description: "Enhanced AVAX Mortgage contract address not found in database",
-          variant: "destructive"
-        });
-      }
     } catch (error) {
       console.error('Error loading contract address:', error);
-    }
-  };
-
-  const loadUserData = async () => {
-    if (!account) return;
-
-    try {
-      const { data: properties, error } = await supabase
-        .from('user_properties')
-        .select('*')
-        .ilike('user_wallet_address', account)
-        .eq('is_active', true);
-
-      if (error) throw error;
-
-      console.log('📊 Enhanced Mortgage - Loaded properties:', properties);
-      setUserProperties(properties || []);
-    } catch (error) {
-      console.error('Error loading user data:', error);
       toast({
-        title: "Error Loading Data",
-        description: "Failed to load user property data",
+        title: "Contract Not Found",
+        description: "Enhanced AVAX Mortgage contract not deployed",
         variant: "destructive"
       });
     }
   };
 
-  const loadContractData = async () => {
+  const fetchUserProperties = async () => {
+    if (!account) return;
+    
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('user_properties')
+        .select('*')
+        .or(`user_wallet_address.ilike.${account},user_address.ilike.${account}`)
+        .eq('is_active', true);
+
+      if (error) {
+        console.error('Error fetching user properties:', error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch user properties",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      setUserProperties(data || []);
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchMortgageData = async () => {
     if (!contractAddress || !account) return;
 
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const contract = new ethers.Contract(contractAddress, ENHANCED_AVAX_MORTGAGE_ABI, provider);
 
-      // Get total properties
-      const totalProps = await contract.getTotalProperties();
-      setTotalProperties(Number(totalProps));
-
       // Try to get mortgage details for current user
-      try {
-        const details = await contract.getMortgageDetails(account);
-        
-        if (details.isActive) {
-          setMortgageData({
-            propertyId: Number(details.propertyId),
-            propertyValue: convertAVAXToUSD(ethers.formatEther(details.propertyValue)),
-            downPayment: convertAVAXToUSD(ethers.formatEther(details.downPayment)),
-            loanAmount: convertAVAXToUSD(ethers.formatEther(details.loanAmount)),
-            monthlyPayment: convertAVAXToUSD(ethers.formatEther(details.monthlyPayment)),
-            remainingBalance: convertAVAXToUSD(ethers.formatEther(details.remainingBalance)),
-            interestRate: Number(details.interestRate),
-            termMonths: Number(details.termMonths),
-            monthsPaid: Number(details.monthsPaid),
-            nextPaymentDue: Number(details.nextPaymentDue),
-            totalPaid: convertAVAXToUSD(ethers.formatEther(details.totalPaid)),
-            isActive: details.isActive,
-            borrower: details.borrower,
-            createdAt: Number(details.createdAt)
-          });
-        }
-      } catch (mortgageError) {
-        console.log('No active mortgage found for user');
+      const details = await contract.getMortgageDetails(account);
+      
+      if (details.isActive) {
+        setMortgageData({
+          propertyId: Number(details.propertyId),
+          propertyValue: Number(ethers.formatEther(details.propertyValue)),
+          downPayment: Number(ethers.formatEther(details.downPayment)),
+          loanAmount: Number(ethers.formatEther(details.loanAmount)),
+          monthlyPayment: Number(ethers.formatEther(details.monthlyPayment)),
+          remainingBalance: Number(ethers.formatEther(details.remainingBalance)),
+          interestRate: Number(details.interestRate),
+          termMonths: Number(details.termMonths),
+          monthsPaid: Number(details.monthsPaid),
+          nextPaymentDue: Number(details.nextPaymentDue),
+          isActive: details.isActive,
+          borrower: details.borrower
+        });
+      } else {
         setMortgageData(null);
       }
     } catch (error) {
-      console.error('Error loading contract data:', error);
+      console.log('No active mortgage found for user');
+      setMortgageData(null);
     }
   };
 
-  const handleSeedProperty = async () => {
+  const fetchAvailableProperties = async () => {
     if (!contractAddress) return;
 
-    setIsLoading(true);
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, ENHANCED_AVAX_MORTGAGE_ABI, signer);
+      const contract = new ethers.Contract(contractAddress, ENHANCED_AVAX_MORTGAGE_ABI, provider);
 
-      console.log('🌱 Seeding Art Deco Loft property...');
+      const totalProperties = await contract.getTotalProperties();
+      const properties: Property[] = [];
 
-      const tx = await contract.addProperty(
-        "Art Deco Loft Oceanview",
-        "Ericeira, Portugal", 
-        "/lovable-uploads/art-deco-loft-mexico.jpg",
-        ethers.parseEther(ENHANCED_AVAX_MORTGAGE_CONFIG.PROPERTY_VALUE_AVAX)
-      );
+      for (let i = 1; i <= Number(totalProperties); i++) {
+        try {
+          const property = await contract.getProperty(i);
+          if (property.isActive) {
+            properties.push({
+              id: i,
+              name: property.name,
+              location: property.location,
+              imageUrl: property.imageUrl,
+              price: ethers.formatEther(property.price),
+              isActive: property.isActive
+            });
+          }
+        } catch (error) {
+          console.error(`Error fetching property ${i}:`, error);
+        }
+      }
 
-      const receipt = await tx.wait();
-      console.log('✅ Property seeded successfully:', receipt.hash);
+      setAvailableProperties(properties);
+    } catch (error) {
+      console.error('Error fetching properties:', error);
+    }
+  };
 
+  // Purchase property and trigger indexing
+  const handlePurchaseProperty = async (propertyId: number, propertyValue: string, downPayment: string) => {
+    if (!contractAddress) {
       toast({
-        title: "Property Seeded",
-        description: "Art Deco Loft property added to contract successfully",
-      });
-
-      await loadContractData();
-    } catch (error: any) {
-      console.error('Property seeding failed:', error);
-      toast({
-        title: "Seeding Failed",
-        description: error.message || "Failed to seed property",
+        title: "Error",
+        description: "Wallet not connected or contract not available",
         variant: "destructive"
       });
-    } finally {
-      setIsLoading(false);
+      return;
     }
-  };
-
-  const handlePurchaseProperty = async () => {
-    if (!contractAddress) return;
 
     setIsLoading(true);
     try {
+      console.log('Purchasing property with contract:', contractAddress);
+      
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(contractAddress, ENHANCED_AVAX_MORTGAGE_ABI, signer);
-
-      const totalPaymentAVAX = ENHANCED_AVAX_MORTGAGE_CONFIG.TOTAL_PAYMENT_AVAX;
+      const propertyValueWei = ethers.parseEther(propertyValue);
+      const downPaymentWei = ethers.parseEther(downPayment);
       
-      console.log('🏠 Purchasing property with payment:', totalPaymentAVAX, 'AVAX');
+      // Calculate platform fee (3% of property value)
+      const platformFeeWei = propertyValueWei * BigInt(300) / BigInt(10000); // 3%
+      const totalPayment = downPaymentWei + platformFeeWei;
 
       const tx = await contract.purchaseProperty(
-        ENHANCED_AVAX_MORTGAGE_CONFIG.PROPERTY_ID,
-        ENHANCED_AVAX_MORTGAGE_CONFIG.TERM_MONTHS,
-        { value: ethers.parseEther(totalPaymentAVAX) }
+        propertyId,
+        propertyValueWei,
+        downPaymentWei,
+        interestRate,
+        termMonths,
+        { value: totalPayment }
       );
 
-      const receipt = await tx.wait();
-      console.log('✅ Property purchased successfully:', receipt.hash);
-
-      // Parse MortgageCreated event from receipt
-      const contractInterface = new ethers.Interface(ENHANCED_AVAX_MORTGAGE_ABI);
-      const mortgageCreatedEvent = receipt.logs
-        .map(log => {
-          try {
-            return contractInterface.parseLog(log);
-          } catch {
-            return null;
-          }
-        })
-        .find(log => log && log.name === 'MortgageCreated');
-
-      // Insert into user_properties with receipt data
-      const { error: dbError } = await supabase
-        .from('user_properties')
-        .insert({
-          user_wallet_address: account!,
-          user_address: account!.toLowerCase(),
-          property_name: "Art Deco Loft Oceanview",
-          property_location: "Ericeira, Portugal", 
-          purchase_price: ENHANCED_AVAX_MORTGAGE_CONFIG.PROPERTY_VALUE_USD,
-          purchase_price_base: ENHANCED_AVAX_MORTGAGE_CONFIG.PROPERTY_VALUE_USD * 1000000,
-          down_payment: ENHANCED_AVAX_MORTGAGE_CONFIG.DOWN_PAYMENT_USD,
-          down_payment_base: ENHANCED_AVAX_MORTGAGE_CONFIG.DOWN_PAYMENT_USD * 1000000,
-          loan_amount_base: ENHANCED_AVAX_MORTGAGE_CONFIG.LOAN_AMOUNT_USD * 1000000,
-          remaining_balance: ENHANCED_AVAX_MORTGAGE_CONFIG.LOAN_AMOUNT_USD,
-          monthly_payment: ENHANCED_AVAX_MORTGAGE_CONFIG.MONTHLY_PAYMENT_USD,
-          current_value: ENHANCED_AVAX_MORTGAGE_CONFIG.PROPERTY_VALUE_USD,
-          equity_percentage: 20,
-          property_id: ENHANCED_AVAX_MORTGAGE_CONFIG.PROPERTY_ID,
-          mortgage_id: mortgageCreatedEvent ? mortgageCreatedEvent.args.tokenId.toString() : null,
-          currency: 'USDC-6',
-          apr_bps: ENHANCED_AVAX_MORTGAGE_CONFIG.APR_BPS,
-          term_months: ENHANCED_AVAX_MORTGAGE_CONFIG.TERM_MONTHS,
-          unique_purchase_key: receipt.hash,
-          image_url: "/lovable-uploads/art-deco-loft-mexico.jpg"
-        });
-
-      if (dbError) throw dbError;
-
+      console.log('Transaction sent:', tx.hash);
+      
       toast({
-        title: "Property Purchased!",
-        description: `Successfully purchased Art Deco Loft for $${ENHANCED_AVAX_MORTGAGE_CONFIG.PROPERTY_VALUE_USD.toLocaleString()}`,
+        title: "Transaction Sent",
+        description: `Purchase transaction sent: ${tx.hash.slice(0, 10)}...`
       });
 
-      await loadUserData();
-      await loadContractData();
+      const receipt = await tx.wait();
+      console.log('Transaction confirmed:', receipt);
+
+      if (receipt.status === 1) {
+        // Trigger mortgage events indexing
+        try {
+          const { error: indexError } = await supabase.functions.invoke('mortgage-events-indexer', {
+            body: { 
+              contract_address: contractAddress,
+              network: 'fuji'
+            }
+          });
+
+          if (indexError) {
+            console.error('Indexing error:', indexError);
+          } else {
+            console.log('✅ Events indexed successfully');
+          }
+        } catch (indexError) {
+          console.error('Error triggering indexer:', indexError);
+        }
+
+        toast({
+          title: "Success",
+          description: "Property purchased successfully!"
+        });
+
+        // Refresh data after a short delay to allow indexing
+        setTimeout(() => {
+          fetchUserProperties();
+          fetchMortgageData();
+        }, 2000);
+      } else {
+        throw new Error('Transaction failed');
+      }
+
     } catch (error: any) {
-      console.error('Property purchase failed:', error);
+      console.error('Purchase error:', error);
       toast({
         title: "Purchase Failed",
         description: error.message || "Failed to purchase property",
@@ -276,234 +288,121 @@ export const EnhancedMortgageSystem: React.FC = () => {
     }
   };
 
+  // Make payment for on-chain mortgage
   const handleMakePayment = async () => {
-    if (!contractAddress) return;
+    if (!contractAddress || !mortgageData) {
+      toast({
+        title: "Error",
+        description: "Wallet not connected, contract not available, or no active mortgage",
+        variant: "destructive"
+      });
+      return;
+    }
 
     setIsLoading(true);
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(contractAddress, ENHANCED_AVAX_MORTGAGE_ABI, signer);
-
-      const paymentAmountAVAX = ENHANCED_AVAX_MORTGAGE_CONFIG.MONTHLY_PAYMENT_AVAX;
+      const monthlyPaymentWei = ethers.parseEther(mortgageData.monthlyPayment.toString());
       
-      console.log('💰 Making payment:', paymentAmountAVAX, 'AVAX');
+      console.log('Making payment:', {
+        monthlyPayment: mortgageData.monthlyPayment,
+        monthlyPaymentWei: monthlyPaymentWei.toString()
+      });
 
-      const tx = await contract.makePayment({
-        value: ethers.parseEther(paymentAmountAVAX)
+      const tx = await contract.makePayment({ value: monthlyPaymentWei });
+      
+      toast({
+        title: "Transaction Sent",
+        description: `Payment transaction sent: ${tx.hash.slice(0, 10)}...`
       });
 
       const receipt = await tx.wait();
-      console.log('✅ Payment made successfully:', receipt.hash);
-
-      // Parse PaymentMade event from receipt for immediate sync
-      const contractInterface = new ethers.Interface(ENHANCED_AVAX_MORTGAGE_ABI);
-      const paymentEvent = receipt.logs
-        .map(log => {
-          try {
-            return contractInterface.parseLog(log);
-          } catch {
-            return null;
-          }
-        })
-        .find(log => log && log.name === 'PaymentMade');
-
-      if (paymentEvent) {
-        const args = paymentEvent.args;
-        const principalPaidUSD = convertAVAXToUSD(ethers.formatEther(args.principalPaid));
-        const interestPaidUSD = convertAVAXToUSD(ethers.formatEther(args.interestPaid));
-        
-        console.log('📊 Parsed payment from receipt:', {
-          principalPaid: principalPaidUSD,
-          interestPaid: interestPaidUSD,
-          propertyId: Number(args.propertyId)
-        });
-
-        // Insert into mortgage_payments_ledger
-        const { error: ledgerError } = await supabase
-          .from('mortgage_payments_ledger')
-          .insert({
-            user_address: account!.toLowerCase(),
-            property_id: Number(args.propertyId),
-            principal_delta_base: Math.floor(principalPaidUSD * 1000000),
-            interest_delta_base: Math.floor(interestPaidUSD * 1000000),
-            tx_hash: receipt.hash
+      
+      if (receipt.status === 1) {
+        // Trigger mortgage events indexing to capture payment
+        try {
+          const { error: indexError } = await supabase.functions.invoke('mortgage-events-indexer', {
+            body: { 
+              contract_address: contractAddress,
+              network: 'fuji'
+            }
           });
 
-        if (ledgerError) {
-          console.error('Ledger insert error:', ledgerError);
+          if (indexError) {
+            console.error('Indexing error:', indexError);
+          }
+        } catch (indexError) {
+          console.error('Error triggering indexer:', indexError);
         }
 
-        // Apply payment to user properties
-        const { error: rpcError } = await supabase.rpc('apply_mortgage_payment', {
-          p_user_address: account!.toLowerCase(),
-          p_property_id: Number(args.propertyId),
-          p_principal_delta_base: Math.floor(principalPaidUSD * 1000000),
-          p_interest_delta_base: Math.floor(interestPaidUSD * 1000000),
-          p_tx_hash: receipt.hash
+        toast({
+          title: "Success",
+          description: "Payment made successfully!"
         });
 
-        if (rpcError) {
-          console.error('RPC error:', rpcError);
+        // Refresh data after a short delay
+        setTimeout(() => {
+          fetchMortgageData();
+          fetchUserProperties();
+        }, 2000);
+      } else {
+        throw new Error('Transaction failed');
+      }
+
+    } catch (error: any) {
+      console.error('Payment error:', error);
+      toast({
+        title: "Payment Failed",
+        description: error.message || "Failed to make payment",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Trigger manual indexing of mortgage events
+  const handleReconcilePayments = async () => {
+    if (!contractAddress) {
+      toast({
+        title: "Error",
+        description: "Contract address not available",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.functions.invoke('mortgage-events-indexer', {
+        body: { 
+          contract_address: contractAddress,
+          network: 'fuji'
         }
+      });
+
+      if (error) {
+        throw new Error(error.message);
       }
 
       toast({
-        title: "Payment Successful!",
-        description: `Monthly payment of $${ENHANCED_AVAX_MORTGAGE_CONFIG.MONTHLY_PAYMENT_USD} processed`,
+        title: "Success",
+        description: "Events reconciled successfully!"
       });
 
-      await loadUserData();
-      await loadContractData();
+      // Refresh data
+      setTimeout(() => {
+        fetchUserProperties();
+        fetchMortgageData();
+      }, 2000);
+
     } catch (error: any) {
-      console.error('Payment failed:', error);
+      console.error('Reconcile error:', error);
       toast({
-        title: "Payment Failed",
-        description: error.message || "Failed to process payment",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // New database-only payment handler for properties not on smart contract
-  const handleDatabasePayment = async (property: UserProperty) => {
-    setIsLoading(true);
-    try {
-      // Calculate payment breakdown (simple 80/20 principal/interest split for demo)
-      const monthlyPayment = property.monthly_payment;
-      const principalPortion = monthlyPayment * 0.8;
-      const interestPortion = monthlyPayment * 0.2;
-
-      // Insert payment ledger record
-      const { error: ledgerError } = await supabase
-        .from('mortgage_payments_ledger')
-        .insert({
-          user_address: account!.toLowerCase(),
-          property_id: property.property_id || 1,
-          principal_delta_base: Math.floor(principalPortion * 1000000),
-          interest_delta_base: Math.floor(interestPortion * 1000000),
-          tx_hash: `db_payment_${Date.now()}` // Generate unique hash for DB payments
-        });
-
-      if (ledgerError) throw ledgerError;
-
-      // Apply payment to user properties
-      const { error: rpcError } = await supabase.rpc('apply_mortgage_payment', {
-        p_user_address: account!.toLowerCase(),
-        p_property_id: property.property_id || 1,
-        p_principal_delta_base: Math.floor(principalPortion * 1000000),
-        p_interest_delta_base: Math.floor(interestPortion * 1000000),
-        p_tx_hash: `db_payment_${Date.now()}`
-      });
-
-      if (rpcError) throw rpcError;
-
-      toast({
-        title: "Payment Successful!",
-        description: `Monthly payment of $${monthlyPayment.toLocaleString()} processed (Database Only)`,
-      });
-
-      await loadUserData();
-    } catch (error: any) {
-      console.error('Database payment failed:', error);
-      toast({
-        title: "Payment Failed",
-        description: error.message || "Failed to process database payment",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Sync database property to smart contract
-  const handleSyncToContract = async (property: UserProperty) => {
-    if (!contractAddress) return;
-    
-    setIsLoading(true);
-    try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, ENHANCED_AVAX_MORTGAGE_ABI, signer);
-
-      // Convert property data to contract format
-      const propertyValueAVAX = convertUSDToAVAX(property.purchase_price);
-      const downPaymentAVAX = convertUSDToAVAX(property.down_payment);
-      const totalPaymentAVAX = downPaymentAVAX + "0.01"; // Add small amount for gas
-
-      console.log('🔗 Syncing property to contract:', {
-        name: property.property_name,
-        location: property.property_location,
-        value: propertyValueAVAX
-      });
-
-      const tx = await contract.purchaseProperty(
-        property.property_id || 1,
-        120, // Default term months
-        { value: ethers.parseEther(totalPaymentAVAX) }
-      );
-
-      const receipt = await tx.wait();
-      
-      // Update user property with sync info
-      const { error: updateError } = await supabase
-        .from('user_properties')
-        .update({
-          unique_purchase_key: receipt.hash,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', property.id);
-
-      if (updateError) throw updateError;
-
-      toast({
-        title: "Sync Successful!",
-        description: "Property synced to smart contract successfully",
-      });
-
-      await loadUserData();
-      await loadContractData();
-    } catch (error: any) {
-      console.error('Sync to contract failed:', error);
-      toast({
-        title: "Sync Failed",
-        description: error.message || "Failed to sync property to contract",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleReconcilePayments = async () => {
-    if (!account) return;
-
-    setIsLoading(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('reconcile-mortgage-payments', {
-        body: {
-          wallet_address: account.toLowerCase(),
-          contract_address: contractAddress
-        }
-      });
-
-      if (error) throw error;
-
-      console.log('🔄 Reconciliation result:', data);
-      
-      toast({
-        title: "Reconciliation Complete",
-        description: `Processed ${data.payments_synced} payments from blockchain`,
-      });
-
-      await loadUserData();
-    } catch (error: any) {
-      console.error('Reconciliation failed:', error);
-      toast({
-        title: "Reconciliation Failed",
-        description: error.message || "Failed to reconcile payments",
+        title: "Reconcile Failed",
+        description: error.message || "Failed to reconcile events",
         variant: "destructive"
       });
     } finally {
@@ -536,7 +435,7 @@ export const EnhancedMortgageSystem: React.FC = () => {
         <AlertCircle className="w-16 h-16 mx-auto mb-6 text-destructive" />
         <h3 className="text-xl font-semibold mb-4">Contract Not Available</h3>
         <p className="text-muted-foreground mb-6">
-          Enhanced AVAX Mortgage contract address not found in database
+          Enhanced AVAX Mortgage contract not deployed or address not found
         </p>
         <Button onClick={loadContractAddress} variant="outline">
           <RefreshCw className="w-4 h-4 mr-2" />
@@ -554,7 +453,7 @@ export const EnhancedMortgageSystem: React.FC = () => {
           Enhanced Mortgage System
         </h2>
         <p className="text-lg text-muted-foreground">
-          Receipt-based payment sync with blockchain reconciliation
+          Scalable event-driven mortgage system with smart contract integration
         </p>
       </div>
 
@@ -579,7 +478,7 @@ export const EnhancedMortgageSystem: React.FC = () => {
             <Home className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalProperties}</div>
+            <div className="text-2xl font-bold">{availableProperties.length}</div>
             <p className="text-xs text-muted-foreground">
               On-chain properties
             </p>
@@ -613,43 +512,83 @@ export const EnhancedMortgageSystem: React.FC = () => {
             <CardHeader>
               <CardTitle>Property Purchase</CardTitle>
               <CardDescription>
-                Purchase properties with immediate receipt-based DB sync
+                Purchase properties from the smart contract with event-driven database sync
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {totalProperties === 0 && (
+              {availableProperties.length === 0 ? (
                 <Alert>
                   <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>No Properties Available</AlertTitle>
                   <AlertDescription>
-                    No properties available in contract. Seed a property first.
+                    No active properties found in the smart contract. Contract owner needs to add properties first.
                   </AlertDescription>
                 </Alert>
-              )}
+              ) : (
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="property-select">Select Property</Label>
+                    <select 
+                      id="property-select"
+                      value={selectedPropertyId}
+                      onChange={(e) => setSelectedPropertyId(Number(e.target.value))}
+                      className="w-full p-2 border rounded-md"
+                    >
+                      {availableProperties.map((property) => (
+                        <option key={property.id} value={property.id}>
+                          {property.name} - {property.location} (${property.price} AVAX)
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-              <div className="flex gap-4">
-                <Button 
-                  onClick={handleSeedProperty} 
-                  disabled={isLoading || totalProperties > 0}
-                  variant="outline"
-                >
-                  {isLoading ? "Seeding..." : "Seed Art Deco Loft"}
-                </Button>
-                
-                <Button 
-                  onClick={handlePurchaseProperty} 
-                  disabled={isLoading || totalProperties === 0 || mortgageData?.isActive}
-                >
-                  {isLoading ? "Purchasing..." : `Purchase for $${ENHANCED_AVAX_MORTGAGE_CONFIG.PROPERTY_VALUE_USD.toLocaleString()}`}
-                </Button>
-              </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="property-value">Property Value (AVAX)</Label>
+                      <Input
+                        id="property-value"
+                        type="number"
+                        value={propertyValue}
+                        onChange={(e) => setPropertyValue(e.target.value)}
+                        placeholder="e.g., 100"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="down-payment">Down Payment (AVAX)</Label>
+                      <Input
+                        id="down-payment"
+                        type="number"
+                        value={downPayment}
+                        onChange={(e) => setDownPayment(e.target.value)}
+                        placeholder="e.g., 20"
+                      />
+                    </div>
+                  </div>
 
-              {mortgageData?.isActive && (
-                <Alert>
-                  <CheckCircle className="h-4 w-4" />
-                  <AlertDescription>
-                    You already own this property! Make payments in the Payments tab.
-                  </AlertDescription>
-                </Alert>
+                  <div className="flex gap-2 text-sm text-muted-foreground">
+                    <span>Interest Rate: {interestRate / 100}% APR</span>
+                    <span>•</span>
+                    <span>Term: {termMonths} months</span>
+                  </div>
+
+                  <Button 
+                    onClick={() => handlePurchaseProperty(selectedPropertyId, propertyValue, downPayment)}
+                    disabled={isLoading || !propertyValue || !downPayment || mortgageData?.isActive}
+                    className="w-full"
+                  >
+                    {isLoading ? "Purchasing..." : "Purchase Property"}
+                  </Button>
+
+                  {mortgageData?.isActive && (
+                    <Alert>
+                      <CheckCircle className="h-4 w-4" />
+                      <AlertTitle>Active Mortgage Found</AlertTitle>
+                      <AlertDescription>
+                        You already have an active mortgage. Make payments in the Payments tab.
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                </div>
               )}
             </CardContent>
           </Card>
@@ -660,92 +599,35 @@ export const EnhancedMortgageSystem: React.FC = () => {
             <CardHeader>
               <CardTitle>Make Payment</CardTitle>
               <CardDescription>
-                Process monthly mortgage payments with instant equity updates
+                Process monthly mortgage payments for your active on-chain mortgage
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Smart Contract Mortgage Payment */}
-              {mortgageData?.isActive && (
+              {mortgageData ? (
                 <div className="space-y-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
-                    <span className="text-sm font-medium text-green-700">On-Chain Mortgage Active</span>
-                  </div>
+                  <Alert>
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Active On-Chain Mortgage</AlertTitle>
+                    <AlertDescription>
+                      Monthly Payment: ${mortgageData.monthlyPayment.toFixed(2)} | 
+                      Remaining: ${mortgageData.remainingBalance.toFixed(2)}
+                    </AlertDescription>
+                  </Alert>
                   
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-sm text-muted-foreground">Monthly Payment</p>
-                      <p className="text-2xl font-bold">${mortgageData.monthlyPayment.toLocaleString()}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground">Remaining Balance</p>
-                      <p className="text-2xl font-bold">${mortgageData.remainingBalance.toLocaleString()}</p>
-                    </div>
-                  </div>
-
-                  <Button onClick={handleMakePayment} disabled={isLoading} className="w-full">
-                    {isLoading ? "Processing..." : `Pay $${mortgageData.monthlyPayment.toLocaleString()}`}
+                  <Button 
+                    onClick={handleMakePayment}
+                    disabled={isLoading}
+                    className="w-full"
+                  >
+                    {isLoading ? 'Processing...' : `Make Payment ($${mortgageData.monthlyPayment.toFixed(2)})`}
                   </Button>
                 </div>
-              )}
-
-              {/* Database-Only Mortgage Payment */}
-              {!mortgageData?.isActive && userProperties.length > 0 && (
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <AlertCircle className="h-4 w-4 text-amber-500" />
-                    <span className="text-sm font-medium text-amber-700">Database-Only Mortgage (Not Synced to Blockchain)</span>
-                  </div>
-
-                  {userProperties.map((property) => (
-                    <div key={property.id} className="border rounded-lg p-4 space-y-4">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="font-medium">{property.property_name}</h4>
-                          <p className="text-sm text-muted-foreground">{property.property_location}</p>
-                        </div>
-                        <Badge variant="secondary">Database Only</Badge>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <p className="text-sm text-muted-foreground">Monthly Payment</p>
-                          <p className="text-xl font-bold">${property.monthly_payment.toLocaleString()}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground">Remaining Balance</p>
-                          <p className="text-xl font-bold">${property.remaining_balance.toLocaleString()}</p>
-                        </div>
-                      </div>
-
-                      <div className="flex gap-2">
-                        <Button 
-                          onClick={() => handleDatabasePayment(property)} 
-                          disabled={isLoading} 
-                          className="flex-1"
-                        >
-                          {isLoading ? "Processing..." : `Pay $${property.monthly_payment.toLocaleString()}`}
-                        </Button>
-                        <Button 
-                          onClick={() => handleSyncToContract(property)} 
-                          disabled={isLoading} 
-                          variant="outline"
-                          className="flex-1"
-                        >
-                          {isLoading ? "Syncing..." : "Sync to Blockchain"}
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* No Mortgages Found */}
-              {!mortgageData?.isActive && userProperties.length === 0 && (
+              ) : (
                 <Alert>
                   <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>No Active On-Chain Mortgage</AlertTitle>
                   <AlertDescription>
-                    No active mortgage found. Purchase a property first.
+                    Purchase a property using the smart contract to make mortgage payments.
                   </AlertDescription>
                 </Alert>
               )}
@@ -813,27 +695,28 @@ export const EnhancedMortgageSystem: React.FC = () => {
           )}
         </TabsContent>
 
-        <TabsContent value="reconcile" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Payment Reconciliation</CardTitle>
-              <CardDescription>
-                Sync missed payments from the blockchain
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Alert>
-                <RefreshCw className="h-4 w-4" />
-                <AlertDescription>
-                  This scans recent blocks for PaymentMade events and syncs any missed payments to the database.
-                </AlertDescription>
-              </Alert>
+        <TabsContent value="reconcile" className="space-y-4">
+          <Alert>
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Event Indexing</AlertTitle>
+            <AlertDescription>
+              Manually trigger indexing of mortgage events from the smart contract.
+            </AlertDescription>
+          </Alert>
 
-              <Button onClick={handleReconcilePayments} disabled={isLoading} variant="outline">
-                {isLoading ? "Reconciling..." : "Reconcile Payments"}
-              </Button>
-            </CardContent>
-          </Card>
+          <Button 
+            onClick={handleReconcilePayments}
+            disabled={isLoading}
+            className="w-full"
+          >
+            {isLoading ? 'Indexing...' : 'Index Events'}
+          </Button>
+
+          <div className="space-y-2">
+            <h4 className="font-semibold">Contract Info:</h4>
+            <p className="text-sm text-muted-foreground">Address: {contractAddress || 'Not loaded'}</p>
+            <p className="text-sm text-muted-foreground">Network: Avalanche Fuji</p>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
