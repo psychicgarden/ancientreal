@@ -69,7 +69,14 @@ export const EnhancedMortgageSystem: React.FC = () => {
 
   const loadContractAddress = async () => {
     try {
-      const address = await ContractDatabaseIntegration.getContractAddress('ENHANCED_AVAX_MORTGAGE_NEW');
+      // Try NEW contract first, then fallback to existing name
+      let address = await ContractDatabaseIntegration.getContractAddress('ENHANCED_AVAX_MORTGAGE_NEW');
+      if (!address) {
+        address = await ContractDatabaseIntegration.getContractAddress('ENHANCED_AVAX_MORTGAGE');
+        if (address) {
+          console.log('Using fallback contract ENHANCED_AVAX_MORTGAGE:', address);
+        }
+      }
       setContractAddress(address);
       if (!address) {
         toast({
