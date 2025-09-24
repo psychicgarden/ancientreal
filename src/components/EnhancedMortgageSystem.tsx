@@ -367,6 +367,116 @@ export const EnhancedMortgageSystem: React.FC = () => {
     }
   };
 
+  // New database-only payment handler for properties not on smart contract
+  const handleDatabasePayment = async (property: UserProperty) => {
+    setIsLoading(true);
+    try {
+      // Calculate payment breakdown (simple 80/20 principal/interest split for demo)
+      const monthlyPayment = property.monthly_payment;
+      const principalPortion = monthlyPayment * 0.8;
+      const interestPortion = monthlyPayment * 0.2;
+
+      // Insert payment ledger record
+      const { error: ledgerError } = await supabase
+        .from('mortgage_payments_ledger')
+        .insert({
+          user_address: account!.toLowerCase(),
+          property_id: property.property_id || 1,
+          principal_delta_base: Math.floor(principalPortion * 1000000),
+          interest_delta_base: Math.floor(interestPortion * 1000000),
+          tx_hash: `db_payment_${Date.now()}` // Generate unique hash for DB payments
+        });
+
+      if (ledgerError) throw ledgerError;
+
+      // Apply payment to user properties
+      const { error: rpcError } = await supabase.rpc('apply_mortgage_payment', {
+        p_user_address: account!.toLowerCase(),
+        p_property_id: property.property_id || 1,
+        p_principal_delta_base: Math.floor(principalPortion * 1000000),
+        p_interest_delta_base: Math.floor(interestPortion * 1000000),
+        p_tx_hash: `db_payment_${Date.now()}`
+      });
+
+      if (rpcError) throw rpcError;
+
+      toast({
+        title: "Payment Successful!",
+        description: `Monthly payment of $${monthlyPayment.toLocaleString()} processed (Database Only)`,
+      });
+
+      await loadUserData();
+    } catch (error: any) {
+      console.error('Database payment failed:', error);
+      toast({
+        title: "Payment Failed",
+        description: error.message || "Failed to process database payment",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Sync database property to smart contract
+  const handleSyncToContract = async (property: UserProperty) => {
+    if (!contractAddress) return;
+    
+    setIsLoading(true);
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(contractAddress, ENHANCED_AVAX_MORTGAGE_ABI, signer);
+
+      // Convert property data to contract format
+      const propertyValueAVAX = convertUSDToAVAX(property.purchase_price);
+      const downPaymentAVAX = convertUSDToAVAX(property.down_payment);
+      const totalPaymentAVAX = downPaymentAVAX + "0.01"; // Add small amount for gas
+
+      console.log('🔗 Syncing property to contract:', {
+        name: property.property_name,
+        location: property.property_location,
+        value: propertyValueAVAX
+      });
+
+      const tx = await contract.purchaseProperty(
+        property.property_id || 1,
+        120, // Default term months
+        { value: ethers.parseEther(totalPaymentAVAX) }
+      );
+
+      const receipt = await tx.wait();
+      
+      // Update user property with sync info
+      const { error: updateError } = await supabase
+        .from('user_properties')
+        .update({
+          unique_purchase_key: receipt.hash,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', property.id);
+
+      if (updateError) throw updateError;
+
+      toast({
+        title: "Sync Successful!",
+        description: "Property synced to smart contract successfully",
+      });
+
+      await loadUserData();
+      await loadContractData();
+    } catch (error: any) {
+      console.error('Sync to contract failed:', error);
+      toast({
+        title: "Sync Failed",
+        description: error.message || "Failed to sync property to contract",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleReconcilePayments = async () => {
     if (!account) return;
 
@@ -554,15 +664,14 @@ export const EnhancedMortgageSystem: React.FC = () => {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {!mortgageData?.isActive ? (
-                <Alert>
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>
-                    No active mortgage found. Purchase a property first.
-                  </AlertDescription>
-                </Alert>
-              ) : (
+              {/* Smart Contract Mortgage Payment */}
+              {mortgageData?.isActive && (
                 <div className="space-y-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <span className="text-sm font-medium text-green-700">On-Chain Mortgage Active</span>
+                  </div>
+                  
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-sm text-muted-foreground">Monthly Payment</p>
@@ -578,6 +687,67 @@ export const EnhancedMortgageSystem: React.FC = () => {
                     {isLoading ? "Processing..." : `Pay $${mortgageData.monthlyPayment.toLocaleString()}`}
                   </Button>
                 </div>
+              )}
+
+              {/* Database-Only Mortgage Payment */}
+              {!mortgageData?.isActive && userProperties.length > 0 && (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <AlertCircle className="h-4 w-4 text-amber-500" />
+                    <span className="text-sm font-medium text-amber-700">Database-Only Mortgage (Not Synced to Blockchain)</span>
+                  </div>
+
+                  {userProperties.map((property) => (
+                    <div key={property.id} className="border rounded-lg p-4 space-y-4">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-medium">{property.property_name}</h4>
+                          <p className="text-sm text-muted-foreground">{property.property_location}</p>
+                        </div>
+                        <Badge variant="secondary">Database Only</Badge>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-sm text-muted-foreground">Monthly Payment</p>
+                          <p className="text-xl font-bold">${property.monthly_payment.toLocaleString()}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">Remaining Balance</p>
+                          <p className="text-xl font-bold">${property.remaining_balance.toLocaleString()}</p>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <Button 
+                          onClick={() => handleDatabasePayment(property)} 
+                          disabled={isLoading} 
+                          className="flex-1"
+                        >
+                          {isLoading ? "Processing..." : `Pay $${property.monthly_payment.toLocaleString()}`}
+                        </Button>
+                        <Button 
+                          onClick={() => handleSyncToContract(property)} 
+                          disabled={isLoading} 
+                          variant="outline"
+                          className="flex-1"
+                        >
+                          {isLoading ? "Syncing..." : "Sync to Blockchain"}
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* No Mortgages Found */}
+              {!mortgageData?.isActive && userProperties.length === 0 && (
+                <Alert>
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    No active mortgage found. Purchase a property first.
+                  </AlertDescription>
+                </Alert>
               )}
             </CardContent>
           </Card>
