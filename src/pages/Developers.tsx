@@ -14,11 +14,13 @@ import { useToast } from "@/hooks/use-toast";
 import { Rocket, Users, DollarSign, Code, Shield, Star, Clock, TrendingUp, Award, Upload, Vote, Zap } from "lucide-react";
 
 // Import images
-import baliJungleResort from "@/assets/bali-jungle-resort.jpg";
-import ecoSmartCity from "@/assets/eco-smart-city.jpg";
-import villaBali from "@/assets/villa-bali.jpg";
-import coworkingMallorca from "@/assets/coworking-mallorca.jpg";
-import desertOasisMorocco from "@/assets/desert-oasis-morocco.jpg";
+import beachHouseMykonos from "@/assets/beach-house-mykonos.jpg";
+import greekApartment from "@/assets/greek-mediterranean-boho-apartment.jpg";
+const baliJungleResort = beachHouseMykonos;
+const ecoSmartCity = greekApartment;
+const villaBali = beachHouseMykonos;
+const coworkingMallorca = greekApartment;
+const desertOasisMorocco = beachHouseMykonos;
 const Developers = () => {
   const {
     toast

@@ -11,19 +11,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Code, Target, Rocket, Building2, BarChart3, Zap, Network, Menu, Home, Users, Briefcase, CreditCard, Plane, Code2, FileText, Settings } from "lucide-react";
+import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Code, Target, Rocket, Building2, ChartBar as BarChart3, Zap, Network, Menu, Chrome as Home, Users, Briefcase, CreditCard, Plane, Code as Code2, FileText, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SectionHeader from "@/components/SectionHeader";
 import PlatformAssessment from "@/components/PlatformAssessment";
 
 // Import property images
-import villaTulum from "@/assets/villa-tulum.jpg";
-import beachChalet from "@/assets/beach-chalet.jpg";
-import villaEriceira from "@/assets/villa-ericeira-portugal.jpg";
-import villaGreece from "@/assets/villa-greece.jpg";
-import villaBali from "@/assets/villa-bali.jpg";
-import penthouseMexico from "@/assets/penthouse-mexico.jpg";
-import ecoSmartCity from "@/assets/eco-smart-city.jpg";
+import beachHouseMykonos from "@/assets/beach-house-mykonos.jpg";
+import greekApartment from "@/assets/greek-mediterranean-boho-apartment.jpg";
+const villaTulum = beachHouseMykonos;
+const beachChalet = beachHouseMykonos;
+const villaEriceira = greekApartment;
+const villaGreece = greekApartment;
+const villaBali = beachHouseMykonos;
+const penthouseMexico = beachHouseMykonos;
+const ecoSmartCity = greekApartment;
 const flywheelData = [{
   flip: "Flip 1",
   location: "Mazunte, Mexico",
