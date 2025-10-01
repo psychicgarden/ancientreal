@@ -10,16 +10,7 @@ import { EnhancedContractDeployment } from '@/components/EnhancedContractDeploym
 import { EnhancedPropertyInterface } from '@/components/EnhancedPropertyInterface';
 import { SmartContractPropertyPurchase } from '@/components/SmartContractPropertyPurchase';
 import { SimpleMortgageDashboard } from '@/components/SimpleMortgageDashboard';
-import { 
-  Rocket, 
-  Database, 
-  Home, 
-  Settings, 
-  CheckCircle,
-  AlertTriangle,
-  ExternalLink,
-  ArrowLeft
-} from 'lucide-react';
+import { Rocket, Database, Chrome as Home, Settings, CircleCheck as CheckCircle, TriangleAlert as AlertTriangle, ExternalLink, ArrowLeft } from 'lucide-react';
 
 const SmartContractManagement = () => {
   return (

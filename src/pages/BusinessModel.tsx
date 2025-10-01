@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Code, Target, Rocket, Building2, BarChart3, Zap, Network, Menu, Home, Users, Briefcase, CreditCard, Plane, Code2, FileText, Settings } from "lucide-react";
+import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Code, Target, Rocket, Building2, ChartBar as BarChart3, Zap, Network, Menu, Chrome as Home, Users, Briefcase, CreditCard, Plane, Code as Code2, FileText, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SectionHeader from "@/components/SectionHeader";
 import PlatformAssessment from "@/components/PlatformAssessment";

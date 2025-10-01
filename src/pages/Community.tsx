@@ -7,7 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Slider } from "@/components/ui/slider";
-import { Home, TrendingUp, Shield, Globe, Heart, Users, Music, Flower, Calendar, MapPin, Star, DollarSign, Clock, CheckCircle, ArrowRight, Zap, Play, PiggyBank, Building, TreePine, Waves, Sun, Moon, Wallet, Lock, Unlock } from "lucide-react";
+import { Chrome as Home, TrendingUp, Shield, Globe, Heart, Users, Music, Flower, Calendar, MapPin, Star, DollarSign, Clock, CircleCheck as CheckCircle, ArrowRight, Zap, Play, PiggyBank, Building, TreePine, Waves, Sun, Moon, Wallet, Lock, Clock as Unlock } from "lucide-react";
 import { useState } from "react";
 // Import available images
 import beachHouseMykonos from "@/assets/beach-house-mykonos.jpg";

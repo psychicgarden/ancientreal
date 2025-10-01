@@ -2,7 +2,7 @@ import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Home, DollarSign, Calendar, Settings, Plus, TrendingUp } from "lucide-react";
+import { Chrome as Home, DollarSign, Calendar, Settings, Plus, TrendingUp } from "lucide-react";
 import beachHouseMykonos from "@/assets/beach-house-mykonos.jpg";
 import greekApartment from "@/assets/greek-mediterranean-boho-apartment.jpg";
 const villaBali = beachHouseMykonos;

@@ -9,7 +9,7 @@ import { ethers } from 'ethers';
 import { ContractDatabaseIntegration } from '@/lib/contract-database-integration';
 import { usePaymentSync } from '@/hooks/usePaymentSync';
 import { ENHANCED_AVAX_MORTGAGE_ABI, ENHANCED_AVAX_MORTGAGE_CONFIG, convertUSDToAVAX, formatAVAXAmount } from '@/lib/enhanced-avax-mortgage-abi';
-import { TrendingUp, Calendar, DollarSign, Home, PiggyBank, RefreshCw, AlertTriangle } from 'lucide-react';
+import { TrendingUp, Calendar, DollarSign, Chrome as Home, PiggyBank, RefreshCw, TriangleAlert as AlertTriangle } from 'lucide-react';
 import { OptimizedImage } from '@/components/ui/optimized-image';
 import { getPropertyImage } from '@/lib/propertyImageMapping';
 import { PROPERTIES_CATALOG } from '@/lib/propertiesCatalog';

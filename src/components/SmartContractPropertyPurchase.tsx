@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { AlertTriangle, CheckCircle2, Home, Loader2, ExternalLink } from 'lucide-react';
+import { TriangleAlert as AlertTriangle, CircleCheck as CheckCircle2, Chrome as Home, Loader as Loader2, ExternalLink } from 'lucide-react';
 
 interface Property {
   id: number;
