@@ -2,34 +2,32 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { calculatePropertyAppreciation } from '@/lib/finance';
 
-// Import available property assets
+// Import all relevant property assets
+import bohoArtDecoLoft from '@/assets/boho-art-deco-loft-mexico.jpg';
+import luxuryBohoBungalow from '@/assets/luxury-boho-beach-bungalow-bahia.jpg';
+import artDecoCoastalEriceira from '@/assets/art-deco-coastal-ericeira.jpg';
+import villaTulum from '@/assets/villa-tulum.jpg';
+import villaEriceira from '@/assets/villa-ericeira-portugal.jpg';
+import villaBahia from '@/assets/villa-bahia.jpg';
+import villaBali from '@/assets/villa-bali.jpg';
+import villaGreece from '@/assets/villa-greece.jpg';
+import villaMexico from '@/assets/villa-mexico.jpg';
+import beachChalet from '@/assets/beach-chalet.jpg';
+import beachHouseMaldives from '@/assets/beach-house-maldives.jpg';
 import beachHouseMykonos from '@/assets/beach-house-mykonos.jpg';
-import greekApartment from '@/assets/greek-mediterranean-boho-apartment.jpg';
-// Use available images as placeholders for missing assets
-const bohoArtDecoLoft = beachHouseMykonos;
-const luxuryBohoBungalow = beachHouseMykonos;
-const artDecoCoastalEriceira = greekApartment;
-const villaTulum = beachHouseMykonos;
-const villaEriceira = greekApartment;
-const villaBahia = beachHouseMykonos;
-const villaBali = beachHouseMykonos;
-const villaGreece = greekApartment;
-const villaMexico = beachHouseMykonos;
-const beachChalet = beachHouseMykonos;
-const beachHouseMaldives = beachHouseMykonos;
-const apartmentNyc = beachHouseMykonos;
-const apartmentGreece = greekApartment;
-const penthouseMexico = beachHouseMykonos;
-const loftBahia = beachHouseMykonos;
-const desertOasisMorocco = beachHouseMykonos;
-const desertOasisBahia = beachHouseMykonos;
-const jungleLodgeCostarica = beachHouseMykonos;
-const baliJungleResort = beachHouseMykonos;
-const ericeiraCoastalApartment = greekApartment;
-const artisticBohoCoastalEriceira = greekApartment;
-const artDecoLoftMexico = beachHouseMykonos;
-const bahiaBeachBungalow = beachHouseMykonos;
-const villaCorfu = greekApartment;
+import apartmentNyc from '@/assets/apartment-nyc.jpg';
+import apartmentGreece from '@/assets/apartment-greece.jpg';
+import penthouseMexico from '@/assets/penthouse-mexico.jpg';
+import loftBahia from '@/assets/loft-bahia.jpg';
+import desertOasisMorocco from '@/assets/desert-oasis-morocco.jpg';
+import desertOasisBahia from '@/assets/desert-oasis-bahia.jpg';
+import jungleLodgeCostarica from '@/assets/jungle-lodge-costarica.jpg';
+import baliJungleResort from '@/assets/bali-jungle-resort.jpg';
+import ericeiraCoastalApartment from '@/assets/ericeira-coastal-apartment.jpg';
+import artisticBohoCoastalEriceira from '@/assets/artistic-boho-coastal-ericeira.jpg';
+import artDecoLoftMexico from '@/assets/art-deco-loft-mexico.jpg';
+import bahiaBeachBungalow from '@/assets/bahia-beach-bungalow.jpg';
+import villaCorfu from '@/assets/villa-corfu-greece.jpg';
 
 export interface FractionalProperty {
   id: string;

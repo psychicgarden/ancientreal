@@ -1,5 +1,4 @@
-import beachHouseMykonos from '@/assets/beach-house-mykonos.jpg';
-const artDecoLoftMexico = beachHouseMykonos;
+import artDecoLoftMexico from '@/assets/boho-art-deco-loft-mexico.jpg';
 
 interface PropertyWithImage {
   image_url?: string;

@@ -3,13 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Search, MapPin, Calendar, Users, Wallet, Gift } from "lucide-react";
+import villaBahia from "@/assets/loft-bahia.jpg";
+import villaMexico from "@/assets/penthouse-mexico.jpg";
+import villaGreece from "@/assets/apartment-greece.jpg";
 import beachHouseMykonos from "@/assets/beach-house-mykonos.jpg";
-import greekApartment from "@/assets/greek-mediterranean-boho-apartment.jpg";
-const villaBahia = beachHouseMykonos;
-const villaMexico = beachHouseMykonos;
-const villaGreece = greekApartment;
-const jungleLodge = beachHouseMykonos;
-const desertOasis = greekApartment;
+import jungleLodge from "@/assets/jungle-lodge-costarica.jpg";
+import desertOasis from "@/assets/desert-oasis-morocco.jpg";
 
 const TravelerPortal = () => {
   return (
