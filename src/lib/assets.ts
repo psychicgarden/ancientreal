@@ -2,18 +2,17 @@
 import { PLATFORM } from '@/config/chain';
 
 // Core application images (imported for bundling)
-// Use existing image as placeholder
+import heroImage from '@/assets/hero-image.jpg';
+import villaTulum from '@/assets/villa-tulum.jpg';
+import beachChalet from '@/assets/beach-chalet.jpg';
+import villaEriceira from '@/assets/villa-ericeira-portugal.jpg';
+import baliJungleResort from '@/assets/bali-jungle-resort.jpg';
+import desertOasisMorocco from '@/assets/desert-oasis-morocco.jpg';
 import beachHouseMykonos from '@/assets/beach-house-mykonos.jpg';
-import greekApartment from '@/assets/greek-mediterranean-boho-apartment.jpg';
-const heroImage = beachHouseMykonos;
-const villaTulum = beachHouseMykonos;
-const beachChalet = beachHouseMykonos;
-const villaEriceira = beachHouseMykonos;
-const baliJungleResort = beachHouseMykonos;
-const desertOasisMorocco = beachHouseMykonos;
-const mazunteBohoVilla = beachHouseMykonos;
-const mallorcaOceanviewVilla = beachHouseMykonos;
-const bahiaTropicalHaven = greekApartment;
+// NEW AI-GENERATED BOHO LUXURY PROPERTY IMAGES
+import mazunteBohoVilla from '@/assets/mazunte-boho-villa.jpg';
+import mallorcaOceanviewVilla from '@/assets/mallorca-oceanview-villa.jpg';
+import bahiaTropicalHaven from '@/assets/bahia-tropical-haven.jpg';
 
 // Asset management utilities
 export const ASSETS = {

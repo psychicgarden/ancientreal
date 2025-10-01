@@ -8,9 +8,16 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EnhancedContractDeployment } from '@/components/EnhancedContractDeployment';
 import { EnhancedPropertyInterface } from '@/components/EnhancedPropertyInterface';
-import { SmartContractPropertyPurchase } from '@/components/SmartContractPropertyPurchase';
-import { SimpleMortgageDashboard } from '@/components/SimpleMortgageDashboard';
-import { Rocket, Database, Chrome as Home, Settings, CircleCheck as CheckCircle, TriangleAlert as AlertTriangle, ExternalLink, ArrowLeft } from 'lucide-react';
+import { 
+  Rocket, 
+  Database, 
+  Home, 
+  Settings, 
+  CheckCircle,
+  AlertTriangle,
+  ExternalLink,
+  ArrowLeft
+} from 'lucide-react';
 
 const SmartContractManagement = () => {
   return (
@@ -94,43 +101,36 @@ const SmartContractManagement = () => {
         </div>
 
         {/* Main Content */}
-        <Tabs defaultValue="purchase" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="purchase" className="flex items-center gap-2">
-              <Home className="w-4 h-4" />
-              Purchase Property
-            </TabsTrigger>
-            <TabsTrigger value="dashboard" className="flex items-center gap-2">
-              <Settings className="w-4 h-4" />
-              Mortgage Dashboard
-            </TabsTrigger>
+        <Tabs defaultValue="deploy" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="deploy" className="flex items-center gap-2">
               <Rocket className="w-4 h-4" />
               Deploy Contract
             </TabsTrigger>
+            <TabsTrigger value="test" className="flex items-center gap-2">
+              <Home className="w-4 h-4" />
+              Test Interface
+            </TabsTrigger>
             <TabsTrigger value="manage" className="flex items-center gap-2">
-              <Database className="w-4 h-4" />
+              <Settings className="w-4 h-4" />
               Manage
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="purchase" className="space-y-6">
-            <SmartContractPropertyPurchase />
-          </TabsContent>
-
-          <TabsContent value="dashboard" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Mortgage Dashboard</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <SimpleMortgageDashboard />
-              </CardContent>
-            </Card>
-          </TabsContent>
-
           <TabsContent value="deploy" className="space-y-6">
             <EnhancedContractDeployment />
+          </TabsContent>
+
+          <TabsContent value="test" className="space-y-6">
+            <div className="space-y-4">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold mb-2">Test Enhanced Property Interface</h2>
+                <p className="text-muted-foreground">
+                  Test the enhanced property investment interface with NFT ownership and real AVAX values
+                </p>
+              </div>
+              <EnhancedPropertyInterface />
+            </div>
           </TabsContent>
 
           <TabsContent value="manage" className="space-y-6">
