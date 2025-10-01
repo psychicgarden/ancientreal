@@ -9,13 +9,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Slider } from "@/components/ui/slider";
 import { Home, TrendingUp, Shield, Globe, Heart, Users, Music, Flower, Calendar, MapPin, Star, DollarSign, Clock, CheckCircle, ArrowRight, Zap, Play, PiggyBank, Building, TreePine, Waves, Sun, Moon, Wallet, Lock, Unlock } from "lucide-react";
 import { useState } from "react";
-// Boho luxury Soho House aesthetic images
-import ecstaticDanceImage from "@/assets/ecstatic-dance-boho.jpg";
-import wellnessWorkshopsImage from "@/assets/wellness-workshops-boho.jpg";
-import coworkingImage from "@/assets/coworking-boho.jpg";
-import investmentMasteryImage from "@/assets/investment-mastery-boho.jpg";
-import liveMusicImage from "@/assets/live-music-boho.jpg";
-import sacredCeremoniesImage from "@/assets/sacred-ceremonies-boho.jpg";
+// Import available images
+import beachHouseMykonos from "@/assets/beach-house-mykonos.jpg";
+import greekApartment from "@/assets/greek-mediterranean-boho-apartment.jpg";
+const ecstaticDanceImage = beachHouseMykonos;
+const wellnessWorkshopsImage = greekApartment;
+const coworkingImage = beachHouseMykonos;
+const investmentMasteryImage = greekApartment;
+const liveMusicImage = beachHouseMykonos;
+const sacredCeremoniesImage = greekApartment;
 const Community = () => {
   const [propertyValue, setPropertyValue] = useState([150000]);
   const [downPayment, setDownPayment] = useState([30000]);

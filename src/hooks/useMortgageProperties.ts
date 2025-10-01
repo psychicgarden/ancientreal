@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { PROPERTIES_CATALOG } from '@/lib/propertiesCatalog';
-import antalyaTurkeyVilla from "@/assets/antalya-turkey-villa.jpg";
-import kohPhanganSeaBungalow from "@/assets/koh-phangan-sea-bungalow.jpg";
-import corfuGreekApartment from "@/assets/corfu-greek-apartment.jpg";
+import beachHouseMykonos from "@/assets/beach-house-mykonos.jpg";
+import greekApartment from "@/assets/greek-mediterranean-boho-apartment.jpg";
+const antalyaTurkeyVilla = beachHouseMykonos;
+const kohPhanganSeaBungalow = beachHouseMykonos;
+const corfuGreekApartment = greekApartment;
 
 export interface MortgagePropertyData {
   id: string;
