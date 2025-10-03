@@ -22,6 +22,9 @@ export interface MortgageMetrics {
   timeToPayoff: string;
   equityBuilt: number;
   loanToValueRatio: number;
+  paymentsCompleted: number;
+  paymentsRemaining: number;
+  paymentProgressPercent: number;
 }
 
 export function calculateMortgageMetrics(
@@ -73,6 +76,12 @@ export function calculateMortgageMetrics(
   // LTV ratio
   const loanToValueRatio = propertyValue > 0 ? (remainingBalance / propertyValue) * 100 : 0;
   
+  // Calculate payment progress
+  const totalPaid = principalPaid + interestPaid;
+  const paymentsCompleted = monthlyPayment > 0 ? Math.floor(totalPaid / monthlyPayment) : 0;
+  const paymentsRemaining = Math.max(0, mortgage.termMonths - paymentsCompleted);
+  const paymentProgressPercent = mortgage.termMonths > 0 ? (paymentsCompleted / mortgage.termMonths) * 100 : 0;
+  
   return {
     remainingBalance,
     paidBalance,
@@ -84,7 +93,10 @@ export function calculateMortgageMetrics(
     nextPaymentDue,
     timeToPayoff,
     equityBuilt: totalEquity,
-    loanToValueRatio
+    loanToValueRatio,
+    paymentsCompleted,
+    paymentsRemaining,
+    paymentProgressPercent
   };
 }
 

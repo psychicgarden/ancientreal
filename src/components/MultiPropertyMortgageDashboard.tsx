@@ -67,6 +67,9 @@ interface PropertyMortgageData {
     equityBuilt: number;
     remainingMonths: number;
     monthsElapsed: number;
+    paymentsCompleted: number;
+    paymentsRemaining: number;
+    paymentProgressPercent: number;
   };
 }
 
@@ -211,7 +214,10 @@ export const MultiPropertyMortgageDashboard = ({
                 loanToValueRatio: metrics.loanToValueRatio,
                 equityBuilt: metrics.equityBuilt,
                 remainingMonths: metrics.remainingMonths,
-                monthsElapsed: metrics.monthsElapsed
+                monthsElapsed: metrics.monthsElapsed,
+                paymentsCompleted: metrics.paymentsCompleted,
+                paymentsRemaining: metrics.paymentsRemaining,
+                paymentProgressPercent: metrics.paymentProgressPercent
               }
             };
           });
@@ -541,8 +547,38 @@ export const MultiPropertyMortgageDashboard = ({
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
+                  <CheckCircle2 className="h-5 w-5" />
+                  Portfolio Payment Progress
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {filteredProperties.map((property) => (
+                  <div key={property.id} className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <div className="font-medium">{property.name}</div>
+                        <div className="text-sm text-muted-foreground">
+                          Payment {property.metrics.paymentsCompleted} of {property.metrics.paymentsCompleted + property.metrics.paymentsRemaining}
+                        </div>
+                      </div>
+                      <Badge variant="outline">
+                        {property.metrics.paymentProgressPercent.toFixed(1)}%
+                      </Badge>
+                    </div>
+                    <Progress value={property.metrics.paymentProgressPercent} className="h-3" />
+                    <div className="text-xs text-muted-foreground">
+                      {property.metrics.paymentsRemaining} payments remaining
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
                   <LineChart className="h-5 w-5" />
-                  Mortgage Progress by Property
+                  Equity Building Progress
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -669,11 +705,14 @@ export const MultiPropertyMortgageDashboard = ({
                               <h4 className="font-medium">
                                 {property.name} #{index + 1}
                               </h4>
+                              <p className="text-sm font-medium text-primary">
+                                Payment {property.metrics.paymentsCompleted} of {property.metrics.paymentsCompleted + property.metrics.paymentsRemaining} ({property.metrics.paymentProgressPercent.toFixed(1)}%)
+                              </p>
                               <p className="text-sm text-muted-foreground">
-                                ${Math.round(property.monthlyPayment).toLocaleString()}/mo • {property.metrics.ownershipPercentage.toFixed(1)}% owned
+                                ${Math.round(property.monthlyPayment).toLocaleString()}/mo • {property.metrics.paymentsRemaining} payments left
                               </p>
                               <p className="text-xs text-muted-foreground">
-                                {property.metrics.timeToPayoff} remaining • {property.metrics.loanToValueRatio.toFixed(0)}% LTV
+                                {property.metrics.ownershipPercentage.toFixed(1)}% equity • {property.metrics.loanToValueRatio.toFixed(0)}% LTV
                               </p>
                             </div>
                           </div>
@@ -728,6 +767,26 @@ export const MultiPropertyMortgageDashboard = ({
                 </CardHeader>
                 
                 <CardContent className="space-y-4">
+                  {/* Payment Progress Highlight */}
+                  <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="h-5 w-5 text-primary" />
+                        <span className="font-semibold text-primary">
+                          Payment {property.metrics.paymentsCompleted} of {property.metrics.paymentsCompleted + property.metrics.paymentsRemaining}
+                        </span>
+                      </div>
+                      <Badge variant="secondary">
+                        {property.metrics.paymentProgressPercent.toFixed(1)}% Complete
+                      </Badge>
+                    </div>
+                    <Progress value={property.metrics.paymentProgressPercent} className="h-3 mb-2" />
+                    <div className="flex justify-between text-xs text-muted-foreground">
+                      <span>{property.metrics.paymentsCompleted} payments made</span>
+                      <span>{property.metrics.paymentsRemaining} remaining</span>
+                    </div>
+                  </div>
+                  
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
                       <span className="text-muted-foreground">Purchase Price:</span>
@@ -749,10 +808,13 @@ export const MultiPropertyMortgageDashboard = ({
                   
                   <div>
                     <div className="flex justify-between text-sm mb-2">
-                      <span>Mortgage Progress</span>
+                      <span>Equity Progress</span>
                       <span className="font-medium">{property.metrics.ownershipPercentage.toFixed(1)}%</span>
                     </div>
                     <Progress value={property.metrics.ownershipPercentage} />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      ${Math.round(property.equity).toLocaleString()} equity built • {property.metrics.timeToPayoff} to full ownership
+                    </p>
                   </div>
                   
                   <div className="flex gap-2">
