@@ -90,9 +90,19 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   // Auto-connection with proper validation
   useEffect(() => {
     const initializeWallet = async () => {
-      // Never auto-connect in demo mode unless explicitly enabled
+      // Auto-connect demo wallet in demo mode
       if (DEMO_CONFIG.isEnabled) {
-        console.log("Demo mode: Skipping auto-connection");
+        console.log("✅ Demo mode: Auto-connecting demo wallet");
+        const demoWallet = getDemoWallet();
+        if (demoWallet) {
+          setAccount(demoWallet.address);
+          setChainId(demoWallet.chainId);
+          setNetworkName(demoWallet.networkName);
+          setIsConnected(true);
+          setUsdtBalance("1000");
+          setEthBalance("2.5");
+          console.log("✅ Demo wallet auto-connected:", demoWallet.address);
+        }
         return;
       }
 

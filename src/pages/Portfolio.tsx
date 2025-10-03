@@ -65,9 +65,12 @@ const Portfolio = () => {
       }
 
       console.log('🚀 Starting data fetch for account:', account);
+      console.log('🔍 Account type:', typeof account);
+      console.log('🔍 Account lowercase:', account.toLowerCase());
       setLoading(true);
       try {
         // Fetch whole property mortgages from user_properties (using user_wallet_address)
+        console.log('🔍 Querying user_properties with wallet:', account.toLowerCase());
         const { data: wholeProperties, error: propertiesError } = await supabase
           .from('user_properties')
           .select('*')
@@ -75,11 +78,14 @@ const Portfolio = () => {
           .eq('is_active', true)
           .order('created_at', { ascending: false });
 
+        console.log('📦 Raw Supabase response:', { data: wholeProperties, error: propertiesError });
+        
         if (propertiesError) {
-          console.error('Error fetching user properties:', propertiesError);
+          console.error('❌ Error fetching user properties:', propertiesError);
           setUserProperties([]);
         } else {
-          console.log('Whole property mortgages:', wholeProperties);
+          console.log('✅ Whole property mortgages loaded:', wholeProperties?.length, 'properties');
+          console.log('📊 Properties data:', wholeProperties);
           setUserProperties(wholeProperties || []);
         }
 
@@ -256,9 +262,12 @@ const Portfolio = () => {
             <p className="text-muted-foreground">
               Connect your wallet to view your property portfolio and investment details.
             </p>
+            <p className="text-sm text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/20 p-3 rounded-lg mt-4">
+              💡 <strong>Demo Mode Active:</strong> Click "Connect Wallet" below to connect the demo wallet (0x966f...f94) and view your properties.
+            </p>
           </div>
           <Button onClick={connectWallet} className="w-full" size="lg">
-            Connect Wallet
+            Connect Demo Wallet
           </Button>
         </div>
       </div>
