@@ -96,7 +96,7 @@ export const InvestorMortgageDashboard = ({ onNavigateToProperties }: { onNaviga
             ? Number(property.monthly_payment)
             : computeMonthlyPaymentUSD(loanUsd, aprBps, termMonths);
 
-          const due = computeNextDueDate(property.purchase_date);
+          const due = computeNextDueDate((property as any).purchase_date || property.created_at);
 
           const mortgageDetails = {
             isActive: remainingBalUsd > 0,
@@ -107,7 +107,7 @@ export const InvestorMortgageDashboard = ({ onNavigateToProperties }: { onNaviga
             isOverdue: false,
             daysPastDue: 0,
             missedPayments: 0,
-            startDate: Math.floor(new Date(property.purchase_date).getTime() / 1000),
+            startDate: Math.floor(new Date((property as any).purchase_date || property.created_at).getTime() / 1000),
             downPayment: (property as any).down_payment_base ? fromBase((property as any).down_payment_base) : Number(property.down_payment || 0),
             isCompleted: remainingBalUsd <= 0,
             isForeclosed: false,

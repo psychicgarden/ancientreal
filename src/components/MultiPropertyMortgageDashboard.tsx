@@ -141,7 +141,7 @@ export const MultiPropertyMortgageDashboard = ({
               interestPaidBase: BigInt((property as any).interest_paid_base || 0),
               aprBps: Number((property as any).apr_bps || 800), // 8% APR
               termMonths: Number((property as any).term_months || 120), // 10 years
-              purchaseDate: property.purchase_date
+              purchaseDate: (property as any).purchase_date || property.created_at
             };
 
             // Calculate metrics as backup, but prefer stored database values
@@ -193,7 +193,7 @@ export const MultiPropertyMortgageDashboard = ({
               isOverdue: false, // TODO: Calculate based on payment history
               daysPastDue: 0,
               mortgageProgress: metrics.ownershipPercentage,
-              purchaseDate: new Date(property.purchase_date),
+              purchaseDate: new Date((property as any).purchase_date || property.created_at),
               userProperty: {
                 ...property, // Include ALL original property fields for demo detection
                 id: property.id,
@@ -291,7 +291,7 @@ export const MultiPropertyMortgageDashboard = ({
     interestPaidBase: BigInt((p.userProperty as any).interest_paid_base || 0),
     aprBps: Number((p.userProperty as any).apr_bps || 800),
     termMonths: Number((p.userProperty as any).term_months || 120),
-    purchaseDate: p.userProperty.purchase_date,
+    purchaseDate: (p.userProperty as any).purchase_date || (p.userProperty as any).created_at,
     propertyValue: p.purchasePrice
   }));
 

@@ -1806,6 +1806,7 @@ export type Database = {
           property_id: number
           property_location: string
           property_name: string
+          purchase_date: string
           purchase_price: number
           purchase_price_base: number
           remaining_balance: number

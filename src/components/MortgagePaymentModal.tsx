@@ -120,17 +120,22 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
           payment_type: 'demo_payment'
         });
 
-      // Update user property with new balance using the ID from userProperty
-      if (property.userProperty?.id) {
-        await supabase
-          .from('user_properties')
-          .update({
-            remaining_balance: Math.max(0, property.remainingBalance - mortgageDetails.principalAmount),
-            principal_paid_base: (property.userProperty.principal_paid_base || 0) + Number(toBase(mortgageDetails.principalAmount)),
-            interest_paid_base: (property.userProperty.interest_paid_base || 0) + Number(toBase(mortgageDetails.interestAmount)),
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', property.userProperty.id);
+      // Apply payment atomically via RPC to bypass RLS and update user_properties
+      const principalBase = Number(toBase(mortgageDetails.principalAmount));
+      const interestBase = Number(toBase(mortgageDetails.interestAmount));
+      const { data: applyResult, error: applyError } = await supabase
+        .rpc('apply_mortgage_payment', {
+          p_user_address: (account || 'demo-wallet').toLowerCase(),
+          p_property_id: mappedId,
+          p_principal_delta_base: principalBase,
+          p_interest_delta_base: interestBase,
+          p_tx_hash: `demo_${Date.now()}`
+        });
+
+      if (applyError) {
+        console.error('❌ apply_mortgage_payment failed:', applyError);
+      } else {
+        console.log('✅ Payment applied via RPC:', applyResult);
       }
 
       toast({
