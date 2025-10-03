@@ -59,11 +59,7 @@ export const InvestorMortgageDashboard = ({ onNavigateToProperties }: { onNaviga
         // Fetch data from Supabase - Clean up duplicates and get unique properties
         const acct = account?.toLowerCase() ?? "";
         const { data: properties, error: propertiesError } = await supabase
-          .from('user_properties')
-          .select('*')
-          .or(`user_address.eq.${acct},user_wallet_address.eq.${acct}`)
-          .eq('is_active', true)
-          .order('updated_at', { ascending: false });
+          .rpc('get_user_portfolio', { wallet: acct });
 
         // Remove duplicates by property_name
         const uniqueProperties = properties?.reduce((acc: any[], current: any) => {

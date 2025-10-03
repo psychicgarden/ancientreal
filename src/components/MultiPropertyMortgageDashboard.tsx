@@ -97,11 +97,7 @@ export const MultiPropertyMortgageDashboard = ({
         setLoading(true);
         
         const { data: userProperties, error } = await supabase
-          .from('user_properties')
-          .select('*')
-          .eq('user_wallet_address', account.toLowerCase())
-          .eq('is_active', true)
-          .order('created_at', { ascending: false });
+          .rpc('get_user_portfolio', { wallet: account.toLowerCase() });
 
         console.log('🔍 MultiPropertyMortgageDashboard - Database query result:', {
           account: account.toLowerCase(),
