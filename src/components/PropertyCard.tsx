@@ -5,6 +5,7 @@ import { Heart, MapPin, TrendingUp, Users, Calendar, DollarSign } from "lucide-r
 import { useState } from "react";
 import { MortgagePaymentModal } from "@/components/MortgagePaymentModal";
 import { PropertyAnalyticsModal } from "@/components/PropertyAnalyticsModal";
+import { OptimizedImage } from "@/components/ui/optimized-image";
 
 interface PropertyCardProps {
   id: string;
@@ -149,14 +150,12 @@ export const PropertyCard = ({
   return (
     <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300">{/* ... keep existing code */}
       <div className="relative">
-        <img
+        <OptimizedImage
           src={image}
           alt={title}
           loading="lazy"
+          showPlaceholder
           className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-          onError={(e) => {
-            e.currentTarget.src = '/placeholder.svg';
-          }}
         />
         <div className="absolute bottom-3 left-3 flex gap-2">
           {getStatusBadge()}
