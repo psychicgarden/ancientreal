@@ -107,13 +107,12 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
       // Simulate processing delay
       await new Promise(resolve => setTimeout(resolve, 1500));
 
-      // Update payment history for demo
-      const mappedId = PROPERTY_ID_MAP[property.id] ?? 1;
+      // Compute property ID for RPC from DB if available, fallback to map
+      const propertyIdForRpc = Number((property as any).userProperty?.property_id ?? PROPERTY_ID_MAP[property.id] ?? 1);
       await supabase
         .from('payment_history')
         .insert({
           user_wallet_address: (account || 'demo-wallet').toLowerCase(),
-          property_id: mappedId.toString(),
           payment_amount: property.monthlyPayment,
           remaining_balance_after: Math.max(0, property.remainingBalance - mortgageDetails.principalAmount),
           status: 'completed',
@@ -126,7 +125,7 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
       const { data: applyResult, error: applyError } = await supabase
         .rpc('apply_mortgage_payment', {
           p_user_address: (account || 'demo-wallet').toLowerCase(),
-          p_property_id: mappedId,
+          p_property_id: propertyIdForRpc,
           p_principal_delta_base: principalBase,
           p_interest_delta_base: interestBase,
           p_tx_hash: `demo_${Date.now()}`
@@ -134,6 +133,13 @@ export const MortgagePaymentModal = ({ isOpen, onClose, property, onSuccess }: M
 
       if (applyError) {
         console.error('❌ apply_mortgage_payment failed:', applyError);
+        toast({
+          title: "Payment Failed",
+          description: applyError.message || "Could not apply mortgage payment.",
+          variant: "destructive"
+        });
+        setIsProcessing(false);
+        return;
       } else {
         console.log('✅ Payment applied via RPC:', applyResult);
       }
