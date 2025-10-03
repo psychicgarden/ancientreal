@@ -65,27 +65,20 @@ const Portfolio = () => {
       }
 
       console.log('🚀 Starting data fetch for account:', account);
-      console.log('🔍 Account type:', typeof account);
-      console.log('🔍 Account lowercase:', account.toLowerCase());
       setLoading(true);
       try {
-        // Fetch whole property mortgages from user_properties (using user_wallet_address)
-        console.log('🔍 Querying user_properties with wallet:', account.toLowerCase());
+        // Fetch whole property mortgages using secure RPC function
+        console.log('🔍 Calling get_user_portfolio RPC for wallet:', account.toLowerCase());
         const { data: wholeProperties, error: propertiesError } = await supabase
-          .from('user_properties')
-          .select('*')
-          .eq('user_wallet_address', account.toLowerCase())
-          .eq('is_active', true)
-          .order('created_at', { ascending: false });
+          .rpc('get_user_portfolio', { wallet: account.toLowerCase() });
 
-        console.log('📦 Raw Supabase response:', { data: wholeProperties, error: propertiesError });
+        console.log('📦 Portfolio RPC response:', { data: wholeProperties, error: propertiesError });
         
         if (propertiesError) {
-          console.error('❌ Error fetching user properties:', propertiesError);
+          console.error('❌ Error fetching user portfolio:', propertiesError);
           setUserProperties([]);
         } else {
-          console.log('✅ Whole property mortgages loaded:', wholeProperties?.length, 'properties');
-          console.log('📊 Properties data:', wholeProperties);
+          console.log('✅ Portfolio loaded:', wholeProperties?.length, 'properties');
           setUserProperties(wholeProperties || []);
         }
 

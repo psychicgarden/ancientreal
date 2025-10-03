@@ -24,7 +24,7 @@ export const getDemoWallet = () => {
   
   return {
     address: DEMO_CONFIG.testWalletAddress,
-    chainId: '0x1', // Ethereum mainnet for demo
-    networkName: 'Demo Network'
+    chainId: '0xa869', // Avalanche Fuji testnet (43113)
+    networkName: 'Avalanche Fuji Testnet'
   };
 };

@@ -1785,6 +1785,38 @@ export type Database = {
           updated_at: string
         }[]
       }
+      get_user_portfolio: {
+        Args: { wallet: string }
+        Returns: {
+          apr_bps: number
+          created_at: string
+          currency: string
+          current_value: number
+          down_payment: number
+          down_payment_base: number
+          equity_percentage: number
+          id: string
+          image_url: string
+          interest_paid_base: number
+          is_active: boolean
+          loan_amount_base: number
+          monthly_payment: number
+          mortgage_id: string
+          principal_paid_base: number
+          property_id: number
+          property_location: string
+          property_name: string
+          purchase_price: number
+          purchase_price_base: number
+          remaining_balance: number
+          remaining_balance_base: number
+          term_months: number
+          unique_purchase_key: string
+          updated_at: string
+          user_address: string
+          user_wallet_address: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
