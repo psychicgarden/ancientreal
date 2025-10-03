@@ -50,7 +50,7 @@ export const EnhancedPortfolioAnalytics: React.FC<EnhancedPortfolioAnalyticsProp
       interestPaidBase: BigInt(property.interest_paid_base || 0),
       aprBps: Number(property.apr_bps || 800),
       termMonths: Number(property.term_months || 120),
-      purchaseDate: property.purchase_date
+      purchaseDate: (property as any).purchase_date || property.created_at
     };
     const purchasePrice = property.purchase_price_base ? 
       fromBase(property.purchase_price_base) : 

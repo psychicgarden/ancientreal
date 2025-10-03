@@ -208,13 +208,10 @@ export const useFractionalProperties = () => {
   const fetchProperties = async () => {
     try {
       setLoading(true);
-      // Fetch properties with mortgage terms and whole property sales count
+      // Fetch properties with mortgage terms and whole property sales count using RPC
       const { data, error } = await supabase
         .from('property_fractionalization')
-        .select(`
-          *,
-          whole_properties_sold:user_properties(count)
-        `)
+        .select('*')
         .eq('is_active', true)
         .eq('is_listed_fractionally', true)
         .eq('owner_approved_listing', true) // Only show owner-approved listings
@@ -233,22 +230,29 @@ export const useFractionalProperties = () => {
         prop.owner_wallet_address !== '0x1234567890123456789012345678901234567890'
       ) || [];
 
-      // Count whole properties sold for each fractionalized property
-      const propertiesWithCounts = await Promise.all(
-        validProperties.map(async (prop) => {
-          const { count } = await supabase
-            .from('user_properties')
-            .select('*', { count: 'exact', head: true })
-            .eq('property_name', prop.property_name)
-            .eq('property_location', prop.property_location)
-            .eq('is_active', true);
-          
-          return {
-            ...prop,
-            whole_properties_sold: count || 0
-          };
-        })
-      );
+      // Count whole properties sold for each fractionalized property using RPC
+      const { data: soldCounts, error: countsError } = await supabase
+        .rpc('get_whole_properties_sold');
+      
+      if (countsError) {
+        console.error('Error fetching sold counts:', countsError);
+      }
+      
+      const soldCountsMap = new Map<string, number>();
+      soldCounts?.forEach((row: any) => {
+        const key = `${row.property_name}|${row.property_location}`;
+        soldCountsMap.set(key.toLowerCase(), Number(row.sold_count || 0));
+      });
+
+      const propertiesWithCounts = validProperties.map((prop) => {
+        const key = `${prop.property_name}|${prop.property_location}`.toLowerCase();
+        const wholePropertiesSold = soldCountsMap.get(key) || 0;
+        
+        return {
+          ...prop,
+          whole_properties_sold: wholePropertiesSold
+        };
+      });
 
       const transformedProperties = propertiesWithCounts.map(transformProperty);
       setProperties(transformedProperties);

@@ -1818,6 +1818,14 @@ export type Database = {
           user_wallet_address: string
         }[]
       }
+      get_whole_properties_sold: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          property_location: string
+          property_name: string
+          sold_count: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

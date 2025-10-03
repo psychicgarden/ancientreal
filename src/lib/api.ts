@@ -17,9 +17,7 @@ export class SupabaseApi {
       logger.debug('Getting user properties', { userId }, 'SupabaseApi');
       
       const { data, error } = await supabase
-        .from('user_properties')
-        .select('*')
-        .eq('user_wallet_address', userId);
+        .rpc('get_user_portfolio', { wallet: userId.toLowerCase() });
       
       if (error) {
         logger.error('Failed to get user properties', error, 'SupabaseApi');
