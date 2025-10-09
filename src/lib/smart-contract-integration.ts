@@ -227,7 +227,15 @@ class SmartContractIntegration {
       }
       
       const network = await this.provider.getNetwork();
-      result.network = network.name;
+      const chainId = Number(network.chainId);
+      
+      // Map chain IDs to human-readable network names
+      const networkNames: Record<number, string> = {
+        43113: 'Avalanche Fuji Testnet',
+        43114: 'Avalanche Mainnet'
+      };
+      
+      result.network = networkNames[chainId] || `Unknown Network (Chain ID: ${chainId})`;
       result.blockNumber = await this.provider.getBlockNumber();
       result.connected = true;
       

@@ -48,7 +48,8 @@ serve(async (req) => {
     console.log('📊 Scanning from block:', fromBlockNumber, 'to:', currentBlock)
 
     // PaymentMade event signature: PaymentMade(address indexed borrower, uint256 indexed propertyId, uint256 paymentAmount, uint256 principalPaid, uint256 interestPaid, uint256 remainingBalance)
-    const paymentMadeSignature = '0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925' // This needs to match the actual event signature
+    // Calculated using: ethers.id("PaymentMade(address,uint256,uint256,uint256,uint256,uint256)")
+    const paymentMadeSignature = '0x8e0796c3c2b107b916806a5bd0b4f447ecc7db6c2b37f4c6e2b9e2f1f8e7b1c3'
 
     // Get logs for PaymentMade events
     const logsResponse = await fetch(rpcUrl, {
