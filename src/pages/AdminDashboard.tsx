@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Settings, Database, Shield } from 'lucide-react';
 import { BlockchainReconciliation } from '@/components/admin/BlockchainReconciliation';
-import { SmartContractStatus } from '@/components/SmartContractStatus';
+import { AncientSCContractsList } from '@/components/admin/AncientSCContractsList';
 
 export default function AdminDashboard() {
   return (
@@ -62,35 +62,7 @@ export default function AdminDashboard() {
         </TabsContent>
 
         <TabsContent value="contracts" className="space-y-6">
-          <SmartContractStatus />
-          
-          <Card>
-            <CardHeader>
-              <CardTitle>Contract Configuration</CardTitle>
-              <CardDescription>
-                Manage smart contract addresses and deployment status
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="p-4 bg-muted rounded-lg">
-                  <p className="text-sm font-semibold mb-2">Primary Mortgage Contract</p>
-                  <code className="text-xs bg-background px-2 py-1 rounded">
-                    0x0b92ece58415c0b1aba86c372f45ffc4d6046bed
-                  </code>
-                  <p className="text-xs text-muted-foreground mt-2">AncientMortgage on Avalanche Fuji</p>
-                </div>
-                
-                <div className="p-4 bg-muted rounded-lg">
-                  <p className="text-sm font-semibold mb-2">USDT Test Token</p>
-                  <code className="text-xs bg-background px-2 py-1 rounded">
-                    0xc29837e2f495d8f04c5e7aca7d378baa8765dd36
-                  </code>
-                  <p className="text-xs text-muted-foreground mt-2">TestUSDT with faucet on Fuji</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <AncientSCContractsList />
         </TabsContent>
 
         <TabsContent value="settings" className="space-y-6">
