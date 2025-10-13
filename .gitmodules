@@ -1,0 +1,4 @@
+[submodule "ancient-sc"]
+	path = ancient-sc
+	url = https://github.com/psychicgarden/ancient-sc.git
+	branch = main

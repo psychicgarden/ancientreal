@@ -1,9 +1,10 @@
 import React from 'react';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
-import { CheckCircle, ExternalLink, DollarSign, TrendingUp, Shield } from 'lucide-react';
+import { CheckCircle, ExternalLink, DollarSign, TrendingUp, Shield, GitBranch } from 'lucide-react';
 import { CONTRACTS, getExplorerAddressUrl } from '@/config/chain';
 import { useFeatureFlag } from '@/lib/feature-flags';
+import { isAncientSCAvailable } from '@/lib/ancient-sc-integration';
 
 export const SmartContractStatus = () => {
   const mortgageEnabled = useFeatureFlag('mortgageContractEnabled');
@@ -113,6 +114,28 @@ export const SmartContractStatus = () => {
           </div>
         </div>
       </div>
+
+      {isAncientSCAvailable() && (
+        <div className="mt-6 p-4 bg-accent/10 rounded-lg border border-accent/20">
+          <div className="flex items-center gap-2 mb-3">
+            <GitBranch className="w-5 h-5 text-accent" />
+            <h3 className="font-medium">Ancient SC Submodule</h3>
+            <Badge variant="outline" className="text-xs">Git Submodule</Badge>
+          </div>
+          <p className="text-sm text-muted-foreground mb-2">
+            Production contracts from <code className="text-xs bg-muted px-1 py-0.5 rounded">ancient-sc</code> repository
+          </p>
+          <div className="text-xs text-muted-foreground">
+            <div>📁 Location: <code>/ancient-sc/contracts/</code></div>
+            <div>🔗 Source: <a href="https://github.com/psychicgarden/ancient-sc" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">github.com/psychicgarden/ancient-sc</a></div>
+            <div className="mt-2">
+              <a href="/admin/projects" className="text-primary hover:underline">
+                View in Admin Dashboard →
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </Card>
   );
 };
