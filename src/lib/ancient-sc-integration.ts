@@ -3,23 +3,52 @@
  * References contracts from /ancient-sc/contracts/
  */
 
+import { 
+  ANCIENT_MORTGAGE_ABI, 
+  ANCIENT_MORTGAGE_ADDRESS,
+  ENHANCED_STAKING_ABI,
+  ENHANCED_STAKING_ADDRESS,
+  TEST_USDT_ABI,
+  TEST_USDT_ADDRESS
+} from './abis';
+
 export interface AncientSCContract {
   name: string;
   address: string;
   network: 'fuji' | 'mainnet';
-  abi?: any[];
+  abi: any[];
   deployedAt?: string;
   deploymentTxHash?: string;
 }
 
 /**
- * Get ancient-sc contract addresses from database
- * Filters by source = 'ancient-sc'
+ * Get ancient-sc contract addresses and ABIs
+ * Uses deployed addresses from chain.ts config
  */
-export async function getAncientSCContracts(): Promise<AncientSCContract[]> {
-  // This will be populated from contract_addresses table
-  // For now, return empty array until contracts are deployed
-  return [];
+export function getAncientSCContracts(): AncientSCContract[] {
+  return [
+    {
+      name: 'AncientMortgage',
+      address: ANCIENT_MORTGAGE_ADDRESS,
+      network: 'fuji',
+      abi: [...ANCIENT_MORTGAGE_ABI],
+      deployedAt: '2025-01-13'
+    },
+    {
+      name: 'EnhancedStakingPool',
+      address: ENHANCED_STAKING_ADDRESS,
+      network: 'fuji',
+      abi: [...ENHANCED_STAKING_ABI],
+      deployedAt: '2025-01-13'
+    },
+    {
+      name: 'TestUSDT',
+      address: TEST_USDT_ADDRESS,
+      network: 'fuji',
+      abi: [...TEST_USDT_ABI],
+      deployedAt: '2025-01-13'
+    }
+  ];
 }
 
 /**

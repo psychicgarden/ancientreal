@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ExternalLink, GitBranch, CheckCircle, FileCode } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { getAncientSCContracts, getAncientSCExplorerUrl } from '@/lib/ancient-sc-integration';
 
 interface AncientSCContract {
   name: string;
@@ -47,6 +48,8 @@ const ANCIENT_SC_CONTRACTS: AncientSCContract[] = [
 ];
 
 export const AncientSCContractsList = () => {
+  const deployedContracts = getAncientSCContracts();
+  
   return (
     <div className="space-y-6">
       {/* Submodule Info */}
@@ -86,58 +89,53 @@ export const AncientSCContractsList = () => {
         </div>
       </Card>
 
-      {/* Contracts List */}
+      {/* Deployed Contracts List */}
       <div>
-        <h3 className="text-lg font-semibold mb-4">Available Contracts</h3>
+        <h3 className="text-lg font-semibold mb-4">Deployed Contracts on Fuji Testnet</h3>
         <div className="grid gap-4">
-          {ANCIENT_SC_CONTRACTS.map((contract) => (
-            <Card key={contract.name} className="p-4 border-l-4 border-l-accent">
+          {deployedContracts.map((contract) => (
+            <Card key={contract.name} className="p-4 border-l-4 border-l-green-500">
               <div className="flex items-start justify-between mb-3">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
                     <h4 className="font-medium">{contract.name}</h4>
-                    <Badge 
-                      variant={contract.status === 'deployed' ? 'default' : 'secondary'}
-                      className="text-xs"
-                    >
-                      {contract.status === 'deployed' ? 'Deployed' : 'Available'}
+                    <Badge variant="default" className="text-xs">
+                      <CheckCircle className="w-3 h-3 mr-1" />
+                      Deployed
                     </Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-2">
-                    {contract.description}
-                  </p>
-                  <code className="text-xs bg-muted px-2 py-1 rounded">
-                    {contract.file}
-                  </code>
-                </div>
-              </div>
-
-              {contract.status === 'deployed' && contract.address && (
-                <div className="mt-3 p-3 bg-muted/50 rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                      <span className="text-sm font-medium">Deployed</span>
-                    </div>
                     <Badge variant="outline" className="text-xs">
                       {contract.network}
                     </Badge>
                   </div>
-                  <div className="mt-2 flex items-center justify-between">
-                    <code className="text-xs bg-background px-2 py-1 rounded">
-                      {contract.address?.slice(0, 8)}...{contract.address?.slice(-6)}
-                    </code>
-                    <a
-                      href={`https://testnet.snowtrace.io/address/${contract.address}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-xs text-primary hover:underline"
-                    >
-                      View on Snowtrace <ExternalLink className="w-3 h-3" />
-                    </a>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="text-muted-foreground">Address:</span>
+                      <code className="text-xs bg-muted px-2 py-1 rounded font-mono">
+                        {contract.address}
+                      </code>
+                      <a
+                        href={getAncientSCExplorerUrl(contract.address, contract.network)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-xs text-primary hover:underline"
+                      >
+                        Snowtrace <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="text-muted-foreground">ABI Functions:</span>
+                      <Badge variant="secondary" className="text-xs">
+                        {contract.abi.length} functions
+                      </Badge>
+                    </div>
+                    {contract.deployedAt && (
+                      <div className="text-xs text-muted-foreground">
+                        Deployed: {contract.deployedAt}
+                      </div>
+                    )}
                   </div>
                 </div>
-              )}
+              </div>
             </Card>
           ))}
         </div>
