@@ -1,4 +1,3 @@
-[submodule "ancient-sc"]
-	path = ancient-sc
+[submodule "contracts"]
+	path = contracts
 	url = https://github.com/psychicgarden/ancient-sc.git
-	branch = main
