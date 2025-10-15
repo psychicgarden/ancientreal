@@ -119,14 +119,16 @@ export const EnhancedMortgageSystem: React.FC = () => {
     
     setIsLoading(true);
     try {
+      console.log('🔍 Fetching user properties for account:', account);
+      
       const { data, error } = await supabase
         .from('user_properties')
         .select('*')
-        .or(`user_wallet_address.ilike.${account},user_address.ilike.${account}`)
+        .or(`user_wallet_address.ilike.${account.toLowerCase()},user_address.ilike.${account.toLowerCase()}`)
         .eq('is_active', true);
 
       if (error) {
-        console.error('Error fetching user properties:', error);
+        console.error('❌ Error fetching user properties:', error);
         toast({
           title: "Error",
           description: "Failed to fetch user properties",
@@ -135,9 +137,10 @@ export const EnhancedMortgageSystem: React.FC = () => {
         return;
       }
 
+      console.log('✅ Fetched user properties:', data);
       setUserProperties(data || []);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('❌ Error:', error);
     } finally {
       setIsLoading(false);
     }
@@ -299,25 +302,58 @@ export const EnhancedMortgageSystem: React.FC = () => {
           
           // Save to database
           try {
+            const purchasePrice = parseFloat(propertyValue);
+            const downPaymentAmount = parseFloat(downPayment);
+            const loanAmount = purchasePrice - downPaymentAmount;
+            
             const { error: dbError } = await supabase
               .from('user_properties')
               .insert({
                 user_wallet_address: account.toLowerCase(),
+                user_address: account.toLowerCase(), // Also set user_address for compatibility
                 mortgage_id: mortgageId,
                 property_id: propertyId,
                 property_name: `Property #${propertyId}`,
-                purchase_price: parseFloat(propertyValue),
-                down_payment: parseFloat(downPayment),
+                property_location: 'Mazunte, Oaxaca, Mexico', // Required field
+                purchase_price: purchasePrice,
+                down_payment: downPaymentAmount,
+                loan_amount: loanAmount,
+                remaining_balance: loanAmount, // Initially equals loan amount
+                monthly_payment: 0, // Will be updated from contract
                 term_months: 120,
                 apr_bps: 800,
-                payment_token: 'ETH',
+                is_active: true,
                 created_at: new Date().toISOString()
               });
 
             if (dbError) {
-              console.error('Database error:', dbError);
+              console.error('❌ Database error:', dbError);
             } else {
               console.log('✅ Saved to database');
+              
+              // Update monthly payment from contract
+              try {
+                const provider = new ethers.BrowserProvider(window.ethereum);
+                const contract = new ethers.Contract(contractAddress, ANCIENT_MORTGAGE_ETH_ABI, provider);
+                const mortgageData = await contract.getMortgage(mortgageId);
+                
+                // Update the database with the actual monthly payment from contract
+                const { error: updateError } = await supabase
+                  .from('user_properties')
+                  .update({
+                    monthly_payment: Number(ethers.formatEther(mortgageData.monthlyPayment)),
+                    remaining_balance: Number(ethers.formatEther(mortgageData.remainingBalance))
+                  })
+                  .eq('mortgage_id', mortgageId);
+                
+                if (updateError) {
+                  console.error('❌ Error updating monthly payment:', updateError);
+                } else {
+                  console.log('✅ Updated monthly payment from contract');
+                }
+              } catch (contractError) {
+                console.error('❌ Error fetching mortgage data from contract:', contractError);
+              }
             }
           } catch (err) {
             console.error('Failed to save to database:', err);
