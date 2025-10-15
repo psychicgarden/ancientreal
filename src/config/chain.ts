@@ -17,22 +17,22 @@ requiredEnvVars.forEach(envVar => {
   }
 });
 
-// Chain Configuration
+// Chain Configuration - Base Sepolia (for ETH testing)
 export const CHAIN = {
-  id: Number(import.meta.env.VITE_CHAIN_ID ?? 43113),
-  idHex: import.meta.env.VITE_CHAIN_ID_HEX ?? '0xa869',
-  name: import.meta.env.VITE_CHAIN_NAME ?? 'Avalanche Fuji Testnet',
-  rpcUrl: import.meta.env.VITE_RPC_URL ?? 'https://api.avax-test.network/ext/bc/C/rpc',
-  explorerUrl: import.meta.env.VITE_EXPLORER_URL ?? 'https://testnet.snowtrace.io',
+  id: Number(import.meta.env.VITE_CHAIN_ID ?? 84532),
+  idHex: import.meta.env.VITE_CHAIN_ID_HEX ?? '0x14a34',
+  name: import.meta.env.VITE_CHAIN_NAME ?? 'Base Sepolia',
+  rpcUrl: import.meta.env.VITE_RPC_URL ?? 'https://sepolia.base.org',
+  explorerUrl: import.meta.env.VITE_EXPLORER_URL ?? 'https://sepolia.basescan.org',
   nativeCurrency: {
-    name: 'Avalanche',
-    symbol: 'AVAX', 
+    name: 'Ethereum',
+    symbol: 'ETH', 
     decimals: 18
   },
   rpcUrls: [
-    import.meta.env.VITE_RPC_URL ?? 'https://api.avax-test.network/ext/bc/C/rpc',
-    'https://avalanche-fuji-c-chain.publicnode.com',
-    'https://rpc.ankr.com/avalanche_fuji'
+    import.meta.env.VITE_RPC_URL ?? 'https://sepolia.base.org',
+    'https://base-sepolia.blockpi.network/v1/rpc/public',
+    'https://base-sepolia-rpc.publicnode.com'
   ]
 } as const;
 

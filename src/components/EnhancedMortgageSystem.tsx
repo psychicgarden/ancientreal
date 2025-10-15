@@ -108,9 +108,41 @@ export const EnhancedMortgageSystem: React.FC = () => {
       console.log('✅ Using ETH contract address:', address);
       console.log('✅ Expected ETH contract:', '0x9524C8A3b6eEaE8cCE29F6183a7200A530F84bD1');
       console.log('✅ Are they the same?', address === '0x9524C8A3b6eEaE8cCE29F6183a7200A530F84bD1');
+      
+      // Validate network
+      await validateNetwork();
     } catch (error) {
       console.error('Error loading contract address:', error);
       setContractNotFound(true);
+    }
+  };
+
+  const validateNetwork = async () => {
+    try {
+      if (!window.ethereum) return;
+      
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const network = await provider.getNetwork();
+      
+      console.log('🌐 Current network:', {
+        chainId: network.chainId.toString(),
+        name: network.name
+      });
+      
+      if (network.chainId !== 84532n) {
+        toast({
+          title: "⚠️ Wrong Network",
+          description: "Please switch to Base Sepolia (Chain ID: 84532) to use this feature.",
+          variant: "destructive"
+        });
+        return false;
+      }
+      
+      console.log('✅ Network validated: Base Sepolia');
+      return true;
+    } catch (error) {
+      console.error('❌ Network validation error:', error);
+      return false;
     }
   };
 
@@ -228,6 +260,12 @@ export const EnhancedMortgageSystem: React.FC = () => {
         description: "Wallet not connected or contract not available",
         variant: "destructive"
       });
+      return;
+    }
+
+    // Validate network before proceeding
+    const isValidNetwork = await validateNetwork();
+    if (!isValidNetwork) {
       return;
     }
 
