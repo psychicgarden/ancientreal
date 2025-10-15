@@ -208,6 +208,8 @@ export class Web3Integration {
     return await mortgageContract.getMortgageDetails(account);
   }
 
+  // DEPRECATED: This function calls a contract method that doesn't exist on the ETH contract
+  // Use hardcoded property data from useMortgageProperties.ts instead
   async getPropertyStatus(): Promise<{
     totalValue: bigint;
     currentValue: bigint;
@@ -216,8 +218,15 @@ export class Web3Integration {
     totalRentalIncomeGenerated: bigint;
     fullyOwned: boolean;
   }> {
-    const mortgageContract = await this.getContract('MAZUNTE_MORTGAGE');
-    return await mortgageContract.getPropertyStatus();
+    // Return mock data instead of calling non-existent contract function
+    return {
+      totalValue: BigInt(129000),
+      currentValue: BigInt(129000),
+      totalDownPayments: BigInt(0),
+      appreciationValue: BigInt(0),
+      totalRentalIncomeGenerated: BigInt(0),
+      fullyOwned: false
+    };
   }
 
   async getPaymentSchedule(account: string): Promise<Array<{
