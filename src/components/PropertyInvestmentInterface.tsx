@@ -7,6 +7,7 @@ import { ethers } from 'ethers';
 import { supabase } from '@/integrations/supabase/client';
 import { ContractDatabaseIntegration } from '@/lib/contract-database-integration';
 import { ENHANCED_AVAX_MORTGAGE_ABI, ENHANCED_AVAX_MORTGAGE_CONFIG, convertUSDToAVAX, formatAVAXAmount } from '@/lib/enhanced-avax-mortgage-abi';
+import { ANCIENT_MORTGAGE_ETH_ABI, ANCIENT_MORTGAGE_ETH_ADDRESS } from '@/lib/abis/ancient-mortgage-eth-abi';
 import { Home, DollarSign, Calendar, MapPin, TrendingUp, Users, Shield, CheckCircle } from 'lucide-react';
 import { PROPERTIES_CATALOG } from '@/lib/propertiesCatalog';
 
@@ -41,9 +42,12 @@ export const PropertyInvestmentInterface = () => {
 
   const loadContractAddress = async () => {
     try {
-      const address = await ContractDatabaseIntegration.getContractAddress('ENHANCED_AVAX_MORTGAGE');
+      // Use ETH contract address - no fallbacks to USDC
+      const address = ANCIENT_MORTGAGE_ETH_ADDRESS; // Force ETH contract
       setContractAddress(address);
-      console.log('✅ Enhanced AVAX Mortgage contract loaded:', address);
+      console.log('✅ ETH Mortgage contract loaded:', address);
+      console.log('✅ Expected ETH contract:', '0x9524C8A3b6eEaE8cCE29F6183a7200A530F84bD1');
+      console.log('✅ Are they the same?', address === '0x9524C8A3b6eEaE8cCE29F6183a7200A530F84bD1');
     } catch (error) {
       console.error('❌ Failed to load contract address:', error);
       toast({
@@ -129,24 +133,37 @@ export const PropertyInvestmentInterface = () => {
 
     setIsLoading(true);
     try {
+      console.log('=== DEBUG INFO ===');
+      console.log('Contract Address:', contractAddress);
+      console.log('Expected ETH Contract:', '0x9524C8A3b6eEaE8cCE29F6183a7200A530F84bD1');
+      console.log('Are they the same?', contractAddress === '0x9524C8A3b6eEaE8cCE29F6183a7200A530F84bD1');
+      
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const mortgageContract = new ethers.Contract(contractAddress, ENHANCED_AVAX_MORTGAGE_ABI, signer);
+      const mortgageContract = new ethers.Contract(contractAddress, ANCIENT_MORTGAGE_ETH_ABI, signer);
 
-      const totalPaymentAmount = ethers.parseEther(totalPaymentAVAX);
+      // Debug: Check function signature
+      console.log('Function signature:', mortgageContract.interface.getFunction('purchaseProperty').format());
+      console.log('Function selector:', mortgageContract.interface.getFunction('purchaseProperty').selector);
+      console.log('==================');
+
+      // Convert USD to ETH (using same logic as AVAX for now)
+      const totalPaymentETH = ethers.parseEther(totalPaymentAVAX); // Use AVAX amount as ETH for now
       const propertyId = ENHANCED_AVAX_MORTGAGE_CONFIG.PROPERTY_ID;
 
       toast({
         title: "🏠 Processing Purchase",
-        description: `Paying ${formatAVAXAmount(totalPaymentAVAX)} AVAX for Art Deco Loft...`,
+        description: `Paying ${formatAVAXAmount(totalPaymentAVAX)} ETH for Art Deco Loft...`,
       });
 
-      // Call purchaseProperty on EnhancedAvaxMortgage contract
+      // Call purchaseProperty on ETH contract with correct signature
       const tx = await mortgageContract.purchaseProperty(
         propertyId,           // Property ID (1 = Art Deco Loft)
         termMonths,           // Term in months (120 = 10 years)
+        800,                  // aprBps (8% APR)
+        "0x",                 // empty signature
         { 
-          value: totalPaymentAmount // Total payment in wei
+          value: totalPaymentETH // Total payment in wei
         }
       );
 

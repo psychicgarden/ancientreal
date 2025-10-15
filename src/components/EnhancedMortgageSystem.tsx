@@ -12,7 +12,18 @@ import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { ContractDatabaseIntegration } from '@/lib/contract-database-integration';
-import { ENHANCED_AVAX_MORTGAGE_ABI } from '@/lib/enhanced-avax-mortgage-abi';
+import { 
+  AncientMortgageABI, 
+  MockUSDTABI,
+  BASE_SEPOLIA_CONTRACTS,
+  parseUSDT,
+  formatUSDT,
+  calculateDownPayment,
+  calculatePlatformFee,
+  calculateTotalApproval
+} from '@/lib/ancient-protocol';
+import { ANCIENT_MORTGAGE_ETH_ABI, ANCIENT_MORTGAGE_ETH_ADDRESS } from '@/lib/abis/ancient-mortgage-eth-abi';
+import { CONTRACTS } from '@/config/chain';
 import { EnhancedContractDeployment } from '@/components/EnhancedContractDeployment';
 import { Wallet, Home, DollarSign, RefreshCw, CheckCircle, AlertCircle } from 'lucide-react';
 
@@ -65,6 +76,7 @@ export const EnhancedMortgageSystem: React.FC = () => {
   const [mortgageData, setMortgageData] = useState<MortgageData | null>(null);
   const [userProperties, setUserProperties] = useState<UserProperty[]>([]);
   const [availableProperties, setAvailableProperties] = useState<Property[]>([]);
+  const [userTokenId, setUserTokenId] = useState<bigint | null>(null);
   
   // Purchase form state
   const [selectedPropertyId, setSelectedPropertyId] = useState<number>(1);
@@ -89,13 +101,13 @@ export const EnhancedMortgageSystem: React.FC = () => {
 
   const loadContractAddress = async () => {
     try {
-      const address = await ContractDatabaseIntegration.getContractAddress('EnhancedAvaxMortgage');
-      if (!address) {
-        setContractNotFound(true);
-        return;
-      }
+      // Use ETH contract address - no fallbacks to USDC
+      const address = ANCIENT_MORTGAGE_ETH_ADDRESS; // Force ETH contract
       setContractAddress(address);
       setContractNotFound(false);
+      console.log('✅ Using ETH contract address:', address);
+      console.log('✅ Expected ETH contract:', '0x9524C8A3b6eEaE8cCE29F6183a7200A530F84bD1');
+      console.log('✅ Are they the same?', address === '0x9524C8A3b6eEaE8cCE29F6183a7200A530F84bD1');
     } catch (error) {
       console.error('Error loading contract address:', error);
       setContractNotFound(true);
@@ -132,29 +144,29 @@ export const EnhancedMortgageSystem: React.FC = () => {
   };
 
   const fetchMortgageData = async () => {
-    if (!contractAddress || !account) return;
+    if (!contractAddress || !account || !userTokenId) return;
 
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
-      const contract = new ethers.Contract(contractAddress, ENHANCED_AVAX_MORTGAGE_ABI, provider);
+      const contract = new ethers.Contract(contractAddress, ANCIENT_MORTGAGE_ETH_ABI, provider);
 
-      // Try to get mortgage details for current user
-      const details = await contract.getMortgageDetails(account);
+      // Use getMortgage(tokenId) instead of getMortgageDetails(address)
+      const data = await contract.getMortgage(userTokenId);
       
-      if (details.isActive) {
+      if (data.isActive) {
         setMortgageData({
-          propertyId: Number(details.propertyId),
-          propertyValue: Number(ethers.formatEther(details.propertyValue)),
-          downPayment: Number(ethers.formatEther(details.downPayment)),
-          loanAmount: Number(ethers.formatEther(details.loanAmount)),
-          monthlyPayment: Number(ethers.formatEther(details.monthlyPayment)),
-          remainingBalance: Number(ethers.formatEther(details.remainingBalance)),
-          interestRate: Number(details.interestRate),
-          termMonths: Number(details.termMonths),
-          monthsPaid: Number(details.monthsPaid),
-          nextPaymentDue: Number(details.nextPaymentDue),
-          isActive: details.isActive,
-          borrower: details.borrower
+          propertyId: 1, // Will be set from property data
+          propertyValue: Number(formatUSDT(data.propertyPrice)),
+          downPayment: Number(formatUSDT(data.downPayment)),
+          loanAmount: Number(formatUSDT(data.loanAmount)),
+          monthlyPayment: Number(formatUSDT(data.monthlyPayment)),
+          remainingBalance: Number(formatUSDT(data.remainingBalance)),
+          interestRate: 8, // Fixed at 8%
+          termMonths: Number(data.termMonths),
+          monthsPaid: Number(data.paymentsMade),
+          nextPaymentDue: 0, // Calculate from startTime if needed
+          isActive: data.isActive,
+          borrower: data.propertyOwner
         });
       } else {
         setMortgageData(null);
@@ -169,37 +181,44 @@ export const EnhancedMortgageSystem: React.FC = () => {
     if (!contractAddress) return;
 
     try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const contract = new ethers.Contract(contractAddress, ENHANCED_AVAX_MORTGAGE_ABI, provider);
-
-      const totalProperties = await contract.getTotalProperties();
-      const properties: Property[] = [];
-
-      for (let i = 1; i <= Number(totalProperties); i++) {
-        try {
-          const property = await contract.getProperty(i);
-          if (property.isActive) {
-            properties.push({
-              id: i,
-              name: property.name,
-              location: property.location,
-              imageUrl: property.imageUrl,
-              price: ethers.formatEther(property.price),
-              isActive: property.isActive
-            });
-          }
-        } catch (error) {
-          console.error(`Error fetching property ${i}:`, error);
-        }
-      }
-
-      setAvailableProperties(properties);
+      // The deployed contract doesn't have getTotalProperties() or getProperty()
+      // Instead, we'll use a predefined list or load from your database
+      
+      // For now, create some sample properties
+      const sampleProperties: Property[] = [
+        {
+          id: 1,
+          name: "Downtown Condo",
+          location: "New York, NY",
+          imageUrl: "/placeholder.svg",
+          totalValue: 500000,
+          isActive: true,
+        },
+        {
+          id: 2,
+          name: "Suburban House",
+          location: "Austin, TX",
+          imageUrl: "/placeholder.svg",
+          totalValue: 350000,
+          isActive: true,
+        },
+        {
+          id: 3,
+          name: "Beach House",
+          location: "Miami, FL",
+          imageUrl: "/placeholder.svg",
+          totalValue: 750000,
+          isActive: true,
+        },
+      ];
+      
+      setAvailableProperties(sampleProperties);
     } catch (error) {
       console.error('Error fetching properties:', error);
     }
   };
 
-  // Purchase property and trigger indexing
+  // Purchase property with ETH (no approvals needed!)
   const handlePurchaseProperty = async (propertyId: number, propertyValue: string, downPayment: string) => {
     if (!contractAddress) {
       toast({
@@ -212,62 +231,114 @@ export const EnhancedMortgageSystem: React.FC = () => {
 
     setIsLoading(true);
     try {
-      console.log('Purchasing property with contract:', contractAddress);
+      console.log('=== DEBUG INFO ===');
+      console.log('Contract Address:', contractAddress);
+      console.log('Expected ETH Contract:', '0x9524C8A3b6eEaE8cCE29F6183a7200A530F84bD1');
+      console.log('Are they the same?', contractAddress === '0x9524C8A3b6eEaE8cCE29F6183a7200A530F84bD1');
       
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, ENHANCED_AVAX_MORTGAGE_ABI, signer);
-      const propertyValueWei = ethers.parseEther(propertyValue);
-      const downPaymentWei = ethers.parseEther(downPayment);
       
-      // Calculate platform fee (3% of property value)
-      const platformFeeWei = propertyValueWei * BigInt(300) / BigInt(10000); // 3%
-      const totalPayment = downPaymentWei + platformFeeWei;
-
+      // Use ETH contract and ABI
+      const contract = new ethers.Contract(contractAddress, ANCIENT_MORTGAGE_ETH_ABI, signer);
+      
+      // Debug: Check function signature
+      console.log('Function signature:', contract.interface.getFunction('purchaseProperty').format());
+      console.log('Function selector:', contract.interface.getFunction('purchaseProperty').selector);
+      console.log('==================');
+      
+      // Convert property value to ETH (18 decimals)
+      const propertyPriceETH = ethers.parseEther(propertyValue);
+      
+      // Calculate total ETH needed (20% down + 3% platform fee = 23%)
+      const downPaymentPercent = 20; // 20%
+      const platformFeePercent = 3; // 3%
+      const totalPercent = downPaymentPercent + platformFeePercent; // 23%
+      
+      const totalETH = (propertyPriceETH * BigInt(totalPercent)) / BigInt(100);
+      
+      console.log('Purchase breakdown:', {
+        propertyPrice: ethers.formatEther(propertyPriceETH),
+        downPayment: '20%',
+        platformFee: '3%',
+        totalETH: ethers.formatEther(totalETH),
+        totalPercent: `${totalPercent}%`
+      });
+      
+      // Purchase with ETH - send value directly!
+      console.log('Purchasing property with ETH...');
       const tx = await contract.purchaseProperty(
         propertyId,
-        propertyValueWei,
-        downPaymentWei,
-        interestRate,
-        termMonths,
-        { value: totalPayment }
+        120, // termMonths (10 years)
+        800, // aprBps (8% APR)
+        "0x", // empty signature
+        { value: totalETH } // ✅ Send ETH here!
       );
 
       console.log('Transaction sent:', tx.hash);
       
-      toast({
-        title: "Transaction Sent",
-        description: `Purchase transaction sent: ${tx.hash.slice(0, 10)}...`
-      });
-
       const receipt = await tx.wait();
       console.log('Transaction confirmed:', receipt);
 
       if (receipt.status === 1) {
-        // Trigger mortgage events indexing
-        try {
-          const { error: indexError } = await supabase.functions.invoke('mortgage-events-indexer', {
-            body: { 
-              contract_address: contractAddress,
-              network: 'fuji'
+        // Extract tokenId from PropertyPurchased event
+        console.log('Parsing transaction receipt for mortgageId...');
+        const purchaseEvent = receipt.logs
+          .map((log: any) => {
+            try {
+              return contract.interface.parseLog(log);
+            } catch {
+              return null;
             }
-          });
+          })
+          .find((event: any) => event?.name === 'PropertyPurchased');
 
-          if (indexError) {
-            console.error('Indexing error:', indexError);
-          } else {
-            console.log('✅ Events indexed successfully');
+        if (purchaseEvent) {
+          const mortgageId = purchaseEvent.args.mortgageId.toString();
+          console.log('✅ Extracted mortgageId:', mortgageId);
+          setUserTokenId(mortgageId);
+          
+          // Save to database
+          try {
+            const { error: dbError } = await supabase
+              .from('user_properties')
+              .insert({
+                user_wallet_address: account.toLowerCase(),
+                mortgage_id: mortgageId,
+                property_id: propertyId,
+                property_name: `Property #${propertyId}`,
+                purchase_price: parseFloat(propertyValue),
+                down_payment: parseFloat(downPayment),
+                term_months: 120,
+                apr_bps: 800,
+                payment_token: 'ETH',
+                created_at: new Date().toISOString()
+              });
+
+            if (dbError) {
+              console.error('Database error:', dbError);
+            } else {
+              console.log('✅ Saved to database');
+            }
+          } catch (err) {
+            console.error('Failed to save to database:', err);
           }
-        } catch (indexError) {
-          console.error('Error triggering indexer:', indexError);
+          
+          toast({
+            title: "Purchase Successful!",
+            description: `Property purchased! Your mortgage NFT token ID is: ${mortgageId}`,
+          });
+          
+          console.log('Purchase successful! MortgageId:', mortgageId);
+        } else {
+          console.warn('PropertyPurchased event not found - mortgageId not available');
+          toast({
+            title: "Purchase Successful",
+            description: "Property purchased successfully!",
+          });
         }
 
-        toast({
-          title: "Success",
-          description: "Property purchased successfully!"
-        });
-
-        // Refresh data after a short delay to allow indexing
+        // Refresh data after a short delay
         setTimeout(() => {
           fetchUserProperties();
           fetchMortgageData();
@@ -288,9 +359,31 @@ export const EnhancedMortgageSystem: React.FC = () => {
     }
   };
 
-  // Make payment for on-chain mortgage
+  const saveTokenIdToDatabase = async (tokenId: bigint) => {
+    try {
+      const { error } = await supabase
+        .from('user_mortgages')
+        .insert({
+          user_id: account,
+          token_id: tokenId.toString(),
+          property_price: parseFloat(propertyValue),
+          contract_address: contractAddress,
+          network: 'base-sepolia',
+        });
+      
+      if (error) {
+        console.error('Error saving tokenId:', error);
+      } else {
+        console.log('TokenId saved to database:', tokenId.toString());
+      }
+    } catch (error) {
+      console.error('Error saving to database:', error);
+    }
+  };
+
+  // Make payment with ETH (no approvals needed!)
   const handleMakePayment = async () => {
-    if (!contractAddress || !mortgageData) {
+    if (!contractAddress || !mortgageData || !userTokenId) {
       toast({
         title: "Error",
         description: "Wallet not connected, contract not available, or no active mortgage",
@@ -303,15 +396,22 @@ export const EnhancedMortgageSystem: React.FC = () => {
     try {
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, ENHANCED_AVAX_MORTGAGE_ABI, signer);
-      const monthlyPaymentWei = ethers.parseEther(mortgageData.monthlyPayment.toString());
+      
+      // Use ETH contract and ABI
+      const contract = new ethers.Contract(contractAddress, ANCIENT_MORTGAGE_ETH_ABI, signer);
+      
+      // Get mortgage details to find monthly payment
+      const mortgage = await contract.getMortgage(userTokenId);
+      const monthlyPayment = mortgage.monthlyPayment;
       
       console.log('Making payment:', {
-        monthlyPayment: mortgageData.monthlyPayment,
-        monthlyPaymentWei: monthlyPaymentWei.toString()
+        mortgageId: userTokenId.toString(),
+        monthlyPayment: ethers.formatEther(monthlyPayment),
+        token: 'ETH'
       });
-
-      const tx = await contract.makePayment({ value: monthlyPaymentWei });
+      
+      // Make payment with ETH - send value directly!
+      const tx = await contract.makePayment(userTokenId, { value: monthlyPayment });
       
       toast({
         title: "Transaction Sent",
@@ -321,22 +421,6 @@ export const EnhancedMortgageSystem: React.FC = () => {
       const receipt = await tx.wait();
       
       if (receipt.status === 1) {
-        // Trigger mortgage events indexing to capture payment
-        try {
-          const { error: indexError } = await supabase.functions.invoke('mortgage-events-indexer', {
-            body: { 
-              contract_address: contractAddress,
-              network: 'fuji'
-            }
-          });
-
-          if (indexError) {
-            console.error('Indexing error:', indexError);
-          }
-        } catch (indexError) {
-          console.error('Error triggering indexer:', indexError);
-        }
-
         toast({
           title: "Success",
           description: "Payment made successfully!"
