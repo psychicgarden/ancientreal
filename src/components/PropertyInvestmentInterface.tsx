@@ -5,8 +5,8 @@ import { Badge } from './ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { ethers } from 'ethers';
 import { supabase } from '@/integrations/supabase/client';
-import { ContractDatabaseIntegration } from '@/lib/contract-database-integration';
-import { ENHANCED_AVAX_MORTGAGE_ABI, ENHANCED_AVAX_MORTGAGE_CONFIG, convertUSDToAVAX, formatAVAXAmount } from '@/lib/enhanced-avax-mortgage-abi';
+// Removed ContractDatabaseIntegration - using direct ETH contract address
+import { ENHANCED_AVAX_MORTGAGE_CONFIG, convertUSDToAVAX, formatAVAXAmount } from '@/lib/enhanced-avax-mortgage-abi';
 import { ANCIENT_MORTGAGE_ETH_ABI, ANCIENT_MORTGAGE_ETH_ADDRESS } from '@/lib/abis/ancient-mortgage-eth-abi';
 import { Home, DollarSign, Calendar, MapPin, TrendingUp, Users, Shield, CheckCircle } from 'lucide-react';
 import { PROPERTIES_CATALOG } from '@/lib/propertiesCatalog';

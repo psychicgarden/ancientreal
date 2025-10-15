@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { ContractDatabaseIntegration } from '@/lib/contract-database-integration';
+// Removed ContractDatabaseIntegration - using direct ETH contract address
 import { 
   AncientMortgageABI, 
   MockUSDTABI,
@@ -181,38 +181,37 @@ export const EnhancedMortgageSystem: React.FC = () => {
     if (!contractAddress) return;
 
     try {
-      // The deployed contract doesn't have getTotalProperties() or getProperty()
-      // Instead, we'll use a predefined list or load from your database
-      
-      // For now, create some sample properties
-      const sampleProperties: Property[] = [
+      // Use hardcoded properties since contract doesn't have getTotalProperties/getProperty
+      // These match the properties from PROPERTIES_CATALOG
+      const properties: Property[] = [
         {
           id: 1,
-          name: "Downtown Condo",
-          location: "New York, NY",
-          imageUrl: "/placeholder.svg",
-          totalValue: 500000,
-          isActive: true,
+          name: 'Art Deco Loft in Mazunte, Mexico',
+          location: 'Mazunte, Oaxaca, Mexico',
+          imageUrl: '/lovable-uploads/cc5b33a0-6890-4e5f-ae6c-8b73ecef3849.png',
+          totalValue: 435000, // $435,000 USD equivalent
+          isActive: true
         },
         {
           id: 2,
-          name: "Suburban House",
-          location: "Austin, TX",
-          imageUrl: "/placeholder.svg",
-          totalValue: 350000,
-          isActive: true,
+          name: 'Beach House in Zipolite',
+          location: 'Zipolite, Oaxaca, Mexico',
+          imageUrl: '/lovable-uploads/beach-house.png',
+          totalValue: 350000, // $350,000 USD equivalent
+          isActive: true
         },
         {
           id: 3,
-          name: "Beach House",
-          location: "Miami, FL",
-          imageUrl: "/placeholder.svg",
-          totalValue: 750000,
-          isActive: true,
-        },
+          name: 'Mountain Cabin in San José del Pacífico',
+          location: 'San José del Pacífico, Oaxaca, Mexico',
+          imageUrl: '/lovable-uploads/mountain-cabin.png',
+          totalValue: 280000, // $280,000 USD equivalent
+          isActive: true
+        }
       ];
-      
-      setAvailableProperties(sampleProperties);
+
+      console.log('✅ Using hardcoded properties (contract has no property storage):', properties);
+      setAvailableProperties(properties);
     } catch (error) {
       console.error('Error fetching properties:', error);
     }
