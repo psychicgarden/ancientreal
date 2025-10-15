@@ -23,17 +23,45 @@ export class BlockchainSync {
   private provider: ethers.JsonRpcProvider;
   private contract: ethers.Contract;
   private isListening: boolean = false;
+  private isBaseSepolia: boolean = false;
 
   constructor() {
-    this.provider = new ethers.JsonRpcProvider('https://api.avax-test.network/ext/bc/C/rpc');
-    this.contract = new ethers.Contract(
-      CONTRACTS.SIMPLE_MORTGAGE.address,
-      CONTRACTS.SIMPLE_MORTGAGE.abi,
-      this.provider
-    );
+    // Check if we're on Base Sepolia - if so, disable AVAX sync
+    this.checkNetworkAndInitialize();
+  }
+
+  private async checkNetworkAndInitialize() {
+    try {
+      if (typeof window !== 'undefined' && window.ethereum) {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const network = await provider.getNetwork();
+        
+        if (network.chainId === 84532n) {
+          // Base Sepolia - disable AVAX sync
+          console.log('⚠️ BlockchainSync disabled on Base Sepolia - using ETH contracts instead');
+          this.isBaseSepolia = true;
+          return;
+        }
+      }
+      
+      // Initialize AVAX sync only on Avalanche Fuji
+      this.provider = new ethers.JsonRpcProvider('https://api.avax-test.network/ext/bc/C/rpc');
+      this.contract = new ethers.Contract(
+        CONTRACTS.SIMPLE_MORTGAGE.address,
+        CONTRACTS.SIMPLE_MORTGAGE.abi,
+        this.provider
+      );
+    } catch (error) {
+      console.warn('⚠️ Could not initialize BlockchainSync:', error);
+    }
   }
 
   async syncMortgageCreation(mortgageData: MortgageData): Promise<void> {
+    if (this.isBaseSepolia) {
+      console.log('⚠️ syncMortgageCreation skipped - on Base Sepolia');
+      return;
+    }
+    
     try {
       // Fixed exchange rate: $129,000 = 0.00129 AVAX
       const usdExchangeRate = 100000000; // 1 AVAX = $100M USD for our demo
@@ -83,6 +111,11 @@ export class BlockchainSync {
   }
 
   async startEventListener(): Promise<void> {
+    if (this.isBaseSepolia) {
+      console.log('⚠️ startEventListener skipped - on Base Sepolia');
+      return;
+    }
+    
     if (this.isListening) {
       console.log('🔊 Event listener already running');
       return;

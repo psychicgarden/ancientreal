@@ -1,6 +1,8 @@
 // Centralized chain and contract configuration
 // Single source of truth for all blockchain-related constants
 
+import { ethers } from 'ethers';
+
 // Environment validation
 const requiredEnvVars = [
   'VITE_CHAIN_ID',
@@ -76,9 +78,32 @@ export const loadContracts = async (network: string = 'fuji'): Promise<void> => 
   }
 };
 
-// Initialize contracts on app startup
+// Initialize contracts on app startup - ONLY for Avalanche Fuji
+// Don't auto-load Fuji contracts when on Base Sepolia
 if (typeof window !== 'undefined') {
-  loadContracts();
+  // Check current network before loading contracts
+  const checkNetworkAndLoad = async () => {
+    try {
+      if (window.ethereum) {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const network = await provider.getNetwork();
+        
+        // Only load Fuji contracts if we're actually on Avalanche Fuji
+        if (network.chainId === 43113n) {
+          console.log('✅ On Avalanche Fuji - loading Fuji contracts');
+          loadContracts('fuji');
+        } else if (network.chainId === 84532n) {
+          console.log('✅ On Base Sepolia - skipping Fuji contract loading');
+        } else {
+          console.log('⚠️ Unknown network:', network.chainId, '- skipping contract loading');
+        }
+      }
+    } catch (error) {
+      console.log('⚠️ Could not detect network - skipping contract loading');
+    }
+  };
+  
+  checkNetworkAndLoad();
 }
 
 // Platform Configuration

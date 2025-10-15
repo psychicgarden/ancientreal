@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ethers } from 'ethers';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -402,7 +403,37 @@ const AdminProjects = () => {
               </TabsContent>
               
               <TabsContent value="dashboard" className="space-y-6">
-                <SimpleMortgageDashboard />
+                {(() => {
+                  // Disable AVAX components on Base Sepolia to prevent getProperty errors
+                  if (typeof window !== 'undefined' && window.ethereum) {
+                    // Check if we're on Base Sepolia
+                    const checkNetwork = async () => {
+                      try {
+                        const provider = new ethers.BrowserProvider(window.ethereum);
+                        const network = await provider.getNetwork();
+                        return network.chainId === 84532n; // Base Sepolia
+                      } catch {
+                        return false;
+                      }
+                    };
+                    
+                    // If on Base Sepolia, show disabled message instead of AVAX component
+                    if (checkNetwork()) {
+                      return (
+                        <div className="text-center py-12">
+                          <AlertCircle className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
+                          <h3 className="text-xl font-semibold mb-4">AVAX Components Disabled</h3>
+                          <p className="text-muted-foreground mb-6">
+                            This component uses Avalanche Fuji contracts. Switch to "Enhanced Mortgage" tab for Base Sepolia ETH functionality.
+                          </p>
+                        </div>
+                      );
+                    }
+                  }
+                  
+                  // Show AVAX component only on Avalanche Fuji
+                  return <SimpleMortgageDashboard />;
+                })()}
               </TabsContent>
               
               <TabsContent value="enhanced" className="space-y-6">
