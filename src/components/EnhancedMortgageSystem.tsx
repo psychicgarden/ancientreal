@@ -189,7 +189,7 @@ export const EnhancedMortgageSystem: React.FC = () => {
           name: 'Art Deco Loft in Mazunte, Mexico',
           location: 'Mazunte, Oaxaca, Mexico',
           imageUrl: '/lovable-uploads/cc5b33a0-6890-4e5f-ae6c-8b73ecef3849.png',
-          totalValue: 435000, // $435,000 USD equivalent
+          price: '100.0', // 100 ETH equivalent ($435,000 USD)
           isActive: true
         },
         {
@@ -197,7 +197,7 @@ export const EnhancedMortgageSystem: React.FC = () => {
           name: 'Beach House in Zipolite',
           location: 'Zipolite, Oaxaca, Mexico',
           imageUrl: '/lovable-uploads/beach-house.png',
-          totalValue: 350000, // $350,000 USD equivalent
+          price: '80.0', // 80 ETH equivalent ($350,000 USD)
           isActive: true
         },
         {
@@ -205,7 +205,7 @@ export const EnhancedMortgageSystem: React.FC = () => {
           name: 'Mountain Cabin in San José del Pacífico',
           location: 'San José del Pacífico, Oaxaca, Mexico',
           imageUrl: '/lovable-uploads/mountain-cabin.png',
-          totalValue: 280000, // $280,000 USD equivalent
+          price: '60.0', // 60 ETH equivalent ($280,000 USD)
           isActive: true
         }
       ];
@@ -643,7 +643,7 @@ export const EnhancedMortgageSystem: React.FC = () => {
                     >
                       {availableProperties.map((property) => (
                         <option key={property.id} value={property.id}>
-                          {property.name} - {property.location} (${property.price} AVAX)
+                          {property.name} - {property.location} ({property.price} ETH)
                         </option>
                       ))}
                     </select>
@@ -651,7 +651,7 @@ export const EnhancedMortgageSystem: React.FC = () => {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="property-value">Property Value (AVAX)</Label>
+                      <Label htmlFor="property-value">Property Value (ETH)</Label>
                       <Input
                         id="property-value"
                         type="number"
@@ -661,7 +661,7 @@ export const EnhancedMortgageSystem: React.FC = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="down-payment">Down Payment (AVAX)</Label>
+                      <Label htmlFor="down-payment">Down Payment (ETH)</Label>
                       <Input
                         id="down-payment"
                         type="number"
@@ -822,7 +822,7 @@ export const EnhancedMortgageSystem: React.FC = () => {
           <div className="space-y-2">
             <h4 className="font-semibold">Contract Info:</h4>
             <p className="text-sm text-muted-foreground">Address: {contractAddress || 'Not loaded'}</p>
-            <p className="text-sm text-muted-foreground">Network: Avalanche Fuji</p>
+            <p className="text-sm text-muted-foreground">Network: Base Sepolia</p>
           </div>
         </TabsContent>
       </Tabs>

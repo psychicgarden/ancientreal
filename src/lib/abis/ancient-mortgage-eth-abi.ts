@@ -7,6 +7,9 @@ export const ANCIENT_MORTGAGE_ETH_ABI = [
 
   // View functions
   "function getMortgageDetails(uint256 mortgageId) external view returns (tuple(uint256 id, address borrower, uint256 propertyId, uint256 purchasePrice, uint256 downPayment, uint256 loanAmount, uint256 monthlyPayment, uint256 remainingBalance, uint256 interestRate, uint256 termMonths, uint256 paymentsMade, uint256 lastPaymentTime, uint256 createdAt, bool isActive, uint256 totalInterestPaid))",
+  
+  // Add missing getMortgage function
+  "function getMortgage(uint256 mortgageId) external view returns (tuple(uint256 id, address borrower, uint256 propertyId, uint256 purchasePrice, uint256 downPayment, uint256 loanAmount, uint256 monthlyPayment, uint256 remainingBalance, uint256 interestRate, uint256 termMonths, uint256 paymentsMade, uint256 lastPaymentTime, uint256 createdAt, bool isActive, uint256 totalInterestPaid))",
 
   // Events
   "event PropertyPurchased(uint256 indexed mortgageId, address indexed borrower, uint256 indexed propertyId, uint256 purchasePrice, uint256 downPayment, uint256 loanAmount, uint256 monthlyPayment)",
