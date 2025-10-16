@@ -103,6 +103,8 @@ export const EnhancedMortgageSystem: React.FC = () => {
     try {
       // Use ETH contract address - no fallbacks to USDC
       const address = ANCIENT_MORTGAGE_ETH_ADDRESS; // Force ETH contract
+      console.log('🔍 Setting contract address to:', address);
+      console.log('🔍 ANCIENT_MORTGAGE_ETH_ADDRESS constant:', ANCIENT_MORTGAGE_ETH_ADDRESS);
       setContractAddress(address);
       setContractNotFound(false);
       console.log('✅ Using ETH contract address:', address);
@@ -282,9 +284,12 @@ export const EnhancedMortgageSystem: React.FC = () => {
       // Use ETH contract and ABI
       const contract = new ethers.Contract(contractAddress, ANCIENT_MORTGAGE_ETH_ABI, signer);
       
-      // Debug: Check function signature
+      // Debug: Check function signature and contract address
       console.log('Function signature:', contract.interface.getFunction('purchaseProperty').format());
       console.log('Function selector:', contract.interface.getFunction('purchaseProperty').selector);
+      console.log('Contract address from contract object:', contract.target);
+      console.log('Contract address from state:', contractAddress);
+      console.log('Are they the same?', contract.target === contractAddress);
       console.log('==================');
       
       // Convert property value to ETH (18 decimals)
