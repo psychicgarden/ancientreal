@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EnhancedContractDeployment } from '@/components/EnhancedContractDeployment';
 import { EnhancedPropertyInterface } from '@/components/EnhancedPropertyInterface';
+import { useNetworkGuard } from '@/lib/network-guard';
 import { 
   Rocket, 
   Database, 
@@ -20,6 +21,49 @@ import {
 } from 'lucide-react';
 
 const SmartContractManagement = () => {
+  const { isBaseSepolia, isLoading } = useNetworkGuard();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-4 md:p-8">
+        <div className="max-w-7xl mx-auto flex items-center justify-center h-96">
+          <div className="text-center">
+            <RefreshCw className="w-8 h-8 mx-auto mb-4 animate-spin text-muted-foreground" />
+            <p className="text-muted-foreground">Checking network...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isBaseSepolia) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-4 md:p-8">
+        <div className="max-w-7xl mx-auto flex items-center justify-center h-96">
+          <Card className="max-w-md mx-auto">
+            <CardContent className="p-8 text-center">
+              <AlertTriangle className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
+              <h3 className="text-xl font-semibold mb-4">AVAX Components Disabled</h3>
+              <p className="text-muted-foreground mb-6">
+                This page uses Avalanche Fuji contracts. Switch to Base Sepolia ETH functionality in the main admin panel.
+              </p>
+              <div className="bg-muted/50 rounded-lg p-4 mb-6">
+                <p className="text-sm text-muted-foreground">
+                  <strong>Current Network:</strong> Base Sepolia (84532)<br/>
+                  <strong>Required:</strong> Avalanche Fuji (43113)
+                </p>
+              </div>
+              <Button onClick={() => window.history.back()} variant="outline">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Go Back
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-8">

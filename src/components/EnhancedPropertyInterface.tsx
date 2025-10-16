@@ -8,13 +8,15 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { ethers } from 'ethers';
 import { CONTRACTS } from '@/lib/contracts';
-import { Home, DollarSign, Calendar, MapPin, TrendingUp, Users, Shield, CheckCircle, Key } from 'lucide-react';
+import { Home, DollarSign, Calendar, MapPin, TrendingUp, Users, Shield, CheckCircle, Key, AlertTriangle, RefreshCw } from 'lucide-react';
 import { PROPERTIES_CATALOG } from '@/lib/propertiesCatalog';
 import { convertUSDToAVAX, formatAVAXAmount } from '@/lib/constants';
 import { blockchainSync } from '@/lib/blockchain-sync';
+import { useNetworkGuard } from '@/lib/network-guard';
 
 export const EnhancedPropertyInterface = () => {
   const { toast } = useToast();
+  const { isBaseSepolia, isLoading } = useNetworkGuard();
   const [isConnected, setIsConnected] = useState(false);
   const [userAddress, setUserAddress] = useState<string>('');
   const [avaxBalance, setAvaxBalance] = useState<string>('0');
@@ -39,10 +41,15 @@ export const EnhancedPropertyInterface = () => {
   const PLATFORM_FEE_PERCENT = 3.0; // 3% platform fee
 
   useEffect(() => {
+    if (isBaseSepolia) {
+      console.log('⚠️ EnhancedPropertyInterface disabled on Base Sepolia');
+      return;
+    }
+    
     checkWalletConnection();
     // Start blockchain event listener
     blockchainSync.startEventListener();
-  }, []);
+  }, [isBaseSepolia]);
 
   const checkWalletConnection = async () => {
     if (typeof window.ethereum !== 'undefined') {
@@ -213,6 +220,33 @@ export const EnhancedPropertyInterface = () => {
   };
 
   const hasInsufficientBalance = parseFloat(avaxBalance) < parseFloat(totalPaymentAVAX);
+
+  if (isLoading) {
+    return (
+      <div className="text-center py-12">
+        <RefreshCw className="w-8 h-8 mx-auto mb-4 animate-spin text-muted-foreground" />
+        <p className="text-muted-foreground">Checking network...</p>
+      </div>
+    );
+  }
+
+  if (isBaseSepolia) {
+    return (
+      <div className="text-center py-12">
+        <AlertTriangle className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
+        <h3 className="text-xl font-semibold mb-4">AVAX Components Disabled</h3>
+        <p className="text-muted-foreground mb-6">
+          This component uses Avalanche Fuji contracts. Switch to Base Sepolia ETH functionality.
+        </p>
+        <div className="bg-muted/50 rounded-lg p-4 max-w-md mx-auto">
+          <p className="text-sm text-muted-foreground">
+            <strong>Current Network:</strong> Base Sepolia (84532)<br/>
+            <strong>Required:</strong> Avalanche Fuji (43113)
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
