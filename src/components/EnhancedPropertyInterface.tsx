@@ -47,8 +47,8 @@ export const EnhancedPropertyInterface = () => {
     }
     
     checkWalletConnection();
-    // Start blockchain event listener
-    blockchainSync.startEventListener();
+    // DISABLED: blockchainSync.startEventListener() - causes Avalanche RPC calls
+    console.log('⚠️ Blockchain sync disabled to prevent Avalanche connections');
   }, [isBaseSepolia]);
 
   const checkWalletConnection = async () => {

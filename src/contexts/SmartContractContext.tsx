@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { ethers } from 'ethers';
 import { smartContractIntegration, initializeSmartContracts } from '@/lib/smart-contract-integration';
 import { featureFlags, SmartContractFeatureFlags } from '@/lib/feature-flags';
 import { useToast } from '@/hooks/use-toast';
@@ -30,10 +31,32 @@ export function SmartContractProvider({ children }: { children: ReactNode }) {
   const [healthStatus, setHealthStatus] = useState<any>(null);
   const { toast } = useToast();
 
-  // Initialize smart contracts on mount
+  // Initialize smart contracts on mount - DISABLED FOR BASE SEPOLIA
   useEffect(() => {
     const initContracts = async () => {
       try {
+        // Check if we're on Base Sepolia - if so, skip Avalanche initialization
+        if (typeof window !== 'undefined' && window.ethereum) {
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const network = await provider.getNetwork();
+          
+          if (network.chainId === 84532n) { // Base Sepolia
+            console.log('⚠️ Skipping Avalanche smart contract initialization on Base Sepolia');
+            setIsInitialized(true);
+            setIsConnected(false);
+            setCurrentNetwork('Base Sepolia (ETH Mode)');
+            setHealthStatus({
+              connected: false,
+              network: 'Base Sepolia (ETH Mode)',
+              blockNumber: 0,
+              contractsInitialized: [],
+              errors: ['Using ETH contracts instead of Avalanche']
+            });
+            return;
+          }
+        }
+        
+        // Only initialize Avalanche contracts on Avalanche networks
         await initializeSmartContracts();
         const health = await smartContractIntegration.healthCheck();
         

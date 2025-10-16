@@ -8,7 +8,7 @@
 export const ETH_CONTRACTS = {
   BASE_SEPOLIA: {
     chainId: 84532,
-    AncientMortgageETH: "0x9524C8A3b6eEaE8cCE29F6183a7200A530F84bD1",
+    AncientMortgageETH: "0xE527DDaC2592FAa45884a0B78E4D377a5D3dF8cc",
     Treasury: "0x966feD85116F6D283921a6ed176D7643a99cbf94",
     explorer: "https://sepolia.basescan.org",
   }

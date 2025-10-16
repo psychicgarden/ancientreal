@@ -44,7 +44,7 @@ import { ContractDatabaseIntegration } from '@/lib/contract-database-integration
 // Initialize with current known addresses and update from database
 export const CONTRACTS = {
   MAZUNTE_MORTGAGE: '0x0b92ece58415c0b1aba86c372f45ffc4d6046bed', // AncientMortgage - Full Business Model (USDC)
-  MAZUNTE_MORTGAGE_ETH: '0xE527DDaC2592FAa45884a0B78E4D377a5D3dF8cc', // AncientMortgageETH - NEW ETH Contract (Base Sepolia)
+  MAZUNTE_MORTGAGE_ETH: '0xE527DDaC2592FAa45884a0B78E4D377a5D3dF8cc', // AncientMortgageETH - ACTUAL ETH Contract (Base Sepolia)
   USDT: '0xc29837e2f495d8f04c5e7aca7d378baa8765dd36', // TestUSDT - 6 decimals with faucet
   SIMPLE_MORTGAGE: '0x8A791620dd6260079BF849Dc5567aDC3F2FdC318', // SimpleMortgage - Clean, production-ready contract (DEPLOYED)
   STAKING_POOL: '0x474ebf5b375ea4dae1b5ae33f86cb0f30e82af27', // EnhancedStakingPool - Investor Yields
@@ -78,32 +78,10 @@ export const loadContracts = async (network: string = 'fuji'): Promise<void> => 
   }
 };
 
-// Initialize contracts on app startup - ONLY for Avalanche Fuji
-// Don't auto-load Fuji contracts when on Base Sepolia
+// DISABLED: Auto-loading contracts on startup to prevent Avalanche connections
+// Contracts are now loaded on-demand based on current network
 if (typeof window !== 'undefined') {
-  // Check current network before loading contracts
-  const checkNetworkAndLoad = async () => {
-    try {
-      if (window.ethereum) {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const network = await provider.getNetwork();
-        
-        // Only load Fuji contracts if we're actually on Avalanche Fuji
-        if (network.chainId === 43113n) {
-          console.log('✅ On Avalanche Fuji - loading Fuji contracts');
-          loadContracts('fuji');
-        } else if (network.chainId === 84532n) {
-          console.log('✅ On Base Sepolia - skipping Fuji contract loading');
-        } else {
-          console.log('⚠️ Unknown network:', network.chainId, '- skipping contract loading');
-        }
-      }
-    } catch (error) {
-      console.log('⚠️ Could not detect network - skipping contract loading');
-    }
-  };
-  
-  checkNetworkAndLoad();
+  console.log('⚠️ Auto-contract loading disabled to prevent network conflicts');
 }
 
 // Platform Configuration
