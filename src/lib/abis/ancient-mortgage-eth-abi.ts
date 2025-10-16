@@ -16,5 +16,5 @@ export const ANCIENT_MORTGAGE_ETH_ABI = [
   "event PaymentMade(uint256 indexed mortgageId, address indexed borrower, uint256 paymentAmount, uint256 principalPaid, uint256 interestPaid, uint256 remainingBalance)"
 ] as const;
 
-// ETH contract address (from deployment)
-export const ANCIENT_MORTGAGE_ETH_ADDRESS = '0xb48a5f86ffe36d3249acf6d97b14c2eac0dea6b5';
+// NEW ETH CONTRACT: Deployed AncientMortgageETH with proper payable functions
+export const ANCIENT_MORTGAGE_ETH_ADDRESS = '0xE527DDaC2592FAa45884a0B78E4D377a5D3dF8cc';
