@@ -38,6 +38,62 @@ import { resetPortfolio } from '@/lib/admin/resetPortfolio';
 import { shouldAllowPortfolioReset } from '@/config/demo';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
+// Guard component to disable AVAX components on Base Sepolia
+const BaseSepoliaGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isBaseSepolia, setIsBaseSepolia] = React.useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const checkNetwork = async () => {
+      try {
+        if (typeof window !== 'undefined' && window.ethereum) {
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const network = await provider.getNetwork();
+          const isBase = network.chainId === 84532n; // Base Sepolia
+          setIsBaseSepolia(isBase);
+          console.log(`🔍 Network check: Chain ${network.chainId}, isBaseSepolia: ${isBase}`);
+        }
+      } catch (error) {
+        console.warn('⚠️ Could not check network:', error);
+        setIsBaseSepolia(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkNetwork();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="text-center py-12">
+        <RefreshCw className="w-8 h-8 mx-auto mb-4 animate-spin text-muted-foreground" />
+        <p className="text-muted-foreground">Checking network...</p>
+      </div>
+    );
+  }
+
+  if (isBaseSepolia) {
+    return (
+      <div className="text-center py-12">
+        <AlertCircle className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
+        <h3 className="text-xl font-semibold mb-4">AVAX Components Disabled</h3>
+        <p className="text-muted-foreground mb-6">
+          This component uses Avalanche Fuji contracts. Switch to "Enhanced Mortgage" tab for Base Sepolia ETH functionality.
+        </p>
+        <div className="bg-muted/50 rounded-lg p-4 max-w-md mx-auto">
+          <p className="text-sm text-muted-foreground">
+            <strong>Current Network:</strong> Base Sepolia (84532)<br/>
+            <strong>Required:</strong> Avalanche Fuji (43113)
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
+};
+
 interface ProjectSubmission {
   id: string;
   project_title: string;
@@ -403,37 +459,9 @@ const AdminProjects = () => {
               </TabsContent>
               
               <TabsContent value="dashboard" className="space-y-6">
-                {(() => {
-                  // Disable AVAX components on Base Sepolia to prevent getProperty errors
-                  if (typeof window !== 'undefined' && window.ethereum) {
-                    // Check if we're on Base Sepolia
-                    const checkNetwork = async () => {
-                      try {
-                        const provider = new ethers.BrowserProvider(window.ethereum);
-                        const network = await provider.getNetwork();
-                        return network.chainId === 84532n; // Base Sepolia
-                      } catch {
-                        return false;
-                      }
-                    };
-                    
-                    // If on Base Sepolia, show disabled message instead of AVAX component
-                    if (checkNetwork()) {
-                      return (
-                        <div className="text-center py-12">
-                          <AlertCircle className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-                          <h3 className="text-xl font-semibold mb-4">AVAX Components Disabled</h3>
-                          <p className="text-muted-foreground mb-6">
-                            This component uses Avalanche Fuji contracts. Switch to "Enhanced Mortgage" tab for Base Sepolia ETH functionality.
-                          </p>
-                        </div>
-                      );
-                    }
-                  }
-                  
-                  // Show AVAX component only on Avalanche Fuji
-                  return <SimpleMortgageDashboard />;
-                })()}
+                <BaseSepoliaGuard>
+                  <SimpleMortgageDashboard />
+                </BaseSepoliaGuard>
               </TabsContent>
               
               <TabsContent value="enhanced" className="space-y-6">

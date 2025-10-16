@@ -3,6 +3,7 @@ import { ethers } from 'ethers';
 import { supabase } from '@/integrations/supabase/client';
 import { CONTRACTS } from '@/lib/contracts';
 import { PROPERTIES_CATALOG } from '@/lib/propertiesCatalog';
+import { checkNetwork } from '@/lib/network-guard';
 
 export interface MortgageData {
   borrower: string;
@@ -32,16 +33,13 @@ export class BlockchainSync {
 
   private async checkNetworkAndInitialize() {
     try {
-      if (typeof window !== 'undefined' && window.ethereum) {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const network = await provider.getNetwork();
-        
-        if (network.chainId === 84532n) {
-          // Base Sepolia - disable AVAX sync
-          console.log('⚠️ BlockchainSync disabled on Base Sepolia - using ETH contracts instead');
-          this.isBaseSepolia = true;
-          return;
-        }
+      const isBase = await checkNetwork();
+      
+      if (isBase) {
+        // Base Sepolia - disable AVAX sync
+        console.log('⚠️ BlockchainSync disabled on Base Sepolia - using ETH contracts instead');
+        this.isBaseSepolia = true;
+        return;
       }
       
       // Initialize AVAX sync only on Avalanche Fuji
