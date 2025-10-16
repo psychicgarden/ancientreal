@@ -44,7 +44,7 @@ import { ContractDatabaseIntegration } from '@/lib/contract-database-integration
 // Initialize with current known addresses and update from database
 export const CONTRACTS = {
   MAZUNTE_MORTGAGE: '0x0b92ece58415c0b1aba86c372f45ffc4d6046bed', // AncientMortgage - Full Business Model (USDC)
-  MAZUNTE_MORTGAGE_ETH: '0x9524C8A3b6eEaE8cCE29F6183a7200A530F84bD1', // AncientMortgage - ETH Version (Base Sepolia)
+  MAZUNTE_MORTGAGE_ETH: '0xb48a5f86ffe36d3249acf6d97b14c2eac0dea6b5', // AncientMortgage - ETH Version (Base Sepolia)
   USDT: '0xc29837e2f495d8f04c5e7aca7d378baa8765dd36', // TestUSDT - 6 decimals with faucet
   SIMPLE_MORTGAGE: '0x8A791620dd6260079BF849Dc5567aDC3F2FdC318', // SimpleMortgage - Clean, production-ready contract (DEPLOYED)
   STAKING_POOL: '0x474ebf5b375ea4dae1b5ae33f86cb0f30e82af27', // EnhancedStakingPool - Investor Yields

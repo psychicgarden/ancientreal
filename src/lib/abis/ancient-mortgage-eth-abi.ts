@@ -17,4 +17,4 @@ export const ANCIENT_MORTGAGE_ETH_ABI = [
 ] as const;
 
 // ETH contract address (from deployment)
-export const ANCIENT_MORTGAGE_ETH_ADDRESS = '0x9524C8A3b6eEaE8cCE29F6183a7200A530F84bD1';
+export const ANCIENT_MORTGAGE_ETH_ADDRESS = '0xb48a5f86ffe36d3249acf6d97b14c2eac0dea6b5';
