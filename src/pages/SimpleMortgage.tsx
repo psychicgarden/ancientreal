@@ -1,6 +1,6 @@
 import React from 'react';
 import { PropertyInvestmentInterface } from '@/components/PropertyInvestmentInterface';
-import { SimpleMortgageDashboard } from '@/components/SimpleMortgageDashboard';
+import { EnhancedMortgageSystem } from '@/components/EnhancedMortgageSystem';
 import { KYCAdminInterface } from '@/components/KYCAdminInterface';
 import { BusinessModelSummary } from '@/components/BusinessModelSummary';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -45,7 +45,7 @@ export default function SimpleMortgage() {
           </TabsContent>
           
           <TabsContent value="dashboard" className="space-y-6">
-            <SimpleMortgageDashboard />
+            <EnhancedMortgageSystem />
           </TabsContent>
           
           <TabsContent value="kyc" className="space-y-6">

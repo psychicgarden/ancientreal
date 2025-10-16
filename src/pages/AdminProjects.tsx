@@ -30,7 +30,6 @@ import {
 import { PlatformAnalytics } from '@/components/PlatformAnalytics';
 import { LendingPoolOperations } from '@/components/LendingPoolOperations';
 import { PropertyInvestmentInterface } from '@/components/PropertyInvestmentInterface';
-import { SimpleMortgageDashboard } from '@/components/SimpleMortgageDashboard';
 import { EnhancedMortgageSystem } from '@/components/EnhancedMortgageSystem';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useWallet } from '@/contexts/WalletContext';
@@ -38,61 +37,6 @@ import { resetPortfolio } from '@/lib/admin/resetPortfolio';
 import { shouldAllowPortfolioReset } from '@/config/demo';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-// Guard component to disable AVAX components on Base Sepolia
-const BaseSepoliaGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isBaseSepolia, setIsBaseSepolia] = React.useState<boolean | null>(null);
-  const [isLoading, setIsLoading] = React.useState(true);
-
-  React.useEffect(() => {
-    const checkNetwork = async () => {
-      try {
-        if (typeof window !== 'undefined' && window.ethereum) {
-          const provider = new ethers.BrowserProvider(window.ethereum);
-          const network = await provider.getNetwork();
-          const isBase = network.chainId === 84532n; // Base Sepolia
-          setIsBaseSepolia(isBase);
-          console.log(`🔍 Network check: Chain ${network.chainId}, isBaseSepolia: ${isBase}`);
-        }
-      } catch (error) {
-        console.warn('⚠️ Could not check network:', error);
-        setIsBaseSepolia(false);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkNetwork();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className="text-center py-12">
-        <RefreshCw className="w-8 h-8 mx-auto mb-4 animate-spin text-muted-foreground" />
-        <p className="text-muted-foreground">Checking network...</p>
-      </div>
-    );
-  }
-
-  if (isBaseSepolia) {
-    return (
-      <div className="text-center py-12">
-        <AlertCircle className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-        <h3 className="text-xl font-semibold mb-4">AVAX Components Disabled</h3>
-        <p className="text-muted-foreground mb-6">
-          This component uses Avalanche Fuji contracts. Switch to "Enhanced Mortgage" tab for Base Sepolia ETH functionality.
-        </p>
-        <div className="bg-muted/50 rounded-lg p-4 max-w-md mx-auto">
-          <p className="text-sm text-muted-foreground">
-            <strong>Current Network:</strong> Base Sepolia (84532)<br/>
-            <strong>Required:</strong> Avalanche Fuji (43113)
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  return <>{children}</>;
-};
 
 interface ProjectSubmission {
   id: string;
@@ -439,14 +383,10 @@ const AdminProjects = () => {
             )}
 
             <Tabs defaultValue="interface" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="interface" className="flex items-center gap-2">
                   <Home className="w-4 h-4" />
                   Investment Platform
-                </TabsTrigger>
-                <TabsTrigger value="dashboard" className="flex items-center gap-2">
-                  <BarChart3 className="w-4 h-4" />
-                  Mortgage Dashboard
                 </TabsTrigger>
                 <TabsTrigger value="enhanced" className="flex items-center gap-2">
                   <TrendingUp className="w-4 h-4" />
@@ -456,12 +396,6 @@ const AdminProjects = () => {
               
               <TabsContent value="interface" className="space-y-6">
                 <PropertyInvestmentInterface />
-              </TabsContent>
-              
-              <TabsContent value="dashboard" className="space-y-6">
-                <BaseSepoliaGuard>
-                  <SimpleMortgageDashboard />
-                </BaseSepoliaGuard>
               </TabsContent>
               
               <TabsContent value="enhanced" className="space-y-6">
