@@ -277,6 +277,9 @@ export const EnhancedMortgageSystem: React.FC = () => {
       console.log('Contract Address:', contractAddress);
       console.log('Expected ETH Contract:', '0x9524C8A3b6eEaE8cCE29F6183a7200A530F84bD1');
       console.log('Are they the same?', contractAddress === '0x9524C8A3b6eEaE8cCE29F6183a7200A530F84bD1');
+      console.log('Contract Address Type:', typeof contractAddress);
+      console.log('Contract Address Length:', contractAddress?.length);
+      console.log('Is Contract Address Empty?', !contractAddress);
       
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
