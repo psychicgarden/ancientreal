@@ -16,7 +16,7 @@ import { useNetworkGuard } from '@/lib/network-guard';
 
 export const EnhancedPropertyInterface = () => {
   const { toast } = useToast();
-  const { isBaseSepolia, isLoading } = useNetworkGuard();
+  const { isBaseSepolia, isLoading: isNetworkLoading } = useNetworkGuard();
   const [isConnected, setIsConnected] = useState(false);
   const [userAddress, setUserAddress] = useState<string>('');
   const [avaxBalance, setAvaxBalance] = useState<string>('0');

@@ -128,8 +128,8 @@ export function MortgagePurchaseComponent() {
 
       // 1. Calculate amounts
       const propertyPriceBN = parseUSDT(propertyPrice);
-      const breakdown = calculatePurchaseBreakdown(propertyPrice);
-      const totalApproval = parseUSDT(breakdown.totalNeededForPurchase);
+      const breakdown = calculatePurchaseBreakdown(propertyPriceBN);
+      const totalApproval = breakdown.totalNeededForPurchase;
 
       console.log('Purchase breakdown:', breakdown);
 
@@ -269,7 +269,7 @@ export function MortgagePurchaseComponent() {
     }
   };
 
-  const breakdown = calculatePurchaseBreakdown(propertyPrice);
+  const breakdown = calculatePurchaseBreakdown(parseUSDT(propertyPrice));
 
   return (
     <div className="mortgage-container">
@@ -308,35 +308,35 @@ export function MortgagePurchaseComponent() {
               <tbody>
                 <tr>
                   <td>Property Price:</td>
-                  <td>{breakdown.propertyPrice} USDT</td>
+                  <td>{formatUSDT(breakdown.propertyPrice)} USDT</td>
                 </tr>
                 <tr>
                   <td>Down Payment (20%):</td>
-                  <td>{breakdown.downPayment} USDT</td>
+                  <td>{formatUSDT(breakdown.downPayment)} USDT</td>
                 </tr>
                 <tr>
                   <td>Platform Fee (3%):</td>
-                  <td>{breakdown.platformFee} USDT</td>
+                  <td>{formatUSDT(breakdown.platformFee)} USDT</td>
                 </tr>
                 <tr className="highlight">
                   <td><strong>Total Due Now:</strong></td>
-                  <td><strong>{breakdown.totalNeededForPurchase} USDT</strong></td>
+                  <td><strong>{formatUSDT(breakdown.totalNeededForPurchase)} USDT</strong></td>
                 </tr>
                 <tr>
                   <td>Loan Amount:</td>
-                  <td>{breakdown.loanAmount} USDT</td>
+                  <td>{formatUSDT(breakdown.loanAmount)} USDT</td>
                 </tr>
                 <tr>
                   <td>Monthly Payment (est):</td>
-                  <td>{breakdown.estimatedMonthlyPayment} USDT</td>
+                  <td>{formatUSDT(breakdown.estimatedMonthlyPayment)} USDT</td>
                 </tr>
                 <tr>
                   <td>Term:</td>
-                  <td>{breakdown.termMonths} months ({breakdown.termYears} years)</td>
+                  <td>{breakdown.termMonths.toString()} months ({breakdown.termYears.toString()} years)</td>
                 </tr>
                 <tr>
                   <td>APR:</td>
-                  <td>{breakdown.apr}</td>
+                  <td>{breakdown.apr}%</td>
                 </tr>
               </tbody>
             </table>

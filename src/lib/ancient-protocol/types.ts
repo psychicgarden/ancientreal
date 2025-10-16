@@ -120,3 +120,36 @@ export function calculateTotalApproval(propertyPrice: bigint): bigint {
   return calculateDownPayment(propertyPrice) + calculatePlatformFee(propertyPrice);
 }
 
+/**
+ * Calculate purchase breakdown
+ */
+export function calculatePurchaseBreakdown(propertyPrice: bigint) {
+  const downPayment = calculateDownPayment(propertyPrice);
+  const platformFee = calculatePlatformFee(propertyPrice);
+  const loanAmount = calculateLoanAmount(propertyPrice);
+  const totalUpfront = downPayment + platformFee;
+  
+  // Calculate monthly payment using standard amortization formula
+  const aprBps = 800; // 8% APR
+  const termMonths = 120; // 10 years
+  const monthlyRate = (aprBps / 10000) / 12;
+  const estimatedMonthlyPayment = loanAmount * BigInt(Math.floor(
+    monthlyRate * Math.pow(1 + monthlyRate, termMonths) / 
+    (Math.pow(1 + monthlyRate, termMonths) - 1) * 1000000
+  )) / BigInt(1000000);
+  
+  return {
+    propertyPrice,
+    downPayment,
+    platformFee,
+    loanAmount,
+    totalUpfront,
+    totalNeededForPurchase: totalUpfront,
+    estimatedMonthlyPayment,
+    apr: aprBps / 100, // Convert to percentage
+    termMonths: BigInt(termMonths),
+    termYears: BigInt(termMonths / 12)
+  };
+}
+
+

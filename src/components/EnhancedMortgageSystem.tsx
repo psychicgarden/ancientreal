@@ -435,13 +435,20 @@ export const EnhancedMortgageSystem: React.FC = () => {
   const saveTokenIdToDatabase = async (tokenId: bigint) => {
     try {
       const { error } = await supabase
-        .from('user_mortgages')
+        .from('user_properties')
         .insert({
-          user_id: account,
-          token_id: tokenId.toString(),
-          property_price: parseFloat(propertyValue),
-          contract_address: contractAddress,
-          network: 'base-sepolia',
+          user_wallet_address: account,
+          mortgage_id: tokenId.toString(),
+          purchase_price: parseFloat(propertyValue),
+          property_name: 'Base Sepolia Property',
+          property_location: 'On-Chain',
+          down_payment: parseFloat(propertyValue) * 0.23,
+          remaining_balance: parseFloat(propertyValue) * 0.77,
+          current_value: parseFloat(propertyValue),
+          equity_percentage: 23,
+          is_active: true,
+          currency: 'ETH',
+          property_id: 1,
         });
       
       if (error) {

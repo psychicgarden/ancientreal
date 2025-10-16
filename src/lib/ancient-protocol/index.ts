@@ -42,7 +42,7 @@ export {
   getExplorerUrl,
   type DeploymentAddresses,
   type NetworkDeployments,
-} from '../addresses';
+} from './addresses';
 
 // ========================================
 // Type Definitions

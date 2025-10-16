@@ -97,5 +97,5 @@ export async function createValidatedContract<T extends ethers.BaseContract>(
     throw new Error(`Contract validation failed: ${validation.error}`);
   }
 
-  return new ethers.Contract(contractAddress, abi, signer) as T;
+  return new ethers.Contract(contractAddress, abi, signer) as unknown as T;
 }
