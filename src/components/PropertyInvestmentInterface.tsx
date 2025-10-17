@@ -135,8 +135,8 @@ export const PropertyInvestmentInterface = () => {
     try {
       console.log('=== DEBUG INFO ===');
       console.log('Contract Address:', contractAddress);
-      console.log('Expected ETH Contract:', '0x9524C8A3b6eEaE8cCE29F6183a7200A530F84bD1');
-      console.log('Are they the same?', contractAddress === '0x9524C8A3b6eEaE8cCE29F6183a7200A530F84bD1');
+      console.log('Expected ETH Contract:', '0xE527DDaC2592FAa45884a0B78E4D377a5D3dF8cc');
+      console.log('Are they the same?', contractAddress === '0xE527DDaC2592FAa45884a0B78E4D377a5D3dF8cc');
       
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();

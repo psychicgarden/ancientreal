@@ -108,8 +108,8 @@ export const EnhancedMortgageSystem: React.FC = () => {
       setContractAddress(address);
       setContractNotFound(false);
       console.log('✅ Using ETH contract address:', address);
-      console.log('✅ Expected ETH contract:', '0x9524C8A3b6eEaE8cCE29F6183a7200A530F84bD1');
-      console.log('✅ Are they the same?', address === '0x9524C8A3b6eEaE8cCE29F6183a7200A530F84bD1');
+      console.log('✅ Expected ETH contract:', '0xE527DDaC2592FAa45884a0B78E4D377a5D3dF8cc');
+      console.log('✅ Are they the same?', address === '0xE527DDaC2592FAa45884a0B78E4D377a5D3dF8cc');
       
       // Validate network
       await validateNetwork();
@@ -275,8 +275,8 @@ export const EnhancedMortgageSystem: React.FC = () => {
     try {
       console.log('=== DEBUG INFO ===');
       console.log('Contract Address:', contractAddress);
-      console.log('Expected ETH Contract:', '0x9524C8A3b6eEaE8cCE29F6183a7200A530F84bD1');
-      console.log('Are they the same?', contractAddress === '0x9524C8A3b6eEaE8cCE29F6183a7200A530F84bD1');
+      console.log('Expected ETH Contract:', '0xE527DDaC2592FAa45884a0B78E4D377a5D3dF8cc');
+      console.log('Are they the same?', contractAddress === '0xE527DDaC2592FAa45884a0B78E4D377a5D3dF8cc');
       console.log('Contract Address Type:', typeof contractAddress);
       console.log('Contract Address Length:', contractAddress?.length);
       console.log('Is Contract Address Empty?', !contractAddress);
