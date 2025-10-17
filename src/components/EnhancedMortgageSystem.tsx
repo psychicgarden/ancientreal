@@ -99,6 +99,19 @@ export const EnhancedMortgageSystem: React.FC = () => {
     }
   }, [contractAddress, account]);
 
+  // Auto-refresh data every 30 seconds when user has properties
+  useEffect(() => {
+    if (userProperties.length > 0 && account) {
+      const interval = setInterval(() => {
+        console.log('🔄 Auto-refreshing data...');
+        fetchUserProperties();
+        fetchMortgageData();
+      }, 30000); // 30 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [userProperties.length, account]);
+
   const loadContractAddress = async () => {
     try {
       // Use ETH contract address - no fallbacks to USDC
@@ -149,11 +162,15 @@ export const EnhancedMortgageSystem: React.FC = () => {
   };
 
   const fetchUserProperties = async () => {
-    if (!account) return;
+    if (!account) {
+      console.log('⚠️ No account connected, skipping fetchUserProperties');
+      return;
+    }
     
     setIsLoading(true);
     try {
       console.log('🔍 Fetching user properties for account:', account);
+      console.log('🔍 Account lowercase:', account.toLowerCase());
       
       const { data, error } = await supabase
         .from('user_properties')
@@ -162,19 +179,54 @@ export const EnhancedMortgageSystem: React.FC = () => {
         .eq('is_active', true);
 
       if (error) {
-        console.error('❌ Error fetching user properties:', error);
+        console.error('❌ Supabase error fetching user properties:', error);
+        console.error('❌ Error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
         toast({
-          title: "Error",
-          description: "Failed to fetch user properties",
+          title: "Database Error",
+          description: `Failed to fetch user properties: ${error.message}`,
           variant: "destructive"
         });
         return;
       }
 
-      console.log('✅ Fetched user properties:', data);
+      console.log('✅ Raw data from Supabase:', data);
+      console.log('✅ Number of properties found:', data?.length || 0);
+      
+      if (data && data.length > 0) {
+        console.log('✅ Property details:', data.map(p => ({
+          id: p.id,
+          mortgage_id: p.mortgage_id,
+          property_name: p.property_name,
+          user_wallet_address: p.user_wallet_address,
+          user_address: p.user_address,
+          is_active: p.is_active
+        })));
+      } else {
+        console.log('⚠️ No properties found for account:', account);
+        console.log('⚠️ This might be normal if no purchases have been made yet');
+      }
+      
       setUserProperties(data || []);
+      
+      // Show success toast if properties were found
+      if (data && data.length > 0) {
+        toast({
+          title: "Properties Loaded",
+          description: `Found ${data.length} active property(ies)`,
+        });
+      }
     } catch (error) {
-      console.error('❌ Error:', error);
+      console.error('❌ Unexpected error in fetchUserProperties:', error);
+      toast({
+        title: "Unexpected Error",
+        description: "An unexpected error occurred while fetching properties",
+        variant: "destructive"
+      });
     } finally {
       setIsLoading(false);
     }
@@ -419,11 +471,30 @@ export const EnhancedMortgageSystem: React.FC = () => {
           });
         }
 
-        // Refresh data after a short delay
-        setTimeout(() => {
-          fetchUserProperties();
-          fetchMortgageData();
-        }, 2000);
+        // Refresh data with retry mechanism
+        const refreshData = async (attempt = 1) => {
+          console.log(`🔄 Refreshing data (attempt ${attempt})...`);
+          try {
+            await fetchUserProperties();
+            await fetchMortgageData();
+            console.log('✅ Data refresh successful');
+          } catch (error) {
+            console.error(`❌ Data refresh failed (attempt ${attempt}):`, error);
+            if (attempt < 3) {
+              // Retry after increasing delay
+              setTimeout(() => refreshData(attempt + 1), attempt * 3000);
+            } else {
+              toast({
+                title: "Data Refresh Failed",
+                description: "Please manually refresh to see your properties",
+                variant: "destructive"
+              });
+            }
+          }
+        };
+        
+        // Start refresh after 3 seconds, then retry if needed
+        setTimeout(() => refreshData(), 3000);
       } else {
         throw new Error('Transaction failed');
       }
@@ -633,10 +704,20 @@ export const EnhancedMortgageSystem: React.FC = () => {
         <p className="text-muted-foreground mb-6">
           Enhanced AVAX Mortgage contract not deployed or address not found
         </p>
-        <Button onClick={loadContractAddress} variant="outline">
-          <RefreshCw className="w-4 h-4 mr-2" />
-          Retry
-        </Button>
+        <div className="flex gap-2 justify-center">
+          <Button onClick={loadContractAddress} variant="outline">
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Retry
+          </Button>
+          <Button onClick={() => {
+            console.log('🔄 Manual refresh triggered by user');
+            fetchUserProperties();
+            fetchMortgageData();
+          }} variant="outline">
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Refresh Data
+          </Button>
+        </div>
       </div>
     );
   }
@@ -837,7 +918,15 @@ export const EnhancedMortgageSystem: React.FC = () => {
               <CardContent className="text-center py-12">
                 <Home className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
                 <h3 className="text-lg font-semibold mb-2">No Properties Yet</h3>
-                <p className="text-muted-foreground">Purchase a property to get started</p>
+                <p className="text-muted-foreground mb-4">Purchase a property to get started</p>
+                <Button onClick={() => {
+                  console.log('🔄 Manual refresh triggered from My Properties tab');
+                  fetchUserProperties();
+                  fetchMortgageData();
+                }} variant="outline" size="sm">
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Refresh Properties
+                </Button>
               </CardContent>
             </Card>
           ) : (
