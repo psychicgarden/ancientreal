@@ -53,29 +53,11 @@ export const CONTRACTS = {
   PLATFORM_TREASURY: import.meta.env.VITE_PLATFORM_TREASURY_ADDRESS ?? '0x742d35Cc6670C068fC0DB3674fE6c61c2B3d2a0B'
 } as const;
 
-// Load and update contracts from database
+// DISABLED: Load and update contracts from database to prevent address overrides
 export const loadContracts = async (network: string = 'fuji'): Promise<void> => {
-  try {
-    const dbContracts = await ContractDatabaseIntegration.getAllContractAddresses(network);
-    
-    // Update known contracts with database values
-    if (dbContracts.AncientMortgage) {
-      (CONTRACTS as any).MAZUNTE_MORTGAGE = dbContracts.AncientMortgage;
-    }
-    if (dbContracts.SIMPLE_MORTGAGE) {
-      (CONTRACTS as any).SIMPLE_MORTGAGE = dbContracts.SIMPLE_MORTGAGE;
-    }
-    if (dbContracts.USDT) {
-      (CONTRACTS as any).USDT = dbContracts.USDT;
-    }
-    if (dbContracts.STAKING_POOL) {
-      (CONTRACTS as any).STAKING_POOL = dbContracts.STAKING_POOL;
-    }
-    
-    console.log('✅ Updated contract addresses from database:', dbContracts);
-  } catch (error) {
-    console.error('❌ Failed to load contracts from database:', error);
-  }
+  console.log('⚠️ Database contract loading disabled to prevent address overrides');
+  console.log('✅ Using hardcoded ETH contract address:', CONTRACTS.MAZUNTE_MORTGAGE_ETH);
+  return;
 };
 
 // DISABLED: Auto-loading contracts on startup to prevent Avalanche connections
