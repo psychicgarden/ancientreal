@@ -41,7 +41,7 @@ export const deployments: NetworkDeployments = {
   [ChainId.BASE_SEPOLIA]: {
     MockUSDT: "0x82895d380f6df68d50e34d2ccc94bad1415a2b46",
     AncientStakingPool: "0xac7378799cffd01f38a4e39fb5d91d60a0e62b33",
-    AncientMortgage: "0xb48a5f86ffe36d3249acf6d97b14c2eac0dea6b5",
+    AncientMortgage: "0xE527DDaC2592FAa45884a0B78E4D377a5D3dF8cc",
   },
 
   // Avalanche Fuji (Testnet)
