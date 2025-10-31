@@ -17,11 +17,11 @@ const Hero = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-6 lg:px-8 text-center">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="max-w-4xl mx-auto">
 
           {/* Main Headline */}
-          <h1 className="text-2xl md:text-5xl lg:text-6xl font-bold leading-relaxed text-accent-foreground mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight sm:leading-relaxed text-accent-foreground mb-4 sm:mb-6">
             The World's First
             <br />
             <span className="bg-gradient-to-r from-gold to-gold/80 bg-clip-text text-transparent">
@@ -30,20 +30,22 @@ const Hero = () => {
           </h1>
 
           {/* Subheading */}
-          <p className="text-xl text-accent-foreground/80 mb-12 max-w-3xl mx-auto leading-relaxed md:text-xl">50 Million digital nomads seeking homeownership abroad and can't get a mortgage. 
-<br />
-We Solve That.</p>
+          <p className="text-base sm:text-lg md:text-xl text-accent-foreground/80 mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed px-2">
+            50 Million digital nomads seeking homeownership abroad and can't get a mortgage.
+            <br className="hidden sm:block" />
+            <span className="block sm:inline"> We Solve That.</span>
+          </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Button variant="hero" size="lg" className="text-lg px-8 py-4" onClick={() => navigate('/banking')}>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-10 sm:mb-16 px-4">
+            <Button variant="hero" size="lg" className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 w-full sm:w-auto" onClick={() => navigate('/banking')}>
               Start Investing
-              <ArrowRight className="w-5 h-5 ml-2" />
+              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
             </Button>
             <Button 
               variant="default"
               size="lg"
-              className="text-lg px-8 py-4 bg-primary hover:bg-primary/90"
+              className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-primary hover:bg-primary/90 w-full sm:w-auto"
               onClick={() => navigate('/investor')}
             >
               View Properties
@@ -51,32 +53,32 @@ We Solve That.</p>
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-2xl mx-auto px-4">
             <div className="text-center">
-              <div className="flex items-center justify-center w-16 h-16 bg-accent-foreground/10 backdrop-blur-sm rounded-xl mx-auto mb-4">
-                <Home className="w-8 h-8 text-gold" />
+              <div className="flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-accent-foreground/10 backdrop-blur-sm rounded-xl mx-auto mb-3 sm:mb-4">
+                <Home className="w-6 h-6 sm:w-8 sm:h-8 text-gold" />
               </div>
-              <div className="text-3xl font-bold text-accent-foreground mb-2">500+*</div>
-              <div className="text-accent-foreground/70">Premium Properties</div>
+              <div className="text-2xl sm:text-3xl font-bold text-accent-foreground mb-1 sm:mb-2">500+*</div>
+              <div className="text-sm sm:text-base text-accent-foreground/70">Premium Properties</div>
             </div>
             <div className="text-center">
-              <div className="flex items-center justify-center w-16 h-16 bg-accent-foreground/10 backdrop-blur-sm rounded-xl mx-auto mb-4">
-                <TrendingUp className="w-8 h-8 text-gold" />
+              <div className="flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-accent-foreground/10 backdrop-blur-sm rounded-xl mx-auto mb-3 sm:mb-4">
+                <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-gold" />
               </div>
-              <div className="text-3xl font-bold text-accent-foreground mb-2">12.5%*</div>
-              <div className="text-accent-foreground/70">Average Returns</div>
+              <div className="text-2xl sm:text-3xl font-bold text-accent-foreground mb-1 sm:mb-2">12.5%*</div>
+              <div className="text-sm sm:text-base text-accent-foreground/70">Average Returns</div>
             </div>
             <div className="text-center">
-              <div className="flex items-center justify-center w-16 h-16 bg-accent-foreground/10 backdrop-blur-sm rounded-xl mx-auto mb-4">
-                <Shield className="w-8 h-8 text-gold" />
+              <div className="flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-accent-foreground/10 backdrop-blur-sm rounded-xl mx-auto mb-3 sm:mb-4">
+                <Shield className="w-6 h-6 sm:w-8 sm:h-8 text-gold" />
               </div>
-              <div className="text-3xl font-bold text-accent-foreground mb-2">$2B+*</div>
-              <div className="text-accent-foreground/70">Assets Managed</div>
+              <div className="text-2xl sm:text-3xl font-bold text-accent-foreground mb-1 sm:mb-2">$2B+*</div>
+              <div className="text-sm sm:text-base text-accent-foreground/70">Assets Managed</div>
             </div>
           </div>
           
           {/* Disclaimer Notice */}
-          <div className="mt-8 text-center text-xs text-accent-foreground/60 max-w-2xl mx-auto">
+          <div className="mt-6 sm:mt-8 text-center text-xs text-accent-foreground/60 max-w-2xl mx-auto px-4">
             <p>*Projected figures for demonstration purposes. Past performance does not guarantee future results. All investments carry risk of loss.</p>
           </div>
         </div>
