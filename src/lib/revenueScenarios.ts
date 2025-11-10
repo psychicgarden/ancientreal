@@ -74,17 +74,23 @@ export function calculateScenario(inputs: ScenarioInputs, name: string): Scenari
   // Total revenue
   const totalRevenue = platformFees + mortgageInterest + appreciationShare;
 
-  // Calculate IRR (simplified formula)
+  // Convert to millions for all calculations
+  const totalRevenueM = totalRevenue / 1_000_000;
+  const platformFeesM = platformFees / 1_000_000;
+  const mortgageInterestM = mortgageInterest / 1_000_000;
+  const appreciationShareM = appreciationShare / 1_000_000;
+
+  // Calculate IRR and Cash Multiple using millions
   const initialCapital = 2.75; // $2.75M initial capital
-  const irr = (Math.pow(totalRevenue / initialCapital, 1 / termYears) - 1) * 100;
-  const cashMultiple = totalRevenue / initialCapital;
+  const irr = (Math.pow(totalRevenueM / initialCapital, 1 / termYears) - 1) * 100;
+  const cashMultiple = totalRevenueM / initialCapital;
 
   return {
     name,
-    totalRevenue: totalRevenue / 1_000_000, // Convert to millions
-    platformFees: platformFees / 1_000_000,
-    mortgageInterest: mortgageInterest / 1_000_000,
-    appreciationShare: appreciationShare / 1_000_000,
+    totalRevenue: totalRevenueM,
+    platformFees: platformFeesM,
+    mortgageInterest: mortgageInterestM,
+    appreciationShare: appreciationShareM,
     irr,
     cashMultiple,
     financedUnits,
