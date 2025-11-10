@@ -44,6 +44,12 @@ export const MortgageOptionsCalculator = () => {
     const totalAppreciation = propertyValueAtEnd - propertyPrice;
     
     if (type === 'CASH') {
+      // Ancient's revenue: $75k profit + platform fee ($3,500 or 3.5%)
+      const buildCost = 75000; // Ancient's investment to build
+      const profitFromSale = 75000; // $75k profit on the flip
+      const actualPlatformFee = 3500; // Platform fee (user specified)
+      const totalRevenue = profitFromSale + actualPlatformFee;
+      
       return {
         monthlyPayment: 0,
         totalPayments: downPayment,
@@ -51,11 +57,11 @@ export const MortgageOptionsCalculator = () => {
         propertyValueAtEnd,
         netGain: totalAppreciation,
         buyerROI: (totalAppreciation / propertyPrice) * 100,
-        totalRevenue: propertyPrice + platformFee,
+        totalRevenue: totalRevenue,
         interestRevenue: 0,
         samRevenue: 0,
-        platformFee,
-        ancientROI: ((propertyPrice + platformFee) / propertyPrice - 1) * 100
+        platformFee: actualPlatformFee,
+        ancientROI: ((totalRevenue) / buildCost) * 100 // ROI based on $75k build cost
       };
     }
     
