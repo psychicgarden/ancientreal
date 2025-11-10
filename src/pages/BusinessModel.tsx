@@ -15,6 +15,7 @@ import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Co
 import { useNavigate } from "react-router-dom";
 import SectionHeader from "@/components/SectionHeader";
 import PlatformAssessment from "@/components/PlatformAssessment";
+import { MortgageOptionsCalculator } from "@/components/MortgageOptionsCalculator";
 
 // Import property images
 import villaTulum from "@/assets/villa-tulum.jpg";
@@ -357,8 +358,9 @@ const BusinessModel = () => {
 
           {/* Tabbed Content */}
           <Tabs defaultValue="revenue-model" className="w-full">
-            <TabsList className="grid w-full grid-cols-5 mb-8">
+            <TabsList className="grid w-full grid-cols-6 mb-8">
               <TabsTrigger value="revenue-model">Revenue Model</TabsTrigger>
+              <TabsTrigger value="product-comparison">Product Comparison</TabsTrigger>
               <TabsTrigger value="platform-assessment">Platform Assessment</TabsTrigger>
               <TabsTrigger value="budget-breakdown">Budget Breakdown</TabsTrigger>
               <TabsTrigger value="legal-structuring">Legal Structuring</TabsTrigger>
@@ -857,6 +859,10 @@ const BusinessModel = () => {
                   </div>
                 </div>
               </div>
+            </TabsContent>
+
+            <TabsContent value="product-comparison">
+              <MortgageOptionsCalculator />
             </TabsContent>
 
             <TabsContent value="platform-assessment">
