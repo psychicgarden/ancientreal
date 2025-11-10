@@ -132,6 +132,28 @@ export interface ScenarioResults {
   cashUnits: number;
   avgMonthlyPayment: number;
   totalLoanAmount: number;
+  investorPaybackMonths?: number; // Months until investor capital is returned
+  developmentPhaseCash?: number; // Total cash collected in Years 0-5
+}
+
+/**
+ * Phased cash flow breakdown for investor timeline
+ */
+export interface PhasedCashFlows {
+  developmentPhase: {
+    year: number;
+    flip: string;
+    immediateCash: number;
+    deferredPrincipal: number;
+  }[];
+  mortgagePhase: {
+    year: number;
+    interestIncome: number;
+  }[];
+  exitPhase: {
+    year: number;
+    appreciationShare: number;
+  };
 }
 
 /**
@@ -546,7 +568,9 @@ export function calculateTieredPortfolioScenario(
   // Platform fees on ALL sales
   const platformFees = calculatePlatformFees();
 
-  // Calculate revenue from each product type
+  // Calculate IMMEDIATE CASH from cash sales (THIS IS THE FIX!)
+  let cashSalesRevenue = 0;
+  let downPaymentRevenue = 0;
   let totalMortgageInterest = 0;
   let totalSAMInterest = 0;
   let totalLoanAmount = 0;
@@ -557,10 +581,16 @@ export function calculateTieredPortfolioScenario(
     const flipMortgageUnits = Math.round(flip.units * mortgageRate);
     const flipSAMUnits = Math.round(flip.units * samRate);
 
+    // IMMEDIATE CASH: Full cash sales
+    cashSalesRevenue += flip.price * flipCashUnits;
+
     // Mortgage product: base price + $10K premium, 20% down
     const mortgagePrice = flip.price + 10000;
     const mortgageLoanPerUnit = mortgagePrice * 0.80;
     const mortgageLoanAmount = mortgageLoanPerUnit * flipMortgageUnits;
+    
+    // IMMEDIATE CASH: Down payments on mortgage units
+    downPaymentRevenue += mortgagePrice * 0.20 * flipMortgageUnits;
     
     if (mortgageLoanAmount > 0) {
       const monthlyRate = mortgageAPR / 100 / 12;
@@ -577,6 +607,9 @@ export function calculateTieredPortfolioScenario(
     // SAM product: cash price, 20% down, lower APR
     const samLoanPerUnit = flip.price * 0.80;
     const samLoanAmount = samLoanPerUnit * flipSAMUnits;
+    
+    // IMMEDIATE CASH: Down payments on SAM units
+    downPaymentRevenue += flip.price * 0.20 * flipSAMUnits;
     
     if (samLoanAmount > 0) {
       const monthlyRate = samAPR / 100 / 12;
@@ -606,12 +639,18 @@ export function calculateTieredPortfolioScenario(
   const platformFeesM = platformFees / 1_000_000;
   const totalInterestM = (totalMortgageInterest + totalSAMInterest) / 1_000_000;
   const appreciationShareM = appreciationShare / 1_000_000;
+  
+  // Development phase cash (Years 0-5)
+  const totalImmediateCash = cashSalesRevenue + downPaymentRevenue + platformFees;
+  const developmentPhaseCashM = totalImmediateCash / 1_000_000;
 
-  // Calculate IRR
+  // Calculate IRR with CORRECTED Year 0 cash flow
   const cashFlows: number[] = [];
   const annualInterest = totalInterestM / termYears;
   
-  cashFlows[0] = platformFeesM - INITIAL_CAPITAL;
+  // Year 0: ALL IMMEDIATE CASH minus initial investment
+  cashFlows[0] = developmentPhaseCashM - INITIAL_CAPITAL;
+  
   for (let year = 1; year < termYears; year++) {
     cashFlows[year] = annualInterest;
   }
@@ -619,6 +658,20 @@ export function calculateTieredPortfolioScenario(
 
   const irr = newtonRaphsonIRR(cashFlows);
   const cashMultiple = totalRevenueM / INITIAL_CAPITAL;
+
+  // Calculate investor payback period
+  let cumulativeCash = developmentPhaseCashM - INITIAL_CAPITAL;
+  let paybackMonths = 0;
+  
+  if (cumulativeCash >= INITIAL_CAPITAL) {
+    // Paid back in development phase (Years 0-5)
+    paybackMonths = Math.ceil((INITIAL_CAPITAL / developmentPhaseCashM) * 60); // 5 years = 60 months
+  } else {
+    // Need mortgage income to pay back
+    const monthlyInterest = totalInterestM / termYears / 12;
+    const remainingCapital = INITIAL_CAPITAL - cumulativeCash;
+    paybackMonths = 60 + Math.ceil(remainingCapital / monthlyInterest);
+  }
 
   // Calculate weighted average monthly payment
   const avgMonthlyPayment = totalLoanAmount > 0 
@@ -638,6 +691,8 @@ export function calculateTieredPortfolioScenario(
     cashUnits,
     avgMonthlyPayment,
     totalLoanAmount: totalLoanAmount / 1_000_000,
+    investorPaybackMonths: paybackMonths,
+    developmentPhaseCash: developmentPhaseCashM,
   };
 }
 
@@ -726,4 +781,59 @@ export function generateScenarioCashFlow(scenario: ScenarioResults) {
   }
   
   return data;
+}
+
+/**
+ * Generate phased timeline showing development (Years 0-5) vs mortgage income (Years 1-15)
+ */
+export function generatePhasedTimeline(
+  cashRate: number,
+  mortgageRate: number,
+  samRate: number
+): PhasedCashFlows {
+  const flips = getFlips();
+  const developmentPhase = [];
+  
+  // Development phase: 6 flips over 5 years
+  for (const flip of flips) {
+    const flipCashUnits = Math.round(flip.units * cashRate);
+    const flipMortgageUnits = Math.round(flip.units * mortgageRate);
+    const flipSAMUnits = Math.round(flip.units * samRate);
+    
+    const cashSales = flip.price * flipCashUnits;
+    const mortgagePrice = flip.price + 10000;
+    const mortgageDownPayments = mortgagePrice * 0.20 * flipMortgageUnits;
+    const samDownPayments = flip.price * 0.20 * flipSAMUnits;
+    const platformFees = FEE_RATE * flip.price * flip.units;
+    
+    const immediateCash = cashSales + mortgageDownPayments + samDownPayments + platformFees;
+    const deferredPrincipal = (mortgagePrice * 0.80 * flipMortgageUnits) + (flip.price * 0.80 * flipSAMUnits);
+    
+    developmentPhase.push({
+      year: parseInt(flip.flip.match(/\d+/)?.[0] || "0"),
+      flip: flip.flip,
+      immediateCash: immediateCash / 1_000_000,
+      deferredPrincipal: deferredPrincipal / 1_000_000,
+    });
+  }
+  
+  // Mortgage phase: Years 1-15
+  const mortgagePhase = [];
+  const scenario = calculateTieredPortfolioScenario(cashRate, mortgageRate, samRate, 10.5, 8.0, 0.20);
+  const annualInterest = scenario.mortgageInterest / 15;
+  
+  for (let year = 1; year <= 15; year++) {
+    mortgagePhase.push({
+      year,
+      interestIncome: annualInterest,
+    });
+  }
+  
+  // Exit phase: Year 15 SAM appreciation
+  const exitPhase = {
+    year: 15,
+    appreciationShare: scenario.appreciationShare,
+  };
+  
+  return { developmentPhase, mortgagePhase, exitPhase };
 }

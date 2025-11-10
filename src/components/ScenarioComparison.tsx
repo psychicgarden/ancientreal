@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, AlertTriangle, CheckCircle, DollarSign } from "lucide-react";
+import { TrendingUp, AlertTriangle, CheckCircle, DollarSign, Clock } from "lucide-react";
 import { ScenarioResults } from "@/lib/revenueScenarios";
 import { ResponsiveContainer, ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 import { generateScenarioCashFlow } from "@/lib/revenueScenarios";
@@ -27,16 +27,34 @@ export const ScenarioComparison: React.FC<ScenarioComparisonProps> = ({ scenario
             <Card key={scenario.name} className={`${colorClass} border-2`}>
               <CardContent className="p-6">
                 <div className="mb-4">
-                  <Badge variant="outline" className="mb-2">
-                    {scenario.name}
-                  </Badge>
+                  <div className="flex items-center justify-between mb-2">
+                    <Badge variant="outline">
+                      {scenario.name}
+                    </Badge>
+                    {scenario.investorPaybackMonths && (
+                      <Badge variant="secondary" className="text-xs">
+                        <Clock className="h-3 w-3 mr-1" />
+                        {scenario.investorPaybackMonths < 12 
+                          ? `${scenario.investorPaybackMonths}mo` 
+                          : `${Math.floor(scenario.investorPaybackMonths / 12)}y ${scenario.investorPaybackMonths % 12}m`}
+                      </Badge>
+                    )}
+                  </div>
                   <div className={`text-4xl font-bold ${iconColor}`}>
                     ${scenario.totalRevenue.toFixed(2)}M
                   </div>
-                  <div className="text-sm text-muted-foreground">15-Year Total Revenue</div>
+                  <div className="text-sm text-muted-foreground">Total Revenue (5yr builds + 15yr income)</div>
                 </div>
 
                 <div className="space-y-3 text-sm">
+                  {scenario.developmentPhaseCash && (
+                    <div className="bg-green-500/10 border border-green-500/20 rounded p-2">
+                      <div className="flex justify-between">
+                        <span className="text-green-700 dark:text-green-400 font-medium">Dev Phase Cash (Y0-5):</span>
+                        <span className="font-bold text-green-700 dark:text-green-400">${scenario.developmentPhaseCash.toFixed(2)}M</span>
+                      </div>
+                    </div>
+                  )}
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Platform Fees:</span>
                     <span className="font-mono font-semibold">${scenario.platformFees.toFixed(2)}M</span>

@@ -2,7 +2,8 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Check, TrendingUp, DollarSign, Home, Sparkles } from "lucide-react";
+import { Check, TrendingUp, DollarSign, Home, Sparkles, Clock, Calendar } from "lucide-react";
+import InvestorTimeline from "./InvestorTimeline";
 
 interface ProductComparisonProps {
   basePrice?: number;
@@ -117,6 +118,22 @@ export const ProductComparison: React.FC<ProductComparisonProps> = ({
         <p className="text-lg text-muted-foreground">
           40% Cash • 50% Mortgage • 10% SAM = 26-29% Blended IRR
         </p>
+      </div>
+
+      {/* Timeline Badges */}
+      <div className="flex flex-wrap justify-center gap-3">
+        <Badge variant="outline" className="text-sm py-2 px-4">
+          <Clock className="h-4 w-4 mr-2" />
+          6 Flips over 5 Years
+        </Badge>
+        <Badge variant="outline" className="text-sm py-2 px-4">
+          <TrendingUp className="h-4 w-4 mr-2" />
+          15-Year Mortgage Income
+        </Badge>
+        <Badge variant="outline" className="text-sm py-2 px-4">
+          <Calendar className="h-4 w-4 mr-2" />
+          Year 15 Appreciation Exit
+        </Badge>
       </div>
 
       {/* Product Cards */}
@@ -291,8 +308,19 @@ export const ProductComparison: React.FC<ProductComparisonProps> = ({
               Diversified revenue streams across three distinct buyer segments
             </p>
           </div>
+          
+          <div className="mt-4 pt-4 border-t border-border text-sm text-muted-foreground">
+            <strong className="text-foreground">Investment Timeline:</strong> 6 flips complete in Years 0-5, 
+            generating immediate cash to repay investors. Mortgage income continues passively for 15 years.
+          </div>
         </CardContent>
       </Card>
+
+      {/* Investor Timeline */}
+      <InvestorTimeline 
+        investorPaybackMonths={18} 
+        developmentPhaseCash={5.2} 
+      />
     </div>
   );
 };
