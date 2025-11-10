@@ -108,13 +108,13 @@ const revenueStreams = [{
   title: "Mortgage Interest",
   amount: "$7.46M",
   description: "8% yield serving the $250B cross-border lending void",
-  timeline: "10-year stream",
+  timeline: "15-year stream",
   icon: "🌐"
 }, {
-  title: "ARW Appreciation",
-  amount: "$16.62M",
-  description: "Capturing nomad wealth lost to rent into property equity",
-  timeline: "10-year capture",
+  title: "Property Appreciation (30% SAM)",
+  amount: "$7.96M",
+  description: "Fair 30% share of property appreciation at year 15",
+  timeline: "15-year capture",
   icon: "🚀"
 }];
 const landAcquisition = [{
@@ -395,8 +395,8 @@ const BusinessModel = () => {
                 <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                   <CardContent className="p-6 text-center">
                     <DollarSign className="w-8 h-8 text-primary mx-auto mb-3" />
-                    <div className="text-2xl font-bold text-foreground">$24.53M</div>
-                    <div className="text-sm text-muted-foreground">10-Year Capture</div>
+                    <div className="text-2xl font-bold text-foreground">$15.86M</div>
+                    <div className="text-sm text-muted-foreground">15-Year Capture (30% SAM)</div>
                   </CardContent>
                 </Card>
               </div>
@@ -508,10 +508,10 @@ const BusinessModel = () => {
                     </Card>)}
                 </div>
 
-                {/* Revenue Summary */}
+                {/* Revenue Summary with Model Comparison */}
                 <div className="mt-16 text-center">
-                  <h3 className="text-3xl font-bold mb-8">10-Year Revenue Capture</h3>
-                  <div className="grid md:grid-cols-3 gap-6">
+                  <h3 className="text-3xl font-bold mb-8">15-Year Revenue Capture</h3>
+                  <div className="grid md:grid-cols-3 gap-6 mb-8">
                     {revenueStreams.map((stream, index) => <Card key={index} className="bg-card/50 backdrop-blur-sm border-border/50">
                         <CardContent className="p-6 text-center">
                           <div className="text-3xl mb-3">{stream.icon}</div>
@@ -522,10 +522,85 @@ const BusinessModel = () => {
                         </CardContent>
                       </Card>)}
                   </div>
-                  <div className="mt-8 p-6 bg-primary/10 rounded-lg">
-                    <div className="text-3xl font-bold text-primary">$24.53M</div>
-                    <div className="text-sm text-muted-foreground">Total 10-Year Revenue Capture</div>
+                  
+                  {/* Model Comparison */}
+                  <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-8">
+                    <Card className="bg-muted/30 backdrop-blur-sm border-border/50">
+                      <CardContent className="p-6">
+                        <div className="text-sm text-muted-foreground mb-2">OLD MODEL (50% SAM)</div>
+                        <div className="text-3xl font-bold text-muted-foreground mb-3">$19.18M</div>
+                        <div className="space-y-2 text-sm text-left">
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Platform Fees:</span>
+                            <span className="font-mono">$453.6K</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Interest (8%):</span>
+                            <span className="font-mono">$7.46M</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Appreciation (50%):</span>
+                            <span className="font-mono">$11.26M</span>
+                          </div>
+                          <div className="pt-2 border-t border-border/50 flex justify-between">
+                            <span className="font-semibold">IRR:</span>
+                            <span className="font-semibold">21-24%</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="bg-primary/10 backdrop-blur-sm border-primary/30 border-2">
+                      <CardContent className="p-6">
+                        <div className="text-sm text-primary font-semibold mb-2">NEW MODEL (30% SAM) ✨</div>
+                        <div className="text-3xl font-bold text-primary mb-3">$15.86M</div>
+                        <div className="space-y-2 text-sm text-left">
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Platform Fees:</span>
+                            <span className="font-mono">$453.6K</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Interest (8%):</span>
+                            <span className="font-mono">$7.46M</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">Appreciation (30%):</span>
+                            <span className="font-mono text-primary font-semibold">$7.96M</span>
+                          </div>
+                          <div className="pt-2 border-t border-border/50 flex justify-between">
+                            <span className="font-semibold">IRR:</span>
+                            <span className="font-semibold">17-21%</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
+                  
+                  {/* Strategic Rationale */}
+                  <Card className="bg-card/50 backdrop-blur-sm border-border/50 max-w-4xl mx-auto">
+                    <CardContent className="p-6">
+                      <h4 className="font-semibold text-lg mb-3">Why 30% SAM is Strategic</h4>
+                      <div className="grid md:grid-cols-3 gap-4 text-sm">
+                        <div className="space-y-1">
+                          <div className="font-semibold text-primary">🎯 Competitive Advantage</div>
+                          <p className="text-muted-foreground">Most competitive rate in market vs 50% industry standard</p>
+                        </div>
+                        <div className="space-y-1">
+                          <div className="font-semibold text-primary">⚡ Faster Sales</div>
+                          <p className="text-muted-foreground">Lower monthly payments ($993 vs $1,185) accelerate buyer conversion</p>
+                        </div>
+                        <div className="space-y-1">
+                          <div className="font-semibold text-primary">🤝 Fair Partnership</div>
+                          <p className="text-muted-foreground">Buyers keep 70% of appreciation, building real generational wealth</p>
+                        </div>
+                      </div>
+                      <div className="mt-4 pt-4 border-t border-border/50 text-center">
+                        <p className="text-sm text-muted-foreground">
+                          <span className="font-semibold text-foreground">Net Impact:</span> -$3.32M (-17.3%) but offset by volume growth and buyer loyalty
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
               </div>
 
@@ -565,7 +640,7 @@ const BusinessModel = () => {
                             </div>
                             <div className="flex items-start space-x-3">
                               <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                              <span className="text-sm">$24M revenue validates business model</span>
+                              <span className="text-sm">$15.86M revenue validates business model</span>
                             </div>
                             <div className="flex items-start space-x-3">
                               <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
@@ -642,10 +717,10 @@ const BusinessModel = () => {
                    {/* Evolution Flow Visual */}
                    <div className="relative">
                      <div className="flex items-center justify-center space-x-8">
-                       <div className="text-center">
-                         <div className="text-3xl font-bold text-primary mb-2">$24M</div>
-                         <div className="text-sm text-muted-foreground">Boutique Development</div>
-                       </div>
+                        <div className="text-center">
+                          <div className="text-3xl font-bold text-primary mb-2">$15.86M</div>
+                          <div className="text-sm text-muted-foreground">Boutique Development (30% SAM)</div>
+                        </div>
                        
                        <div className="flex items-center space-x-2">
                          <ArrowRight className="w-6 h-6 text-muted-foreground" />
