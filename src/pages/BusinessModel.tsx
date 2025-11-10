@@ -13,14 +13,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Code, Target, Rocket, Building2, BarChart3, Zap, Network, Menu, Home, Users, Briefcase, CreditCard, Plane, Code2, FileText, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, ComposedChart } from "recharts";
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, ComposedChart, PieChart, Pie, Cell } from "recharts";
 import SectionHeader from "@/components/SectionHeader";
 import PlatformAssessment from "@/components/PlatformAssessment";
 import { MortgageOptionsCalculator } from "@/components/MortgageOptionsCalculator";
 import { ScenarioComparison } from "@/components/ScenarioComparison";
 import { SensitivityDashboard } from "@/components/SensitivityDashboard";
 import { StrategicRecommendations } from "@/components/StrategicRecommendations";
-import { getCurrentScenario, getAggressiveScenario, getTieredScenario } from "@/lib/revenueScenarios";
+import { getCurrentScenario, getAggressiveScenario, getTieredScenario, getAcceleratedScenario, getHybridScenario } from "@/lib/revenueScenarios";
 
 // Import property images
 import villaTulum from "@/assets/villa-tulum.jpg";
@@ -222,6 +222,9 @@ const landAcquisition = [{
 const BusinessModel = () => {
   const navigate = useNavigate();
   const totalPlatformFees = flywheelData.reduce((sum, flip) => sum + flip.platformFee, 0);
+  const currentScenario = getCurrentScenario();
+  const acceleratedScenario = getAcceleratedScenario();
+  const hybridScenario = getHybridScenario();
   return <div className="min-h-screen bg-gradient-subtle">
       {/* Navigation Menu */}
       <div className="fixed top-4 right-4 z-50">
@@ -714,77 +717,38 @@ const BusinessModel = () => {
                   </CardContent>
                 </Card>
 
-                {/* Financial Waterfall Diagram */}
+                {/* Revenue Composition & Returns */}
                 <Card className="bg-card/80 backdrop-blur-sm border-border/50 mb-8">
                   <CardContent className="p-8">
                     <div className="mb-8">
                       <div className="inline-flex items-center space-x-2 mb-4">
                         <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary"></div>
-                        <div className="text-sm font-medium text-primary uppercase tracking-wider">15-Year Financial Waterfall</div>
+                        <div className="text-sm font-medium text-primary uppercase tracking-wider">Revenue Structure</div>
                         <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary"></div>
                       </div>
-                      <h3 className="text-3xl font-bold mb-3">Cash Flow & IRR Progression</h3>
+                      <h3 className="text-3xl font-bold mb-3">Investment Returns Overview</h3>
                       <p className="text-lg text-muted-foreground">
-                        Revenue builds from platform fees, steady interest income, and appreciation capture
+                        Diversified revenue streams from platform fees, mortgage interest, and property appreciation
                       </p>
                     </div>
 
-                    {/* Cumulative Revenue Chart */}
+                    {/* Revenue Composition Pie Chart */}
                     <div className="mb-8">
-                      <h4 className="text-lg font-semibold mb-4">Cumulative Revenue Growth</h4>
-                      <ResponsiveContainer width="100%" height={300}>
-                        <AreaChart data={cashFlowData}>
-                          <defs>
-                            <linearGradient id="colorCumulative" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
-                              <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
-                            </linearGradient>
-                          </defs>
-                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
-                          <XAxis 
-                            dataKey="year" 
-                            stroke="hsl(var(--muted-foreground))"
-                            style={{ fontSize: '12px' }}
-                          />
-                          <YAxis 
-                            stroke="hsl(var(--muted-foreground))"
-                            style={{ fontSize: '12px' }}
-                            tickFormatter={(value) => `$${value.toFixed(1)}M`}
-                          />
-                          <Tooltip 
-                            contentStyle={{ 
-                              backgroundColor: 'hsl(var(--background))',
-                              border: '1px solid hsl(var(--border))',
-                              borderRadius: '8px'
-                            }}
-                            formatter={(value: number) => [`$${value.toFixed(2)}M`, 'Cumulative Revenue']}
-                          />
-                          <Area 
-                            type="monotone" 
-                            dataKey="cumulative" 
-                            stroke="hsl(var(--primary))" 
-                            strokeWidth={3}
-                            fill="url(#colorCumulative)"
-                          />
-                        </AreaChart>
-                      </ResponsiveContainer>
-                    </div>
-
-                    {/* Annual Cash Flow Breakdown */}
-                    <div className="mb-8">
-                      <h4 className="text-lg font-semibold mb-4">Annual Cash Flow by Stream</h4>
-                      <ResponsiveContainer width="100%" height={300}>
-                        <ComposedChart data={cashFlowData}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
-                          <XAxis 
-                            dataKey="year" 
-                            stroke="hsl(var(--muted-foreground))"
-                            style={{ fontSize: '12px' }}
-                          />
-                          <YAxis 
-                            stroke="hsl(var(--muted-foreground))"
-                            style={{ fontSize: '12px' }}
-                            tickFormatter={(value) => `$${value.toFixed(1)}M`}
+                      <h4 className="text-lg font-semibold mb-6 text-center">Revenue Composition</h4>
+                      <ResponsiveContainer width="100%" height={350}>
+                        <PieChart>
+                          <Pie
+                            data={[
+                              { name: 'Platform Fees', value: currentScenario.platformFees, fill: 'hsl(var(--chart-1))' },
+                              { name: 'Mortgage Interest', value: currentScenario.mortgageInterest, fill: 'hsl(var(--chart-2))' },
+                              { name: 'Appreciation Share', value: currentScenario.appreciationShare, fill: 'hsl(var(--chart-3))' },
+                            ]}
+                            cx="50%"
+                            cy="50%"
+                            labelLine={false}
+                            label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                            outerRadius={120}
+                            dataKey="value"
                           />
                           <Tooltip 
                             contentStyle={{ 
@@ -794,12 +758,25 @@ const BusinessModel = () => {
                             }}
                             formatter={(value: number) => [`$${value.toFixed(2)}M`]}
                           />
-                          <Legend />
-                          <Bar dataKey="platformFees" stackId="a" fill="hsl(var(--chart-1))" name="Platform Fees" />
-                          <Bar dataKey="interest" stackId="a" fill="hsl(var(--chart-2))" name="Interest" />
-                          <Bar dataKey="appreciation" stackId="a" fill="hsl(var(--chart-3))" name="Appreciation" />
-                        </ComposedChart>
+                        </PieChart>
                       </ResponsiveContainer>
+                      <div className="grid grid-cols-3 gap-4 mt-6">
+                        <div className="text-center p-4 bg-chart-1/10 rounded-lg border border-chart-1/20">
+                          <div className="text-sm text-muted-foreground mb-1">Platform Fees</div>
+                          <div className="text-2xl font-bold">${currentScenario.platformFees.toFixed(2)}M</div>
+                          <div className="text-xs text-muted-foreground mt-1">3% of total</div>
+                        </div>
+                        <div className="text-center p-4 bg-chart-2/10 rounded-lg border border-chart-2/20">
+                          <div className="text-sm text-muted-foreground mb-1">Interest Income</div>
+                          <div className="text-2xl font-bold">${currentScenario.mortgageInterest.toFixed(2)}M</div>
+                          <div className="text-xs text-muted-foreground mt-1">47% of total</div>
+                        </div>
+                        <div className="text-center p-4 bg-chart-3/10 rounded-lg border border-chart-3/20">
+                          <div className="text-sm text-muted-foreground mb-1">Appreciation</div>
+                          <div className="text-2xl font-bold">${currentScenario.appreciationShare.toFixed(2)}M</div>
+                          <div className="text-xs text-muted-foreground mt-1">50% of total</div>
+                        </div>
+                      </div>
                     </div>
 
                     {/* Investment Returns Timeline */}
@@ -906,7 +883,7 @@ const BusinessModel = () => {
                   </p>
                 </div>
 
-                <ScenarioComparison scenarios={[getCurrentScenario(), getAggressiveScenario(), getTieredScenario()]} />
+                <ScenarioComparison scenarios={[currentScenario, acceleratedScenario, hybridScenario, getAggressiveScenario(), getTieredScenario()]} />
               </div>
 
               {/* Sensitivity Dashboard */}

@@ -8,6 +8,7 @@ import { TrendingUp, DollarSign, Percent } from "lucide-react";
 export const SensitivityDashboard: React.FC = () => {
   const [apr, setApr] = useState(8);
   const [cashRate, setCashRate] = useState(20);
+  const [termYears, setTermYears] = useState(15);
 
   const inputs: ScenarioInputs = {
     apr,
@@ -15,7 +16,7 @@ export const SensitivityDashboard: React.FC = () => {
     totalUnits: 112,
     avgPropertyPrice: 143000,
     platformFeeRate: 0.035,
-    termYears: 15,
+    termYears,
     appreciationRate: 0.07,
     samShare: 0.30,
   };
@@ -33,7 +34,7 @@ export const SensitivityDashboard: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 mb-8">
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
           {/* APR Slider */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -52,8 +53,8 @@ export const SensitivityDashboard: React.FC = () => {
               className="w-full"
             />
             <div className="flex justify-between text-xs text-muted-foreground">
-              <span>6% (Very Competitive)</span>
-              <span>14% (High Rate)</span>
+              <span>6%</span>
+              <span>14%</span>
             </div>
           </div>
 
@@ -75,8 +76,31 @@ export const SensitivityDashboard: React.FC = () => {
               className="w-full"
             />
             <div className="flex justify-between text-xs text-muted-foreground">
-              <span>10% (Mostly Financed)</span>
-              <span>40% (High Cash)</span>
+              <span>10%</span>
+              <span>40%</span>
+            </div>
+          </div>
+
+          {/* Mortgage Term Slider */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <TrendingUp className="w-5 h-5 text-primary" />
+                <span className="font-semibold">Mortgage Term</span>
+              </div>
+              <span className="text-2xl font-bold text-primary">{termYears}y</span>
+            </div>
+            <Slider
+              value={[termYears]}
+              onValueChange={(value) => setTermYears(value[0])}
+              min={7}
+              max={20}
+              step={1}
+              className="w-full"
+            />
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>7 years</span>
+              <span>20 years</span>
             </div>
           </div>
         </div>
@@ -137,17 +161,17 @@ export const SensitivityDashboard: React.FC = () => {
             <div className="text-sm">
               <span className="font-semibold text-foreground">Analysis: </span>
               <span className="text-muted-foreground">
-                {apr < 8 
-                  ? "Lower rates increase affordability but reduce interest revenue. Consider buyer acquisition cost."
-                  : apr > 11
-                  ? "Higher rates maximize revenue but may price out buyers. Monitor sales velocity carefully."
-                  : "Balanced rate optimizes for both revenue and market appeal."
+                {termYears <= 10 
+                  ? "Shorter terms accelerate IRR and liquidity but increase monthly payments. Best for buyers with strong cash flow."
+                  : termYears >= 18
+                  ? "Longer terms improve affordability but delay appreciation capture. Monthly payment: $" + Math.round(result.avgMonthlyPayment) + "."
+                  : "Balanced term. IRR: " + result.irr.toFixed(1) + "%. Monthly payment: $" + Math.round(result.avgMonthlyPayment) + "."
                 }
-                {cashRate < 20
-                  ? " Low cash requirement maximizes accessibility."
-                  : cashRate > 30
-                  ? " High cash requirement de-risks but shrinks buyer pool."
-                  : " Moderate cash balance provides steady capital."
+                {apr >= 10 && termYears >= 15
+                  ? " Higher APR with longer term balances revenue well."
+                  : apr < 8 && termYears <= 10
+                  ? " Lower APR with shorter term optimizes for faster liquidity."
+                  : ""
                 }
               </span>
             </div>

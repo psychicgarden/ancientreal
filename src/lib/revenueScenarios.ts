@@ -108,6 +108,26 @@ export const SCENARIO_PRESETS = {
     appreciationRate: 0.07,
     samShare: 0.30,
   },
+  accelerated: {
+    apr: 8,
+    cashPurchaseRate: 0.20,
+    totalUnits: 112,
+    avgPropertyPrice: 143000,
+    platformFeeRate: 0.035,
+    termYears: 10,
+    appreciationRate: 0.07,
+    samShare: 0.30,
+  },
+  hybrid: {
+    apr: 8,
+    cashPurchaseRate: 0.20,
+    totalUnits: 112,
+    avgPropertyPrice: 143000,
+    platformFeeRate: 0.035,
+    termYears: 12.5, // 50/50 split between 10 and 15 years
+    appreciationRate: 0.07,
+    samShare: 0.30,
+  },
   aggressive: {
     apr: 11.5,
     cashPurchaseRate: 0.30,
@@ -142,6 +162,20 @@ export function getCurrentScenario(): ScenarioResults {
  */
 export function getAggressiveScenario(): ScenarioResults {
   return calculateScenario(SCENARIO_PRESETS.aggressive, "Aggressive Model");
+}
+
+/**
+ * Generate accelerated (10-year) scenario
+ */
+export function getAcceleratedScenario(): ScenarioResults {
+  return calculateScenario(SCENARIO_PRESETS.accelerated, "Accelerated (10-Year)");
+}
+
+/**
+ * Generate hybrid scenario
+ */
+export function getHybridScenario(): ScenarioResults {
+  return calculateScenario(SCENARIO_PRESETS.hybrid, "Hybrid Model");
 }
 
 /**
