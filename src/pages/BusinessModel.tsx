@@ -526,11 +526,11 @@ const BusinessModel = () => {
                                 </div>
                                 <div className="flex justify-between items-center">
                                   <span className="text-muted-foreground">Platform fee (3.5%):</span>
-                                  <span className="font-mono font-semibold">${flip.platformFee.toFixed(3)}K</span>
+                                  <span className="font-mono font-semibold">${flip.platformFee.toFixed(0)}K</span>
                                 </div>
                                 <div className="border-t pt-1.5 mt-1.5 flex justify-between items-center">
                                   <span className="font-semibold text-foreground">Total Cash In:</span>
-                                  <span className="font-mono text-lg font-bold text-primary">${flip.cashIn.toFixed(3)}M</span>
+                                  <span className="font-mono text-lg font-bold text-primary">${flip.cashIn.toFixed(2)}M</span>
                                 </div>
                               </div>
                             </div>
@@ -540,7 +540,7 @@ const BusinessModel = () => {
                           <div className="p-8 flex flex-col justify-center items-center border-l border-border/50">
                             <div className="text-center mb-4">
                               <div className="text-sm text-muted-foreground">Remaining Budget</div>
-                              <div className="text-2xl font-bold">${flip.remaining}M</div>
+                              <div className="text-2xl font-bold">${flip.remaining.toFixed(2)}M</div>
                             </div>
                             
                             {index < flywheelData.length - 1 && <div className="flex flex-col items-center">
@@ -554,7 +554,7 @@ const BusinessModel = () => {
                 </div>
 
               {/* Clean Revenue Model Showcase */}
-              <div className="mb-16">
+              <div className="mb-16 mt-24">
                 <div className="text-center mb-12">
                   <h2 className="text-4xl font-bold mb-4">$20.64M Revenue Model</h2>
                   <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
