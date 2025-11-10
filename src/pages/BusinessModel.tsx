@@ -36,11 +36,12 @@ const flywheelData = [{
   location: "Mazunte, Mexico",
   flag: "🇲🇽",
   units: 15,
+  pricePerUnit: 135000,
   buildCost: 1.125,
   salesPrice: 2.025,
   cashIn: 0.81,
   remaining: 2.435,
-  platformFee: 60.75,
+  platformFee: 70.875,
   image: villaTulum,
   structure: "Mexican SAPI + Fideicomiso"
 }, {
@@ -48,11 +49,12 @@ const flywheelData = [{
   location: "Bahia, Brazil",
   flag: "🇧🇷",
   units: 21,
+  pricePerUnit: 138000,
   buildCost: 1.575,
-  salesPrice: 2.835,
+  salesPrice: 2.898,
   cashIn: 1.107,
   remaining: 1.967,
-  platformFee: 85.05,
+  platformFee: 101.871,
   image: beachChalet,
   structure: "Brazilian LTDA"
 }, {
@@ -60,11 +62,12 @@ const flywheelData = [{
   location: "Corfu, Greece",
   flag: "🇬🇷",
   units: 16,
+  pricePerUnit: 141000,
   buildCost: 1.2,
-  salesPrice: 2.16,
+  salesPrice: 2.256,
   cashIn: 0.864,
   remaining: 1.631,
-  platformFee: 64.8,
+  platformFee: 78.912,
   image: villaGreece,
   structure: "Greek IKE SPV"
 }, {
@@ -72,11 +75,12 @@ const flywheelData = [{
   location: "Mallorca, Spain",
   flag: "🇪🇸",
   units: 15,
+  pricePerUnit: 144000,
   buildCost: 1.125,
-  salesPrice: 2.025,
+  salesPrice: 2.16,
   cashIn: 0.837,
   remaining: 1.343,
-  platformFee: 60.75,
+  platformFee: 75.6,
   image: villaEriceira,
   structure: "Spanish SL"
 }, {
@@ -84,11 +88,12 @@ const flywheelData = [{
   location: "Koh Phangan, Thailand",
   flag: "🇹🇭",
   units: 25,
+  pricePerUnit: 147000,
   buildCost: 1.875,
-  salesPrice: 3.375,
+  salesPrice: 3.675,
   cashIn: 1.323,
   remaining: 0.923,
-  platformFee: 101.25,
+  platformFee: 128.625,
   image: villaBali,
   structure: "30+30 Leasehold"
 }, {
@@ -96,11 +101,12 @@ const flywheelData = [{
   location: "Antalya, Turkey",
   flag: "🇹🇷",
   units: 20,
+  pricePerUnit: 150000,
   buildCost: 1.5,
-  salesPrice: 2.7,
+  salesPrice: 3.0,
   cashIn: 1.08,
   remaining: 0.371,
-  platformFee: 81,
+  platformFee: 105,
   image: penthouseMexico,
   structure: "Turkish SPV"
 }];
@@ -114,7 +120,7 @@ const dynamicPricingBreakdown = [
   { flip: "Flip 4B", units: 20, avgPrice: 150000, platformFee: 105000 }
 ];
 
-const totalDynamicRevenue = 17.53; // Million
+const totalDynamicRevenue = 20.64; // Million (with 11.5% APR)
 
 // Calculate 15-year cash flow waterfall
 const generateCashFlowData = () => {
@@ -125,7 +131,7 @@ const generateCashFlowData = () => {
   const platformFeesY0 = 0.561; // $561K in millions
   
   // Annual interest payments (evenly distributed over 15 years)
-  const annualInterest = 8.21 / 15; // ~$547K per year
+  const annualInterest = 11.32 / 15; // ~$755K per year with 11.5% APR
   
   // Appreciation hits at Year 15
   const appreciationY15 = 8.76; // $8.76M
@@ -178,8 +184,8 @@ const revenueStreams = [{
   icon: "🏛"
 }, {
   title: "Mortgage Interest",
-  amount: "$8.21M",
-  description: "8% APR yield over 15-year term (weighted avg pricing)",
+  amount: "$11.32M",
+  description: "11.5% APR yield over 15-year term (weighted avg pricing)",
   timeline: "15-year stream",
   icon: "🌐"
 }, {
@@ -470,8 +476,8 @@ const BusinessModel = () => {
                 <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                   <CardContent className="p-6 text-center">
                     <DollarSign className="w-8 h-8 text-primary mx-auto mb-3" />
-                    <div className="text-2xl font-bold text-foreground">$17.53M</div>
-                    <div className="text-sm text-muted-foreground">15-Year Revenue (Dynamic Pricing)</div>
+                    <div className="text-2xl font-bold text-foreground">$20.64M</div>
+                    <div className="text-sm text-muted-foreground">15-Year Revenue (11.5% APR)</div>
                   </CardContent>
                 </Card>
               </div>
@@ -517,7 +523,7 @@ const BusinessModel = () => {
                                 </div>
                                 <div>
                                   <div className="text-xs text-muted-foreground">Sale Price</div>
-                                  <div className="font-semibold">$135K/unit</div>
+                                  <div className="font-semibold">${(flip.pricePerUnit / 1000).toFixed(0)}K/unit</div>
                                 </div>
                               </div>
                             </div>
@@ -538,11 +544,12 @@ const BusinessModel = () => {
                             <div className="bg-primary/5 rounded-lg p-3">
                               <div className="text-sm font-medium text-foreground mb-2">Cash In Breakdown</div>
                               <div className="space-y-1 text-sm">
-                                {(() => {
+                            {(() => {
                               const financedUnits = Math.floor(flip.units * 0.8); // 80% financed
                               const cashUnits = flip.units - financedUnits;
-                              const financedCash = financedUnits * 135 * 0.2; // 20% down payments
-                              const cashPurchases = cashUnits * 135; // full cash purchases
+                              const priceInK = flip.pricePerUnit / 1000; // Convert to thousands
+                              const financedCash = financedUnits * priceInK * 0.2; // 20% down payments
+                              const cashPurchases = cashUnits * priceInK; // full cash purchases
                               return <>
                                       <div className="flex justify-between items-center">
                                         <span className="text-muted-foreground">{financedUnits} financed (20% down):</span>
@@ -553,7 +560,7 @@ const BusinessModel = () => {
                                         <span className="font-mono font-semibold">${cashPurchases.toFixed(0)}K</span>
                                       </div>
                                       <div className="flex justify-between items-center">
-                                        <span className="text-muted-foreground">Platform fee (3%):</span>
+                                        <span className="text-muted-foreground">Platform fee (3.5%):</span>
                                         <span className="font-mono font-semibold">${flip.platformFee}K</span>
                                       </div>
                                       <div className="border-t pt-1.5 mt-1.5 flex justify-between items-center">
@@ -586,9 +593,9 @@ const BusinessModel = () => {
               {/* Clean Revenue Model Showcase */}
               <div className="mb-16">
                 <div className="text-center mb-12">
-                  <h2 className="text-4xl font-bold mb-4">$17.53M Revenue Model</h2>
+                  <h2 className="text-4xl font-bold mb-4">$20.64M Revenue Model</h2>
                   <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                    Three revenue streams, dynamic pricing strategy, 18-22% IRR
+                    Three revenue streams, dynamic pricing strategy, 11.5% APR, 23-26% IRR
                   </p>
                 </div>
                 
@@ -616,8 +623,8 @@ const BusinessModel = () => {
                         <div className="text-5xl">🌐</div>
                         <div>
                           <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">Mortgage Interest</div>
-                          <div className="text-4xl font-bold text-primary mb-3">$8.21M</div>
-                          <p className="text-sm text-muted-foreground">8% APR on 15-year mortgages</p>
+                          <div className="text-4xl font-bold text-primary mb-3">$11.32M</div>
+                          <p className="text-sm text-muted-foreground">11.5% APR on 15-year mortgages</p>
                         </div>
                         <div className="bg-background/50 rounded-lg p-3 text-sm">
                           <div className="text-muted-foreground">15-year revenue stream</div>
@@ -648,16 +655,16 @@ const BusinessModel = () => {
                   <CardContent className="p-10">
                     <div className="text-center">
                       <div className="text-sm text-muted-foreground uppercase tracking-widest mb-3">15-Year Total Revenue</div>
-                      <div className="text-6xl font-bold text-primary mb-4">$17.53M</div>
+                      <div className="text-6xl font-bold text-primary mb-4">$20.64M</div>
                       <div className="flex items-center justify-center gap-8 text-sm">
                         <div>
                           <span className="text-muted-foreground">IRR:</span>
-                          <span className="font-bold ml-2">18-22%</span>
+                          <span className="font-bold ml-2">23-26%</span>
                         </div>
                         <div className="h-4 w-px bg-border"></div>
                         <div>
                           <span className="text-muted-foreground">Cash Multiple:</span>
-                          <span className="font-bold ml-2">6.4×</span>
+                          <span className="font-bold ml-2">6.9×</span>
                         </div>
                         <div className="h-4 w-px bg-border"></div>
                         <div>

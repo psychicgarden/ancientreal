@@ -129,7 +129,7 @@ export const DevelopmentFlywheel: React.FC = () => {
                 <strong>Gross Sales ($16.02M)</strong> represents 100% of sale prices collected as: 
                 <strong> Immediate Cash ($4.84M)</strong> funds next flips, 
                 <strong> Deferred Principal ($11.18M)</strong> collected over 15 years, plus 
-                <strong> Interest ($8.21M)</strong> shown in 15-year financial revenue. 
+                <strong> Interest ($11.32M)</strong> shown in 15-year financial revenue. 
                 Construction profit is an operational metric not included in IRR calculations.
               </span>
             </div>
