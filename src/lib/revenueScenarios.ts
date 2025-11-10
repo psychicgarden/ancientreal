@@ -308,7 +308,7 @@ export function calculateScenario(inputs: ScenarioInputs, name: string): Scenari
  */
 export const SCENARIO_PRESETS = {
   current: {
-    apr: 8,
+    apr: 11.5,
     cashPurchaseRate: 0.20,
     totalUnits: 112,
     avgPropertyPrice: 143000,

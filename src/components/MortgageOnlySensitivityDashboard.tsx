@@ -6,7 +6,7 @@ import { calculateMortgageOnlyScenario, ScenarioInputs } from "@/lib/revenueScen
 import { TrendingUp, DollarSign, Percent, Home } from "lucide-react";
 
 export const MortgageOnlySensitivityDashboard: React.FC = () => {
-  const [apr, setApr] = useState(8);
+  const [apr, setApr] = useState(11.5);
   const [cashRate, setCashRate] = useState(20);
   const [termYears, setTermYears] = useState(15);
 
