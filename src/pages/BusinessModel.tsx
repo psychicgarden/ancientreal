@@ -782,17 +782,9 @@ const BusinessModel = () => {
                             style={{ fontSize: '12px' }}
                           />
                           <YAxis 
-                            yAxisId="left"
                             stroke="hsl(var(--muted-foreground))"
                             style={{ fontSize: '12px' }}
                             tickFormatter={(value) => `$${value.toFixed(1)}M`}
-                          />
-                          <YAxis 
-                            yAxisId="right"
-                            orientation="right"
-                            stroke="hsl(var(--primary))"
-                            style={{ fontSize: '12px' }}
-                            tickFormatter={(value) => `${value.toFixed(0)}%`}
                           />
                           <Tooltip 
                             contentStyle={{ 
@@ -800,26 +792,54 @@ const BusinessModel = () => {
                               border: '1px solid hsl(var(--border))',
                               borderRadius: '8px'
                             }}
-                            formatter={(value: number, name: string) => {
-                              if (name === 'IRR') return [`${value.toFixed(1)}%`, name];
-                              return [`$${value.toFixed(2)}M`, name];
-                            }}
+                            formatter={(value: number) => [`$${value.toFixed(2)}M`]}
                           />
                           <Legend />
-                          <Bar yAxisId="left" dataKey="platformFees" stackId="a" fill="hsl(var(--chart-1))" name="Platform Fees" />
-                          <Bar yAxisId="left" dataKey="interest" stackId="a" fill="hsl(var(--chart-2))" name="Interest" />
-                          <Bar yAxisId="left" dataKey="appreciation" stackId="a" fill="hsl(var(--chart-3))" name="Appreciation" />
-                          <Line 
-                            yAxisId="right"
-                            type="monotone" 
-                            dataKey="irr" 
-                            stroke="hsl(var(--primary))" 
-                            strokeWidth={3}
-                            name="IRR"
-                            dot={{ fill: 'hsl(var(--primary))', r: 4 }}
-                          />
+                          <Bar dataKey="platformFees" stackId="a" fill="hsl(var(--chart-1))" name="Platform Fees" />
+                          <Bar dataKey="interest" stackId="a" fill="hsl(var(--chart-2))" name="Interest" />
+                          <Bar dataKey="appreciation" stackId="a" fill="hsl(var(--chart-3))" name="Appreciation" />
                         </ComposedChart>
                       </ResponsiveContainer>
+                    </div>
+
+                    {/* Investment Returns Timeline */}
+                    <div className="mb-8">
+                      <h4 className="text-lg font-semibold mb-4">Investment Returns Timeline</h4>
+                      <div className="grid md:grid-cols-3 gap-4">
+                        <Card className="bg-gradient-to-br from-chart-1/10 to-chart-1/5 border-chart-1/20">
+                          <CardContent className="p-6 text-center">
+                            <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">Year 5</div>
+                            <div className="text-4xl font-bold text-primary mb-2">4.6%</div>
+                            <div className="text-sm text-muted-foreground">IRR</div>
+                            <div className="mt-3 pt-3 border-t border-border/30">
+                              <div className="text-xs text-muted-foreground">Cumulative Revenue</div>
+                              <div className="text-lg font-semibold">$3.45M</div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                        <Card className="bg-gradient-to-br from-chart-2/10 to-chart-2/5 border-chart-2/20">
+                          <CardContent className="p-6 text-center">
+                            <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">Year 10</div>
+                            <div className="text-4xl font-bold text-primary mb-2">8.5%</div>
+                            <div className="text-sm text-muted-foreground">IRR</div>
+                            <div className="mt-3 pt-3 border-t border-border/30">
+                              <div className="text-xs text-muted-foreground">Cumulative Revenue</div>
+                              <div className="text-lg font-semibold">$6.19M</div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                        <Card className="bg-gradient-to-br from-chart-3/10 to-chart-3/5 border-chart-3/20">
+                          <CardContent className="p-6 text-center">
+                            <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">Year 15</div>
+                            <div className="text-4xl font-bold text-primary mb-2">13.4%</div>
+                            <div className="text-sm text-muted-foreground">IRR</div>
+                            <div className="mt-3 pt-3 border-t border-border/30">
+                              <div className="text-xs text-muted-foreground">Cumulative Revenue</div>
+                              <div className="text-lg font-semibold">$17.53M</div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
                     </div>
 
                     {/* Key Metrics Grid */}
