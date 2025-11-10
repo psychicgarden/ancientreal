@@ -14,7 +14,7 @@ export const MortgageOnlySensitivityDashboard: React.FC = () => {
     apr,
     cashPurchaseRate: cashRate / 100,
     totalUnits: 112,
-    avgPropertyPrice: 143000,
+    avgPropertyPrice: 142366, // Weighted average across flips
     platformFeeRate: 0.035,
     termYears,
     appreciationRate: 0.07, // Not used in mortgage-only
@@ -173,7 +173,13 @@ export const MortgageOnlySensitivityDashboard: React.FC = () => {
           <h3 className="text-lg font-semibold mb-4 text-foreground">Revenue Breakdown</h3>
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Platform Fees (3.5%)</span>
+              <span className="text-muted-foreground">Construction Profit ($75k build cost)</span>
+              <span className="font-semibold text-primary">
+                ${result.constructionProfit.toFixed(2)}M
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground">Platform Fees (3.5% on financed)</span>
               <span className="font-semibold text-foreground">
                 ${result.platformFees.toFixed(2)}M
               </span>
@@ -187,6 +193,12 @@ export const MortgageOnlySensitivityDashboard: React.FC = () => {
             <div className="flex justify-between items-center pt-3 border-t border-border">
               <span className="text-muted-foreground">Appreciation Share (0% SAM)</span>
               <span className="font-semibold text-foreground">$0.00M</span>
+            </div>
+            <div className="flex justify-between items-center pt-3 border-t-2 border-primary/30">
+              <span className="text-foreground font-bold">Total Revenue</span>
+              <span className="font-bold text-primary text-lg">
+                ${result.totalRevenue.toFixed(2)}M
+              </span>
             </div>
           </div>
         </div>
@@ -270,12 +282,27 @@ export const MortgageOnlySensitivityDashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Comparison Note */}
-        <div className="mt-6 p-4 bg-muted/20 rounded-lg border border-border/30">
-          <p className="text-sm text-muted-foreground">
-            <strong className="text-foreground">Note:</strong> This model removes the 30% SAM component. 
-            Buyers own 100% of property appreciation, which may increase adoption rates but reduces platform revenue by approximately 50% compared to the SAM model.
-          </p>
+        {/* Business Model Details */}
+        <div className="mt-6 p-6 bg-muted/20 rounded-lg border border-border/30">
+          <h4 className="text-lg font-semibold mb-3 text-foreground">Business Model Details</h4>
+          <div className="space-y-2 text-sm text-muted-foreground">
+            <p>
+              <strong className="text-foreground">Development:</strong> 112 properties across 6 flips at $75k build cost per unit
+            </p>
+            <p>
+              <strong className="text-foreground">Pricing:</strong> Dynamic pricing from $135k (Flip 1-2) to $150k (Flip 5-6)
+            </p>
+            <p>
+              <strong className="text-foreground">Construction Profit:</strong> ${result.constructionProfit.toFixed(2)}M from all units (Years 0-2)
+            </p>
+            <p>
+              <strong className="text-foreground">Financial Services:</strong> Platform fees + mortgage interest from {result.financedUnits} financed units
+            </p>
+            <p className="pt-2 border-t border-border/30">
+              <strong className="text-foreground">Note:</strong> This model removes the 30% SAM component. 
+              Buyers own 100% of property appreciation, which may increase adoption rates but reduces platform revenue compared to the SAM model.
+            </p>
+          </div>
         </div>
       </CardContent>
     </Card>

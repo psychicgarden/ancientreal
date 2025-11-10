@@ -17,6 +17,7 @@ export interface ScenarioInputs {
 export interface ScenarioResults {
   name: string;
   totalRevenue: number;
+  constructionProfit: number;
   platformFees: number;
   mortgageInterest: number;
   appreciationShare: number;
@@ -74,25 +75,67 @@ function calculateTrueIRR(
 }
 
 /**
+ * Calculate construction profit across 6 development flips
+ */
+function calculateConstructionProfit(totalUnits: number): number {
+  const buildCost = 75000; // $75k per unit
+  
+  // Flip 1-2: 37 units at $135k
+  const flip12Units = 37;
+  const flip12Price = 135000;
+  const flip12Profit = flip12Units * (flip12Price - buildCost);
+  
+  // Flip 3-4: 38 units at $142.5k
+  const flip34Units = 38;
+  const flip34Price = 142500;
+  const flip34Profit = flip34Units * (flip34Price - buildCost);
+  
+  // Flip 5-6: 37 units at $150k
+  const flip56Units = 37;
+  const flip56Price = 150000;
+  const flip56Profit = flip56Units * (flip56Price - buildCost);
+  
+  return flip12Profit + flip34Profit + flip56Profit;
+}
+
+/**
+ * Calculate weighted average property price across all flips
+ */
+function getWeightedAvgPrice(): number {
+  const flip12 = 37 * 135000;
+  const flip34 = 38 * 142500;
+  const flip56 = 37 * 150000;
+  return (flip12 + flip34 + flip56) / 112;
+}
+
+/**
  * Calculate true IRR for mortgage-only model (no SAM)
- * Only includes platform fees and mortgage interest
+ * Includes construction profit, platform fees, and mortgage interest
  */
 function calculateMortgageOnlyIRR(
   initialInvestment: number,
+  constructionProfitM: number,
   platformFeesM: number,
   mortgageInterestM: number,
   termYears: number
 ): number {
   const annualInterest = mortgageInterestM / termYears;
   
-  // Build cash flow array without appreciation share
-  const cashFlows = [-initialInvestment + platformFeesM]; // Year 0
-  for (let i = 1; i <= termYears; i++) {
-    cashFlows.push(annualInterest); // Years 1-15
+  // Build cash flow array with early construction profit
+  // Years 0-2: Construction profit realized as units are completed (~$3.78M/year)
+  const annualConstructionProfit = constructionProfitM / 3; // Spread over 3 years
+  
+  const cashFlows = [-initialInvestment + platformFeesM + annualConstructionProfit]; // Year 0
+  cashFlows.push(annualInterest + annualConstructionProfit); // Year 1
+  cashFlows.push(annualInterest + annualConstructionProfit); // Year 2
+  
+  // Years 3-termYears: Only mortgage interest
+  for (let i = 3; i <= termYears; i++) {
+    cashFlows.push(annualInterest);
   }
   
   // Newton-Raphson solver for IRR
-  let rate = 0.10; // Initial guess: 10%
+  let rate = 0.20; // Initial guess: 20%
   const maxIterations = 100;
   const tolerance = 0.0001;
   
@@ -129,12 +172,15 @@ export function calculateScenario(inputs: ScenarioInputs, name: string): Scenari
     samShare,
   } = inputs;
 
+  // Calculate construction profit
+  const constructionProfit = calculateConstructionProfit(totalUnits);
+
   // Calculate unit distribution
   const cashUnits = Math.round(totalUnits * cashPurchaseRate);
   const financedUnits = totalUnits - cashUnits;
 
-  // Platform fees (on all sales)
-  const platformFees = totalUnits * avgPropertyPrice * platformFeeRate;
+  // Platform fees (only on financed units)
+  const platformFees = financedUnits * avgPropertyPrice * platformFeeRate;
 
   // Calculate mortgage interest revenue
   const downPaymentRate = 0.20; // 20% down payment
@@ -157,11 +203,12 @@ export function calculateScenario(inputs: ScenarioInputs, name: string): Scenari
   const totalAppreciation = finalValue - (totalUnits * avgPropertyPrice);
   const appreciationShare = totalAppreciation * samShare;
 
-  // Total revenue
-  const totalRevenue = platformFees + mortgageInterest + appreciationShare;
+  // Total revenue (includes construction profit)
+  const totalRevenue = constructionProfit + platformFees + mortgageInterest + appreciationShare;
 
   // Convert to millions for all calculations
   const totalRevenueM = totalRevenue / 1_000_000;
+  const constructionProfitM = constructionProfit / 1_000_000;
   const platformFeesM = platformFees / 1_000_000;
   const mortgageInterestM = mortgageInterest / 1_000_000;
   const appreciationShareM = appreciationShare / 1_000_000;
@@ -180,6 +227,7 @@ export function calculateScenario(inputs: ScenarioInputs, name: string): Scenari
   return {
     name,
     totalRevenue: totalRevenueM,
+    constructionProfit: constructionProfitM,
     platformFees: platformFeesM,
     mortgageInterest: mortgageInterestM,
     appreciationShare: appreciationShareM,
@@ -291,17 +339,22 @@ export function calculateMortgageOnlyScenario(inputs: ScenarioInputs, name: stri
     apr,
     cashPurchaseRate,
     totalUnits,
-    avgPropertyPrice,
     platformFeeRate,
     termYears,
   } = inputs;
+
+  // Calculate construction profit
+  const constructionProfit = calculateConstructionProfit(totalUnits);
+
+  // Use weighted average price across all flips
+  const avgPropertyPrice = getWeightedAvgPrice();
 
   // Calculate unit distribution
   const cashUnits = Math.round(totalUnits * cashPurchaseRate);
   const financedUnits = totalUnits - cashUnits;
 
-  // Platform fees (on all sales)
-  const platformFees = totalUnits * avgPropertyPrice * platformFeeRate;
+  // Platform fees (only on financed units)
+  const platformFees = financedUnits * avgPropertyPrice * platformFeeRate;
 
   // Calculate mortgage interest revenue
   const downPaymentRate = 0.20;
@@ -321,19 +374,21 @@ export function calculateMortgageOnlyScenario(inputs: ScenarioInputs, name: stri
   // NO appreciation share - buyer owns 100%
   const appreciationShare = 0;
 
-  // Total revenue (no SAM component)
-  const totalRevenue = platformFees + mortgageInterest;
+  // Total revenue (includes construction profit)
+  const totalRevenue = constructionProfit + platformFees + mortgageInterest;
 
   // Convert to millions
   const totalRevenueM = totalRevenue / 1_000_000;
+  const constructionProfitM = constructionProfit / 1_000_000;
   const platformFeesM = platformFees / 1_000_000;
   const mortgageInterestM = mortgageInterest / 1_000_000;
   const appreciationShareM = 0;
 
-  // Calculate IRR without appreciation windfall
+  // Calculate IRR with construction profit timing
   const initialCapital = 3.0;
   const irr = calculateMortgageOnlyIRR(
     initialCapital,
+    constructionProfitM,
     platformFeesM,
     mortgageInterestM,
     termYears
@@ -343,6 +398,7 @@ export function calculateMortgageOnlyScenario(inputs: ScenarioInputs, name: stri
   return {
     name,
     totalRevenue: totalRevenueM,
+    constructionProfit: constructionProfitM,
     platformFees: platformFeesM,
     mortgageInterest: mortgageInterestM,
     appreciationShare: appreciationShareM,
