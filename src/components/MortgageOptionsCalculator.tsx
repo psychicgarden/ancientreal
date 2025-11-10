@@ -101,6 +101,11 @@ export const MortgageOptionsCalculator = () => {
     const totalInterest = (monthlyPayment * termMonths) - loanAmount;
     const netGain = totalAppreciation;
     
+    // Ancient's 15-year return on the loan amount
+    const totalRevenue = totalInterest + platformFee;
+    const ancientProfit = totalRevenue; // Interest + fee is profit
+    const ancientROI = (ancientProfit / loanAmount) * 100; // Total ROI over 15 years
+    
     return {
       monthlyPayment,
       totalPayments,
@@ -108,11 +113,11 @@ export const MortgageOptionsCalculator = () => {
       propertyValueAtEnd,
       netGain,
       buyerROI: (netGain / totalPayments) * 100,
-      totalRevenue: totalInterest + platformFee,
+      totalRevenue,
       interestRevenue: totalInterest,
       samRevenue: 0,
       platformFee,
-      ancientROI: ((totalInterest + platformFee) / loanAmount - 1) * 100
+      ancientROI
     };
   };
 
