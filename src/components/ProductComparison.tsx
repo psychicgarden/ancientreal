@@ -66,7 +66,7 @@ export const ProductComparison: React.FC<ProductComparisonProps> = ({
       title: "Ancient Mortgage",
       subtitle: "Pathway to Ownership",
       icon: <Home className="w-6 h-6" />,
-      badge: "Core Revenue: 20-22% IRR",
+      badge: "Volume Engine: 19-20% IRR",
       badgeVariant: "secondary" as const,
       price: financedPrice,
       downPayment: financedDownPayment,
@@ -288,7 +288,7 @@ export const ProductComparison: React.FC<ProductComparisonProps> = ({
               <div className="text-4xl font-bold text-primary mb-2">50%</div>
               <div className="font-semibold mb-1">Ancient Mortgage</div>
               <div className="text-sm text-muted-foreground">
-                Core revenue engine • 20-22% IRR
+                50% of volume • 19-20% IRR
               </div>
             </div>
             <div className="text-center">
