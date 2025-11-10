@@ -15,6 +15,11 @@ interface CalculationResults {
   propertyValueAtEnd: number;
   netGain: number;
   buyerROI: number;
+  equityMultiple: number;
+  monthlyNetCashFlow: number;
+  totalCashFlowCollected: number;
+  netEquityAtEnd: number;
+  remainingLoanBalance: number;
   
   // Ancient metrics
   totalRevenue: number;
@@ -22,6 +27,7 @@ interface CalculationResults {
   samRevenue: number;
   platformFee: number;
   ancientROI: number;
+  ancientEquityMultiple: number;
 }
 
 export const MortgageOptionsCalculator = () => {
@@ -30,6 +36,8 @@ export const MortgageOptionsCalculator = () => {
   const [termYears, setTermYears] = useState(15);
   const [appreciationRate, setAppreciationRate] = useState(7);
   const [samPercent, setSamPercent] = useState(30);
+  const [baseMonthlyRent, setBaseMonthlyRent] = useState(1000);
+  const rentalGrowthRate = 4; // 4% annual growth
 
   const calculateOption = (
     type: 'CASH' | 'SAM_8' | 'FIXED_11'
@@ -45,6 +53,16 @@ export const MortgageOptionsCalculator = () => {
     const propertyValueAtEnd = effectivePrice * Math.pow(1 + appreciationRate / 100, termYears);
     const totalAppreciation = propertyValueAtEnd - effectivePrice;
     
+    // Calculate rental cash flow
+    let totalCashFlow = 0;
+    let monthlyRent = baseMonthlyRent;
+    
+    for (let year = 0; year < termYears; year++) {
+      const yearlyRent = monthlyRent * 12;
+      totalCashFlow += yearlyRent;
+      monthlyRent = monthlyRent * (1 + rentalGrowthRate / 100); // Grow rent by 4% each year
+    }
+    
     if (type === 'CASH') {
       // Ancient's revenue: $75k profit + platform fee ($3,500 or 3.5%)
       const buildCost = 75000; // Ancient's investment to build
@@ -52,18 +70,29 @@ export const MortgageOptionsCalculator = () => {
       const actualPlatformFee = 3500; // Platform fee (user specified)
       const totalRevenue = profitFromSale + actualPlatformFee;
       
+      const netCashFlow = totalCashFlow; // All rental income goes to buyer
+      const avgMonthlyCashFlow = netCashFlow / termMonths;
+      const netEquity = propertyValueAtEnd; // No loan, so all equity is buyer's
+      const equityMultiple = (netEquity + netCashFlow) / effectivePrice;
+      
       return {
         monthlyPayment: 0,
-        totalPayments: downPayment,
+        totalPayments: effectivePrice,
         totalInterest: 0,
         propertyValueAtEnd,
         netGain: totalAppreciation,
-        buyerROI: (totalAppreciation / downPayment) * 100, // Cash-on-cash return
+        buyerROI: (totalAppreciation / effectivePrice) * 100,
+        equityMultiple,
+        monthlyNetCashFlow: avgMonthlyCashFlow,
+        totalCashFlowCollected: netCashFlow,
+        netEquityAtEnd: netEquity,
+        remainingLoanBalance: 0,
         totalRevenue: totalRevenue,
         interestRevenue: 0,
         samRevenue: 0,
         platformFee: actualPlatformFee,
-        ancientROI: ((totalRevenue) / buildCost) * 100 // ROI based on $75k build cost
+        ancientROI: ((totalRevenue) / buildCost) * 100,
+        ancientEquityMultiple: totalRevenue / buildCost
       };
     }
     
@@ -75,22 +104,41 @@ export const MortgageOptionsCalculator = () => {
       const totalPayments = downPayment + (monthlyPayment * termMonths);
       const totalInterest = (monthlyPayment * termMonths) - loanAmount;
       
+      // Calculate remaining loan balance at end (should be 0 for fully amortized)
+      const remainingBalance = 0;
+      
+      // Calculate net cash flow (rental income - mortgage payments)
+      const totalMortgagePayments = monthlyPayment * termMonths;
+      const netCashFlow = totalCashFlow - totalMortgagePayments;
+      const avgMonthlyCashFlow = netCashFlow / termMonths;
+      
       // Dynamic SAM to Ancient
       const samShare = totalAppreciation * (samPercent / 100);
-      const netGain = totalAppreciation - samShare;
+      const buyerAppreciationShare = totalAppreciation - samShare;
+      const netEquity = propertyValueAtEnd - remainingBalance;
+      const buyerNetEquity = netEquity - samShare;
+      
+      // Equity multiple: (Final Equity + Cash Flow) / Down Payment
+      const equityMultiple = (buyerNetEquity + netCashFlow) / downPayment;
       
       return {
         monthlyPayment,
         totalPayments,
         totalInterest,
         propertyValueAtEnd,
-        netGain,
-        buyerROI: (netGain / downPayment) * 100, // Cash-on-cash return on down payment
+        netGain: buyerAppreciationShare,
+        buyerROI: (buyerAppreciationShare / downPayment) * 100,
+        equityMultiple,
+        monthlyNetCashFlow: avgMonthlyCashFlow,
+        totalCashFlowCollected: netCashFlow,
+        netEquityAtEnd: buyerNetEquity,
+        remainingLoanBalance: remainingBalance,
         totalRevenue: totalInterest + samShare + platformFee,
         interestRevenue: totalInterest,
         samRevenue: samShare,
         platformFee,
-        ancientROI: ((totalInterest + samShare + platformFee) / loanAmount - 1) * 100
+        ancientROI: ((totalInterest + samShare + platformFee) / loanAmount - 1) * 100,
+        ancientEquityMultiple: (totalInterest + samShare + platformFee) / loanAmount
       };
     }
     
@@ -101,7 +149,21 @@ export const MortgageOptionsCalculator = () => {
       (Math.pow(1 + monthlyRate, termMonths) - 1);
     const totalPayments = downPayment + (monthlyPayment * termMonths);
     const totalInterest = (monthlyPayment * termMonths) - loanAmount;
+    
+    // Calculate remaining loan balance at end (should be 0 for fully amortized)
+    const remainingBalance = 0;
+    
+    // Calculate net cash flow (rental income - mortgage payments)
+    const totalMortgagePayments = monthlyPayment * termMonths;
+    const netCashFlow = totalCashFlow - totalMortgagePayments;
+    const avgMonthlyCashFlow = netCashFlow / termMonths;
+    
+    // Buyer keeps all appreciation
     const netGain = totalAppreciation;
+    const netEquity = propertyValueAtEnd - remainingBalance;
+    
+    // Equity multiple: (Final Equity + Cash Flow) / Down Payment
+    const equityMultiple = (netEquity + netCashFlow) / downPayment;
     
     // Ancient's return expressed as annualized IRR (effective annual rate)
     const totalRevenue = totalInterest + platformFee;
@@ -115,12 +177,18 @@ export const MortgageOptionsCalculator = () => {
       totalInterest,
       propertyValueAtEnd,
       netGain,
-      buyerROI: (netGain / downPayment) * 100, // Cash-on-cash return on down payment
+      buyerROI: (netGain / downPayment) * 100,
+      equityMultiple,
+      monthlyNetCashFlow: avgMonthlyCashFlow,
+      totalCashFlowCollected: netCashFlow,
+      netEquityAtEnd: netEquity,
+      remainingLoanBalance: remainingBalance,
       totalRevenue,
       interestRevenue: totalInterest,
       samRevenue: 0,
       platformFee,
-      ancientROI
+      ancientROI,
+      ancientEquityMultiple: totalRevenue / loanAmount
     };
   };
 
@@ -132,6 +200,8 @@ export const MortgageOptionsCalculator = () => {
     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value);
 
   const formatPercent = (value: number) => `${value.toFixed(1)}%`;
+  
+  const formatMultiple = (value: number) => `${value.toFixed(1)}×`;
 
   return (
     <div className="w-full space-y-8">
@@ -227,6 +297,22 @@ export const MortgageOptionsCalculator = () => {
                 className="pt-2"
               />
             </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="rent" className="flex items-center gap-2">
+                <DollarSign className="w-4 h-4" />
+                Monthly Rent: {formatCurrency(baseMonthlyRent)}
+              </Label>
+              <Slider
+                id="rent"
+                value={[baseMonthlyRent]}
+                onValueChange={([value]) => setBaseMonthlyRent(value)}
+                min={500}
+                max={3000}
+                step={100}
+                className="pt-2"
+              />
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -254,18 +340,26 @@ export const MortgageOptionsCalculator = () => {
               </div>
               <Separator />
               <div className="pt-2 space-y-2">
-                <div className="text-xs font-semibold text-muted-foreground uppercase">Buyer Metrics</div>
+                <div className="text-xs font-semibold text-muted-foreground uppercase">Buyer Returns ({termYears}y)</div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Equity Multiple</span>
+                  <span className="font-semibold text-primary text-lg">{formatMultiple(cashResults.equityMultiple)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Monthly Cash Flow</span>
+                  <span className="font-semibold">{formatCurrency(cashResults.monthlyNetCashFlow)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Total Cash Flow</span>
+                  <span className="font-semibold">{formatCurrency(cashResults.totalCashFlowCollected)}</span>
+                </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Property Value (Y{termYears})</span>
                   <span className="font-semibold text-primary">{formatCurrency(cashResults.propertyValueAtEnd)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Net Gain</span>
-                  <span className="font-semibold text-primary">{formatCurrency(cashResults.netGain)}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">ROI</span>
-                  <span className="font-semibold text-primary">{formatPercent(cashResults.buyerROI)}</span>
+                  <span className="text-muted-foreground">Your Net Equity</span>
+                  <span className="font-semibold text-primary">{formatCurrency(cashResults.netEquityAtEnd)}</span>
                 </div>
               </div>
               <Separator />
@@ -280,8 +374,8 @@ export const MortgageOptionsCalculator = () => {
                   <span>{formatCurrency(cashResults.platformFee)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Ancient ROI</span>
-                  <span className="font-semibold">{formatPercent(cashResults.ancientROI)}</span>
+                  <span className="text-muted-foreground">Ancient Multiple</span>
+                  <span className="font-semibold">{formatMultiple(cashResults.ancientEquityMultiple)}</span>
                 </div>
               </div>
             </div>
@@ -309,22 +403,30 @@ export const MortgageOptionsCalculator = () => {
               </div>
               <Separator />
               <div className="pt-2 space-y-2">
-                <div className="text-xs font-semibold text-muted-foreground uppercase">Buyer Metrics</div>
+                <div className="text-xs font-semibold text-muted-foreground uppercase">Buyer Returns ({termYears}y)</div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Total Paid</span>
-                  <span className="font-semibold">{formatCurrency(samResults.totalPayments)}</span>
+                  <span className="text-muted-foreground">Equity Multiple</span>
+                  <span className="font-semibold text-primary text-lg">{formatMultiple(samResults.equityMultiple)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Monthly Cash Flow</span>
+                  <span className="font-semibold">{formatCurrency(samResults.monthlyNetCashFlow)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Total Cash Flow</span>
+                  <span className="font-semibold">{formatCurrency(samResults.totalCashFlowCollected)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Property Value (Y{termYears})</span>
                   <span className="font-semibold text-primary">{formatCurrency(samResults.propertyValueAtEnd)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Net Gain ({100 - samPercent}% SAM)</span>
-                  <span className="font-semibold text-primary">{formatCurrency(samResults.netGain)}</span>
+                  <span className="text-muted-foreground">Your Net Equity</span>
+                  <span className="font-semibold text-primary">{formatCurrency(samResults.netEquityAtEnd)}</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">ROI</span>
-                  <span className="font-semibold text-primary">{formatPercent(samResults.buyerROI)}</span>
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>Ancient's SAM Share ({samPercent}%)</span>
+                  <span>{formatCurrency(samResults.samRevenue)}</span>
                 </div>
               </div>
               <Separator />
@@ -347,8 +449,8 @@ export const MortgageOptionsCalculator = () => {
                   <span>{formatCurrency(samResults.platformFee)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Ancient ROI</span>
-                  <span className="font-semibold text-primary">{formatPercent(samResults.ancientROI)}</span>
+                  <span className="text-muted-foreground">Ancient Multiple</span>
+                  <span className="font-semibold text-primary">{formatMultiple(samResults.ancientEquityMultiple)}</span>
                 </div>
               </div>
             </div>
@@ -376,22 +478,26 @@ export const MortgageOptionsCalculator = () => {
               </div>
               <Separator />
               <div className="pt-2 space-y-2">
-                <div className="text-xs font-semibold text-muted-foreground uppercase">Buyer Metrics</div>
+                <div className="text-xs font-semibold text-muted-foreground uppercase">Buyer Returns ({termYears}y)</div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Total Paid</span>
-                  <span className="font-semibold">{formatCurrency(fixedResults.totalPayments)}</span>
+                  <span className="text-muted-foreground">Equity Multiple</span>
+                  <span className="font-semibold text-primary text-lg">{formatMultiple(fixedResults.equityMultiple)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Monthly Cash Flow</span>
+                  <span className="font-semibold">{formatCurrency(fixedResults.monthlyNetCashFlow)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Total Cash Flow</span>
+                  <span className="font-semibold">{formatCurrency(fixedResults.totalCashFlowCollected)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Property Value (Y{termYears})</span>
                   <span className="font-semibold text-primary">{formatCurrency(fixedResults.propertyValueAtEnd)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Net Gain (100%)</span>
-                  <span className="font-semibold text-primary">{formatCurrency(fixedResults.netGain)}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">ROI (Cash-on-Cash)</span>
-                  <span className="font-semibold text-primary">{formatPercent(fixedResults.buyerROI)}</span>
+                  <span className="text-muted-foreground">Your Net Equity</span>
+                  <span className="font-semibold text-primary">{formatCurrency(fixedResults.netEquityAtEnd)}</span>
                 </div>
               </div>
               <Separator />
@@ -410,8 +516,12 @@ export const MortgageOptionsCalculator = () => {
                   <span>{formatCurrency(fixedResults.platformFee)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Ancient ROI</span>
-                  <span className="font-semibold">{formatPercent(fixedResults.ancientROI)}</span>
+                  <span className="text-muted-foreground">Ancient Multiple</span>
+                  <span className="font-semibold">{formatMultiple(fixedResults.ancientEquityMultiple)}</span>
+                </div>
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>Annual IRR</span>
+                  <span>{formatPercent(fixedResults.ancientROI)}</span>
                 </div>
               </div>
             </div>
