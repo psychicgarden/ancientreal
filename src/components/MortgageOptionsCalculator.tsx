@@ -25,10 +25,11 @@ interface CalculationResults {
 }
 
 export const MortgageOptionsCalculator = () => {
-  const [propertyPrice, setPropertyPrice] = useState(130000);
+  const [propertyPrice, setPropertyPrice] = useState(143000); // Weighted average of dynamic pricing
   const [downPaymentPercent, setDownPaymentPercent] = useState(20);
   const [termYears, setTermYears] = useState(15);
   const [appreciationRate, setAppreciationRate] = useState(7);
+  const [samPercent, setSamPercent] = useState(30);
 
   const calculateOption = (
     type: 'CASH' | 'SAM_8' | 'FIXED_11'
@@ -66,8 +67,8 @@ export const MortgageOptionsCalculator = () => {
       const totalPayments = downPayment + (monthlyPayment * termMonths);
       const totalInterest = (monthlyPayment * termMonths) - loanAmount;
       
-      // 30% SAM to Ancient
-      const samShare = totalAppreciation * 0.30;
+      // Dynamic SAM to Ancient
+      const samShare = totalAppreciation * (samPercent / 100);
       const netGain = totalAppreciation - samShare;
       
       return {
@@ -196,6 +197,22 @@ export const MortgageOptionsCalculator = () => {
                 className="pt-2"
               />
             </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="sam" className="flex items-center gap-2">
+                <Percent className="w-4 h-4" />
+                SAM Share (Ancient): {samPercent}%
+              </Label>
+              <Slider
+                id="sam"
+                value={[samPercent]}
+                onValueChange={([value]) => setSamPercent(value)}
+                min={0}
+                max={65}
+                step={5}
+                className="pt-2"
+              />
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -257,11 +274,11 @@ export const MortgageOptionsCalculator = () => {
           </CardContent>
         </Card>
 
-        {/* 8% + 30% SAM */}
+        {/* 8% + Dynamic SAM */}
         <Card className="border-2 border-primary shadow-lg">
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">8% + 30% SAM</CardTitle>
+              <CardTitle className="text-lg">8% + {samPercent}% SAM</CardTitle>
               <Badge>Recommended</Badge>
             </div>
             <CardDescription>Low payment, shared growth</CardDescription>
@@ -288,7 +305,7 @@ export const MortgageOptionsCalculator = () => {
                   <span className="font-semibold text-primary">{formatCurrency(samResults.propertyValueAtEnd)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Net Gain (70% SAM)</span>
+                  <span className="text-muted-foreground">Net Gain ({100 - samPercent}% SAM)</span>
                   <span className="font-semibold text-primary">{formatCurrency(samResults.netGain)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
@@ -308,7 +325,7 @@ export const MortgageOptionsCalculator = () => {
                   <span>{formatCurrency(samResults.interestRevenue)}</span>
                 </div>
                 <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>30% SAM Share</span>
+                  <span>{samPercent}% SAM Share</span>
                   <span>{formatCurrency(samResults.samRevenue)}</span>
                 </div>
                 <div className="flex justify-between text-xs text-muted-foreground">
@@ -395,8 +412,32 @@ export const MortgageOptionsCalculator = () => {
           <CardDescription>Which option wins for each stakeholder?</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-3">
+          <div className="space-y-6">
+            {/* SAM Sensitivity Analysis */}
+            <div className="bg-muted/30 rounded-lg p-4">
+              <h4 className="font-semibold mb-3">SAM Sensitivity Analysis (7% Appreciation)</h4>
+              <div className="space-y-2 text-sm">
+                {[20, 30, 40, 50, 65].map(sam => {
+                  const testResults = calculateOption('SAM_8');
+                  const testSamShare = (testResults.propertyValueAtEnd - propertyPrice) * (sam / 100);
+                  const testRevenue = testResults.interestRevenue + testSamShare + testResults.platformFee;
+                  return (
+                    <div key={sam} className="flex justify-between items-center">
+                      <span className={sam === samPercent ? 'font-bold text-primary' : 'text-muted-foreground'}>
+                        {sam}% SAM
+                      </span>
+                      <span className={sam === samPercent ? 'font-bold text-primary' : ''}>
+                        {formatCurrency(testRevenue)} Ancient Revenue
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Best Option Summary */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-3">
               <div className="text-sm font-semibold">Best for Buyer (Monthly Payment)</div>
               <div className="flex items-center gap-2">
                 <Badge variant="default">8% + 30% SAM</Badge>
@@ -438,6 +479,7 @@ export const MortgageOptionsCalculator = () => {
               <div className="text-xs text-muted-foreground">
                 Immediate capital for next flip
               </div>
+            </div>
             </div>
           </div>
         </CardContent>
