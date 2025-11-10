@@ -96,8 +96,8 @@ export const ProductComparison: React.FC<ProductComparisonProps> = ({
       features: [
         "Lowest monthly payment",
         "8% APR (vs 10.5%)",
-        "Share 20% appreciation with Ancient",
-        "Aligned incentives",
+        "Share 30% of appreciation with Ancient",
+        "Ownership: 100% (30% appreciation share at exit)",
         "Budget-friendly path",
       ],
       bestFor: "Buyers prioritizing low monthly costs",
@@ -300,13 +300,30 @@ export const ProductComparison: React.FC<ProductComparisonProps> = ({
             </div>
           </div>
 
-          <div className="mt-6 pt-6 border-t border-border text-center">
-            <div className="text-2xl font-bold mb-2">
-              Blended Portfolio IRR: 26-29%
+          <div className="mt-6 pt-6 border-t border-border">
+            {/* Cash ROI Callout */}
+            <div className="mb-6 p-4 rounded-lg bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-semibold text-foreground flex items-center gap-2">
+                  <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  💰 Cash Velocity ROI
+                </span>
+                <span className="text-2xl font-bold text-green-600 dark:text-green-400">~93% ROI</span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Build $75K → Sell $143K + 3.5% fee = ~$69.9K profit per unit (~93% ROI per cycle)
+              </p>
             </div>
-            <p className="text-muted-foreground">
-              Diversified revenue streams across three distinct buyer segments
-            </p>
+            
+            {/* Blended IRR */}
+            <div className="text-center">
+              <div className="text-2xl font-bold mb-2">
+                Blended Portfolio IRR: 26-29%
+              </div>
+              <p className="text-muted-foreground">
+                Diversified revenue streams across three distinct buyer segments
+              </p>
+            </div>
           </div>
           
           <div className="mt-4 pt-4 border-t border-border text-sm text-muted-foreground">

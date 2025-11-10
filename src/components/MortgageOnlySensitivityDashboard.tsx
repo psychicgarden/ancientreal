@@ -6,7 +6,7 @@ import { calculateMortgageOnlyScenario, ScenarioInputs } from "@/lib/revenueScen
 import { TrendingUp, DollarSign, Percent, Home } from "lucide-react";
 
 export const MortgageOnlySensitivityDashboard: React.FC = () => {
-  const [apr, setApr] = useState(11.5);
+  const [apr, setApr] = useState(10.5);
   const [cashRate, setCashRate] = useState(20);
   const [termYears, setTermYears] = useState(15);
 
@@ -66,6 +66,7 @@ export const MortgageOnlySensitivityDashboard: React.FC = () => {
               </label>
               <span className="text-2xl font-bold text-primary">{apr}%</span>
             </div>
+            <p className="text-xs text-muted-foreground">Borrower APR (not investor IRR)</p>
             <Slider
               value={[apr]}
               onValueChange={(value) => setApr(value[0])}

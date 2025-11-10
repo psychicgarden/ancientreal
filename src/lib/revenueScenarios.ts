@@ -260,6 +260,16 @@ export function calculateScenario(inputs: ScenarioInputs, name: string): Scenari
   // Construction profit (for display only - NOT in 15-year revenue)
   const constructionProfit = calculateConstructionProfit();
 
+  // Calculate immediate cash from cash sales
+  const cashSalesRevenue = flips.reduce((sum, flip) => {
+    return sum + (flip.price * flip.cashUnits);
+  }, 0);
+  
+  // Calculate down payments from financed units (20% down)
+  const downPaymentRevenue = flips.reduce((sum, flip) => {
+    return sum + (flip.price * 0.20 * flip.financedUnits);
+  }, 0);
+
   // Platform fees (3.5% on ALL sales)
   const platformFees = calculatePlatformFees();
 
@@ -299,13 +309,24 @@ export function calculateScenario(inputs: ScenarioInputs, name: string): Scenari
   const mortgageInterestM = totalMortgageInterest / 1_000_000;
   const appreciationShareM = appreciationShare / 1_000_000;
 
-  // Calculate IRR using 15-year financial cash flows only
-  const cashFlows = build15YearCashflows(
-    platformFeesM,
-    mortgageInterestM,
-    appreciationShareM,
-    termYears
-  );
+  // Calculate total immediate cash for Year 0 (includes cash sales + down payments + platform fees)
+  const totalImmediateCash = (cashSalesRevenue + downPaymentRevenue + platformFees) / 1_000_000;
+
+  // Calculate IRR with corrected Year 0 cash flow
+  const cashFlows: number[] = [];
+  const annualInterest = mortgageInterestM / termYears;
+  
+  // Year 0: ALL IMMEDIATE CASH minus initial investment
+  cashFlows[0] = totalImmediateCash - INITIAL_CAPITAL;
+  
+  // Years 1-14: Annual mortgage interest
+  for (let year = 1; year < termYears; year++) {
+    cashFlows[year] = annualInterest;
+  }
+  
+  // Year 15: Mortgage interest + appreciation share
+  cashFlows[termYears] = annualInterest + appreciationShareM;
+  
   const irr = newtonRaphsonIRR(cashFlows);
   const cashMultiple = totalRevenueM / INITIAL_CAPITAL;
 
@@ -387,7 +408,7 @@ export const SCENARIO_PRESETS = {
     samRate: 0.10,
     mortgageAPR: 10.5,
     samAPR: 8.0,
-    samShare: 0.20,
+    samShare: 0.30, // Ancient keeps 30% of SAM appreciation
     totalUnits: 112,
     avgPropertyPrice: 143000,
     platformFeeRate: 0.035,
@@ -401,7 +422,7 @@ export const SCENARIO_PRESETS = {
     samRate: 0.10,
     mortgageAPR: 11.0,
     samAPR: 8.0,
-    samShare: 0.20,
+    samShare: 0.30,
     totalUnits: 112,
     avgPropertyPrice: 143000,
     platformFeeRate: 0.035,
@@ -415,7 +436,7 @@ export const SCENARIO_PRESETS = {
     samRate: 0.10,
     mortgageAPR: 10.0,
     samAPR: 8.0,
-    samShare: 0.20,
+    samShare: 0.30,
     totalUnits: 112,
     avgPropertyPrice: 143000,
     platformFeeRate: 0.035,
@@ -565,8 +586,20 @@ export function calculateTieredPortfolioScenario(
   // Construction profit (for display only)
   const constructionProfit = calculateConstructionProfit();
 
-  // Platform fees on ALL sales
-  const platformFees = calculatePlatformFees();
+  // Platform fees on ALL sales - include $10K premium on financed units
+  let platformFees = 0;
+  for (const flip of flips) {
+    const flipCashUnits = Math.round(flip.units * cashRate);
+    const flipMortgageUnits = Math.round(flip.units * mortgageRate);
+    const flipSAMUnits = Math.round(flip.units * samRate);
+    
+    // Financed units (mortgage) have $10K premium, cash and SAM don't
+    platformFees += FEE_RATE * (
+      flip.price * flipCashUnits + 
+      (flip.price + 10_000) * flipMortgageUnits + 
+      flip.price * flipSAMUnits
+    );
+  }
 
   // Calculate IMMEDIATE CASH from cash sales (THIS IS THE FIX!)
   let cashSalesRevenue = 0;

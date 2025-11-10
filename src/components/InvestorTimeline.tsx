@@ -74,7 +74,7 @@ export default function InvestorTimeline({
             </Badge>
             <h4 className="font-semibold text-foreground mb-1">SAM Appreciation Exit</h4>
             <p className="text-sm text-muted-foreground mb-2">
-              Collect 20% of appreciation on SAM units
+              Collect 30% of appreciation on SAM units
             </p>
             <div className="flex items-center gap-2 text-sm">
               <TrendingUp className="h-4 w-4 text-purple-600" />

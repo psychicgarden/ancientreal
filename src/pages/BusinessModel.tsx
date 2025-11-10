@@ -34,7 +34,7 @@ import penthouseMexico from "@/assets/penthouse-mexico.jpg";
 import ecoSmartCity from "@/assets/eco-smart-city.jpg";
 
 // Calculate dynamic flywheel data with rolling budget
-const INITIAL_CAPITAL = 2.75; // $2.75M initial capital
+const INITIAL_CAPITAL = 3.0; // $3.0M initial capital
 
 const calculateFlywheelWithBudget = () => {
   const flywheel = calculateDevelopmentFlywheel();
@@ -406,7 +406,7 @@ const BusinessModel = () => {
               Development Flywheel Model
             </Badge>
             <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-primary bg-clip-text text-transparent">
-              6 Locations, 4 Flips, 9× ROI
+              6 Locations, 6 Flips over 5 years
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-12">
               Borders wrote the last chapter of property; code writes the next

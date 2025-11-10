@@ -6,7 +6,7 @@ import { calculateScenario, ScenarioInputs } from "@/lib/revenueScenarios";
 import { TrendingUp, DollarSign, Percent } from "lucide-react";
 
 export const SensitivityDashboard: React.FC = () => {
-  const [apr, setApr] = useState(11.5);
+  const [apr, setApr] = useState(10.5);
   const [cashRate, setCashRate] = useState(20);
   const [termYears, setTermYears] = useState(15);
 
@@ -44,6 +44,7 @@ export const SensitivityDashboard: React.FC = () => {
               </div>
               <span className="text-2xl font-bold text-primary">{apr.toFixed(1)}%</span>
             </div>
+            <p className="text-xs text-muted-foreground">Borrower APR (not investor IRR)</p>
             <Slider
               value={[apr]}
               onValueChange={(value) => setApr(value[0])}
