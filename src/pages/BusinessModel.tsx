@@ -519,158 +519,134 @@ const BusinessModel = () => {
                     </Card>)}
                 </div>
 
-              {/* Three-Model Revenue Comparison */}
+              {/* Clean Revenue Model Showcase */}
               <div className="mb-16">
-                <h2 className="text-3xl font-bold mb-8 text-center">Revenue Model Evolution</h2>
+                <div className="text-center mb-12">
+                  <h2 className="text-4xl font-bold mb-4">$17.53M Revenue Model</h2>
+                  <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                    Three revenue streams, dynamic pricing strategy, 18-22% IRR
+                  </p>
+                </div>
                 
-                <div className="grid md:grid-cols-3 gap-6 mb-12">
-                  {/* OLD MODEL ($24M - 50% SAM, $150k flat, 8% appreciation) */}
-                  <Card className="bg-card/80 backdrop-blur-sm border-border/50">
-                    <CardContent className="p-6">
-                      <div className="mb-4">
-                        <Badge variant="outline" className="mb-2">Original</Badge>
-                        <h3 className="text-xl font-bold">$24M Model</h3>
-                        <p className="text-sm text-muted-foreground">50% SAM, $150k flat, 8% appreciation</p>
-                      </div>
-                      
-                      <div className="space-y-3 mb-4">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Platform Fees</span>
-                          <span className="font-semibold">$588K</span>
+                {/* Revenue Breakdown Cards */}
+                <div className="grid md:grid-cols-3 gap-8 mb-12">
+                  <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
+                    <CardContent className="p-8">
+                      <div className="text-center space-y-4">
+                        <div className="text-5xl">🏛</div>
+                        <div>
+                          <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">Platform Fees</div>
+                          <div className="text-4xl font-bold text-primary mb-3">$561K</div>
+                          <p className="text-sm text-muted-foreground">3.5% infrastructure fee on all sales</p>
                         </div>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Interest (8%, 15yr)</span>
-                          <span className="font-semibold">$8.61M</span>
+                        <div className="bg-background/50 rounded-lg p-3 text-sm">
+                          <div className="text-muted-foreground">Immediate capture</div>
                         </div>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Appreciation (50% SAM)</span>
-                          <span className="font-semibold">$14.81M</span>
-                        </div>
-                        <div className="border-t pt-3">
-                          <div className="flex justify-between">
-                            <span className="font-bold">Total</span>
-                            <span className="font-bold text-lg">$24M</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="bg-muted/30 rounded-lg p-3">
-                        <div className="text-xs text-muted-foreground mb-1">IRR</div>
-                        <div className="text-lg font-bold">24-28%</div>
                       </div>
                     </CardContent>
                   </Card>
 
-                  {/* PREVIOUS MODEL ($15.86M - 30% SAM, $130k flat, 7% appreciation) */}
-                  <Card className="bg-card/80 backdrop-blur-sm border-border/50">
-                    <CardContent className="p-6">
-                      <div className="mb-4">
-                        <Badge variant="outline" className="mb-2">Previous</Badge>
-                        <h3 className="text-xl font-bold">$15.86M Model</h3>
-                        <p className="text-sm text-muted-foreground">30% SAM, $130k flat, 7% appreciation</p>
-                      </div>
-                      
-                      <div className="space-y-3 mb-4">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Platform Fees</span>
-                          <span className="font-semibold">$454K</span>
+                  <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
+                    <CardContent className="p-8">
+                      <div className="text-center space-y-4">
+                        <div className="text-5xl">🌐</div>
+                        <div>
+                          <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">Mortgage Interest</div>
+                          <div className="text-4xl font-bold text-primary mb-3">$8.21M</div>
+                          <p className="text-sm text-muted-foreground">8% APR on 15-year mortgages</p>
                         </div>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Interest (8%, 15yr)</span>
-                          <span className="font-semibold">$7.46M</span>
+                        <div className="bg-background/50 rounded-lg p-3 text-sm">
+                          <div className="text-muted-foreground">15-year revenue stream</div>
                         </div>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Appreciation (30% SAM)</span>
-                          <span className="font-semibold">$7.96M</span>
-                        </div>
-                        <div className="border-t pt-3">
-                          <div className="flex justify-between">
-                            <span className="font-bold">Total</span>
-                            <span className="font-bold text-lg">$15.86M</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="bg-muted/30 rounded-lg p-3">
-                        <div className="text-xs text-muted-foreground mb-1">IRR</div>
-                        <div className="text-lg font-bold">17-21%</div>
                       </div>
                     </CardContent>
                   </Card>
 
-                  {/* NEW MODEL ($17.53M - 30% SAM, dynamic pricing $135k→$150k, 7% appreciation) */}
-                  <Card className="bg-card/80 backdrop-blur-sm border-primary/50 border-2 shadow-xl">
-                    <CardContent className="p-6">
-                      <div className="mb-4">
-                        <Badge className="mb-2">Current</Badge>
-                        <h3 className="text-xl font-bold">$17.53M Model</h3>
-                        <p className="text-sm text-muted-foreground">30% SAM, $135k→$150k dynamic, 7% appreciation</p>
-                      </div>
-                      
-                      <div className="space-y-3 mb-4">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Platform Fees</span>
-                          <span className="font-semibold text-primary">$561K</span>
+                  <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
+                    <CardContent className="p-8">
+                      <div className="text-center space-y-4">
+                        <div className="text-5xl">🚀</div>
+                        <div>
+                          <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">Appreciation Share</div>
+                          <div className="text-4xl font-bold text-primary mb-3">$8.76M</div>
+                          <p className="text-sm text-muted-foreground">30% SAM at 7% annual growth</p>
                         </div>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Interest (8%, 15yr)</span>
-                          <span className="font-semibold text-primary">$8.21M</span>
+                        <div className="bg-background/50 rounded-lg p-3 text-sm">
+                          <div className="text-muted-foreground">Year 15 capture</div>
                         </div>
-                        <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Appreciation (30% SAM)</span>
-                          <span className="font-semibold text-primary">$8.76M</span>
-                        </div>
-                        <div className="border-t pt-3">
-                          <div className="flex justify-between">
-                            <span className="font-bold">Total</span>
-                            <span className="font-bold text-lg text-primary">$17.53M</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="bg-primary/10 rounded-lg p-3">
-                        <div className="text-xs text-muted-foreground mb-1">IRR</div>
-                        <div className="text-lg font-bold text-primary">18-22%</div>
                       </div>
                     </CardContent>
                   </Card>
                 </div>
 
-                {/* Dynamic Pricing Breakdown */}
+                {/* Total Revenue Card */}
+                <Card className="bg-gradient-to-br from-primary/20 to-primary/10 border-primary/30 border-2 mb-12">
+                  <CardContent className="p-10">
+                    <div className="text-center">
+                      <div className="text-sm text-muted-foreground uppercase tracking-widest mb-3">15-Year Total Revenue</div>
+                      <div className="text-6xl font-bold text-primary mb-4">$17.53M</div>
+                      <div className="flex items-center justify-center gap-8 text-sm">
+                        <div>
+                          <span className="text-muted-foreground">IRR:</span>
+                          <span className="font-bold ml-2">18-22%</span>
+                        </div>
+                        <div className="h-4 w-px bg-border"></div>
+                        <div>
+                          <span className="text-muted-foreground">Cash Multiple:</span>
+                          <span className="font-bold ml-2">6.4×</span>
+                        </div>
+                        <div className="h-4 w-px bg-border"></div>
+                        <div>
+                          <span className="text-muted-foreground">112 Units:</span>
+                          <span className="font-bold ml-2">6 Locations</span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Dynamic Pricing Strategy */}
                 <Card className="bg-card/80 backdrop-blur-sm border-border/50 mb-8">
                   <CardContent className="p-8">
-                    <h3 className="text-2xl font-bold mb-6">Dynamic Pricing Strategy: $135k → $150k</h3>
-                    <p className="text-muted-foreground mb-6">
-                      Properties appreciate $3k per flip, creating urgency for early buyers while capturing market growth
-                    </p>
+                    <div className="mb-8">
+                      <div className="inline-flex items-center space-x-2 mb-4">
+                        <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary"></div>
+                        <div className="text-sm font-medium text-primary uppercase tracking-wider">Pricing Strategy</div>
+                        <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary"></div>
+                      </div>
+                      <h3 className="text-3xl font-bold mb-3">Dynamic Pricing: $135k → $150k</h3>
+                      <p className="text-lg text-muted-foreground">
+                        Strategic $3k escalation per flip captures market growth and creates buyer urgency
+                      </p>
+                    </div>
                     
                     <div className="overflow-x-auto">
                       <table className="w-full">
                         <thead>
-                          <tr className="border-b">
-                            <th className="text-left py-3 px-4">Flip</th>
-                            <th className="text-left py-3 px-4">Units</th>
-                            <th className="text-right py-3 px-4">Avg Price</th>
-                            <th className="text-right py-3 px-4">Platform Fee (3.5%)</th>
-                            <th className="text-right py-3 px-4">Total Sales</th>
+                          <tr className="border-b-2 border-border">
+                            <th className="text-left py-4 px-4 font-semibold">Flip</th>
+                            <th className="text-left py-4 px-4 font-semibold">Units</th>
+                            <th className="text-right py-4 px-4 font-semibold">Price</th>
+                            <th className="text-right py-4 px-4 font-semibold">Platform Fee</th>
+                            <th className="text-right py-4 px-4 font-semibold">Gross Sales</th>
                           </tr>
                         </thead>
                         <tbody>
                           {dynamicPricingBreakdown.map((flip, idx) => (
-                            <tr key={idx} className="border-b hover:bg-muted/30 transition-colors">
-                              <td className="py-3 px-4 font-semibold">{flip.flip}</td>
-                              <td className="py-3 px-4">{flip.units}</td>
-                              <td className="py-3 px-4 text-right">${(flip.avgPrice / 1000).toFixed(0)}k</td>
-                              <td className="py-3 px-4 text-right">${(flip.platformFee / 1000).toFixed(1)}k</td>
-                              <td className="py-3 px-4 text-right font-semibold">${((flip.units * flip.avgPrice) / 1000000).toFixed(2)}M</td>
+                            <tr key={idx} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
+                              <td className="py-4 px-4 font-semibold">{flip.flip}</td>
+                              <td className="py-4 px-4">{flip.units}</td>
+                              <td className="py-4 px-4 text-right font-mono">${(flip.avgPrice / 1000).toFixed(0)}k</td>
+                              <td className="py-4 px-4 text-right font-mono text-primary">${(flip.platformFee / 1000).toFixed(1)}k</td>
+                              <td className="py-4 px-4 text-right font-mono font-semibold">${((flip.units * flip.avgPrice) / 1000000).toFixed(2)}M</td>
                             </tr>
                           ))}
-                          <tr className="font-bold bg-muted/30">
-                            <td className="py-3 px-4">TOTAL</td>
-                            <td className="py-3 px-4">112</td>
-                            <td className="py-3 px-4 text-right">$143k avg</td>
-                            <td className="py-3 px-4 text-right text-primary">$560.9K</td>
-                            <td className="py-3 px-4 text-right text-primary">$16.02M</td>
+                          <tr className="font-bold bg-primary/5 border-t-2 border-primary/20">
+                            <td className="py-4 px-4 text-lg">TOTAL</td>
+                            <td className="py-4 px-4 text-lg">112</td>
+                            <td className="py-4 px-4 text-right font-mono text-lg">$143k avg</td>
+                            <td className="py-4 px-4 text-right font-mono text-primary text-lg">$560.9K</td>
+                            <td className="py-4 px-4 text-right font-mono text-primary text-lg">$16.02M</td>
                           </tr>
                         </tbody>
                       </table>
@@ -678,43 +654,32 @@ const BusinessModel = () => {
                   </CardContent>
                 </Card>
 
-                {/* Strategic Rationale */}
-                <Card className="bg-card/80 backdrop-blur-sm border-border/50">
-                  <CardContent className="p-8">
-                    <h3 className="text-xl font-bold mb-6">Why Dynamic Pricing Wins</h3>
-                    <div className="grid md:grid-cols-3 gap-6 mb-6">
-                      <div>
-                        <div className="text-2xl mb-2">⚡</div>
-                        <h4 className="font-semibold mb-2">Creates Urgency</h4>
-                        <p className="text-sm text-muted-foreground">Early buyers save $15k+ vs. later flips, driving faster conversions</p>
-                      </div>
-                      <div>
-                        <div className="text-2xl mb-2">📈</div>
-                        <h4 className="font-semibold mb-2">Reflects Market Reality</h4>
-                        <p className="text-sm text-muted-foreground">Properties developed later naturally cost more due to land/construction inflation</p>
-                      </div>
-                      <div>
-                        <div className="text-2xl mb-2">💰</div>
-                        <h4 className="font-semibold mb-2">+$1.67M Revenue (+10.5%)</h4>
-                        <p className="text-sm text-muted-foreground">Captures market growth without sacrificing 30% SAM buyer appeal</p>
-                      </div>
-                    </div>
-                    <div className="grid md:grid-cols-3 gap-4 pt-6 border-t">
-                      <div className="text-center">
-                        <div className="text-sm text-muted-foreground mb-1">vs. $24M Model</div>
-                        <div className="text-lg font-bold text-destructive">-$6.47M (-27%)</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-sm text-muted-foreground mb-1">vs. $15.86M Model</div>
-                        <div className="text-lg font-bold text-primary">+$1.67M (+10.5%)</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-sm text-muted-foreground mb-1">Buyer Impact</div>
-                        <div className="text-lg font-bold">70% SAM + Fair Pricing</div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                {/* Key Value Propositions */}
+                <div className="grid md:grid-cols-3 gap-6">
+                  <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+                    <CardContent className="p-6">
+                      <div className="text-3xl mb-3">⚡</div>
+                      <h4 className="font-bold text-lg mb-2">Urgency Driver</h4>
+                      <p className="text-sm text-muted-foreground">Early buyers save $15k+ vs. later flips, accelerating conversion velocity</p>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+                    <CardContent className="p-6">
+                      <div className="text-3xl mb-3">📈</div>
+                      <h4 className="font-bold text-lg mb-2">Market Reality</h4>
+                      <p className="text-sm text-muted-foreground">Pricing reflects 18-month construction inflation and land appreciation</p>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+                    <CardContent className="p-6">
+                      <div className="text-3xl mb-3">🤝</div>
+                      <h4 className="font-bold text-lg mb-2">Competitive SAM</h4>
+                      <p className="text-sm text-muted-foreground">30% SAM vs. 50% industry standard = buyers keep 70% appreciation</p>
+                    </CardContent>
+                  </Card>
+                </div>
               </div>
               </div>
 
