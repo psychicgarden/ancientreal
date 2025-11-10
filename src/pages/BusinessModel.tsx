@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -21,7 +21,8 @@ import { ScenarioComparison } from "@/components/ScenarioComparison";
 import { SensitivityDashboard } from "@/components/SensitivityDashboard";
 import { MortgageOnlySensitivityDashboard } from "@/components/MortgageOnlySensitivityDashboard";
 import { StrategicRecommendations } from "@/components/StrategicRecommendations";
-import { getCurrentScenario, getAggressiveScenario, getTieredScenario, getAcceleratedScenario, getHybridScenario, calculateDevelopmentFlywheel } from "@/lib/revenueScenarios";
+import { getCurrentScenario, getAggressiveScenario, getTieredScenario, getAcceleratedScenario, getHybridScenario, calculateDevelopmentFlywheel, getCashOptimizedScenario, getMortgageHeavyScenario, getHelocStrategyScenario } from "@/lib/revenueScenarios";
+import { ProductComparison } from "@/components/ProductComparison";
 
 // Import property images
 import villaTulum from "@/assets/villa-tulum.jpg";
@@ -204,6 +205,9 @@ const BusinessModel = () => {
   const currentScenario = getCurrentScenario();
   const acceleratedScenario = getAcceleratedScenario();
   const hybridScenario = getHybridScenario();
+  const cashOptimizedScenario = getCashOptimizedScenario();
+  const mortgageHeavyScenario = getMortgageHeavyScenario();
+  const helocStrategyScenario = getHelocStrategyScenario();
   return <div className="min-h-screen bg-gradient-subtle">
       {/* Navigation Menu */}
       <div className="fixed top-4 right-4 z-50">
@@ -410,15 +414,156 @@ const BusinessModel = () => {
           </div>
 
           {/* Tabbed Content */}
-          <Tabs defaultValue="revenue-model" className="w-full">
+          <Tabs defaultValue="product-comparison" className="w-full">
             <TabsList className="grid w-full grid-cols-6 mb-8">
+              <TabsTrigger value="product-comparison">Three Paths</TabsTrigger>
+              <TabsTrigger value="tiered-portfolio">Tiered Portfolio</TabsTrigger>
               <TabsTrigger value="revenue-model">Revenue Model</TabsTrigger>
-              <TabsTrigger value="product-comparison">Product Comparison</TabsTrigger>
               <TabsTrigger value="platform-assessment">Platform Assessment</TabsTrigger>
               <TabsTrigger value="budget-breakdown">Budget Breakdown</TabsTrigger>
               <TabsTrigger value="legal-structuring">Legal Structuring</TabsTrigger>
               <TabsTrigger value="buyers-journey">Buyer's Journey</TabsTrigger>
             </TabsList>
+
+            {/* Product Comparison Tab */}
+            <TabsContent value="product-comparison">
+              <ProductComparison basePrice={143000} />
+            </TabsContent>
+
+            {/* Tiered Portfolio Tab */}
+            <TabsContent value="tiered-portfolio">
+              <div className="space-y-12">
+                <div className="text-center mb-12">
+                  <Badge variant="outline" className="mb-4">
+                    Tiered Portfolio Analysis
+                  </Badge>
+                  <h2 className="text-4xl font-bold mb-4">
+                    Three Scenarios: 26-29% Blended IRR
+                  </h2>
+                  <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    Diversified revenue mix across cash sales, mortgages, and SAM products
+                  </p>
+                </div>
+
+                <ScenarioComparison 
+                  scenarios={[
+                    cashOptimizedScenario,
+                    mortgageHeavyScenario,
+                    helocStrategyScenario,
+                  ]}
+                />
+
+                {/* Strategy Breakdown */}
+                <Card className="bg-card/80 backdrop-blur-sm border-border/50">
+                  <CardHeader>
+                    <CardTitle className="text-2xl">
+                      Recommended: Cash Optimized (40/50/10)
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="grid md:grid-cols-3 gap-6">
+                      <div className="bg-muted/50 rounded-lg p-6">
+                        <div className="text-3xl font-bold text-primary mb-2">40%</div>
+                        <div className="font-semibold mb-2">Full Cash Sales</div>
+                        <ul className="text-sm text-muted-foreground space-y-1">
+                          <li>• Price: $135-150K</li>
+                          <li>• HELOC-enabled buyers</li>
+                          <li>• 45-55% IRR per flip</li>
+                          <li>• Fastest capital recycling</li>
+                        </ul>
+                      </div>
+                      
+                      <div className="bg-muted/50 rounded-lg p-6">
+                        <div className="text-3xl font-bold text-primary mb-2">50%</div>
+                        <div className="font-semibold mb-2">Ancient Mortgage</div>
+                        <ul className="text-sm text-muted-foreground space-y-1">
+                          <li>• Price: $145-165K (+$10K)</li>
+                          <li>• 10.5% APR, 15-year term</li>
+                          <li>• 20-22% IRR</li>
+                          <li>• Core revenue engine</li>
+                        </ul>
+                      </div>
+                      
+                      <div className="bg-muted/50 rounded-lg p-6">
+                        <div className="text-3xl font-bold text-primary mb-2">10%</div>
+                        <div className="font-semibold mb-2">SAM Model</div>
+                        <ul className="text-sm text-muted-foreground space-y-1">
+                          <li>• Price: $135-150K</li>
+                          <li>• 8% APR + 20% appreciation</li>
+                          <li>• ~20% IRR</li>
+                          <li>• Brand differentiation</li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div className="pt-6 border-t border-border">
+                      <h4 className="font-semibold mb-4">Key Benefits of This Mix:</h4>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div className="flex items-start gap-3">
+                          <div className="mt-1 text-primary">✓</div>
+                          <div>
+                            <div className="font-semibold text-sm">Diversified Revenue</div>
+                            <div className="text-xs text-muted-foreground">
+                              Fast cash recycling + steady interest income + appreciation upside
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <div className="mt-1 text-primary">✓</div>
+                          <div>
+                            <div className="font-semibold text-sm">Market Reach</div>
+                            <div className="text-xs text-muted-foreground">
+                              Appeals to HELOC families, independent buyers, and budget-conscious buyers
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <div className="mt-1 text-primary">✓</div>
+                          <div>
+                            <div className="font-semibold text-sm">Risk Management</div>
+                            <div className="text-xs text-muted-foreground">
+                              Not dependent on one revenue stream or buyer segment
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-start gap-3">
+                          <div className="mt-1 text-primary">✓</div>
+                          <div>
+                            <div className="font-semibold text-sm">Brand Story</div>
+                            <div className="text-xs text-muted-foreground">
+                              "Three paths to ownership" creates unique market positioning
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-primary/5 border border-primary/20 rounded-lg p-6">
+                      <div className="flex items-start gap-4">
+                        <TrendingUp className="w-6 h-6 text-primary mt-1 flex-shrink-0" />
+                        <div>
+                          <div className="font-semibold mb-2">Expected Performance</div>
+                          <div className="grid grid-cols-3 gap-6 text-sm">
+                            <div>
+                              <div className="text-muted-foreground">Blended IRR</div>
+                              <div className="text-2xl font-bold text-primary">26-29%</div>
+                            </div>
+                            <div>
+                              <div className="text-muted-foreground">Payback Period</div>
+                              <div className="text-2xl font-bold text-primary">18-24mo</div>
+                            </div>
+                            <div>
+                              <div className="text-muted-foreground">Cash Multiple</div>
+                              <div className="text-2xl font-bold text-primary">5.2-5.8×</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
 
             <TabsContent value="revenue-model">
 

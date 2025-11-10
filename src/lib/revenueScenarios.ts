@@ -357,6 +357,49 @@ export const SCENARIO_PRESETS = {
     appreciationRate: 0.07,
     samShare: 0.30,
   },
+  // New tiered portfolio presets
+  cashOptimized: {
+    apr: 10.5,
+    cashPurchaseRate: 0.40,
+    mortgageRate: 0.50,
+    samRate: 0.10,
+    mortgageAPR: 10.5,
+    samAPR: 8.0,
+    samShare: 0.20,
+    totalUnits: 112,
+    avgPropertyPrice: 143000,
+    platformFeeRate: 0.035,
+    termYears: 15,
+    appreciationRate: 0.07,
+  },
+  mortgageHeavy: {
+    apr: 11.0,
+    cashPurchaseRate: 0.25,
+    mortgageRate: 0.65,
+    samRate: 0.10,
+    mortgageAPR: 11.0,
+    samAPR: 8.0,
+    samShare: 0.20,
+    totalUnits: 112,
+    avgPropertyPrice: 143000,
+    platformFeeRate: 0.035,
+    termYears: 15,
+    appreciationRate: 0.07,
+  },
+  helocStrategy: {
+    apr: 10.0,
+    cashPurchaseRate: 0.50,
+    mortgageRate: 0.40,
+    samRate: 0.10,
+    mortgageAPR: 10.0,
+    samAPR: 8.0,
+    samShare: 0.20,
+    totalUnits: 112,
+    avgPropertyPrice: 143000,
+    platformFeeRate: 0.035,
+    termYears: 15,
+    appreciationRate: 0.07,
+  },
 };
 
 /**
@@ -467,6 +510,180 @@ export function calculateMortgageOnlyScenario(inputs: ScenarioInputs, name: stri
     avgMonthlyPayment: totalLoanAmount > 0 ? (totalMortgageInterest * 1_000_000 / termYears / 12) / financedUnits : 0,
     totalLoanAmount: totalLoanAmount / 1_000_000,
   };
+}
+
+/**
+ * Calculate tiered portfolio scenario with three distinct product types
+ * @param cashRate - Percentage of units sold as full cash (e.g., 0.40 for 40%)
+ * @param mortgageRate - Percentage of units sold with mortgage (e.g., 0.50 for 50%)
+ * @param samRate - Percentage of units sold with SAM (e.g., 0.10 for 10%)
+ * @param mortgageAPR - APR for mortgage units (e.g., 10.5 for 10.5%)
+ * @param samAPR - APR for SAM units (e.g., 8.0 for 8%)
+ * @param samShare - Platform's share of appreciation for SAM units (e.g., 0.20 for 20%)
+ * @param termYears - Loan term in years (default 15)
+ */
+export function calculateTieredPortfolioScenario(
+  cashRate: number,
+  mortgageRate: number,
+  samRate: number,
+  mortgageAPR: number,
+  samAPR: number,
+  samShare: number,
+  termYears: number = 15,
+  name: string = "Tiered Portfolio"
+): ScenarioResults {
+  const flips = getFlips();
+  const totalUnits = flips.reduce((sum, f) => sum + f.units, 0);
+
+  // Calculate unit distribution
+  const cashUnits = Math.round(totalUnits * cashRate);
+  const mortgageUnits = Math.round(totalUnits * mortgageRate);
+  const samUnits = Math.round(totalUnits * samRate);
+
+  // Construction profit (for display only)
+  const constructionProfit = calculateConstructionProfit();
+
+  // Platform fees on ALL sales
+  const platformFees = calculatePlatformFees();
+
+  // Calculate revenue from each product type
+  let totalMortgageInterest = 0;
+  let totalSAMInterest = 0;
+  let totalLoanAmount = 0;
+
+  // Process each flip
+  for (const flip of flips) {
+    const flipCashUnits = Math.round(flip.units * cashRate);
+    const flipMortgageUnits = Math.round(flip.units * mortgageRate);
+    const flipSAMUnits = Math.round(flip.units * samRate);
+
+    // Mortgage product: base price + $10K premium, 20% down
+    const mortgagePrice = flip.price + 10000;
+    const mortgageLoanPerUnit = mortgagePrice * 0.80;
+    const mortgageLoanAmount = mortgageLoanPerUnit * flipMortgageUnits;
+    
+    if (mortgageLoanAmount > 0) {
+      const monthlyRate = mortgageAPR / 100 / 12;
+      const numPayments = termYears * 12;
+      const monthlyPayment = 
+        (mortgageLoanAmount * monthlyRate * Math.pow(1 + monthlyRate, numPayments)) /
+        (Math.pow(1 + monthlyRate, numPayments) - 1);
+      
+      const totalPaid = monthlyPayment * numPayments;
+      totalMortgageInterest += totalPaid - mortgageLoanAmount;
+      totalLoanAmount += mortgageLoanAmount;
+    }
+
+    // SAM product: cash price, 20% down, lower APR
+    const samLoanPerUnit = flip.price * 0.80;
+    const samLoanAmount = samLoanPerUnit * flipSAMUnits;
+    
+    if (samLoanAmount > 0) {
+      const monthlyRate = samAPR / 100 / 12;
+      const numPayments = termYears * 12;
+      const monthlyPayment = 
+        (samLoanAmount * monthlyRate * Math.pow(1 + monthlyRate, numPayments)) /
+        (Math.pow(1 + monthlyRate, numPayments) - 1);
+      
+      const totalPaid = monthlyPayment * numPayments;
+      totalSAMInterest += totalPaid - samLoanAmount;
+      totalLoanAmount += samLoanAmount;
+    }
+  }
+
+  // Calculate SAM appreciation share (only on SAM units)
+  const weightedAvgPrice = getWeightedAvgPrice();
+  const samFinalValue = samUnits * weightedAvgPrice * Math.pow(1 + 0.07, termYears);
+  const samTotalAppreciation = samFinalValue - (samUnits * weightedAvgPrice);
+  const appreciationShare = samTotalAppreciation * samShare;
+
+  // Total revenue
+  const totalRevenue = platformFees + totalMortgageInterest + totalSAMInterest + appreciationShare;
+
+  // Convert to millions
+  const totalRevenueM = totalRevenue / 1_000_000;
+  const constructionProfitM = constructionProfit / 1_000_000;
+  const platformFeesM = platformFees / 1_000_000;
+  const totalInterestM = (totalMortgageInterest + totalSAMInterest) / 1_000_000;
+  const appreciationShareM = appreciationShare / 1_000_000;
+
+  // Calculate IRR
+  const cashFlows: number[] = [];
+  const annualInterest = totalInterestM / termYears;
+  
+  cashFlows[0] = platformFeesM - INITIAL_CAPITAL;
+  for (let year = 1; year < termYears; year++) {
+    cashFlows[year] = annualInterest;
+  }
+  cashFlows[termYears] = annualInterest + appreciationShareM;
+
+  const irr = newtonRaphsonIRR(cashFlows);
+  const cashMultiple = totalRevenueM / INITIAL_CAPITAL;
+
+  // Calculate weighted average monthly payment
+  const avgMonthlyPayment = totalLoanAmount > 0 
+    ? (totalInterestM * 1_000_000 / termYears / 12) / (mortgageUnits + samUnits)
+    : 0;
+
+  return {
+    name,
+    totalRevenue: totalRevenueM,
+    constructionProfit: constructionProfitM,
+    platformFees: platformFeesM,
+    mortgageInterest: totalInterestM,
+    appreciationShare: appreciationShareM,
+    irr,
+    cashMultiple,
+    financedUnits: mortgageUnits + samUnits,
+    cashUnits,
+    avgMonthlyPayment,
+    totalLoanAmount: totalLoanAmount / 1_000_000,
+  };
+}
+
+/**
+ * Generate tiered portfolio scenarios
+ */
+export function getCashOptimizedScenario(): ScenarioResults {
+  const preset = SCENARIO_PRESETS.cashOptimized;
+  return calculateTieredPortfolioScenario(
+    preset.cashPurchaseRate,
+    preset.mortgageRate!,
+    preset.samRate!,
+    preset.mortgageAPR!,
+    preset.samAPR!,
+    preset.samShare,
+    preset.termYears,
+    "Cash Optimized (40/50/10)"
+  );
+}
+
+export function getMortgageHeavyScenario(): ScenarioResults {
+  const preset = SCENARIO_PRESETS.mortgageHeavy;
+  return calculateTieredPortfolioScenario(
+    preset.cashPurchaseRate,
+    preset.mortgageRate!,
+    preset.samRate!,
+    preset.mortgageAPR!,
+    preset.samAPR!,
+    preset.samShare,
+    preset.termYears,
+    "Mortgage Heavy (25/65/10)"
+  );
+}
+
+export function getHelocStrategyScenario(): ScenarioResults {
+  const preset = SCENARIO_PRESETS.helocStrategy;
+  return calculateTieredPortfolioScenario(
+    preset.cashPurchaseRate,
+    preset.mortgageRate!,
+    preset.samRate!,
+    preset.mortgageAPR!,
+    preset.samAPR!,
+    preset.samShare,
+    preset.termYears,
+    "HELOC Strategy (50/40/10)"
+  );
 }
 
 /**
