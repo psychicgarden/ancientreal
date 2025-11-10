@@ -93,9 +93,6 @@ function Header() {
                 <Link to="/business-model" className="px-3 py-2 text-sm text-foreground/60 hover:text-foreground transition-colors">
                   Business Model
                 </Link>
-                <Link to="/mobile-demo" className="px-3 py-2 text-sm text-foreground/60 hover:text-foreground transition-colors">
-                  Mobile Demo
-                </Link>
                 <Link to="/admin/projects" className="px-3 py-2 text-sm text-foreground/60 hover:text-foreground transition-colors">
                   Admin
                 </Link>
@@ -257,9 +254,6 @@ function Header() {
                    </Link>
                    <Link to="/business-model" className="block px-3 py-2 text-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-lg transition-colors">
                      Business Model
-                   </Link>
-                   <Link to="/mobile-demo" className="block px-3 py-2 text-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-lg transition-colors">
-                     Mobile Demo
                    </Link>
                    <Link to="/admin/projects" className="block px-3 py-2 text-foreground/60 hover:text-foreground hover:bg-muted/50 rounded-lg transition-colors">
                      Admin
