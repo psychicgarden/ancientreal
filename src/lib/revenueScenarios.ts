@@ -29,6 +29,51 @@ export interface ScenarioResults {
 }
 
 /**
+ * Calculate true IRR using Newton-Raphson method
+ * Solves for the rate where NPV of all cash flows equals zero
+ */
+function calculateTrueIRR(
+  initialInvestment: number,
+  platformFeesM: number,
+  mortgageInterestM: number,
+  appreciationShareM: number,
+  termYears: number
+): number {
+  const annualInterest = mortgageInterestM / termYears;
+  
+  // Build cash flow array: Year 0 gets platform fees minus investment
+  // Years 1-14 get annual mortgage interest
+  // Year 15 gets mortgage interest plus appreciation share
+  const cashFlows = [-initialInvestment + platformFeesM]; // Year 0
+  for (let i = 1; i < termYears; i++) {
+    cashFlows.push(annualInterest); // Years 1-14
+  }
+  cashFlows.push(annualInterest + appreciationShareM); // Year 15
+  
+  // Newton-Raphson solver for IRR (finds rate where NPV = 0)
+  let rate = 0.15; // Initial guess: 15%
+  const maxIterations = 100;
+  const tolerance = 0.0001;
+  
+  for (let iteration = 0; iteration < maxIterations; iteration++) {
+    let npv = 0;
+    let dnpv = 0; // Derivative of NPV with respect to rate
+    
+    for (let i = 0; i < cashFlows.length; i++) {
+      const discountFactor = Math.pow(1 + rate, i);
+      npv += cashFlows[i] / discountFactor;
+      dnpv -= (i * cashFlows[i]) / Math.pow(1 + rate, i + 1);
+    }
+    
+    if (Math.abs(npv) < tolerance) break;
+    
+    rate = rate - npv / dnpv; // Newton-Raphson step
+  }
+  
+  return rate * 100; // Convert to percentage
+}
+
+/**
  * Calculate revenue for a given scenario
  */
 export function calculateScenario(inputs: ScenarioInputs, name: string): ScenarioResults {
@@ -80,9 +125,15 @@ export function calculateScenario(inputs: ScenarioInputs, name: string): Scenari
   const mortgageInterestM = mortgageInterest / 1_000_000;
   const appreciationShareM = appreciationShare / 1_000_000;
 
-  // Calculate IRR and Cash Multiple using millions
-  const initialCapital = 2.75; // $2.75M initial capital
-  const irr = (Math.pow(totalRevenueM / initialCapital, 1 / termYears) - 1) * 100;
+  // Calculate true IRR using Newton-Raphson method for NPV=0
+  const initialCapital = 3.0; // $3M initial capital
+  const irr = calculateTrueIRR(
+    initialCapital,
+    platformFeesM,
+    mortgageInterestM,
+    appreciationShareM,
+    termYears
+  );
   const cashMultiple = totalRevenueM / initialCapital;
 
   return {
