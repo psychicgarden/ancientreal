@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Code, Target, Rocket, Building2, BarChart3, Zap, Network, Menu, Home, Users, Briefcase, CreditCard, Plane, Code2, FileText, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, ComposedChart } from "recharts";
 import SectionHeader from "@/components/SectionHeader";
 import PlatformAssessment from "@/components/PlatformAssessment";
 import { MortgageOptionsCalculator } from "@/components/MortgageOptionsCalculator";
@@ -109,6 +110,61 @@ const dynamicPricingBreakdown = [
 ];
 
 const totalDynamicRevenue = 17.53; // Million
+
+// Calculate 15-year cash flow waterfall
+const generateCashFlowData = () => {
+  const data = [];
+  let cumulativeRevenue = 0;
+  
+  // Platform fees come in Year 0-1 (during property sales)
+  const platformFeesY0 = 0.561; // $561K in millions
+  
+  // Annual interest payments (evenly distributed over 15 years)
+  const annualInterest = 8.21 / 15; // ~$547K per year
+  
+  // Appreciation hits at Year 15
+  const appreciationY15 = 8.76; // $8.76M
+  
+  for (let year = 0; year <= 15; year++) {
+    let platformFees = 0;
+    let interest = 0;
+    let appreciation = 0;
+    
+    if (year === 0) {
+      platformFees = platformFeesY0;
+    }
+    
+    if (year >= 1 && year <= 15) {
+      interest = annualInterest;
+    }
+    
+    if (year === 15) {
+      appreciation = appreciationY15;
+    }
+    
+    const yearlyRevenue = platformFees + interest + appreciation;
+    cumulativeRevenue += yearlyRevenue;
+    
+    // Calculate IRR at this point (simplified)
+    const yearsElapsed = year || 0.5;
+    const irr = ((cumulativeRevenue / 2.75) ** (1 / yearsElapsed) - 1) * 100;
+    
+    data.push({
+      year: year === 0 ? "Y0" : `Y${year}`,
+      platformFees: platformFees,
+      interest: interest,
+      appreciation: appreciation,
+      total: yearlyRevenue,
+      cumulative: cumulativeRevenue,
+      irr: Math.min(irr, 25) // Cap at 25% for visualization
+    });
+  }
+  
+  return data;
+};
+
+const cashFlowData = generateCashFlowData();
+
 const revenueStreams = [{
   title: "Platform Fees",
   amount: "$561K",
@@ -650,6 +706,136 @@ const BusinessModel = () => {
                           </tr>
                         </tbody>
                       </table>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Financial Waterfall Diagram */}
+                <Card className="bg-card/80 backdrop-blur-sm border-border/50 mb-8">
+                  <CardContent className="p-8">
+                    <div className="mb-8">
+                      <div className="inline-flex items-center space-x-2 mb-4">
+                        <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary"></div>
+                        <div className="text-sm font-medium text-primary uppercase tracking-wider">15-Year Financial Waterfall</div>
+                        <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary"></div>
+                      </div>
+                      <h3 className="text-3xl font-bold mb-3">Cash Flow & IRR Progression</h3>
+                      <p className="text-lg text-muted-foreground">
+                        Revenue builds from platform fees, steady interest income, and appreciation capture
+                      </p>
+                    </div>
+
+                    {/* Cumulative Revenue Chart */}
+                    <div className="mb-8">
+                      <h4 className="text-lg font-semibold mb-4">Cumulative Revenue Growth</h4>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <AreaChart data={cashFlowData}>
+                          <defs>
+                            <linearGradient id="colorCumulative" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                              <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+                          <XAxis 
+                            dataKey="year" 
+                            stroke="hsl(var(--muted-foreground))"
+                            style={{ fontSize: '12px' }}
+                          />
+                          <YAxis 
+                            stroke="hsl(var(--muted-foreground))"
+                            style={{ fontSize: '12px' }}
+                            tickFormatter={(value) => `$${value.toFixed(1)}M`}
+                          />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: 'hsl(var(--background))',
+                              border: '1px solid hsl(var(--border))',
+                              borderRadius: '8px'
+                            }}
+                            formatter={(value: number) => [`$${value.toFixed(2)}M`, 'Cumulative Revenue']}
+                          />
+                          <Area 
+                            type="monotone" 
+                            dataKey="cumulative" 
+                            stroke="hsl(var(--primary))" 
+                            strokeWidth={3}
+                            fill="url(#colorCumulative)"
+                          />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+
+                    {/* Annual Cash Flow Breakdown */}
+                    <div className="mb-8">
+                      <h4 className="text-lg font-semibold mb-4">Annual Cash Flow by Stream</h4>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <ComposedChart data={cashFlowData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+                          <XAxis 
+                            dataKey="year" 
+                            stroke="hsl(var(--muted-foreground))"
+                            style={{ fontSize: '12px' }}
+                          />
+                          <YAxis 
+                            yAxisId="left"
+                            stroke="hsl(var(--muted-foreground))"
+                            style={{ fontSize: '12px' }}
+                            tickFormatter={(value) => `$${value.toFixed(1)}M`}
+                          />
+                          <YAxis 
+                            yAxisId="right"
+                            orientation="right"
+                            stroke="hsl(var(--primary))"
+                            style={{ fontSize: '12px' }}
+                            tickFormatter={(value) => `${value.toFixed(0)}%`}
+                          />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: 'hsl(var(--background))',
+                              border: '1px solid hsl(var(--border))',
+                              borderRadius: '8px'
+                            }}
+                            formatter={(value: number, name: string) => {
+                              if (name === 'IRR') return [`${value.toFixed(1)}%`, name];
+                              return [`$${value.toFixed(2)}M`, name];
+                            }}
+                          />
+                          <Legend />
+                          <Bar yAxisId="left" dataKey="platformFees" stackId="a" fill="hsl(var(--chart-1))" name="Platform Fees" />
+                          <Bar yAxisId="left" dataKey="interest" stackId="a" fill="hsl(var(--chart-2))" name="Interest" />
+                          <Bar yAxisId="left" dataKey="appreciation" stackId="a" fill="hsl(var(--chart-3))" name="Appreciation" />
+                          <Line 
+                            yAxisId="right"
+                            type="monotone" 
+                            dataKey="irr" 
+                            stroke="hsl(var(--primary))" 
+                            strokeWidth={3}
+                            name="IRR"
+                            dot={{ fill: 'hsl(var(--primary))', r: 4 }}
+                          />
+                        </ComposedChart>
+                      </ResponsiveContainer>
+                    </div>
+
+                    {/* Key Metrics Grid */}
+                    <div className="grid md:grid-cols-4 gap-4 pt-6 border-t border-border">
+                      <div className="text-center">
+                        <div className="text-sm text-muted-foreground mb-1">Initial Capital</div>
+                        <div className="text-2xl font-bold">$2.75M</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-sm text-muted-foreground mb-1">Year 5 Cumulative</div>
+                        <div className="text-2xl font-bold text-primary">$3.45M</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-sm text-muted-foreground mb-1">Year 10 Cumulative</div>
+                        <div className="text-2xl font-bold text-primary">$6.19M</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-sm text-muted-foreground mb-1">Year 15 Total</div>
+                        <div className="text-2xl font-bold text-primary">$17.53M</div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
