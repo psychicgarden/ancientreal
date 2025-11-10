@@ -34,14 +34,16 @@ export const MortgageOptionsCalculator = () => {
   const calculateOption = (
     type: 'CASH' | 'SAM_8' | 'FIXED_11'
   ): CalculationResults => {
-    const downPayment = propertyPrice * (downPaymentPercent / 100);
-    const loanAmount = propertyPrice - downPayment;
+    // Use $155K for 11% Fixed option to increase Ancient's IRR
+    const effectivePrice = type === 'FIXED_11' ? 155000 : propertyPrice;
+    const downPayment = effectivePrice * (downPaymentPercent / 100);
+    const loanAmount = effectivePrice - downPayment;
     const termMonths = termYears * 12;
-    const platformFee = propertyPrice * 0.035;
+    const platformFee = effectivePrice * 0.035;
     
     // Calculate appreciation
-    const propertyValueAtEnd = propertyPrice * Math.pow(1 + appreciationRate / 100, termYears);
-    const totalAppreciation = propertyValueAtEnd - propertyPrice;
+    const propertyValueAtEnd = effectivePrice * Math.pow(1 + appreciationRate / 100, termYears);
+    const totalAppreciation = propertyValueAtEnd - effectivePrice;
     
     if (type === 'CASH') {
       // Ancient's revenue: $75k profit + platform fee ($3,500 or 3.5%)
@@ -56,7 +58,7 @@ export const MortgageOptionsCalculator = () => {
         totalInterest: 0,
         propertyValueAtEnd,
         netGain: totalAppreciation,
-        buyerROI: (totalAppreciation / propertyPrice) * 100,
+        buyerROI: (totalAppreciation / downPayment) * 100, // Cash-on-cash return
         totalRevenue: totalRevenue,
         interestRevenue: 0,
         samRevenue: 0,
@@ -83,7 +85,7 @@ export const MortgageOptionsCalculator = () => {
         totalInterest,
         propertyValueAtEnd,
         netGain,
-        buyerROI: (netGain / totalPayments) * 100,
+        buyerROI: (netGain / downPayment) * 100, // Cash-on-cash return on down payment
         totalRevenue: totalInterest + samShare + platformFee,
         interestRevenue: totalInterest,
         samRevenue: samShare,
@@ -113,7 +115,7 @@ export const MortgageOptionsCalculator = () => {
       totalInterest,
       propertyValueAtEnd,
       netGain,
-      buyerROI: (netGain / totalPayments) * 100,
+      buyerROI: (netGain / downPayment) * 100, // Cash-on-cash return on down payment
       totalRevenue,
       interestRevenue: totalInterest,
       samRevenue: 0,
@@ -357,7 +359,7 @@ export const MortgageOptionsCalculator = () => {
         <Card className="border-2">
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">11% Fixed</CardTitle>
+              <CardTitle className="text-lg">11% Fixed ($155K)</CardTitle>
               <Badge variant="outline">Traditional</Badge>
             </div>
             <CardDescription>Fixed rate, keep all growth</CardDescription>
@@ -366,7 +368,7 @@ export const MortgageOptionsCalculator = () => {
             <div className="space-y-3">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Down Payment ({downPaymentPercent}%)</span>
-                <span className="font-semibold">{formatCurrency(propertyPrice * downPaymentPercent / 100)}</span>
+                <span className="font-semibold">{formatCurrency(155000 * downPaymentPercent / 100)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Monthly Payment</span>
@@ -388,7 +390,7 @@ export const MortgageOptionsCalculator = () => {
                   <span className="font-semibold text-primary">{formatCurrency(fixedResults.netGain)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">ROI</span>
+                  <span className="text-muted-foreground">ROI (Cash-on-Cash)</span>
                   <span className="font-semibold text-primary">{formatPercent(fixedResults.buyerROI)}</span>
                 </div>
               </div>
