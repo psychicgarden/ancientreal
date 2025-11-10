@@ -17,6 +17,10 @@ import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, L
 import SectionHeader from "@/components/SectionHeader";
 import PlatformAssessment from "@/components/PlatformAssessment";
 import { MortgageOptionsCalculator } from "@/components/MortgageOptionsCalculator";
+import { ScenarioComparison } from "@/components/ScenarioComparison";
+import { SensitivityDashboard } from "@/components/SensitivityDashboard";
+import { StrategicRecommendations } from "@/components/StrategicRecommendations";
+import { getCurrentScenario, getAggressiveScenario, getTieredScenario } from "@/lib/revenueScenarios";
 
 // Import property images
 import villaTulum from "@/assets/villa-tulum.jpg";
@@ -866,6 +870,33 @@ const BusinessModel = () => {
                     </CardContent>
                   </Card>
                 </div>
+              </div>
+
+              {/* Scenario Comparison Section */}
+              <div className="mb-16 mt-20">
+                <div className="text-center mb-12">
+                  <div className="inline-flex items-center space-x-2 mb-4">
+                    <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary"></div>
+                    <div className="text-sm font-medium text-primary uppercase tracking-wider">Revenue Optimization</div>
+                    <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary"></div>
+                  </div>
+                  <h2 className="text-4xl font-bold mb-4">Scenario Analysis: 8% vs 11.5% APR</h2>
+                  <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    Compare three strategic approaches to maximize revenue while maintaining market competitiveness
+                  </p>
+                </div>
+
+                <ScenarioComparison scenarios={[getCurrentScenario(), getAggressiveScenario(), getTieredScenario()]} />
+              </div>
+
+              {/* Sensitivity Dashboard */}
+              <div className="mb-16">
+                <SensitivityDashboard />
+              </div>
+
+              {/* Strategic Recommendations */}
+              <div className="mb-16">
+                <StrategicRecommendations />
               </div>
               </div>
 
