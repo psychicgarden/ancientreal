@@ -126,9 +126,9 @@ export const DevelopmentFlywheel: React.FC = () => {
             <div className="text-sm">
               <span className="font-semibold text-foreground">Capital Recovery Breakdown: </span>
               <span className="text-muted-foreground">
-                <strong>Gross Sales ($16.02M)</strong> represents 100% of sale prices collected as: 
-                <strong> Immediate Cash ($4.84M)</strong> funds next flips, 
-                <strong> Deferred Principal ($11.18M)</strong> collected over 15 years, plus 
+                <strong>Gross Sales (${(flywheel.totalGrossSales / 1_000_000).toFixed(2)}M)</strong> represents 100% of sale prices collected as: 
+                <strong> Immediate Cash (${(flywheel.totalImmediateCash / 1_000_000).toFixed(2)}M)</strong> funds next flips, 
+                <strong> Deferred Principal (${(flywheel.totalDeferredPrincipal / 1_000_000).toFixed(2)}M)</strong> collected over 15 years, plus 
                 <strong> Interest ($11.32M)</strong> shown in 15-year financial revenue. 
                 Construction profit is an operational metric not included in IRR calculations.
               </span>

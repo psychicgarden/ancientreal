@@ -21,7 +21,7 @@ import { ScenarioComparison } from "@/components/ScenarioComparison";
 import { SensitivityDashboard } from "@/components/SensitivityDashboard";
 import { MortgageOnlySensitivityDashboard } from "@/components/MortgageOnlySensitivityDashboard";
 import { StrategicRecommendations } from "@/components/StrategicRecommendations";
-import { getCurrentScenario, getAggressiveScenario, getTieredScenario, getAcceleratedScenario, getHybridScenario } from "@/lib/revenueScenarios";
+import { getCurrentScenario, getAggressiveScenario, getTieredScenario, getAcceleratedScenario, getHybridScenario, calculateDevelopmentFlywheel } from "@/lib/revenueScenarios";
 
 // Import property images
 import villaTulum from "@/assets/villa-tulum.jpg";
@@ -31,85 +31,57 @@ import villaGreece from "@/assets/villa-greece.jpg";
 import villaBali from "@/assets/villa-bali.jpg";
 import penthouseMexico from "@/assets/penthouse-mexico.jpg";
 import ecoSmartCity from "@/assets/eco-smart-city.jpg";
-const flywheelData = [{
-  flip: "Flip 1",
-  location: "Mazunte, Mexico",
-  flag: "🇲🇽",
-  units: 15,
-  pricePerUnit: 135000,
-  buildCost: 1.125,
-  salesPrice: 2.025,
-  cashIn: 0.81,
-  remaining: 2.435,
-  platformFee: 70.875,
-  image: villaTulum,
-  structure: "Mexican SAPI + Fideicomiso"
-}, {
-  flip: "Flip 2",
-  location: "Bahia, Brazil",
-  flag: "🇧🇷",
-  units: 21,
-  pricePerUnit: 138000,
-  buildCost: 1.575,
-  salesPrice: 2.898,
-  cashIn: 1.107,
-  remaining: 1.967,
-  platformFee: 101.871,
-  image: beachChalet,
-  structure: "Brazilian LTDA"
-}, {
-  flip: "Flip 3A",
-  location: "Corfu, Greece",
-  flag: "🇬🇷",
-  units: 16,
-  pricePerUnit: 141000,
-  buildCost: 1.2,
-  salesPrice: 2.256,
-  cashIn: 0.864,
-  remaining: 1.631,
-  platformFee: 78.912,
-  image: villaGreece,
-  structure: "Greek IKE SPV"
-}, {
-  flip: "Flip 3B",
-  location: "Mallorca, Spain",
-  flag: "🇪🇸",
-  units: 15,
-  pricePerUnit: 144000,
-  buildCost: 1.125,
-  salesPrice: 2.16,
-  cashIn: 0.837,
-  remaining: 1.343,
-  platformFee: 75.6,
-  image: villaEriceira,
-  structure: "Spanish SL"
-}, {
-  flip: "Flip 4A",
-  location: "Koh Phangan, Thailand",
-  flag: "🇹🇭",
-  units: 25,
-  pricePerUnit: 147000,
-  buildCost: 1.875,
-  salesPrice: 3.675,
-  cashIn: 1.323,
-  remaining: 0.923,
-  platformFee: 128.625,
-  image: villaBali,
-  structure: "30+30 Leasehold"
-}, {
-  flip: "Flip 4B",
-  location: "Antalya, Turkey",
-  flag: "🇹🇷",
-  units: 20,
-  pricePerUnit: 150000,
-  buildCost: 1.5,
-  salesPrice: 3.0,
-  cashIn: 1.08,
-  remaining: 0.371,
-  platformFee: 105,
-  image: penthouseMexico,
-  structure: "Turkish SPV"
-}];
+
+// Calculate dynamic flywheel data with rolling budget
+const INITIAL_CAPITAL = 2.75; // $2.75M initial capital
+
+const calculateFlywheelWithBudget = () => {
+  const flywheel = calculateDevelopmentFlywheel();
+  const images = [villaTulum, beachChalet, villaGreece, villaEriceira, villaBali, penthouseMexico];
+  const locations = [
+    { name: "Mazunte, Mexico", flag: "🇲🇽", structure: "Mexican SAPI + Fideicomiso" },
+    { name: "Bahia, Brazil", flag: "🇧🇷", structure: "Brazilian LTDA" },
+    { name: "Corfu, Greece", flag: "🇬🇷", structure: "Greek IKE SPV" },
+    { name: "Mallorca, Spain", flag: "🇪🇸", structure: "Spanish SL" },
+    { name: "Koh Phangan, Thailand", flag: "🇹🇭", structure: "30+30 Leasehold" },
+    { name: "Antalya, Turkey", flag: "🇹🇷", structure: "Turkish SPV" }
+  ];
+  
+  const prices = [135000, 138000, 141000, 144000, 147000, 150000];
+  
+  let remainingBudget = INITIAL_CAPITAL;
+  
+  return flywheel.flips.map((flip, idx) => {
+    const buildCostM = flip.buildCost / 1_000_000;
+    const immediateCashM = flip.immediateCash / 1_000_000;
+    
+    // Calculate remaining budget BEFORE this flip
+    const budgetBefore = remainingBudget;
+    
+    // Update remaining budget: subtract build cost, add immediate cash
+    remainingBudget = remainingBudget - buildCostM + immediateCashM;
+    
+    return {
+      flip: flip.flip,
+      location: locations[idx].name,
+      flag: locations[idx].flag,
+      units: flip.units,
+      pricePerUnit: prices[idx],
+      buildCost: buildCostM,
+      salesPrice: flip.grossSales / 1_000_000,
+      cashIn: immediateCashM,
+      remaining: remainingBudget,
+      platformFee: flip.platformFees / 1_000,
+      image: images[idx],
+      structure: locations[idx].structure,
+      downPayments: flip.downPayments / 1_000_000,
+      cashSales: flip.cashSales / 1_000_000,
+      deferredPrincipal: flip.deferredPrincipal / 1_000_000
+    };
+  });
+};
+
+const flywheelData = calculateFlywheelWithBudget();
 // Dynamic Pricing: $135k → $150k across 6 flips
 const dynamicPricingBreakdown = [
   { flip: "Flip 1", units: 15, avgPrice: 135000, platformFee: 70875 },
@@ -544,31 +516,22 @@ const BusinessModel = () => {
                             <div className="bg-primary/5 rounded-lg p-3">
                               <div className="text-sm font-medium text-foreground mb-2">Cash In Breakdown</div>
                               <div className="space-y-1 text-sm">
-                            {(() => {
-                              const financedUnits = Math.floor(flip.units * 0.8); // 80% financed
-                              const cashUnits = flip.units - financedUnits;
-                              const priceInK = flip.pricePerUnit / 1000; // Convert to thousands
-                              const financedCash = financedUnits * priceInK * 0.2; // 20% down payments
-                              const cashPurchases = cashUnits * priceInK; // full cash purchases
-                              return <>
-                                      <div className="flex justify-between items-center">
-                                        <span className="text-muted-foreground">{financedUnits} financed (20% down):</span>
-                                        <span className="font-mono font-semibold">${financedCash.toFixed(0)}K</span>
-                                      </div>
-                                      <div className="flex justify-between items-center">
-                                        <span className="text-muted-foreground">{cashUnits} cash purchases:</span>
-                                        <span className="font-mono font-semibold">${cashPurchases.toFixed(0)}K</span>
-                                      </div>
-                                      <div className="flex justify-between items-center">
-                                        <span className="text-muted-foreground">Platform fee (3.5%):</span>
-                                        <span className="font-mono font-semibold">${flip.platformFee}K</span>
-                                      </div>
-                                      <div className="border-t pt-1.5 mt-1.5 flex justify-between items-center">
-                                        <span className="font-semibold text-foreground">Total Cash In:</span>
-                                        <span className="font-mono text-lg font-bold text-primary">${flip.cashIn}M</span>
-                                      </div>
-                                    </>;
-                            })()}
+                                <div className="flex justify-between items-center">
+                                  <span className="text-muted-foreground">{Math.floor(flip.units * 0.8)} financed (20% down):</span>
+                                  <span className="font-mono font-semibold">${(flip.downPayments * 1000).toFixed(0)}K</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                  <span className="text-muted-foreground">{flip.units - Math.floor(flip.units * 0.8)} cash purchases:</span>
+                                  <span className="font-mono font-semibold">${(flip.cashSales * 1000).toFixed(0)}K</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                  <span className="text-muted-foreground">Platform fee (3.5%):</span>
+                                  <span className="font-mono font-semibold">${flip.platformFee.toFixed(3)}K</span>
+                                </div>
+                                <div className="border-t pt-1.5 mt-1.5 flex justify-between items-center">
+                                  <span className="font-semibold text-foreground">Total Cash In:</span>
+                                  <span className="font-mono text-lg font-bold text-primary">${flip.cashIn.toFixed(3)}M</span>
+                                </div>
                               </div>
                             </div>
                           </div>
