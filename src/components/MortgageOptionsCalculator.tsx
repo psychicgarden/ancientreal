@@ -101,10 +101,11 @@ export const MortgageOptionsCalculator = () => {
     const totalInterest = (monthlyPayment * termMonths) - loanAmount;
     const netGain = totalAppreciation;
     
-    // Ancient's 15-year return on the loan amount
+    // Ancient's return expressed as annualized IRR (effective annual rate)
     const totalRevenue = totalInterest + platformFee;
-    const ancientProfit = totalRevenue; // Interest + fee is profit
-    const ancientROI = (ancientProfit / loanAmount) * 100; // Total ROI over 15 years
+    const monthlyIRR = monthlyRate; // IRR per month equals the amortization rate
+    const annualizedIRR = Math.pow(1 + monthlyIRR, 12) - 1;
+    const ancientROI = annualizedIRR * 100;
     
     return {
       monthlyPayment,
