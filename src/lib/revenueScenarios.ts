@@ -74,6 +74,47 @@ function calculateTrueIRR(
 }
 
 /**
+ * Calculate true IRR for mortgage-only model (no SAM)
+ * Only includes platform fees and mortgage interest
+ */
+function calculateMortgageOnlyIRR(
+  initialInvestment: number,
+  platformFeesM: number,
+  mortgageInterestM: number,
+  termYears: number
+): number {
+  const annualInterest = mortgageInterestM / termYears;
+  
+  // Build cash flow array without appreciation share
+  const cashFlows = [-initialInvestment + platformFeesM]; // Year 0
+  for (let i = 1; i <= termYears; i++) {
+    cashFlows.push(annualInterest); // Years 1-15
+  }
+  
+  // Newton-Raphson solver for IRR
+  let rate = 0.10; // Initial guess: 10%
+  const maxIterations = 100;
+  const tolerance = 0.0001;
+  
+  for (let iteration = 0; iteration < maxIterations; iteration++) {
+    let npv = 0;
+    let dnpv = 0;
+    
+    for (let i = 0; i < cashFlows.length; i++) {
+      const discountFactor = Math.pow(1 + rate, i);
+      npv += cashFlows[i] / discountFactor;
+      dnpv -= (i * cashFlows[i]) / Math.pow(1 + rate, i + 1);
+    }
+    
+    if (Math.abs(npv) < tolerance) break;
+    
+    rate = rate - npv / dnpv;
+  }
+  
+  return rate * 100;
+}
+
+/**
  * Calculate revenue for a given scenario
  */
 export function calculateScenario(inputs: ScenarioInputs, name: string): ScenarioResults {
@@ -240,6 +281,78 @@ export function getHybridScenario(): ScenarioResults {
  */
 export function getTieredScenario(): ScenarioResults {
   return calculateScenario(SCENARIO_PRESETS.tiered, "Tiered Model");
+}
+
+/**
+ * Calculate mortgage-only scenario (no SAM - buyer owns 100% appreciation)
+ */
+export function calculateMortgageOnlyScenario(inputs: ScenarioInputs, name: string): ScenarioResults {
+  const {
+    apr,
+    cashPurchaseRate,
+    totalUnits,
+    avgPropertyPrice,
+    platformFeeRate,
+    termYears,
+  } = inputs;
+
+  // Calculate unit distribution
+  const cashUnits = Math.round(totalUnits * cashPurchaseRate);
+  const financedUnits = totalUnits - cashUnits;
+
+  // Platform fees (on all sales)
+  const platformFees = totalUnits * avgPropertyPrice * platformFeeRate;
+
+  // Calculate mortgage interest revenue
+  const downPaymentRate = 0.20;
+  const loanPerUnit = avgPropertyPrice * (1 - downPaymentRate);
+  const totalLoanAmount = financedUnits * loanPerUnit;
+  
+  const monthlyRate = apr / 100 / 12;
+  const numPayments = termYears * 12;
+  const monthlyPayment = totalLoanAmount > 0
+    ? (totalLoanAmount * monthlyRate * Math.pow(1 + monthlyRate, numPayments)) /
+      (Math.pow(1 + monthlyRate, numPayments) - 1)
+    : 0;
+  
+  const totalPaid = monthlyPayment * numPayments;
+  const mortgageInterest = totalPaid - totalLoanAmount;
+
+  // NO appreciation share - buyer owns 100%
+  const appreciationShare = 0;
+
+  // Total revenue (no SAM component)
+  const totalRevenue = platformFees + mortgageInterest;
+
+  // Convert to millions
+  const totalRevenueM = totalRevenue / 1_000_000;
+  const platformFeesM = platformFees / 1_000_000;
+  const mortgageInterestM = mortgageInterest / 1_000_000;
+  const appreciationShareM = 0;
+
+  // Calculate IRR without appreciation windfall
+  const initialCapital = 3.0;
+  const irr = calculateMortgageOnlyIRR(
+    initialCapital,
+    platformFeesM,
+    mortgageInterestM,
+    termYears
+  );
+  const cashMultiple = totalRevenueM / initialCapital;
+
+  return {
+    name,
+    totalRevenue: totalRevenueM,
+    platformFees: platformFeesM,
+    mortgageInterest: mortgageInterestM,
+    appreciationShare: appreciationShareM,
+    irr,
+    cashMultiple,
+    financedUnits,
+    cashUnits,
+    avgMonthlyPayment: monthlyPayment / financedUnits,
+    totalLoanAmount: totalLoanAmount / 1_000_000,
+  };
 }
 
 /**

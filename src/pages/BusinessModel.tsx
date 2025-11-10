@@ -19,6 +19,7 @@ import PlatformAssessment from "@/components/PlatformAssessment";
 import { MortgageOptionsCalculator } from "@/components/MortgageOptionsCalculator";
 import { ScenarioComparison } from "@/components/ScenarioComparison";
 import { SensitivityDashboard } from "@/components/SensitivityDashboard";
+import { MortgageOnlySensitivityDashboard } from "@/components/MortgageOnlySensitivityDashboard";
 import { StrategicRecommendations } from "@/components/StrategicRecommendations";
 import { getCurrentScenario, getAggressiveScenario, getTieredScenario, getAcceleratedScenario, getHybridScenario } from "@/lib/revenueScenarios";
 
@@ -763,9 +764,20 @@ const BusinessModel = () => {
                 <ScenarioComparison scenarios={[currentScenario, getAggressiveScenario(), getTieredScenario()]} />
               </div>
 
-              {/* Sensitivity Dashboard */}
+              {/* Sensitivity Dashboard - SAM Model */}
               <div className="mb-16">
                 <SensitivityDashboard />
+              </div>
+
+              {/* Mortgage-Only Dashboard */}
+              <div className="mb-16">
+                <div className="mb-8">
+                  <h2 className="text-3xl font-bold mb-4 text-foreground">Conservative Alternative</h2>
+                  <p className="text-lg text-muted-foreground">
+                    For buyers who prefer traditional mortgages without shared appreciation
+                  </p>
+                </div>
+                <MortgageOnlySensitivityDashboard />
               </div>
 
               {/* Strategic Recommendations */}
