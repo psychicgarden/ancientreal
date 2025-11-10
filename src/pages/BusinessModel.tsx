@@ -717,129 +717,6 @@ const BusinessModel = () => {
                   </CardContent>
                 </Card>
 
-                {/* Revenue Composition & Returns */}
-                <Card className="bg-card/80 backdrop-blur-sm border-border/50 mb-8">
-                  <CardContent className="p-8">
-                    <div className="mb-8">
-                      <div className="inline-flex items-center space-x-2 mb-4">
-                        <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary"></div>
-                        <div className="text-sm font-medium text-primary uppercase tracking-wider">Revenue Structure</div>
-                        <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary"></div>
-                      </div>
-                      <h3 className="text-3xl font-bold mb-3">Investment Returns Overview</h3>
-                      <p className="text-lg text-muted-foreground">
-                        Diversified revenue streams from platform fees, mortgage interest, and property appreciation
-                      </p>
-                    </div>
-
-                    {/* Revenue Composition Pie Chart */}
-                    <div className="mb-8">
-                      <h4 className="text-lg font-semibold mb-6 text-center">Revenue Composition</h4>
-                      <ResponsiveContainer width="100%" height={350}>
-                        <PieChart>
-                          <Pie
-                            data={[
-                              { name: 'Platform Fees', value: currentScenario.platformFees, fill: 'hsl(var(--chart-1))' },
-                              { name: 'Mortgage Interest', value: currentScenario.mortgageInterest, fill: 'hsl(var(--chart-2))' },
-                              { name: 'Appreciation Share', value: currentScenario.appreciationShare, fill: 'hsl(var(--chart-3))' },
-                            ]}
-                            cx="50%"
-                            cy="50%"
-                            labelLine={false}
-                            label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                            outerRadius={120}
-                            dataKey="value"
-                          />
-                          <Tooltip 
-                            contentStyle={{ 
-                              backgroundColor: 'hsl(var(--background))',
-                              border: '1px solid hsl(var(--border))',
-                              borderRadius: '8px'
-                            }}
-                            formatter={(value: number) => [`$${value.toFixed(2)}M`]}
-                          />
-                        </PieChart>
-                      </ResponsiveContainer>
-                      <div className="grid grid-cols-3 gap-4 mt-6">
-                        <div className="text-center p-4 bg-chart-1/10 rounded-lg border border-chart-1/20">
-                          <div className="text-sm text-muted-foreground mb-1">Platform Fees</div>
-                          <div className="text-2xl font-bold">${currentScenario.platformFees.toFixed(2)}M</div>
-                          <div className="text-xs text-muted-foreground mt-1">3% of total</div>
-                        </div>
-                        <div className="text-center p-4 bg-chart-2/10 rounded-lg border border-chart-2/20">
-                          <div className="text-sm text-muted-foreground mb-1">Interest Income</div>
-                          <div className="text-2xl font-bold">${currentScenario.mortgageInterest.toFixed(2)}M</div>
-                          <div className="text-xs text-muted-foreground mt-1">47% of total</div>
-                        </div>
-                        <div className="text-center p-4 bg-chart-3/10 rounded-lg border border-chart-3/20">
-                          <div className="text-sm text-muted-foreground mb-1">Appreciation</div>
-                          <div className="text-2xl font-bold">${currentScenario.appreciationShare.toFixed(2)}M</div>
-                          <div className="text-xs text-muted-foreground mt-1">50% of total</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Investment Returns Timeline */}
-                    <div className="mb-8">
-                      <h4 className="text-lg font-semibold mb-4">Investment Returns Timeline</h4>
-                      <div className="grid md:grid-cols-3 gap-4">
-                        <Card className="bg-gradient-to-br from-chart-1/10 to-chart-1/5 border-chart-1/20">
-                          <CardContent className="p-6 text-center">
-                            <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">Year 5</div>
-                            <div className="text-4xl font-bold text-primary mb-2">4.6%</div>
-                            <div className="text-sm text-muted-foreground">IRR</div>
-                            <div className="mt-3 pt-3 border-t border-border/30">
-                              <div className="text-xs text-muted-foreground">Cumulative Revenue</div>
-                              <div className="text-lg font-semibold">$3.45M</div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                        <Card className="bg-gradient-to-br from-chart-2/10 to-chart-2/5 border-chart-2/20">
-                          <CardContent className="p-6 text-center">
-                            <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">Year 10</div>
-                            <div className="text-4xl font-bold text-primary mb-2">8.5%</div>
-                            <div className="text-sm text-muted-foreground">IRR</div>
-                            <div className="mt-3 pt-3 border-t border-border/30">
-                              <div className="text-xs text-muted-foreground">Cumulative Revenue</div>
-                              <div className="text-lg font-semibold">$6.19M</div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                        <Card className="bg-gradient-to-br from-chart-3/10 to-chart-3/5 border-chart-3/20">
-                          <CardContent className="p-6 text-center">
-                            <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">Year 15</div>
-                            <div className="text-4xl font-bold text-primary mb-2">13.4%</div>
-                            <div className="text-sm text-muted-foreground">IRR</div>
-                            <div className="mt-3 pt-3 border-t border-border/30">
-                              <div className="text-xs text-muted-foreground">Cumulative Revenue</div>
-                              <div className="text-lg font-semibold">$17.53M</div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </div>
-
-                    {/* Key Metrics Grid */}
-                    <div className="grid md:grid-cols-4 gap-4 pt-6 border-t border-border">
-                      <div className="text-center">
-                        <div className="text-sm text-muted-foreground mb-1">Initial Capital</div>
-                        <div className="text-2xl font-bold">$2.75M</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-sm text-muted-foreground mb-1">Year 5 Cumulative</div>
-                        <div className="text-2xl font-bold text-primary">$3.45M</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-sm text-muted-foreground mb-1">Year 10 Cumulative</div>
-                        <div className="text-2xl font-bold text-primary">$6.19M</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-sm text-muted-foreground mb-1">Year 15 Total</div>
-                        <div className="text-2xl font-bold text-primary">$17.53M</div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
 
                 {/* Key Value Propositions */}
                 <div className="grid md:grid-cols-3 gap-6">
@@ -877,13 +754,13 @@ const BusinessModel = () => {
                     <div className="text-sm font-medium text-primary uppercase tracking-wider">Revenue Optimization</div>
                     <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary"></div>
                   </div>
-                  <h2 className="text-4xl font-bold mb-4">Scenario Analysis: 8% vs 11.5% APR</h2>
+                  <h2 className="text-4xl font-bold mb-4">Revenue Strategy: Conservative, Aggressive, or Tiered?</h2>
                   <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                    Compare three strategic approaches to maximize revenue while maintaining market competitiveness
+                    Three distinct paths to profitability - choose based on market positioning and growth speed
                   </p>
                 </div>
 
-                <ScenarioComparison scenarios={[currentScenario, acceleratedScenario, hybridScenario, getAggressiveScenario(), getTieredScenario()]} />
+                <ScenarioComparison scenarios={[currentScenario, getAggressiveScenario(), getTieredScenario()]} />
               </div>
 
               {/* Sensitivity Dashboard */}
