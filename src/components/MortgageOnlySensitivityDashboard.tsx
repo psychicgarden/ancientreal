@@ -173,19 +173,19 @@ export const MortgageOnlySensitivityDashboard: React.FC = () => {
           <h3 className="text-lg font-semibold mb-4 text-foreground">Revenue Breakdown</h3>
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Construction Profit ($75k build cost)</span>
+              <span className="text-muted-foreground">Construction Profit (sale − $75k build cost)</span>
               <span className="font-semibold text-primary">
                 ${result.constructionProfit.toFixed(2)}M
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Platform Fees (3.5% on financed)</span>
+              <span className="text-muted-foreground">Platform Fees (3.5% on all sales)</span>
               <span className="font-semibold text-foreground">
                 ${result.platformFees.toFixed(2)}M
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Mortgage Interest ({apr}% APR)</span>
+              <span className="text-muted-foreground">Mortgage Interest ({apr}% APR × amortized)</span>
               <span className="font-semibold text-foreground">
                 ${result.mortgageInterest.toFixed(2)}M
               </span>
