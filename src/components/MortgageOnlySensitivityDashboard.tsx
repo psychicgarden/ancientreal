@@ -200,6 +200,76 @@ export const MortgageOnlySensitivityDashboard: React.FC = () => {
           <p className="text-muted-foreground">{getRecommendation()}</p>
         </div>
 
+        {/* Investment Summary */}
+        <div className="mt-8 bg-gradient-to-br from-primary/20 via-primary/10 to-accent/10 border-2 border-primary/40 rounded-xl p-8">
+          <h3 className="text-2xl font-bold mb-6 text-foreground flex items-center gap-3">
+            <DollarSign className="h-7 w-7 text-primary" />
+            Investment Summary ({termYears} Years)
+          </h3>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+            {/* Initial Investment */}
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                Initial Investment
+              </p>
+              <p className="text-3xl font-bold text-foreground">
+                $3.00M
+              </p>
+            </div>
+
+            {/* Total Revenue */}
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                Total Revenue
+              </p>
+              <p className="text-3xl font-bold text-primary">
+                ${result.totalRevenue.toFixed(2)}M
+              </p>
+            </div>
+
+            {/* Net Profit */}
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                Net Profit
+              </p>
+              <p className="text-3xl font-bold text-green-600 dark:text-green-400">
+                ${(result.totalRevenue - 3.0).toFixed(2)}M
+              </p>
+            </div>
+
+            {/* IRR */}
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                IRR
+              </p>
+              <p className="text-3xl font-bold text-foreground">
+                {result.irr.toFixed(1)}%
+              </p>
+            </div>
+
+            {/* Cash Multiple */}
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                Cash Multiple (ROI)
+              </p>
+              <p className="text-3xl font-bold text-foreground">
+                {result.cashMultiple.toFixed(2)}x
+              </p>
+            </div>
+
+            {/* Total Return */}
+            <div className="space-y-2">
+              <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                Total Return
+              </p>
+              <p className="text-3xl font-bold text-primary">
+                {(((result.totalRevenue / 3.0) - 1) * 100).toFixed(1)}%
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Comparison Note */}
         <div className="mt-6 p-4 bg-muted/20 rounded-lg border border-border/30">
           <p className="text-sm text-muted-foreground">
