@@ -19,43 +19,56 @@ export const DevelopmentFlywheel: React.FC = () => {
         </div>
 
         {/* Summary Stats */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-4 gap-4 mb-6">
           <div className="bg-background/80 rounded-lg p-4 border border-border/50">
             <div className="flex items-center gap-2 mb-2">
               <Building2 className="w-4 h-4 text-primary" />
-              <span className="text-sm text-muted-foreground">Construction Profit</span>
+              <span className="text-sm text-muted-foreground">Gross Sales</span>
             </div>
             <div className="text-2xl font-bold text-primary">
-              ${(flywheel.totalConstructionProfit / 1_000_000).toFixed(2)}M
+              ${(flywheel.totalGrossSales / 1_000_000).toFixed(2)}M
             </div>
             <div className="text-xs text-muted-foreground mt-1">
-              Sale price − $75k build cost
+              100% capital recovery (before interest)
             </div>
           </div>
-          
+
           <div className="bg-background/80 rounded-lg p-4 border border-border/50">
             <div className="flex items-center gap-2 mb-2">
               <DollarSign className="w-4 h-4 text-primary" />
-              <span className="text-sm text-muted-foreground">Platform Fees</span>
+              <span className="text-sm text-muted-foreground">Immediate Cash</span>
             </div>
             <div className="text-2xl font-bold text-primary">
-              ${(flywheel.totalPlatformFees / 1_000_000).toFixed(2)}M
+              ${(flywheel.totalImmediateCash / 1_000_000).toFixed(2)}M
             </div>
             <div className="text-xs text-muted-foreground mt-1">
-              3.5% on all sales
+              Down payments + cash + fees
             </div>
           </div>
           
           <div className="bg-background/80 rounded-lg p-4 border border-border/50">
             <div className="flex items-center gap-2 mb-2">
               <TrendingUp className="w-4 h-4 text-primary" />
-              <span className="text-sm text-muted-foreground">Total Cash In</span>
+              <span className="text-sm text-muted-foreground">Deferred Principal</span>
             </div>
             <div className="text-2xl font-bold text-primary">
-              ${(flywheel.totalCashIn / 1_000_000).toFixed(2)}M
+              ${(flywheel.totalDeferredPrincipal / 1_000_000).toFixed(2)}M
             </div>
             <div className="text-xs text-muted-foreground mt-1">
-              Down payments + cash sales + fees
+              80% of financed (over 15 years)
+            </div>
+          </div>
+
+          <div className="bg-background/80 rounded-lg p-4 border border-border/50">
+            <div className="flex items-center gap-2 mb-2">
+              <Building2 className="w-4 h-4 text-amber-500" />
+              <span className="text-sm text-muted-foreground">Construction Profit</span>
+            </div>
+            <div className="text-2xl font-bold text-amber-500">
+              ${(flywheel.totalConstructionProfit / 1_000_000).toFixed(2)}M
+            </div>
+            <div className="text-xs text-muted-foreground mt-1">
+              Operational metric only
             </div>
           </div>
         </div>
@@ -74,10 +87,9 @@ export const DevelopmentFlywheel: React.FC = () => {
                   <th className="text-right py-2 px-3">Units</th>
                   <th className="text-right py-2 px-3">Build Cost</th>
                   <th className="text-right py-2 px-3">Gross Sales</th>
-                  <th className="text-right py-2 px-3">Down Payments</th>
-                  <th className="text-right py-2 px-3">Cash Sales</th>
+                  <th className="text-right py-2 px-3">Immediate Cash</th>
+                  <th className="text-right py-2 px-3">Deferred Principal</th>
                   <th className="text-right py-2 px-3">Platform Fees</th>
-                  <th className="text-right py-2 px-3 font-semibold">Cash In</th>
                 </tr>
               </thead>
               <tbody>
@@ -88,20 +100,17 @@ export const DevelopmentFlywheel: React.FC = () => {
                     <td className="text-right py-3 px-3 text-muted-foreground">
                       ${(flip.buildCost / 1_000_000).toFixed(2)}M
                     </td>
-                    <td className="text-right py-3 px-3">
+                    <td className="text-right py-3 px-3 font-semibold">
                       ${(flip.grossSales / 1_000_000).toFixed(2)}M
                     </td>
-                    <td className="text-right py-3 px-3">
-                      ${(flip.downPayments / 1_000).toFixed(0)}K
+                    <td className="text-right py-3 px-3 text-primary">
+                      ${(flip.immediateCash / 1_000_000).toFixed(2)}M
                     </td>
                     <td className="text-right py-3 px-3">
-                      ${(flip.cashSales / 1_000).toFixed(0)}K
+                      ${(flip.deferredPrincipal / 1_000_000).toFixed(2)}M
                     </td>
-                    <td className="text-right py-3 px-3">
+                    <td className="text-right py-3 px-3 text-muted-foreground">
                       ${(flip.platformFees / 1_000).toFixed(0)}K
-                    </td>
-                    <td className="text-right py-3 px-3 font-semibold text-primary">
-                      ${(flip.totalCashIn / 1_000_000).toFixed(2)}M
                     </td>
                   </tr>
                 ))}
@@ -111,15 +120,17 @@ export const DevelopmentFlywheel: React.FC = () => {
         </div>
 
         {/* Important Note */}
-        <div className="mt-6 p-4 bg-amber-500/10 rounded-lg border border-amber-500/20">
+        <div className="mt-6 p-4 bg-primary/10 rounded-lg border border-primary/20">
           <div className="flex items-start gap-3">
-            <div className="text-amber-500 text-lg mt-0.5">⚠️</div>
+            <div className="text-primary text-lg mt-0.5">💡</div>
             <div className="text-sm">
-              <span className="font-semibold text-foreground">Important: </span>
+              <span className="font-semibold text-foreground">Capital Recovery Breakdown: </span>
               <span className="text-muted-foreground">
-                Construction profit is an <strong>operational metric</strong> that shows development viability 
-                and cash-flow recycling across flips. It is <strong>NOT included</strong> in the 15-year financial revenue 
-                or IRR calculations, which only track Platform Fees + Mortgage Interest + Appreciation Share.
+                <strong>Gross Sales ($16.02M)</strong> represents 100% of sale prices collected as: 
+                <strong> Immediate Cash ($4.84M)</strong> funds next flips, 
+                <strong> Deferred Principal ($11.18M)</strong> collected over 15 years, plus 
+                <strong> Interest ($8.21M)</strong> shown in 15-year financial revenue. 
+                Construction profit is an operational metric not included in IRR calculations.
               </span>
             </div>
           </div>

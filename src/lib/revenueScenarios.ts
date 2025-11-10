@@ -52,7 +52,8 @@ export interface FlywheelFlip {
   downPayments: number;
   platformFees: number;
   cashSales: number;
-  totalCashIn: number;
+  immediateCash: number;
+  deferredPrincipal: number;
   constructionProfit: number;
 }
 
@@ -60,7 +61,9 @@ export function calculateDevelopmentFlywheel(): {
   flips: FlywheelFlip[];
   totalConstructionProfit: number;
   totalPlatformFees: number;
-  totalCashIn: number;
+  totalImmediateCash: number;
+  totalDeferredPrincipal: number;
+  totalGrossSales: number;
 } {
   const flips = getFlips();
   const results: FlywheelFlip[] = [];
@@ -71,7 +74,8 @@ export function calculateDevelopmentFlywheel(): {
     const downPayments = flip.price * 0.20 * flip.financedUnits;
     const cashSales = flip.price * flip.cashUnits;
     const platformFees = FEE_RATE * grossSales;
-    const totalCashIn = downPayments + cashSales + platformFees;
+    const immediateCash = downPayments + cashSales + platformFees;
+    const deferredPrincipal = flip.price * 0.80 * flip.financedUnits;
     const constructionProfit = (flip.price - BUILD_COST) * flip.units;
     
     results.push({
@@ -82,20 +86,25 @@ export function calculateDevelopmentFlywheel(): {
       downPayments,
       platformFees,
       cashSales,
-      totalCashIn,
+      immediateCash,
+      deferredPrincipal,
       constructionProfit,
     });
   }
   
   const totalConstructionProfit = results.reduce((sum, f) => sum + f.constructionProfit, 0);
   const totalPlatformFees = results.reduce((sum, f) => sum + f.platformFees, 0);
-  const totalCashIn = results.reduce((sum, f) => sum + f.totalCashIn, 0);
+  const totalImmediateCash = results.reduce((sum, f) => sum + f.immediateCash, 0);
+  const totalDeferredPrincipal = results.reduce((sum, f) => sum + f.deferredPrincipal, 0);
+  const totalGrossSales = results.reduce((sum, f) => sum + f.grossSales, 0);
   
   return {
     flips: results,
     totalConstructionProfit,
     totalPlatformFees,
-    totalCashIn,
+    totalImmediateCash,
+    totalDeferredPrincipal,
+    totalGrossSales,
   };
 }
 
