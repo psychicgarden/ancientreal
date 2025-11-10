@@ -109,10 +109,11 @@ export const SensitivityDashboard: React.FC = () => {
         <div className="bg-background/50 rounded-lg p-6 border border-border/50">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
             <div>
-              <div className="text-sm text-muted-foreground mb-1">Total Revenue</div>
+              <div className="text-sm text-muted-foreground mb-1">15-Year Total Revenue</div>
               <div className="text-2xl font-bold text-primary">
                 ${result.totalRevenue.toFixed(2)}M
               </div>
+              <div className="text-xs text-muted-foreground mt-1">Fees + Interest + SAM</div>
             </div>
             <div>
               <div className="text-sm text-muted-foreground mb-1">IRR</div>
@@ -127,29 +128,34 @@ export const SensitivityDashboard: React.FC = () => {
               </div>
             </div>
             <div>
-              <div className="text-sm text-muted-foreground mb-1">Interest Revenue</div>
+              <div className="text-sm text-muted-foreground mb-1">Appreciation (30% SAM)</div>
               <div className="text-2xl font-bold">
-                ${result.mortgageInterest.toFixed(2)}M
+                ${result.appreciationShare.toFixed(2)}M
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 text-sm">
+          <div className="grid grid-cols-3 gap-4 text-sm mb-4">
             <div className="bg-background/80 rounded p-3">
-              <div className="text-muted-foreground mb-1">Financed Units</div>
-              <div className="font-semibold">{result.financedUnits} units</div>
+              <div className="text-muted-foreground mb-1">Platform Fees</div>
+              <div className="font-semibold">${result.platformFees.toFixed(2)}M</div>
             </div>
             <div className="bg-background/80 rounded p-3">
-              <div className="text-muted-foreground mb-1">Cash Units</div>
-              <div className="font-semibold">{result.cashUnits} units</div>
+              <div className="text-muted-foreground mb-1">Mortgage Interest</div>
+              <div className="font-semibold">${result.mortgageInterest.toFixed(2)}M</div>
             </div>
             <div className="bg-background/80 rounded p-3">
               <div className="text-muted-foreground mb-1">Total Loan Amount</div>
               <div className="font-semibold">${result.totalLoanAmount.toFixed(2)}M</div>
             </div>
-            <div className="bg-background/80 rounded p-3">
-              <div className="text-muted-foreground mb-1">Avg Monthly Payment</div>
-              <div className="font-semibold">${Math.round(result.avgMonthlyPayment)}</div>
+          </div>
+          
+          <div className="p-3 bg-muted/50 rounded-lg border border-border/50">
+            <div className="text-xs font-medium text-muted-foreground mb-1">
+              Note: Construction Profit (${result.constructionProfit.toFixed(2)}M) shown separately in Development Flywheel
+            </div>
+            <div className="text-xs text-muted-foreground">
+              This dashboard shows 15-year financial revenue only: Platform Fees + Mortgage Interest + Appreciation Share
             </div>
           </div>
         </div>

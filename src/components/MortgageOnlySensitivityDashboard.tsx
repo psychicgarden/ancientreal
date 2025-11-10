@@ -170,35 +170,39 @@ export const MortgageOnlySensitivityDashboard: React.FC = () => {
 
         {/* Revenue Breakdown */}
         <div className="bg-muted/30 p-6 rounded-lg mb-8">
-          <h3 className="text-lg font-semibold mb-4 text-foreground">Revenue Breakdown</h3>
+          <h3 className="text-lg font-semibold mb-4 text-foreground">15-Year Financial Revenue</h3>
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Construction Profit (sale − $75k build cost)</span>
-              <span className="font-semibold text-primary">
-                ${result.constructionProfit.toFixed(2)}M
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Platform Fees (3.5% on all sales)</span>
-              <span className="font-semibold text-foreground">
+              <span className="font-semibold text-primary">
                 ${result.platformFees.toFixed(2)}M
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Mortgage Interest ({apr}% APR × amortized)</span>
-              <span className="font-semibold text-foreground">
+              <span className="text-muted-foreground">Mortgage Interest ({apr}% APR, {termYears}y)</span>
+              <span className="font-semibold text-primary">
                 ${result.mortgageInterest.toFixed(2)}M
               </span>
             </div>
-            <div className="flex justify-between items-center pt-3 border-t border-border">
-              <span className="text-muted-foreground">Appreciation Share (0% SAM)</span>
-              <span className="font-semibold text-foreground">$0.00M</span>
-            </div>
             <div className="flex justify-between items-center pt-3 border-t-2 border-primary/30">
-              <span className="text-foreground font-bold">Total Revenue</span>
+              <span className="text-foreground font-bold">15-Year Total Revenue</span>
               <span className="font-bold text-primary text-lg">
                 ${result.totalRevenue.toFixed(2)}M
               </span>
+            </div>
+          </div>
+          
+          <div className="mt-4 pt-4 border-t border-border/50">
+            <div className="bg-amber-500/10 rounded-lg p-3 border border-amber-500/20">
+              <div className="flex items-start gap-2">
+                <span className="text-amber-500 text-sm mt-0.5">📊</span>
+                <div className="text-xs text-muted-foreground">
+                  <strong className="text-foreground">Development Flywheel: </strong>
+                  Construction profit (${result.constructionProfit.toFixed(2)}M) is shown separately 
+                  as an operational metric. It funds the sequential flips but is not included in 15-year 
+                  financial revenue or IRR calculations.
+                </div>
+              </div>
             </div>
           </div>
         </div>

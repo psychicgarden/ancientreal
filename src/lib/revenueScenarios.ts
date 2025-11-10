@@ -5,40 +5,98 @@
 
 // Business Model Constants
 const BUILD_COST = 75_000; // $75k build cost per unit
-const FEE_RATE = 0.035; // 3.5% platform fee
+const FEE_RATE = 0.035; // 3.5% platform fee on all sales
+const INITIAL_CAPITAL = 3.0; // $3M initial investment
 
-// Cohort structure for 6 flips across 3 years
-interface Cohort {
-  year: number;
+// Flip structure - exact 6 flips matching user's schedule
+interface Flip {
+  flip: string;
   price: number;
   units: number;
+  financedUnits: number;
+  cashUnits: number;
 }
 
 /**
- * Get cohorts scaled to totalUnits
- * Flip 1-2 (Year 0): 37 units @ $135k
- * Flip 3-4 (Year 1): 38 units @ $142.5k
- * Flip 5-6 (Year 2): 37 units @ $150k
+ * Get exact 6-flip schedule with dynamic pricing $135k → $150k
  */
-function getCohorts(totalUnits: number): Cohort[] {
-  const cohort0Units = Math.round(totalUnits * 37 / 112);
-  const cohort1Units = Math.round(totalUnits * 38 / 112);
-  const cohort2Units = totalUnits - cohort0Units - cohort1Units;
-  
+function getFlips(): Flip[] {
   return [
-    { year: 0, price: 135_000, units: cohort0Units },
-    { year: 1, price: 142_500, units: cohort1Units },
-    { year: 2, price: 150_000, units: cohort2Units },
+    { flip: 'Flip 1', price: 135_000, units: 15, financedUnits: 12, cashUnits: 3 },
+    { flip: 'Flip 2', price: 138_000, units: 21, financedUnits: 16, cashUnits: 5 },
+    { flip: 'Flip 3A', price: 141_000, units: 16, financedUnits: 12, cashUnits: 4 },
+    { flip: 'Flip 3B', price: 144_000, units: 15, financedUnits: 12, cashUnits: 3 },
+    { flip: 'Flip 4A', price: 147_000, units: 25, financedUnits: 20, cashUnits: 5 },
+    { flip: 'Flip 4B', price: 150_000, units: 20, financedUnits: 16, cashUnits: 4 },
   ];
 }
 
 /**
- * Get weighted average sale price across all cohorts
+ * Get weighted average sale price across all flips
  */
-function getWeightedAvgPrice(totalUnits: number): number {
-  const cohorts = getCohorts(totalUnits);
-  const totalValue = cohorts.reduce((sum, c) => sum + c.price * c.units, 0);
+function getWeightedAvgPrice(): number {
+  const flips = getFlips();
+  const totalValue = flips.reduce((sum, f) => sum + f.price * f.units, 0);
+  const totalUnits = flips.reduce((sum, f) => sum + f.units, 0);
   return totalValue / totalUnits;
+}
+
+/**
+ * Development Flywheel - Operational cash flow (NOT included in 15-year IRR)
+ */
+export interface FlywheelFlip {
+  flip: string;
+  units: number;
+  buildCost: number;
+  grossSales: number;
+  downPayments: number;
+  platformFees: number;
+  cashSales: number;
+  totalCashIn: number;
+  constructionProfit: number;
+}
+
+export function calculateDevelopmentFlywheel(): {
+  flips: FlywheelFlip[];
+  totalConstructionProfit: number;
+  totalPlatformFees: number;
+  totalCashIn: number;
+} {
+  const flips = getFlips();
+  const results: FlywheelFlip[] = [];
+  
+  for (const flip of flips) {
+    const buildCost = BUILD_COST * flip.units;
+    const grossSales = flip.price * flip.units;
+    const downPayments = flip.price * 0.20 * flip.financedUnits;
+    const cashSales = flip.price * flip.cashUnits;
+    const platformFees = FEE_RATE * grossSales;
+    const totalCashIn = downPayments + cashSales + platformFees;
+    const constructionProfit = (flip.price - BUILD_COST) * flip.units;
+    
+    results.push({
+      flip: flip.flip,
+      units: flip.units,
+      buildCost,
+      grossSales,
+      downPayments,
+      platformFees,
+      cashSales,
+      totalCashIn,
+      constructionProfit,
+    });
+  }
+  
+  const totalConstructionProfit = results.reduce((sum, f) => sum + f.constructionProfit, 0);
+  const totalPlatformFees = results.reduce((sum, f) => sum + f.platformFees, 0);
+  const totalCashIn = results.reduce((sum, f) => sum + f.totalCashIn, 0);
+  
+  return {
+    flips: results,
+    totalConstructionProfit,
+    totalPlatformFees,
+    totalCashIn,
+  };
 }
 
 export interface ScenarioInputs {
@@ -68,71 +126,26 @@ export interface ScenarioResults {
 }
 
 /**
- * Calculate true IRR using Newton-Raphson method
- * Solves for the rate where NPV of all cash flows equals zero
+ * Calculate platform fees on ALL sales (cash + financed) using exact flip schedule
  */
-function calculateTrueIRR(
-  initialInvestment: number,
-  platformFeesM: number,
-  mortgageInterestM: number,
-  appreciationShareM: number,
-  termYears: number
-): number {
-  const annualInterest = mortgageInterestM / termYears;
-  
-  // Build cash flow array: Year 0 gets platform fees minus investment
-  // Years 1-14 get annual mortgage interest
-  // Year 15 gets mortgage interest plus appreciation share
-  const cashFlows = [-initialInvestment + platformFeesM]; // Year 0
-  for (let i = 1; i < termYears; i++) {
-    cashFlows.push(annualInterest); // Years 1-14
-  }
-  cashFlows.push(annualInterest + appreciationShareM); // Year 15
-  
-  // Newton-Raphson solver for IRR (finds rate where NPV = 0)
-  let rate = 0.15; // Initial guess: 15%
-  const maxIterations = 100;
-  const tolerance = 0.0001;
-  
-  for (let iteration = 0; iteration < maxIterations; iteration++) {
-    let npv = 0;
-    let dnpv = 0; // Derivative of NPV with respect to rate
-    
-    for (let i = 0; i < cashFlows.length; i++) {
-      const discountFactor = Math.pow(1 + rate, i);
-      npv += cashFlows[i] / discountFactor;
-      dnpv -= (i * cashFlows[i]) / Math.pow(1 + rate, i + 1);
-    }
-    
-    if (Math.abs(npv) < tolerance) break;
-    
-    rate = rate - npv / dnpv; // Newton-Raphson step
-  }
-  
-  return rate * 100; // Convert to percentage
+function calculatePlatformFees(): number {
+  const flips = getFlips();
+  return flips.reduce((sum, f) => sum + FEE_RATE * f.price * f.units, 0);
 }
 
 /**
- * Calculate construction profit across all cohorts
+ * Calculate construction profit (for display only - NOT included in 15-year revenue)
  */
-function calculateConstructionProfit(totalUnits: number): number {
-  const cohorts = getCohorts(totalUnits);
-  return cohorts.reduce((sum, c) => sum + (c.price - BUILD_COST) * c.units, 0);
+function calculateConstructionProfit(): number {
+  const flips = getFlips();
+  return flips.reduce((sum, f) => sum + (f.price - BUILD_COST) * f.units, 0);
 }
 
 /**
- * Calculate platform fees on ALL sales (cash + financed)
- */
-function calculatePlatformFees(totalUnits: number, feeRate: number = FEE_RATE): number {
-  const cohorts = getCohorts(totalUnits);
-  return cohorts.reduce((sum, c) => sum + feeRate * c.price * c.units, 0);
-}
-
-/**
- * Newton-Raphson IRR solver
+ * Newton-Raphson IRR solver for 15-year financial revenue only
  */
 function newtonRaphsonIRR(cashFlows: number[]): number {
-  let rate = 0.20; // Initial guess: 20%
+  let rate = 0.18; // Initial guess: 18%
   const maxIterations = 100;
   const tolerance = 0.0001;
   
@@ -154,135 +167,116 @@ function newtonRaphsonIRR(cashFlows: number[]): number {
 }
 
 /**
- * Build mortgage-only cash flows with cohort timing
+ * Build 15-year financial cash flows (Platform Fees + Mortgage Interest + SAM)
+ * EXCLUDES construction profit - that's in the Development Flywheel
  */
-function buildMortgageOnlyCashflows(
-  initialInvestment: number,
-  totalUnits: number,
-  financedUnits: number,
+function build15YearCashflows(
+  platformFeesM: number,
+  mortgageInterestM: number,
+  appreciationShareM: number,
+  termYears: number
+): number[] {
+  const cashFlows: number[] = [];
+  const annualInterest = mortgageInterestM / termYears;
+  
+  // Year 0: Platform fees minus initial investment
+  cashFlows[0] = platformFeesM - INITIAL_CAPITAL;
+  
+  // Years 1-14: Annual mortgage interest
+  for (let year = 1; year < termYears; year++) {
+    cashFlows[year] = annualInterest;
+  }
+  
+  // Year 15: Mortgage interest + appreciation share
+  cashFlows[termYears] = annualInterest + appreciationShareM;
+  
+  return cashFlows;
+}
+
+/**
+ * Build mortgage-only 15-year cash flows (no SAM)
+ */
+function buildMortgageOnly15YearCashflows(
+  platformFeesM: number,
   mortgageInterestM: number,
   termYears: number
 ): number[] {
-  const cohorts = getCohorts(totalUnits);
   const cashFlows: number[] = [];
+  const annualInterest = mortgageInterestM / termYears;
   
-  // Year 0: Initial outflow + first cohort revenues
-  const cohort0 = cohorts[0];
-  const constructionProfit0 = (cohort0.price - BUILD_COST) * cohort0.units / 1_000_000;
-  const platformFees0 = FEE_RATE * cohort0.price * cohort0.units / 1_000_000;
-  cashFlows[0] = -initialInvestment + constructionProfit0 + platformFees0;
+  // Year 0: Platform fees minus initial investment
+  cashFlows[0] = platformFeesM - INITIAL_CAPITAL;
   
-  // Year 1: Second cohort revenues + mortgage interest from cohort 0
-  const cohort1 = cohorts[1];
-  const constructionProfit1 = (cohort1.price - BUILD_COST) * cohort1.units / 1_000_000;
-  const platformFees1 = FEE_RATE * cohort1.price * cohort1.units / 1_000_000;
-  const share0 = cohort0.units / totalUnits;
-  const interest1 = share0 * mortgageInterestM / termYears;
-  cashFlows[1] = constructionProfit1 + platformFees1 + interest1;
-  
-  // Year 2: Third cohort revenues + mortgage interest from cohorts 0-1
-  const cohort2 = cohorts[2];
-  const constructionProfit2 = (cohort2.price - BUILD_COST) * cohort2.units / 1_000_000;
-  const platformFees2 = FEE_RATE * cohort2.price * cohort2.units / 1_000_000;
-  const share1 = cohort1.units / totalUnits;
-  const interest2 = (share0 + share1) * mortgageInterestM / termYears;
-  cashFlows[2] = constructionProfit2 + platformFees2 + interest2;
-  
-  // Years 3 to termYears: Full mortgage interest from all cohorts
-  const fullAnnualInterest = mortgageInterestM / termYears;
-  for (let year = 3; year <= termYears; year++) {
-    cashFlows[year] = fullAnnualInterest;
+  // Years 1-15: Annual mortgage interest
+  for (let year = 1; year <= termYears; year++) {
+    cashFlows[year] = annualInterest;
   }
   
   return cashFlows;
 }
 
 /**
- * Calculate true IRR for mortgage-only model with cohort timing
- */
-function calculateMortgageOnlyIRR(
-  initialInvestment: number,
-  totalUnits: number,
-  financedUnits: number,
-  mortgageInterestM: number,
-  termYears: number
-): number {
-  const cashFlows = buildMortgageOnlyCashflows(
-    initialInvestment,
-    totalUnits,
-    financedUnits,
-    mortgageInterestM,
-    termYears
-  );
-  return newtonRaphsonIRR(cashFlows);
-}
-
-/**
- * Calculate revenue for a given scenario
+ * Calculate revenue for scenario with SAM (15-year financial revenue only)
  */
 export function calculateScenario(inputs: ScenarioInputs, name: string): ScenarioResults {
-  const {
-    apr,
-    cashPurchaseRate,
-    totalUnits,
-    avgPropertyPrice,
-    platformFeeRate,
-    termYears,
-    appreciationRate,
-    samShare,
-  } = inputs;
+  const { apr, termYears, appreciationRate, samShare } = inputs;
 
-  // Calculate construction profit
-  const constructionProfit = calculateConstructionProfit(totalUnits);
+  const flips = getFlips();
+  const totalUnits = flips.reduce((sum, f) => sum + f.units, 0);
+  const financedUnits = flips.reduce((sum, f) => sum + f.financedUnits, 0);
+  const cashUnits = flips.reduce((sum, f) => sum + f.cashUnits, 0);
 
-  // Calculate unit distribution
-  const cashUnits = Math.round(totalUnits * cashPurchaseRate);
-  const financedUnits = totalUnits - cashUnits;
+  // Construction profit (for display only - NOT in 15-year revenue)
+  const constructionProfit = calculateConstructionProfit();
 
-  // Platform fees (on ALL sales: cash + financed)
-  const platformFees = calculatePlatformFees(totalUnits, platformFeeRate);
+  // Platform fees (3.5% on ALL sales)
+  const platformFees = calculatePlatformFees();
 
-  // Calculate mortgage interest revenue
-  const downPaymentRate = 0.20; // 20% down payment
-  const loanPerUnit = avgPropertyPrice * (1 - downPaymentRate);
-  const totalLoanAmount = financedUnits * loanPerUnit;
+  // Calculate mortgage interest per flip and aggregate
+  let totalLoanAmount = 0;
+  let totalMortgageInterest = 0;
   
-  // Monthly payment calculation
-  const monthlyRate = apr / 100 / 12;
-  const numPayments = termYears * 12;
-  const monthlyPayment = totalLoanAmount > 0
-    ? (totalLoanAmount * monthlyRate * Math.pow(1 + monthlyRate, numPayments)) /
-      (Math.pow(1 + monthlyRate, numPayments) - 1)
-    : 0;
-  
-  const totalPaid = monthlyPayment * numPayments;
-  const mortgageInterest = totalPaid - totalLoanAmount;
+  for (const flip of flips) {
+    const loanPerUnit = flip.price * 0.80; // 20% down
+    const loanAmount = loanPerUnit * flip.financedUnits;
+    totalLoanAmount += loanAmount;
+    
+    const monthlyRate = apr / 100 / 12;
+    const numPayments = termYears * 12;
+    const monthlyPayment = loanAmount > 0
+      ? (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, numPayments)) /
+        (Math.pow(1 + monthlyRate, numPayments) - 1)
+      : 0;
+    
+    const totalPaid = monthlyPayment * numPayments;
+    totalMortgageInterest += totalPaid - loanAmount;
+  }
 
-  // Calculate appreciation share (30% SAM)
-  const finalValue = totalUnits * avgPropertyPrice * Math.pow(1 + appreciationRate, termYears);
-  const totalAppreciation = finalValue - (totalUnits * avgPropertyPrice);
+  // Calculate appreciation share (30% SAM at year 15)
+  const weightedAvgPrice = getWeightedAvgPrice();
+  const finalValue = totalUnits * weightedAvgPrice * Math.pow(1 + appreciationRate, termYears);
+  const totalAppreciation = finalValue - (totalUnits * weightedAvgPrice);
   const appreciationShare = totalAppreciation * samShare;
 
-  // Total revenue (includes construction profit)
-  const totalRevenue = constructionProfit + platformFees + mortgageInterest + appreciationShare;
+  // 15-Year Total Revenue (Platform Fees + Mortgage Interest + SAM)
+  const totalRevenue = platformFees + totalMortgageInterest + appreciationShare;
 
-  // Convert to millions for all calculations
+  // Convert to millions
   const totalRevenueM = totalRevenue / 1_000_000;
   const constructionProfitM = constructionProfit / 1_000_000;
   const platformFeesM = platformFees / 1_000_000;
-  const mortgageInterestM = mortgageInterest / 1_000_000;
+  const mortgageInterestM = totalMortgageInterest / 1_000_000;
   const appreciationShareM = appreciationShare / 1_000_000;
 
-  // Calculate true IRR using Newton-Raphson method for NPV=0
-  const initialCapital = 3.0; // $3M initial capital
-  const irr = calculateTrueIRR(
-    initialCapital,
+  // Calculate IRR using 15-year financial cash flows only
+  const cashFlows = build15YearCashflows(
     platformFeesM,
     mortgageInterestM,
     appreciationShareM,
     termYears
   );
-  const cashMultiple = totalRevenueM / initialCapital;
+  const irr = newtonRaphsonIRR(cashFlows);
+  const cashMultiple = totalRevenueM / INITIAL_CAPITAL;
 
   return {
     name,
@@ -295,7 +289,7 @@ export function calculateScenario(inputs: ScenarioInputs, name: string): Scenari
     cashMultiple,
     financedUnits,
     cashUnits,
-    avgMonthlyPayment: monthlyPayment / financedUnits,
+    avgMonthlyPayment: totalLoanAmount > 0 ? (totalMortgageInterest * 1_000_000 / termYears / 12) / financedUnits : 0,
     totalLoanAmount: totalLoanAmount / 1_000_000,
   };
 }
@@ -392,67 +386,63 @@ export function getTieredScenario(): ScenarioResults {
 }
 
 /**
- * Calculate mortgage-only scenario (no SAM - buyer owns 100% appreciation)
+ * Calculate mortgage-only scenario (no SAM - 15-year financial revenue only)
  */
 export function calculateMortgageOnlyScenario(inputs: ScenarioInputs, name: string): ScenarioResults {
-  const {
-    apr,
-    cashPurchaseRate,
-    totalUnits,
-    termYears,
-  } = inputs;
+  const { apr, termYears } = inputs;
 
-  // Calculate construction profit
-  const constructionProfit = calculateConstructionProfit(totalUnits);
+  const flips = getFlips();
+  const totalUnits = flips.reduce((sum, f) => sum + f.units, 0);
+  const financedUnits = flips.reduce((sum, f) => sum + f.financedUnits, 0);
+  const cashUnits = flips.reduce((sum, f) => sum + f.cashUnits, 0);
 
-  // Use weighted average price across all flips
-  const avgPropertyPrice = getWeightedAvgPrice(totalUnits);
+  // Construction profit (for display only - NOT in 15-year revenue)
+  const constructionProfit = calculateConstructionProfit();
 
-  // Calculate unit distribution
-  const cashUnits = Math.round(totalUnits * cashPurchaseRate);
-  const financedUnits = totalUnits - cashUnits;
+  // Platform fees (3.5% on ALL sales)
+  const platformFees = calculatePlatformFees();
 
-  // Platform fees (on ALL sales: cash + financed)
-  const platformFees = calculatePlatformFees(totalUnits, FEE_RATE);
-
-  // Calculate mortgage interest revenue (only on financed units)
-  const downPaymentRate = 0.20;
-  const loanPerUnit = avgPropertyPrice * (1 - downPaymentRate);
-  const totalLoanAmount = financedUnits * loanPerUnit;
+  // Calculate mortgage interest per flip and aggregate
+  let totalLoanAmount = 0;
+  let totalMortgageInterest = 0;
   
-  const monthlyRate = apr / 100 / 12;
-  const numPayments = termYears * 12;
-  const monthlyPayment = totalLoanAmount > 0
-    ? (totalLoanAmount * monthlyRate * Math.pow(1 + monthlyRate, numPayments)) /
-      (Math.pow(1 + monthlyRate, numPayments) - 1)
-    : 0;
-  
-  const totalPaid = monthlyPayment * numPayments;
-  const mortgageInterest = totalPaid - totalLoanAmount;
+  for (const flip of flips) {
+    const loanPerUnit = flip.price * 0.80; // 20% down
+    const loanAmount = loanPerUnit * flip.financedUnits;
+    totalLoanAmount += loanAmount;
+    
+    const monthlyRate = apr / 100 / 12;
+    const numPayments = termYears * 12;
+    const monthlyPayment = loanAmount > 0
+      ? (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, numPayments)) /
+        (Math.pow(1 + monthlyRate, numPayments) - 1)
+      : 0;
+    
+    const totalPaid = monthlyPayment * numPayments;
+    totalMortgageInterest += totalPaid - loanAmount;
+  }
 
   // NO appreciation share - buyer owns 100%
   const appreciationShare = 0;
 
-  // Total revenue
-  const totalRevenue = constructionProfit + platformFees + mortgageInterest;
+  // 15-Year Total Revenue (Platform Fees + Mortgage Interest only)
+  const totalRevenue = platformFees + totalMortgageInterest;
 
   // Convert to millions
   const totalRevenueM = totalRevenue / 1_000_000;
   const constructionProfitM = constructionProfit / 1_000_000;
   const platformFeesM = platformFees / 1_000_000;
-  const mortgageInterestM = mortgageInterest / 1_000_000;
+  const mortgageInterestM = totalMortgageInterest / 1_000_000;
   const appreciationShareM = 0;
 
-  // Calculate IRR with cohort timing
-  const initialCapital = 3.0;
-  const irr = calculateMortgageOnlyIRR(
-    initialCapital,
-    totalUnits,
-    financedUnits,
+  // Calculate IRR using mortgage-only 15-year cash flows
+  const cashFlows = buildMortgageOnly15YearCashflows(
+    platformFeesM,
     mortgageInterestM,
     termYears
   );
-  const cashMultiple = totalRevenueM / initialCapital;
+  const irr = newtonRaphsonIRR(cashFlows);
+  const cashMultiple = totalRevenueM / INITIAL_CAPITAL;
 
   return {
     name,
@@ -465,7 +455,7 @@ export function calculateMortgageOnlyScenario(inputs: ScenarioInputs, name: stri
     cashMultiple,
     financedUnits,
     cashUnits,
-    avgMonthlyPayment: financedUnits > 0 ? monthlyPayment / financedUnits : 0,
+    avgMonthlyPayment: totalLoanAmount > 0 ? (totalMortgageInterest * 1_000_000 / termYears / 12) / financedUnits : 0,
     totalLoanAmount: totalLoanAmount / 1_000_000,
   };
 }
