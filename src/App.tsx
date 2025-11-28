@@ -19,6 +19,7 @@ import NotFound from "./pages/NotFound";
 import BusinessModel from "./pages/BusinessModel";
 import SimpleMortgage from "./pages/SimpleMortgage";
 import MobileDemo from "./pages/MobileDemo";
+import PitchDeck from "./pages/PitchDeck";
 import { WalletProvider } from "@/contexts/WalletContext";
 import { UIProvider } from "@/contexts/UIContext";
 import { SmartContractProvider } from "@/contexts/SmartContractContext";
@@ -66,6 +67,7 @@ function App() {
                 <Route path="/test" element={<SmartContractTest />} />
                 <Route path="/mortgage" element={<SimpleMortgage />} />
                 <Route path="/mobile-demo" element={<MobileDemo />} />
+                <Route path="/pitch-deck" element={<PitchDeck />} />
                 <Route path="/investor-report" element={<Navigate to="/portfolio?tab=platform" replace />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>

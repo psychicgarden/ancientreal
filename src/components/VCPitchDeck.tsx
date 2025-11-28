@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -25,7 +26,8 @@ import {
   ArrowRight,
   CheckCircle2,
   XCircle,
-  Maximize2
+  Maximize2,
+  Presentation
 } from "lucide-react";
 import { PieChart as RechartsPie, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 
@@ -143,6 +145,12 @@ export default function VCPitchDeck() {
           </div>
 
           <div className="flex items-center gap-2">
+            <Link to="/pitch-deck">
+              <Button variant="outline" size="sm" className="gap-2">
+                <Presentation className="h-4 w-4" />
+                Present
+              </Button>
+            </Link>
             <Button
               variant="ghost"
               size="icon"
