@@ -23,6 +23,7 @@ import { MortgageOnlySensitivityDashboard } from "@/components/MortgageOnlySensi
 import { StrategicRecommendations } from "@/components/StrategicRecommendations";
 import { getCurrentScenario, getAggressiveScenario, getTieredScenario, getAcceleratedScenario, getHybridScenario, calculateDevelopmentFlywheel, getCashOptimizedScenario, getMortgageHeavyScenario, getHelocStrategyScenario } from "@/lib/revenueScenarios";
 import { ProductComparison } from "@/components/ProductComparison";
+import VCPitchDeck from "@/components/VCPitchDeck";
 
 // Import property images
 import villaTulum from "@/assets/villa-tulum.jpg";
@@ -414,16 +415,22 @@ const BusinessModel = () => {
           </div>
 
           {/* Tabbed Content */}
-          <Tabs defaultValue="product-comparison" className="w-full">
-            <TabsList className="grid w-full grid-cols-6 mb-8">
-              <TabsTrigger value="product-comparison">Three Paths</TabsTrigger>
-              <TabsTrigger value="tiered-portfolio">Tiered Portfolio</TabsTrigger>
-              <TabsTrigger value="revenue-model">Revenue Model</TabsTrigger>
-              <TabsTrigger value="platform-assessment">Platform Assessment</TabsTrigger>
-              <TabsTrigger value="budget-breakdown">Budget Breakdown</TabsTrigger>
-              <TabsTrigger value="legal-structuring">Legal Structuring</TabsTrigger>
-              <TabsTrigger value="buyers-journey">Buyer's Journey</TabsTrigger>
+          <Tabs defaultValue="vc-pitch" className="w-full">
+            <TabsList className="grid w-full grid-cols-8 mb-8">
+              <TabsTrigger value="vc-pitch" className="text-xs lg:text-sm">VC Pitch Deck</TabsTrigger>
+              <TabsTrigger value="product-comparison" className="text-xs lg:text-sm">Three Paths</TabsTrigger>
+              <TabsTrigger value="tiered-portfolio" className="text-xs lg:text-sm">Tiered Portfolio</TabsTrigger>
+              <TabsTrigger value="revenue-model" className="text-xs lg:text-sm">Revenue Model</TabsTrigger>
+              <TabsTrigger value="platform-assessment" className="text-xs lg:text-sm">Platform</TabsTrigger>
+              <TabsTrigger value="budget-breakdown" className="text-xs lg:text-sm">Budget</TabsTrigger>
+              <TabsTrigger value="legal-structuring" className="text-xs lg:text-sm">Legal</TabsTrigger>
+              <TabsTrigger value="buyers-journey" className="text-xs lg:text-sm">Buyer's Journey</TabsTrigger>
             </TabsList>
+
+            {/* VC Pitch Deck Tab */}
+            <TabsContent value="vc-pitch">
+              <VCPitchDeck />
+            </TabsContent>
 
             {/* Product Comparison Tab */}
             <TabsContent value="product-comparison">
