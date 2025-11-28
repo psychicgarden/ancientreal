@@ -1732,7 +1732,7 @@ export type Database = {
         Returns: Json
       }
       backfill_user_properties_from_transactions: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: undefined
       }
       backfill_user_property_from_tx: {
@@ -1748,18 +1748,12 @@ export type Database = {
           lender_share: number
         }[]
       }
-      calculate_daily_yield: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
+      calculate_daily_yield: { Args: never; Returns: undefined }
       calculate_monthly_payment: {
         Args: { apr_bps: number; loan_amount_usd: number; term_months: number }
         Returns: number
       }
-      create_platform_backup: {
-        Args: Record<PropertyKey, never>
-        Returns: Json
-      }
+      create_platform_backup: { Args: never; Returns: Json }
       distribute_monthly_rental_income: {
         Args: { property_frac_id: string; rental_month?: string }
         Returns: undefined
@@ -1819,7 +1813,7 @@ export type Database = {
         }[]
       }
       get_whole_properties_sold: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           property_location: string
           property_name: string
@@ -1847,10 +1841,7 @@ export type Database = {
         Args: { p_project_id?: string }
         Returns: Json
       }
-      reset_fractional_portfolio: {
-        Args: { p_wallet: string }
-        Returns: Json
-      }
+      reset_fractional_portfolio: { Args: { p_wallet: string }; Returns: Json }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
