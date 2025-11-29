@@ -24,6 +24,7 @@ import { StrategicRecommendations } from "@/components/StrategicRecommendations"
 import { getCurrentScenario, getAggressiveScenario, getTieredScenario, getAcceleratedScenario, getHybridScenario, calculateDevelopmentFlywheel, getCashOptimizedScenario, getMortgageHeavyScenario, getHelocStrategyScenario } from "@/lib/revenueScenarios";
 import { ProductComparison } from "@/components/ProductComparison";
 import VCPitchDeck from "@/components/VCPitchDeck";
+import CashFirstStrategy from "@/components/CashFirstStrategy";
 
 // Import property images
 import villaTulum from "@/assets/villa-tulum.jpg";
@@ -158,14 +159,14 @@ const revenueStreams = [{
   icon: "🏛"
 }, {
   title: "Mortgage Interest",
-  amount: "$11.32M",
-  description: "11.5% APR yield over 15-year term (weighted avg pricing)",
+  amount: "$10.5M",
+  description: "11% flat APR yield over 15-year term",
   timeline: "15-year stream",
   icon: "🌐"
 }, {
-  title: "Property Appreciation (30% SAM)",
-  amount: "$8.76M",
-  description: "30% share of 7% annual appreciation at year 15",
+  title: "Property Appreciation (15% SAM)",
+  amount: "$4.38M",
+  description: "15% share of 7% annual appreciation at exit",
   timeline: "15-year capture",
   icon: "🚀"
 }];
@@ -442,15 +443,18 @@ const BusinessModel = () => {
               <div className="space-y-12">
                 <div className="text-center mb-12">
                   <Badge variant="outline" className="mb-4">
-                    Tiered Portfolio Analysis
+                    Cash-First Strategy
                   </Badge>
                   <h2 className="text-4xl font-bold mb-4">
-                    Three Scenarios: 26-29% Blended IRR
+                    100% Cash Flagship → 10% Cash / 90% Mortgage
                   </h2>
                   <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                    Diversified revenue mix across cash sales, mortgages, and SAM products
+                    Phase into mortgages over time for maximum capital velocity
                   </p>
                 </div>
+
+                {/* Cash First Strategy Component */}
+                <CashFirstStrategy />
 
                 <ScenarioComparison 
                   scenarios={[
@@ -464,13 +468,13 @@ const BusinessModel = () => {
                 <Card className="bg-card/80 backdrop-blur-sm border-border/50">
                   <CardHeader>
                     <CardTitle className="text-2xl">
-                      Recommended: Cash Optimized (40/50/10)
+                      Target at Scale: Mortgage Heavy (10/75/15)
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div className="grid md:grid-cols-3 gap-6">
                       <div className="bg-muted/50 rounded-lg p-6">
-                        <div className="text-3xl font-bold text-primary mb-2">40%</div>
+                        <div className="text-3xl font-bold text-green-500 mb-2">10%</div>
                         <div className="font-semibold mb-2">Full Cash Sales</div>
                         <ul className="text-sm text-muted-foreground space-y-1">
                           <li>• Price: $135-150K</li>
@@ -481,23 +485,23 @@ const BusinessModel = () => {
                       </div>
                       
                       <div className="bg-muted/50 rounded-lg p-6">
-                        <div className="text-3xl font-bold text-primary mb-2">50%</div>
+                        <div className="text-3xl font-bold text-primary mb-2">75%</div>
                         <div className="font-semibold mb-2">Ancient Mortgage</div>
                         <ul className="text-sm text-muted-foreground space-y-1">
                           <li>• Price: $145-165K (+$10K)</li>
-                          <li>• 10.5% APR, 15-year term</li>
-                          <li>• 20-22% IRR</li>
+                          <li>• 11% flat APR, 15-year term</li>
+                          <li>• 19-20% IRR</li>
                           <li>• Core revenue engine</li>
                         </ul>
                       </div>
                       
                       <div className="bg-muted/50 rounded-lg p-6">
-                        <div className="text-3xl font-bold text-primary mb-2">10%</div>
+                        <div className="text-3xl font-bold text-orange-500 mb-2">15%</div>
                         <div className="font-semibold mb-2">SAM Model</div>
                         <ul className="text-sm text-muted-foreground space-y-1">
                           <li>• Price: $135-150K</li>
-                          <li>• 8% APR + 20% appreciation</li>
-                          <li>• ~20% IRR</li>
+                          <li>• 8% APR + 15% appreciation</li>
+                          <li>• ~18% IRR</li>
                           <li>• Brand differentiation</li>
                         </ul>
                       </div>

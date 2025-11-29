@@ -351,64 +351,64 @@ export function calculateScenario(inputs: ScenarioInputs, name: string): Scenari
  */
 export const SCENARIO_PRESETS = {
   current: {
-    apr: 11.5,
+    apr: 11.0, // 11% flat mortgage rate
     cashPurchaseRate: 0.20,
     totalUnits: 112,
     avgPropertyPrice: 143000,
     platformFeeRate: 0.035,
     termYears: 15,
     appreciationRate: 0.07,
-    samShare: 0.30,
+    samShare: 0.15, // 15% SAM share
   },
   accelerated: {
-    apr: 8,
+    apr: 11.0,
     cashPurchaseRate: 0.20,
     totalUnits: 112,
     avgPropertyPrice: 143000,
     platformFeeRate: 0.035,
     termYears: 10,
     appreciationRate: 0.07,
-    samShare: 0.30,
+    samShare: 0.15,
   },
   hybrid: {
-    apr: 8,
+    apr: 11.0,
     cashPurchaseRate: 0.20,
     totalUnits: 112,
     avgPropertyPrice: 143000,
     platformFeeRate: 0.035,
-    termYears: 12.5, // 50/50 split between 10 and 15 years
+    termYears: 12.5,
     appreciationRate: 0.07,
-    samShare: 0.30,
+    samShare: 0.15,
   },
   aggressive: {
-    apr: 11.5,
+    apr: 11.0,
     cashPurchaseRate: 0.30,
     totalUnits: 112,
     avgPropertyPrice: 143000,
     platformFeeRate: 0.035,
     termYears: 15,
     appreciationRate: 0.07,
-    samShare: 0.30,
+    samShare: 0.15,
   },
   tiered: {
-    apr: 9.75, // Weighted average of 8%, 10%, 11.5%
+    apr: 11.0,
     cashPurchaseRate: 0.25,
     totalUnits: 112,
     avgPropertyPrice: 143000,
     platformFeeRate: 0.035,
     termYears: 15,
     appreciationRate: 0.07,
-    samShare: 0.30,
+    samShare: 0.15,
   },
-  // New tiered portfolio presets
+  // Tiered portfolio presets with phased cash-to-mortgage evolution
   cashOptimized: {
-    apr: 10.5,
+    apr: 11.0,
     cashPurchaseRate: 0.40,
-    mortgageRate: 0.50,
-    samRate: 0.10,
-    mortgageAPR: 10.5,
+    mortgageRate: 0.45,
+    samRate: 0.15,
+    mortgageAPR: 11.0,
     samAPR: 8.0,
-    samShare: 0.30, // Ancient keeps 30% of SAM appreciation
+    samShare: 0.15, // Ancient keeps 15% of SAM appreciation
     totalUnits: 112,
     avgPropertyPrice: 143000,
     platformFeeRate: 0.035,
@@ -417,12 +417,12 @@ export const SCENARIO_PRESETS = {
   },
   mortgageHeavy: {
     apr: 11.0,
-    cashPurchaseRate: 0.25,
-    mortgageRate: 0.65,
-    samRate: 0.10,
+    cashPurchaseRate: 0.10, // Phased to 10% cash
+    mortgageRate: 0.75, // 75% mortgage
+    samRate: 0.15, // 15% SAM
     mortgageAPR: 11.0,
     samAPR: 8.0,
-    samShare: 0.30,
+    samShare: 0.15,
     totalUnits: 112,
     avgPropertyPrice: 143000,
     platformFeeRate: 0.035,
@@ -430,13 +430,13 @@ export const SCENARIO_PRESETS = {
     appreciationRate: 0.07,
   },
   helocStrategy: {
-    apr: 10.0,
+    apr: 11.0,
     cashPurchaseRate: 0.50,
-    mortgageRate: 0.40,
-    samRate: 0.10,
-    mortgageAPR: 10.0,
+    mortgageRate: 0.35,
+    samRate: 0.15,
+    mortgageAPR: 11.0,
     samAPR: 8.0,
-    samShare: 0.30,
+    samShare: 0.15,
     totalUnits: 112,
     avgPropertyPrice: 143000,
     platformFeeRate: 0.035,
@@ -852,7 +852,7 @@ export function generatePhasedTimeline(
   
   // Mortgage phase: Years 1-15
   const mortgagePhase = [];
-  const scenario = calculateTieredPortfolioScenario(cashRate, mortgageRate, samRate, 10.5, 8.0, 0.20);
+  const scenario = calculateTieredPortfolioScenario(cashRate, mortgageRate, samRate, 11.0, 8.0, 0.15);
   const annualInterest = scenario.mortgageInterest / 15;
   
   for (let year = 1; year <= 15; year++) {
