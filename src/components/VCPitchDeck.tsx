@@ -385,7 +385,7 @@ function Slide4Solution() {
           <CardContent className="space-y-4">
             {[
               { icon: Wallet, text: "10–20% down payment" },
-              { icon: BarChart3, text: "10% fixed on-chain mortgage" },
+              { icon: BarChart3, text: "11% fixed on-chain mortgage" },
               { icon: Database, text: "Payments mint Repayment NFTs" },
               { icon: Award, text: "Build OCCR: On-Chain Credit Report" },
             ].map((item, idx) => (
@@ -408,10 +408,10 @@ function Slide4Solution() {
 
 function Slide5Revenue() {
   const streams = [
-    { title: "Mortgage Interest Spread", value: "4%", desc: "Borrow at ~6% → lend at 10%", icon: TrendingUp },
-    { title: "Developer Fee", value: "5%", desc: "Third-party developer integrations", icon: Building2 },
-    { title: "Buyer Fee", value: "3%", desc: "Every buyer financing through Ancient", icon: Users },
-    { title: "Servicing Fees", value: "20-30yr", desc: "Recurring revenue on every payment", icon: BarChart3 },
+    { title: "Mortgage Interest Spread", value: "5%", desc: "Borrow at ~6% → lend at 11%", icon: TrendingUp },
+    { title: "SAM Appreciation", value: "15%", desc: "15% of property appreciation at exit", icon: Building2 },
+    { title: "Buyer Fee", value: "3.5%", desc: "Every buyer financing through Ancient", icon: Users },
+    { title: "Servicing Fees", value: "15-30yr", desc: "Recurring revenue on every payment", icon: BarChart3 },
     { title: "OCCR Data Licensing", value: "∞", desc: "World's first borderless credit identity", icon: Database },
     { title: "Construction Margin", value: "48%", desc: "Build ~$90K → sell ~$135K (bootstrapping)", icon: Rocket },
   ];
@@ -571,7 +571,7 @@ function Slide7Endgame() {
 
 function Slide8Traction() {
   const metrics = [
-    { value: "12", label: "Units Live", sublabel: "$75K net per year" },
+    { value: "12", label: "Units Live", sublabel: "20% CoC" },
     { value: "16", label: "Unit Complex", sublabel: "Under construction" },
     { value: "✓", label: "Supply Chain", sublabel: "Full pipeline executed" },
     { value: "$$$", label: "Real Revenue", sublabel: "Real renters, real buyers" },
