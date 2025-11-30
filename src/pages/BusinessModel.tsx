@@ -15,7 +15,7 @@ import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Co
 import { useNavigate } from "react-router-dom";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, ComposedChart, PieChart, Pie, Cell } from "recharts";
 import SectionHeader from "@/components/SectionHeader";
-import PlatformAssessment from "@/components/PlatformAssessment";
+import TechDueDiligence from "@/components/TechDueDiligence";
 import { MortgageOptionsCalculator } from "@/components/MortgageOptionsCalculator";
 import { ScenarioComparison } from "@/components/ScenarioComparison";
 import { SensitivityDashboard } from "@/components/SensitivityDashboard";
@@ -446,7 +446,7 @@ const BusinessModel = () => {
               <TabsTrigger value="product-comparison" className="text-xs lg:text-sm">Three Paths</TabsTrigger>
               <TabsTrigger value="tiered-portfolio" className="text-xs lg:text-sm">Tiered Portfolio</TabsTrigger>
               <TabsTrigger value="revenue-model" className="text-xs lg:text-sm">Revenue</TabsTrigger>
-              <TabsTrigger value="platform-assessment" className="text-xs lg:text-sm">Platform</TabsTrigger>
+              <TabsTrigger value="tech-due-diligence" className="text-xs lg:text-sm">Tech Due Diligence</TabsTrigger>
               <TabsTrigger value="budget-breakdown" className="text-xs lg:text-sm">Budget</TabsTrigger>
               <TabsTrigger value="legal-structuring" className="text-xs lg:text-sm">Legal</TabsTrigger>
               <TabsTrigger value="buyers-journey" className="text-xs lg:text-sm">Buyer Journey</TabsTrigger>
@@ -1280,8 +1280,8 @@ const BusinessModel = () => {
               <MortgageOptionsCalculator />
             </TabsContent>
 
-            <TabsContent value="platform-assessment">
-              <PlatformAssessment />
+            <TabsContent value="tech-due-diligence">
+              <TechDueDiligence />
             </TabsContent>
 
             <TabsContent value="budget-breakdown" className="space-y-8">
