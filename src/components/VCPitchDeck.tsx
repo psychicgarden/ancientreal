@@ -41,12 +41,13 @@ const SLIDES = [
   { id: 7, title: "Endgame" },
   { id: 8, title: "Traction" },
   { id: 9, title: "Moat" },
-  { id: 10, title: "Investment" },
-  { id: 11, title: "Compounding" },
-  { id: 12, title: "Returns" },
-  { id: 13, title: "Use of Funds" },
-  { id: 14, title: "Team" },
-  { id: 15, title: "Closing" },
+  { id: 10, title: "Competitive" },
+  { id: 11, title: "Investment" },
+  { id: 12, title: "Compounding" },
+  { id: 13, title: "Returns" },
+  { id: 14, title: "Use of Funds" },
+  { id: 15, title: "Team" },
+  { id: 16, title: "Closing" },
 ];
 
 const compoundingData = [
@@ -68,7 +69,7 @@ export default function VCPitchDeck() {
   const [currentSlide, setCurrentSlide] = useState(1);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  const nextSlide = () => setCurrentSlide((s) => Math.min(s + 1, 15));
+  const nextSlide = () => setCurrentSlide((s) => Math.min(s + 1, 16));
   const prevSlide = () => setCurrentSlide((s) => Math.max(s - 1, 1));
 
   const renderSlide = () => {
@@ -92,17 +93,19 @@ export default function VCPitchDeck() {
       case 9:
         return <Slide9Moat />;
       case 10:
-        return <Slide10Investment />;
+        return <Slide10Competitive />;
       case 11:
-        return <Slide11Compounding />;
+        return <Slide11Investment />;
       case 12:
-        return <Slide12Returns />;
+        return <Slide12Compounding />;
       case 13:
-        return <Slide13UseOfFunds />;
+        return <Slide13Returns />;
       case 14:
-        return <Slide14Team />;
+        return <Slide14UseOfFunds />;
       case 15:
-        return <Slide15Closing />;
+        return <Slide15Team />;
+      case 16:
+        return <Slide16Closing />;
       default:
         return <Slide1Title />;
     }
@@ -161,7 +164,7 @@ export default function VCPitchDeck() {
             <Button
               variant="ghost"
               onClick={nextSlide}
-              disabled={currentSlide === 15}
+              disabled={currentSlide === 16}
               className="gap-2"
             >
               Next
@@ -173,7 +176,7 @@ export default function VCPitchDeck() {
 
       {/* Slide Counter */}
       <div className="text-center mt-4 text-muted-foreground text-sm">
-        Slide {currentSlide} of 15: {SLIDES[currentSlide - 1].title}
+        Slide {currentSlide} of 16: {SLIDES[currentSlide - 1].title}
       </div>
     </div>
   );
@@ -655,11 +658,85 @@ function Slide9Moat() {
   );
 }
 
-function Slide10Investment() {
+function Slide10Competitive() {
+  const competitors = [
+    { name: "Divvy Homes", raised: "$1.127B", status: "Sold ~$1B", flaw: "US-only, FICO" },
+    { name: "Roofstock", raised: "$240M", status: "Stalled", flaw: "No global path" },
+    { name: "Lofty AI", raised: "$400K", status: "Small", flaw: "US investors only" },
+    { name: "RealT", raised: "Bootstrap", status: "$2M fines", flaw: "Operational chaos" },
+  ];
+
   return (
     <div className="flex-1 space-y-6">
       <div className="text-center">
         <Badge variant="outline" className="mb-4">Slide 10</Badge>
+        <h2 className="text-3xl lg:text-4xl font-bold mb-2">
+          $1.5B Raised. <span className="text-destructive">All Hit the Same Wall.</span>
+        </h2>
+        <p className="text-muted-foreground">
+          They proved demand exists. Now we serve the other 95%.
+        </p>
+      </div>
+
+      {/* Competitor Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {competitors.map((comp) => (
+          <div 
+            key={comp.name}
+            className="p-4 bg-card/50 rounded-lg border border-border/50"
+          >
+            <div className="font-semibold text-sm mb-1">{comp.name}</div>
+            <div className="text-lg font-bold text-primary">{comp.raised}</div>
+            <div className="text-xs text-muted-foreground mt-1">{comp.status}</div>
+            <div className="text-xs text-destructive mt-2 font-medium">⚠ {comp.flaw}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* The Gap */}
+      <div className="grid md:grid-cols-2 gap-4">
+        <Card className="bg-destructive/10 border-destructive/30">
+          <CardContent className="p-4">
+            <h3 className="font-semibold text-destructive mb-2 flex items-center gap-2">
+              <XCircle className="h-4 w-4" />
+              Their Ceiling
+            </h3>
+            <ul className="text-sm space-y-1 text-muted-foreground">
+              <li>• FICO-dependent = US-only</li>
+              <li>• No cross-border enforcement</li>
+              <li>• Divvy sold at 50% haircut</li>
+            </ul>
+          </CardContent>
+        </Card>
+        <Card className="bg-primary/10 border-primary/30">
+          <CardContent className="p-4">
+            <h3 className="font-semibold text-primary mb-2 flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4" />
+              Ancient's Solution
+            </h3>
+            <ul className="text-sm space-y-1">
+              <li>• Title-Retention Protocol</li>
+              <li>• OCCR = borderless credit</li>
+              <li>• Smart-contract enforcement</li>
+            </ul>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Punchline */}
+      <div className="text-center p-4 bg-gradient-to-r from-primary/10 to-orange-500/10 rounded-xl border border-primary/20">
+        <p className="font-bold">We're not the "Divvy for X."</p>
+        <p className="text-primary font-bold">We're building what they can't — the global mortgage layer.</p>
+      </div>
+    </div>
+  );
+}
+
+function Slide11Investment() {
+  return (
+    <div className="flex-1 space-y-6">
+      <div className="text-center">
+        <Badge variant="outline" className="mb-4">Slide 11</Badge>
         <h2 className="text-3xl lg:text-4xl font-bold mb-2">The BTC-Staked Investment</h2>
         <p className="text-primary font-semibold text-lg">VC Cheat Code</p>
       </div>
@@ -730,11 +807,11 @@ function Slide10Investment() {
   );
 }
 
-function Slide11Compounding() {
+function Slide12Compounding() {
   return (
     <div className="flex-1 space-y-6">
       <div className="text-center">
-        <Badge variant="outline" className="mb-4">Slide 11</Badge>
+        <Badge variant="outline" className="mb-4">Slide 12</Badge>
         <h2 className="text-3xl lg:text-4xl font-bold mb-2">The Compounding Engine</h2>
         <p className="text-muted-foreground">
           Because of Peru margins (~48%), capital snowballs
@@ -782,7 +859,7 @@ function Slide11Compounding() {
   );
 }
 
-function Slide12Returns() {
+function Slide13Returns() {
   const scenarios = [
     { 
       name: "BEAR", 
@@ -816,7 +893,7 @@ function Slide12Returns() {
   return (
     <div className="flex-1 space-y-6">
       <div className="text-center">
-        <Badge variant="outline" className="mb-4">Slide 12</Badge>
+        <Badge variant="outline" className="mb-4">Slide 13</Badge>
         <h2 className="text-3xl lg:text-4xl font-bold mb-2">VC Return Scenarios</h2>
         <p className="text-primary font-semibold">CRUSHING</p>
       </div>
@@ -866,11 +943,11 @@ function Slide12Returns() {
   );
 }
 
-function Slide13UseOfFunds() {
+function Slide14UseOfFunds() {
   return (
     <div className="flex-1 space-y-6">
       <div className="text-center">
-        <Badge variant="outline" className="mb-4">Slide 13</Badge>
+        <Badge variant="outline" className="mb-4">Slide 14</Badge>
         <h2 className="text-3xl lg:text-4xl font-bold mb-2">Use of Funds</h2>
       </div>
 
@@ -930,11 +1007,11 @@ function Slide13UseOfFunds() {
   );
 }
 
-function Slide14Team() {
+function Slide15Team() {
   return (
     <div className="flex-1 space-y-8">
       <div className="text-center">
-        <Badge variant="outline" className="mb-4">Slide 14</Badge>
+        <Badge variant="outline" className="mb-4">Slide 15</Badge>
         <h2 className="text-3xl lg:text-4xl font-bold mb-2">Team</h2>
       </div>
 
@@ -982,7 +1059,7 @@ function Slide14Team() {
   );
 }
 
-function Slide15Closing() {
+function Slide16Closing() {
   return (
     <div className="flex-1 flex flex-col items-center justify-center text-center space-y-8 bg-gradient-to-br from-background via-primary/5 to-background rounded-xl p-8">
       <h1 className="text-4xl lg:text-6xl font-bold">
@@ -990,7 +1067,7 @@ function Slide15Closing() {
       </h1>
 
       <p className="text-2xl text-muted-foreground">
-        The Mortgage Rail for a Borderless Generation
+        The Global Mortgage Layer They Can't Build
       </p>
 
       <div className="space-y-2 text-xl">
