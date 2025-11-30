@@ -61,9 +61,8 @@ const compoundingData = [
 ];
 
 const useOfFundsData = [
-  { name: "Construction", value: 70, color: "hsl(var(--primary))" },
-  { name: "Protocol Engineering", value: 20, color: "hsl(var(--chart-2))" },
-  { name: "Legal & SPV", value: 10, color: "hsl(var(--chart-3))" },
+  { name: "Hard Assets (Land + Construction)", value: 79, color: "hsl(var(--primary))" },
+  { name: "Tech & Legal (Global Rails)", value: 21, color: "hsl(var(--chart-2))" },
 ];
 
 export default function VCPitchDeck() {
@@ -196,23 +195,25 @@ function Slide1Title() {
       
       <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
         <span className="bg-gradient-to-r from-primary via-orange-500 to-red-500 bg-clip-text text-transparent">
-          Global Mortgages
+          The "Stripe for Mortgage" Protocol
         </span>
         <br />
         <span className="text-foreground">
-          Powered by Crypto Collateral
+          Hardware-Enabled
         </span>
         <br />
         <span className="text-muted-foreground text-3xl lg:text-4xl">
-          & On-Chain Credit
+          Global Mortgage Network
         </span>
       </h1>
       
       <div className="max-w-2xl mx-auto pt-8 border-t border-border/50">
         <p className="text-xl text-muted-foreground">
-          The Infrastructure That Connects a{" "}
-          <span className="text-primary font-bold">$1T Crypto Economy</span> to a{" "}
-          <span className="text-primary font-bold">$300T Real Estate Market</span>
+          Connecting <span className="text-orange-500 font-bold">$1T Trapped Crypto Wealth</span> with{" "}
+          <span className="text-blue-500 font-bold">35M Credit-Invisible Global Nomads</span>
+        </p>
+        <p className="text-sm text-muted-foreground mt-4">
+          Series Seed — $1.75M (Asset-Backed Venture Note)
         </p>
       </div>
     </div>
@@ -684,36 +685,78 @@ function Slide8Endgame() {
 }
 
 function Slide9Traction() {
-  const metrics = [
-    { value: "12", label: "Units Live", sublabel: "20% CoC" },
-    { value: "16", label: "Unit Complex", sublabel: "Under construction" },
-    { value: "✓", label: "Supply Chain", sublabel: "Full pipeline executed" },
-    { value: "$$$", label: "Real Revenue", sublabel: "Real renters, real buyers" },
+  const phases = [
+    { 
+      phase: 1, 
+      title: "Proof of Operations", 
+      status: "LIVE",
+      metrics: "12 Units",
+      revenue: "$75K Net Income",
+      purpose: "We know how to run this profitably.",
+      color: "text-green-500",
+      bg: "from-green-500/10 to-green-500/5",
+      borderColor: "border-green-500/30"
+    },
+    { 
+      phase: 2, 
+      title: "Proof of Execution", 
+      status: "BUILDING",
+      metrics: "16 Units",
+      revenue: "Fully Funded",
+      purpose: "Vertical construction capability.",
+      color: "text-yellow-500",
+      bg: "from-yellow-500/10 to-yellow-500/5",
+      borderColor: "border-yellow-500/30"
+    },
+    { 
+      phase: 3, 
+      title: "Proof of Protocol", 
+      status: "RAISING",
+      metrics: "15 Custom Homes",
+      revenue: "$1.75M Raise",
+      purpose: "The 'Genesis Block' for OCCR.",
+      color: "text-primary",
+      bg: "from-primary/10 to-primary/5",
+      borderColor: "border-primary/30"
+    },
   ];
 
   return (
-    <div className="flex-1 space-y-8">
+    <div className="flex-1 space-y-6">
       <div className="text-center">
         <Badge variant="outline" className="mb-4">Slide 9</Badge>
-        <h2 className="text-3xl lg:text-4xl font-bold mb-2">Traction</h2>
-        <p className="text-xl text-primary font-semibold">Real, Not Theoretical</p>
+        <h2 className="text-3xl lg:text-4xl font-bold mb-2">The Trilogy: De-Risking Execution</h2>
+        <p className="text-muted-foreground">We aren't asking you to fund a theory. We are funding a <span className="text-primary font-semibold">scale-up</span>.</p>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {metrics.map((metric, idx) => (
-          <Card key={idx} className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/30">
-            <CardContent className="p-6 text-center">
-              <div className="text-4xl font-bold text-primary mb-2">{metric.value}</div>
-              <div className="font-semibold">{metric.label}</div>
-              <div className="text-xs text-muted-foreground mt-1">{metric.sublabel}</div>
+      <div className="grid md:grid-cols-3 gap-4">
+        {phases.map((phase) => (
+          <Card key={phase.phase} className={`bg-gradient-to-br ${phase.bg} ${phase.borderColor}`}>
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between">
+                <Badge variant="outline" className="text-xs">Phase {phase.phase}</Badge>
+                <Badge className={`${phase.color} bg-background/50`}>{phase.status}</Badge>
+              </div>
+              <CardTitle className="text-lg mt-2">{phase.title}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Metrics:</span>
+                <span className="font-bold">{phase.metrics}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Revenue:</span>
+                <span className={`font-semibold ${phase.color}`}>{phase.revenue}</span>
+              </div>
+              <p className="text-xs text-muted-foreground pt-2 border-t border-border/50">{phase.purpose}</p>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      <div className="text-center p-8 bg-gradient-to-r from-primary/10 to-orange-500/10 rounded-xl border border-primary/20">
-        <p className="text-2xl font-bold mb-2">We've already done the hard part.</p>
-        <p className="text-lg text-muted-foreground">Now we scale globally.</p>
+      <div className="text-center p-6 bg-gradient-to-r from-primary/10 to-orange-500/10 rounded-xl border border-primary/20">
+        <p className="text-xl font-bold mb-1">Bitcoin Valley</p>
+        <p className="text-sm text-muted-foreground">Our flagship community — the "Genesis Block" for the On-Chain Credit Score (OCCR).</p>
       </div>
     </div>
   );
@@ -971,84 +1014,89 @@ function Slide13Compounding() {
 }
 
 function Slide14Returns() {
-  const scenarios = [
-    { 
-      name: "BEAR", 
-      condition: "slow growth + BTC flat",
-      profitShare: "$1.6M",
-      equityValue: "$15M",
-      total: "$16.6M",
-      color: "text-yellow-500",
-      bg: "from-yellow-500/10 to-yellow-500/5"
-    },
-    { 
-      name: "BASE", 
-      condition: "regional expansion + BTC $150K",
-      profitShare: "$3.3M",
-      equityValue: "$60M",
-      total: "$71.6M",
-      color: "text-primary",
-      bg: "from-primary/10 to-primary/5"
-    },
-    { 
-      name: "BULL", 
-      condition: "Ancient becomes mortgage layer for Web3",
-      profitShare: "$7M",
-      equityValue: "$300M–$450M",
-      total: "$321M–$471M",
-      color: "text-green-500",
-      bg: "from-green-500/10 to-green-500/5"
-    },
-  ];
-
   return (
     <div className="flex-1 space-y-6">
       <div className="text-center">
         <Badge variant="outline" className="mb-4">Slide 14</Badge>
-        <h2 className="text-3xl lg:text-4xl font-bold mb-2">VC Return Scenarios</h2>
-        <p className="text-primary font-semibold">CRUSHING</p>
+        <h2 className="text-3xl lg:text-4xl font-bold mb-2">Return Scenarios</h2>
+        <p className="text-muted-foreground">Asset-backed protection with unlimited upside</p>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-4">
-        {scenarios.map((scenario) => (
-          <Card key={scenario.name} className={`bg-gradient-to-br ${scenario.bg} border-border/50`}>
-            <CardHeader className="pb-2">
-              <Badge variant="outline" className={`w-fit ${scenario.color}`}>{scenario.name}</Badge>
-              <p className="text-xs text-muted-foreground">{scenario.condition}</p>
-            </CardHeader>
-            <CardContent className="space-y-2">
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Bear Case */}
+        <Card className="bg-gradient-to-br from-yellow-500/10 to-yellow-500/5 border-yellow-500/30">
+          <CardHeader>
+            <Badge className="w-fit bg-yellow-500/20 text-yellow-500 border-yellow-500/30">
+              SCENARIO A: BEAR CASE
+            </Badge>
+            <CardTitle className="text-xl">Tech Fails</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-muted-foreground">
+              We liquidate the 15 homes (~$2M Value).
+            </p>
+            <div className="space-y-2 p-4 bg-background/50 rounded-lg">
               <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Profit Share</span>
-                <span className="font-semibold">{scenario.profitShare}</span>
+                <span className="text-muted-foreground">Asset Value</span>
+                <span className="font-semibold">$2M+</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-sm text-muted-foreground">Equity Value</span>
-                <span className="font-semibold">{scenario.equityValue}</span>
+                <span className="text-muted-foreground">Loan Repaid</span>
+                <span className="font-semibold text-green-500">✓</span>
               </div>
-              <div className="pt-2 border-t border-border/50">
-                <div className="flex justify-between">
-                  <span className="font-semibold">Total Return</span>
-                  <span className={`font-bold ${scenario.color}`}>{scenario.total}</span>
-                </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">BTC Returned</span>
+                <span className="font-semibold text-green-500">100%</span>
               </div>
-            </CardContent>
-          </Card>
-        ))}
+            </div>
+            <div className="text-center p-3 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
+              <p className="text-lg font-bold text-yellow-500">Result: Zero Loss</p>
+              <p className="text-xs text-muted-foreground">Your floor = debt-free real estate</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Bull Case */}
+        <Card className="bg-gradient-to-br from-green-500/10 to-green-500/5 border-green-500/30">
+          <CardHeader>
+            <Badge className="w-fit bg-green-500/20 text-green-500 border-green-500/30">
+              SCENARIO B: BULL CASE
+            </Badge>
+            <CardTitle className="text-xl">Protocol Scales</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-muted-foreground">
+              We scale to 1,000+ mortgages globally.
+            </p>
+            <div className="space-y-2 p-4 bg-background/50 rounded-lg">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Tech Valuation</span>
+                <span className="font-semibold">$100M+</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Your 15% Equity</span>
+                <span className="font-semibold text-green-500">$15M+</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">BTC Returned</span>
+                <span className="font-semibold text-green-500">100%</span>
+              </div>
+            </div>
+            <div className="text-center p-3 bg-green-500/10 rounded-lg border border-green-500/20">
+              <p className="text-lg font-bold text-green-500">Result: Infinite ROI</p>
+              <p className="text-xs text-muted-foreground">$0 deployed → $15M+ return</p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 text-center">
-        <div className="p-4 bg-card/50 rounded-lg border border-border/50">
-          <div className="text-2xl font-bold text-primary">$0</div>
-          <div className="text-sm text-muted-foreground">Capital deployed by VC</div>
-        </div>
-        <div className="p-4 bg-card/50 rounded-lg border border-border/50">
-          <div className="text-2xl font-bold text-primary">100%</div>
-          <div className="text-sm text-muted-foreground">BTC returned</div>
-        </div>
-        <div className="p-4 bg-card/50 rounded-lg border border-border/50">
-          <div className="text-2xl font-bold text-primary">∞</div>
-          <div className="text-sm text-muted-foreground">ROI</div>
-        </div>
+      <div className="text-center p-6 bg-primary/10 rounded-xl border border-primary/20">
+        <p className="text-xl font-bold">
+          <span className="text-muted-foreground">VC risk = </span>
+          <span className="text-green-500">zero</span>
+          <span className="text-muted-foreground"> • VC upside = </span>
+          <span className="text-primary">enormous</span>
+        </p>
       </div>
     </div>
   );
@@ -1093,9 +1141,8 @@ function Slide15UseOfFunds() {
 
         <div className="space-y-4">
           {[
-            { pct: "70%", title: "15-Home Construction", desc: "Validation layer", color: "bg-primary" },
-            { pct: "20%", title: "Protocol Engineering", desc: "MaaS, OCCR, title NFTs", color: "bg-[hsl(var(--chart-2))]" },
-            { pct: "10%", title: "Legal & SPV Setup", desc: "Multi-country compliance", color: "bg-[hsl(var(--chart-3))]" },
+            { pct: "79%", title: "Hard Assets (Land + Construction)", desc: "Your downside is floored by debt-free real estate", color: "bg-primary" },
+            { pct: "21%", title: "Tech & Legal (Building Global Rails)", desc: "Protocol engineering, OCCR, multi-jurisdiction SPVs", color: "bg-[hsl(var(--chart-2))]" },
           ].map((item, idx) => (
             <div key={idx} className="flex items-center gap-4 p-4 bg-card/50 rounded-lg border border-border/50">
               <div className={`w-4 h-4 rounded ${item.color}`} />
@@ -1108,6 +1155,17 @@ function Slide15UseOfFunds() {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4 mt-4">
+        <div className="p-4 bg-green-500/10 rounded-lg border border-green-500/30 text-center">
+          <p className="font-bold text-green-500">79% = Your Floor</p>
+          <p className="text-xs text-muted-foreground">$1.38M in debt-free real estate</p>
+        </div>
+        <div className="p-4 bg-primary/10 rounded-lg border border-primary/30 text-center">
+          <p className="font-bold text-primary">21% = Your Ceiling</p>
+          <p className="text-xs text-muted-foreground">$370K building global mortgage rails</p>
         </div>
       </div>
 

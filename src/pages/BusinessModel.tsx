@@ -27,6 +27,11 @@ import VCPitchDeck from "@/components/VCPitchDeck";
 import CashFirstStrategy from "@/components/CashFirstStrategy";
 import CompetitiveLandscape from "@/components/CompetitiveLandscape";
 import DevCoFinCoModel from "@/components/DevCoFinCoModel";
+import MarketFailure from "@/components/MarketFailure";
+import TractionTrilogy from "@/components/TractionTrilogy";
+import UnfairUnitEconomics from "@/components/UnfairUnitEconomics";
+import KillSwitch from "@/components/KillSwitch";
+import AWSPitch from "@/components/AWSPitch";
 
 // Import property images
 import villaTulum from "@/assets/villa-tulum.jpg";
@@ -298,10 +303,10 @@ const BusinessModel = () => {
         {/* ANCIENT branding top-left */}
         <div className="absolute top-8 left-8 z-20">
           <h3 className="text-2xl lg:text-4xl font-light text-white/95 tracking-[0.3em] uppercase">
-            ANCIENT
+            ANCIENT PROTOCOL
           </h3>
           <p className="text-sm lg:text-base font-light text-white/80 tracking-wide mt-2">
-            The World's First Decentralized State
+            The "Stripe for Mortgage" Protocol
           </p>
         </div>
         
@@ -310,8 +315,8 @@ const BusinessModel = () => {
           {/* Main Hero Text */}
           <div className="space-y-4 mb-12">
             <h1 className="text-5xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight">
-              <span className="block text-white drop-shadow-2xl">The Global Mortgage Layer</span>
-              <span className="block bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent drop-shadow-2xl">They Can't Build</span>
+              <span className="block text-white drop-shadow-2xl">Hardware-Enabled</span>
+              <span className="block bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent drop-shadow-2xl">Mortgage Network</span>
             </h1>
           </div>
           
@@ -319,16 +324,32 @@ const BusinessModel = () => {
           <div className="max-w-3xl mx-auto mt-16">
             <div className="bg-black/20 backdrop-blur-xl rounded-3xl border border-white/10 p-6 lg:p-8 shadow-2xl">
               <p className="text-lg lg:text-xl xl:text-2xl font-light leading-relaxed text-white mb-6">
-                <span className="font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">$1.5B+</span> raised by US-only rent-to-own players.
+                Connecting <span className="font-bold bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text text-transparent">$1T in trapped crypto wealth</span> with{" "}
+                <span className="font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">35M credit-invisible Global Nomads</span>
               </p>
               <div className="w-24 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto mb-6"></div>
               <p className="text-base lg:text-lg text-white/90 leading-relaxed font-light">
-                All hit the same wall: <span className="text-orange-400 font-semibold">they can't operate where FICO doesn't exist.</span> That's 95% of the world. We're building for them.
+                We build the homes ("Hardware") to launch the credit engine ("Software"). <span className="text-green-400 font-semibold">12 operational units</span> generating <span className="text-green-400 font-semibold">18.75% Net Yields</span>.
               </p>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Market Failure Section */}
+      <MarketFailure />
+
+      {/* Traction Trilogy Section */}
+      <TractionTrilogy />
+
+      {/* Unfair Unit Economics Section */}
+      <UnfairUnitEconomics />
+
+      {/* Kill Switch Risk Management Section */}
+      <KillSwitch />
+
+      {/* AWS Pitch Section */}
+      <AWSPitch />
 
       {/* Why Now Section */}
       <section className="px-4 bg-background py-[50px]">
