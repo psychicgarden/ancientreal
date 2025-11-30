@@ -25,6 +25,7 @@ import { getCurrentScenario, getAggressiveScenario, getTieredScenario, getAccele
 import { ProductComparison } from "@/components/ProductComparison";
 import VCPitchDeck from "@/components/VCPitchDeck";
 import CashFirstStrategy from "@/components/CashFirstStrategy";
+import CompetitiveLandscape from "@/components/CompetitiveLandscape";
 
 // Import property images
 import villaTulum from "@/assets/villa-tulum.jpg";
@@ -305,11 +306,11 @@ const BusinessModel = () => {
         
         {/* Centered Main Content */}
         <div className="relative z-10 w-full max-w-6xl mx-auto px-6 text-center mt-24 lg:mt-32">
-          {/* Main Hero Text - Two Lines as Requested */}
+          {/* Main Hero Text */}
           <div className="space-y-4 mb-12">
             <h1 className="text-5xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight">
-              <span className="block text-white drop-shadow-2xl">Building Infrastructure</span>
-              <span className="block bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent drop-shadow-2xl">for a Borderless World</span>
+              <span className="block text-white drop-shadow-2xl">The Global Mortgage Layer</span>
+              <span className="block bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent drop-shadow-2xl">They Can't Build</span>
             </h1>
           </div>
           
@@ -317,11 +318,11 @@ const BusinessModel = () => {
           <div className="max-w-3xl mx-auto mt-16">
             <div className="bg-black/20 backdrop-blur-xl rounded-3xl border border-white/10 p-6 lg:p-8 shadow-2xl">
               <p className="text-lg lg:text-xl xl:text-2xl font-light leading-relaxed text-white mb-6">
-                50 million nomads burn <span className="font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">$900B annually</span> on dead rent.
+                <span className="font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">$1.5B+</span> raised by US-only rent-to-own players.
               </p>
               <div className="w-24 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent mx-auto mb-6"></div>
               <p className="text-base lg:text-lg text-white/90 leading-relaxed font-light">
-                We convert that into fractional, on-chain deeds of dream properties.
+                All hit the same wall: <span className="text-orange-400 font-semibold">they can't operate where FICO doesn't exist.</span> That's 95% of the world. We're building for them.
               </p>
             </div>
           </div>
@@ -417,20 +418,26 @@ const BusinessModel = () => {
 
           {/* Tabbed Content */}
           <Tabs defaultValue="vc-pitch" className="w-full">
-            <TabsList className="grid w-full grid-cols-8 mb-8">
-              <TabsTrigger value="vc-pitch" className="text-xs lg:text-sm">VC Pitch Deck</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-9 mb-8">
+              <TabsTrigger value="vc-pitch" className="text-xs lg:text-sm">VC Pitch</TabsTrigger>
+              <TabsTrigger value="competition" className="text-xs lg:text-sm">Competition</TabsTrigger>
               <TabsTrigger value="product-comparison" className="text-xs lg:text-sm">Three Paths</TabsTrigger>
               <TabsTrigger value="tiered-portfolio" className="text-xs lg:text-sm">Tiered Portfolio</TabsTrigger>
-              <TabsTrigger value="revenue-model" className="text-xs lg:text-sm">Revenue Model</TabsTrigger>
+              <TabsTrigger value="revenue-model" className="text-xs lg:text-sm">Revenue</TabsTrigger>
               <TabsTrigger value="platform-assessment" className="text-xs lg:text-sm">Platform</TabsTrigger>
               <TabsTrigger value="budget-breakdown" className="text-xs lg:text-sm">Budget</TabsTrigger>
               <TabsTrigger value="legal-structuring" className="text-xs lg:text-sm">Legal</TabsTrigger>
-              <TabsTrigger value="buyers-journey" className="text-xs lg:text-sm">Buyer's Journey</TabsTrigger>
+              <TabsTrigger value="buyers-journey" className="text-xs lg:text-sm">Buyer Journey</TabsTrigger>
             </TabsList>
 
             {/* VC Pitch Deck Tab */}
             <TabsContent value="vc-pitch">
               <VCPitchDeck />
+            </TabsContent>
+
+            {/* Competition Tab */}
+            <TabsContent value="competition">
+              <CompetitiveLandscape />
             </TabsContent>
 
             {/* Product Comparison Tab */}
