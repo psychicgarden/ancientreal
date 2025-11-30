@@ -26,6 +26,7 @@ import { ProductComparison } from "@/components/ProductComparison";
 import VCPitchDeck from "@/components/VCPitchDeck";
 import CashFirstStrategy from "@/components/CashFirstStrategy";
 import CompetitiveLandscape from "@/components/CompetitiveLandscape";
+import DevCoFinCoModel from "@/components/DevCoFinCoModel";
 
 // Import property images
 import villaTulum from "@/assets/villa-tulum.jpg";
@@ -450,15 +451,18 @@ const BusinessModel = () => {
               <div className="space-y-12">
                 <div className="text-center mb-12">
                   <Badge variant="outline" className="mb-4">
-                    Cash-First Strategy
+                    Two-Pocket Engine
                   </Badge>
                   <h2 className="text-4xl font-bold mb-4">
-                    100% Cash Flagship → 10% Cash / 90% Mortgage
+                    DevCo Builds Fast. FinCo Holds Mortgages. IRR Protected.
                   </h2>
                   <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                    Phase into mortgages over time for maximum capital velocity
+                    Originate-to-Distribute model: 40/60 Cash-Heavy → 10/90 Debt Scale → Securitization
                   </p>
                 </div>
+
+                {/* DevCo/FinCo Two-Pocket Model */}
+                <DevCoFinCoModel />
 
                 {/* Cash First Strategy Component */}
                 <CashFirstStrategy />

@@ -14,40 +14,31 @@ interface Phase {
 
 const phases: Phase[] = [
   {
-    name: "Phase 1: Flagship",
-    timeline: "Year 1",
-    cashPercent: 100,
-    mortgagePercent: 0,
-    samPercent: 0,
-    description: "100% cash sales maximize capital velocity",
-    highlight: "Maximum profit recycling",
-  },
-  {
-    name: "Phase 2: Growth",
-    timeline: "Year 2-3",
+    name: "Phase 1: Cash Heavy",
+    timeline: "Years 1-2",
     cashPercent: 40,
-    mortgagePercent: 45,
-    samPercent: 15,
-    description: "Introduce mortgage product, build OCCR dataset",
-    highlight: "Protocol validation",
+    mortgagePercent: 60,
+    samPercent: 0,
+    description: "Cash buyers replenish construction fund. Mortgages build OCCR proof of concept.",
+    highlight: "Prove asset quality for LPs",
   },
   {
-    name: "Phase 3: Scale",
-    timeline: "Year 4-5",
-    cashPercent: 20,
-    mortgagePercent: 65,
-    samPercent: 15,
-    description: "Mortgage-heavy model for recurring revenue",
-    highlight: "Long-term yield streams",
-  },
-  {
-    name: "Phase 4: Platform",
-    timeline: "Year 5+",
+    name: "Phase 2: Debt Scale",
+    timeline: "Years 3-5",
     cashPercent: 10,
-    mortgagePercent: 75,
-    samPercent: 15,
-    description: "Developer integrations, minimal cash",
-    highlight: "Mortgage-as-a-Service",
+    mortgagePercent: 90,
+    samPercent: 0,
+    description: "Track record enables $50M RWA Debt Facility from MakerDAO/Centrifuge.",
+    highlight: "Mass adoption - become 'The Bank'",
+  },
+  {
+    name: "Phase 3: BlackRock Turn",
+    timeline: "Year 5+",
+    cashPercent: 5,
+    mortgagePercent: 95,
+    samPercent: 0,
+    description: "Bundle 1,000 mortgages into 'Nomad Bonds' (NFT). Sell to Pension Funds/Aave DAO.",
+    highlight: "Securitization - keep Servicing Rights",
   },
 ];
 
@@ -60,7 +51,7 @@ export default function CashFirstStrategy() {
           Cash-First Strategy: Phased Evolution
         </CardTitle>
         <p className="text-sm text-muted-foreground">
-          100% cash flagship → 10% cash / 90% mortgage at scale
+          40/60 Cash-Heavy → 10/90 Debt Scale → Securitization at Scale
         </p>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -161,23 +152,42 @@ export default function CashFirstStrategy() {
           </div>
         </div>
 
-        {/* Key Metrics */}
+        {/* Key Metrics - Updated for Two-Pocket Model */}
         <div className="grid grid-cols-4 gap-2 text-center">
           <div className="bg-green-500/10 rounded-lg p-3">
-            <div className="text-lg font-bold text-green-500">100%</div>
+            <div className="text-lg font-bold text-green-500">40%</div>
             <div className="text-xs text-muted-foreground">Cash at Start</div>
           </div>
           <div className="bg-primary/10 rounded-lg p-3">
-            <div className="text-lg font-bold text-primary">11%</div>
-            <div className="text-xs text-muted-foreground">Flat Mortgage Rate</div>
+            <div className="text-lg font-bold text-primary">10%</div>
+            <div className="text-xs text-muted-foreground">Borrower Rate</div>
+          </div>
+          <div className="bg-blue-500/10 rounded-lg p-3">
+            <div className="text-lg font-bold text-blue-500">7%</div>
+            <div className="text-xs text-muted-foreground">Staker Yield</div>
           </div>
           <div className="bg-orange-500/10 rounded-lg p-3">
-            <div className="text-lg font-bold text-orange-500">15%</div>
-            <div className="text-xs text-muted-foreground">SAM Share</div>
+            <div className="text-lg font-bold text-orange-500">3%</div>
+            <div className="text-xs text-muted-foreground">Protocol NIM</div>
           </div>
-          <div className="bg-muted rounded-lg p-3">
-            <div className="text-lg font-bold">10%</div>
-            <div className="text-xs text-muted-foreground">Cash at Scale</div>
+        </div>
+
+        {/* Liquidity Trigger Rule */}
+        <div className="bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-lg p-4 border border-orange-500/20">
+          <h4 className="font-semibold mb-2 flex items-center gap-2 text-orange-500">
+            <Zap className="h-4 w-4" />
+            IRR Protection Rule
+          </h4>
+          <p className="text-sm text-muted-foreground italic mb-2">
+            "We only issue a mortgage if the External Liquidity Pool has funds to buy the house from DevCo CASH."
+          </p>
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            <div className="p-2 bg-background/50 rounded">
+              <span className="font-medium">Pool Empty →</span> Cash Buyers Only
+            </div>
+            <div className="p-2 bg-background/50 rounded">
+              <span className="font-medium">Pool Full →</span> Open Mortgage Floodgates
+            </div>
           </div>
         </div>
       </CardContent>

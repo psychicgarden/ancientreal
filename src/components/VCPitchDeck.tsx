@@ -37,17 +37,18 @@ const SLIDES = [
   { id: 3, title: "The Problem" },
   { id: 4, title: "The Solution" },
   { id: 5, title: "Revenue Model" },
-  { id: 6, title: "Tech Play" },
-  { id: 7, title: "Endgame" },
-  { id: 8, title: "Traction" },
-  { id: 9, title: "Moat" },
-  { id: 10, title: "Competitive" },
-  { id: 11, title: "Investment" },
-  { id: 12, title: "Compounding" },
-  { id: 13, title: "Returns" },
-  { id: 14, title: "Use of Funds" },
-  { id: 15, title: "Team" },
-  { id: 16, title: "Closing" },
+  { id: 6, title: "Financial Engine" },
+  { id: 7, title: "Tech Play" },
+  { id: 8, title: "Endgame" },
+  { id: 9, title: "Traction" },
+  { id: 10, title: "Moat" },
+  { id: 11, title: "Competitive" },
+  { id: 12, title: "Investment" },
+  { id: 13, title: "Compounding" },
+  { id: 14, title: "Returns" },
+  { id: 15, title: "Use of Funds" },
+  { id: 16, title: "Team" },
+  { id: 17, title: "Closing" },
 ];
 
 const compoundingData = [
@@ -69,7 +70,7 @@ export default function VCPitchDeck() {
   const [currentSlide, setCurrentSlide] = useState(1);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  const nextSlide = () => setCurrentSlide((s) => Math.min(s + 1, 16));
+  const nextSlide = () => setCurrentSlide((s) => Math.min(s + 1, 17));
   const prevSlide = () => setCurrentSlide((s) => Math.max(s - 1, 1));
 
   const renderSlide = () => {
@@ -85,27 +86,29 @@ export default function VCPitchDeck() {
       case 5:
         return <Slide5Revenue />;
       case 6:
-        return <Slide6TechPlay />;
+        return <Slide6FinancialEngine />;
       case 7:
-        return <Slide7Endgame />;
+        return <Slide7TechPlay />;
       case 8:
-        return <Slide8Traction />;
+        return <Slide8Endgame />;
       case 9:
-        return <Slide9Moat />;
+        return <Slide9Traction />;
       case 10:
-        return <Slide10Competitive />;
+        return <Slide10Moat />;
       case 11:
-        return <Slide11Investment />;
+        return <Slide11Competitive />;
       case 12:
-        return <Slide12Compounding />;
+        return <Slide12Investment />;
       case 13:
-        return <Slide13Returns />;
+        return <Slide13Compounding />;
       case 14:
-        return <Slide14UseOfFunds />;
+        return <Slide14Returns />;
       case 15:
-        return <Slide15Team />;
+        return <Slide15UseOfFunds />;
       case 16:
-        return <Slide16Closing />;
+        return <Slide16Team />;
+      case 17:
+        return <Slide17Closing />;
       default:
         return <Slide1Title />;
     }
@@ -164,7 +167,7 @@ export default function VCPitchDeck() {
             <Button
               variant="ghost"
               onClick={nextSlide}
-              disabled={currentSlide === 16}
+              disabled={currentSlide === 17}
               className="gap-2"
             >
               Next
@@ -176,7 +179,7 @@ export default function VCPitchDeck() {
 
       {/* Slide Counter */}
       <div className="text-center mt-4 text-muted-foreground text-sm">
-        Slide {currentSlide} of 16: {SLIDES[currentSlide - 1].title}
+        Slide {currentSlide} of 17: {SLIDES[currentSlide - 1].title}
       </div>
     </div>
   );
@@ -451,11 +454,119 @@ function Slide5Revenue() {
   );
 }
 
-function Slide6TechPlay() {
+function Slide6FinancialEngine() {
   return (
     <div className="flex-1 space-y-6">
       <div className="text-center">
         <Badge variant="outline" className="mb-4">Slide 6</Badge>
+        <h2 className="text-3xl lg:text-4xl font-bold mb-2">The Financial Engine</h2>
+        <p className="text-primary font-semibold">Originate-to-Distribute</p>
+        <p className="text-muted-foreground text-sm mt-1">
+          How we scale mortgages without trapping capital
+        </p>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* DevCo - Construction Loop */}
+        <Card className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-green-500/30">
+          <CardHeader className="pb-3">
+            <Badge className="w-fit bg-green-500/20 text-green-600 dark:text-green-400 border-green-500/30">
+              DEVCO
+            </Badge>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Building2 className="h-5 w-5 text-green-500" />
+              Construction Loop (High Velocity)
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="space-y-2">
+              {[
+                "Use Seed Capital to build",
+                "Sell asset to Protocol Pool immediately",
+                "Capital recycles every 12 months",
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-center gap-2 text-sm">
+                  <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+            <div className="pt-3 border-t border-green-500/20 text-center">
+              <div className="text-2xl font-bold text-green-500">&gt;25% IRR</div>
+              <p className="text-xs text-muted-foreground">Protected velocity</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* FinCo - Mortgage Loop */}
+        <Card className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border-blue-500/30">
+          <CardHeader className="pb-3">
+            <Badge className="w-fit bg-blue-500/20 text-blue-600 dark:text-blue-400 border-blue-500/30">
+              FINCO
+            </Badge>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Wallet className="h-5 w-5 text-blue-500" />
+              Mortgage Loop (High Yield)
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="space-y-2">
+              {[
+                "Funded by DeFi yield seekers (staking USDC)",
+                "Stakers earn 7% • Borrowers pay 10%",
+                "Ancient captures 3% spread + data",
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-center gap-2 text-sm">
+                  <CheckCircle2 className="h-4 w-4 text-blue-500 shrink-0" />
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+            <div className="pt-3 border-t border-blue-500/20 text-center">
+              <div className="text-2xl font-bold text-blue-500">3% NIM</div>
+              <p className="text-xs text-muted-foreground">Net Interest Margin</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Transaction Flow */}
+      <div className="bg-muted/30 rounded-lg p-4">
+        <h4 className="font-semibold text-sm mb-3">Transaction Flow: $135K Home Sale</h4>
+        <div className="grid grid-cols-3 gap-3">
+          <div className="p-3 bg-green-500/10 rounded-lg border border-green-500/30 text-center">
+            <div className="font-bold text-green-500">$27K</div>
+            <div className="text-xs text-muted-foreground">Nomad pays 20% down</div>
+          </div>
+          <div className="p-3 bg-blue-500/10 rounded-lg border border-blue-500/30 text-center">
+            <div className="font-bold text-blue-500">$108K</div>
+            <div className="text-xs text-muted-foreground">FinCo wires 80%</div>
+          </div>
+          <div className="p-3 bg-primary/10 rounded-lg border border-primary/30 text-center">
+            <div className="font-bold text-primary">$135K</div>
+            <div className="text-xs text-muted-foreground">DevCo receives CASH</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Punchline */}
+      <div className="text-center p-4 bg-gradient-to-r from-primary/10 to-orange-500/10 rounded-xl border border-primary/20">
+        <p className="font-medium">
+          We operate like <span className="text-primary font-bold">Rocket Mortgage</span>, not a commercial bank.
+        </p>
+        <p className="text-sm text-muted-foreground mt-1">
+          DevCo gets cashed out 100% at closing. Seed capital never trapped in 15-year loans.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function Slide7TechPlay() {
+  return (
+    <div className="flex-1 space-y-6">
+      <div className="text-center">
+        <Badge variant="outline" className="mb-4">Slide 7</Badge>
         <h2 className="text-3xl lg:text-4xl font-bold mb-2">The Tech Play</h2>
         <p className="text-muted-foreground">
           The 15 homes are not the business. They are the <span className="text-primary font-semibold">"Genesis Block"</span> of a global mortgage liquidity protocol.
@@ -534,10 +645,10 @@ function Slide6TechPlay() {
   );
 }
 
-function Slide7Endgame() {
+function Slide8Endgame() {
   return (
     <div className="flex-1 flex flex-col items-center justify-center space-y-8">
-      <Badge variant="outline" className="text-lg px-4 py-1">Slide 7</Badge>
+      <Badge variant="outline" className="text-lg px-4 py-1">Slide 8</Badge>
       <h2 className="text-3xl lg:text-5xl font-bold text-center">
         The Endgame:<br />
         <span className="text-primary">The Ancient Credit Fund</span>
@@ -572,7 +683,7 @@ function Slide7Endgame() {
   );
 }
 
-function Slide8Traction() {
+function Slide9Traction() {
   const metrics = [
     { value: "12", label: "Units Live", sublabel: "20% CoC" },
     { value: "16", label: "Unit Complex", sublabel: "Under construction" },
@@ -583,7 +694,7 @@ function Slide8Traction() {
   return (
     <div className="flex-1 space-y-8">
       <div className="text-center">
-        <Badge variant="outline" className="mb-4">Slide 8</Badge>
+        <Badge variant="outline" className="mb-4">Slide 9</Badge>
         <h2 className="text-3xl lg:text-4xl font-bold mb-2">Traction</h2>
         <p className="text-xl text-primary font-semibold">Real, Not Theoretical</p>
       </div>
@@ -608,7 +719,7 @@ function Slide8Traction() {
   );
 }
 
-function Slide9Moat() {
+function Slide10Moat() {
   const moatItems = [
     { icon: Building2, text: "Real-world developer/operator" },
     { icon: Shield, text: "Title escrow enforcement system" },
@@ -624,7 +735,7 @@ function Slide9Moat() {
   return (
     <div className="flex-1 space-y-6">
       <div className="text-center">
-        <Badge variant="outline" className="mb-4">Slide 9</Badge>
+        <Badge variant="outline" className="mb-4">Slide 10</Badge>
         <h2 className="text-3xl lg:text-4xl font-bold mb-2">Why This Cannot Be Forked</h2>
         <p className="text-muted-foreground">
           Ancient owns both the real-world machinery AND the protocol layer.
@@ -658,7 +769,7 @@ function Slide9Moat() {
   );
 }
 
-function Slide10Competitive() {
+function Slide11Competitive() {
   const competitors = [
     { name: "Divvy Homes", raised: "$1.127B", status: "Sold ~$1B", flaw: "US-only, FICO" },
     { name: "Roofstock", raised: "$240M", status: "Stalled", flaw: "No global path" },
@@ -669,7 +780,7 @@ function Slide10Competitive() {
   return (
     <div className="flex-1 space-y-6">
       <div className="text-center">
-        <Badge variant="outline" className="mb-4">Slide 10</Badge>
+        <Badge variant="outline" className="mb-4">Slide 11</Badge>
         <h2 className="text-3xl lg:text-4xl font-bold mb-2">
           $1.5B Raised. <span className="text-destructive">All Hit the Same Wall.</span>
         </h2>
@@ -732,11 +843,11 @@ function Slide10Competitive() {
   );
 }
 
-function Slide11Investment() {
+function Slide12Investment() {
   return (
     <div className="flex-1 space-y-6">
       <div className="text-center">
-        <Badge variant="outline" className="mb-4">Slide 11</Badge>
+        <Badge variant="outline" className="mb-4">Slide 12</Badge>
         <h2 className="text-3xl lg:text-4xl font-bold mb-2">The BTC-Staked Investment</h2>
         <p className="text-primary font-semibold text-lg">VC Cheat Code</p>
       </div>
@@ -807,11 +918,11 @@ function Slide11Investment() {
   );
 }
 
-function Slide12Compounding() {
+function Slide13Compounding() {
   return (
     <div className="flex-1 space-y-6">
       <div className="text-center">
-        <Badge variant="outline" className="mb-4">Slide 12</Badge>
+        <Badge variant="outline" className="mb-4">Slide 13</Badge>
         <h2 className="text-3xl lg:text-4xl font-bold mb-2">The Compounding Engine</h2>
         <p className="text-muted-foreground">
           Because of Peru margins (~48%), capital snowballs
@@ -859,7 +970,7 @@ function Slide12Compounding() {
   );
 }
 
-function Slide13Returns() {
+function Slide14Returns() {
   const scenarios = [
     { 
       name: "BEAR", 
@@ -893,7 +1004,7 @@ function Slide13Returns() {
   return (
     <div className="flex-1 space-y-6">
       <div className="text-center">
-        <Badge variant="outline" className="mb-4">Slide 13</Badge>
+        <Badge variant="outline" className="mb-4">Slide 14</Badge>
         <h2 className="text-3xl lg:text-4xl font-bold mb-2">VC Return Scenarios</h2>
         <p className="text-primary font-semibold">CRUSHING</p>
       </div>
@@ -943,11 +1054,11 @@ function Slide13Returns() {
   );
 }
 
-function Slide14UseOfFunds() {
+function Slide15UseOfFunds() {
   return (
     <div className="flex-1 space-y-6">
       <div className="text-center">
-        <Badge variant="outline" className="mb-4">Slide 14</Badge>
+        <Badge variant="outline" className="mb-4">Slide 15</Badge>
         <h2 className="text-3xl lg:text-4xl font-bold mb-2">Use of Funds</h2>
       </div>
 
@@ -1007,11 +1118,11 @@ function Slide14UseOfFunds() {
   );
 }
 
-function Slide15Team() {
+function Slide16Team() {
   return (
     <div className="flex-1 space-y-8">
       <div className="text-center">
-        <Badge variant="outline" className="mb-4">Slide 15</Badge>
+        <Badge variant="outline" className="mb-4">Slide 16</Badge>
         <h2 className="text-3xl lg:text-4xl font-bold mb-2">Team</h2>
       </div>
 
@@ -1059,7 +1170,7 @@ function Slide15Team() {
   );
 }
 
-function Slide16Closing() {
+function Slide17Closing() {
   return (
     <div className="flex-1 flex flex-col items-center justify-center text-center space-y-8 bg-gradient-to-br from-background via-primary/5 to-background rounded-xl p-8">
       <h1 className="text-4xl lg:text-6xl font-bold">
