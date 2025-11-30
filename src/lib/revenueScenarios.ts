@@ -4,7 +4,7 @@
  */
 
 // Business Model Constants
-const BUILD_COST = 75_000; // $75k build cost per unit
+const BUILD_COST = 91_000; // $91k all-in build cost per unit (land + construction)
 const FEE_RATE = 0.035; // 3.5% platform fee on all sales
 const INITIAL_CAPITAL = 3.0; // $3M initial investment
 
