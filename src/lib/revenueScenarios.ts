@@ -1,12 +1,26 @@
 /**
  * Revenue Model Scenario Calculations
- * Comparing different APR and cash purchase strategies
+ * Two-Pocket Model: DevCo (Development) + FinCo (Protocol/Liquidity Pool)
  */
 
 // Business Model Constants
 const BUILD_COST = 75_000; // $75k build cost per unit
 const FEE_RATE = 0.035; // 3.5% platform fee on all sales
 const INITIAL_CAPITAL = 3.0; // $3M initial investment
+
+// FinCo Economics (Two-Pocket Model)
+export const FINCO_ECONOMICS = {
+  borrowerRate: 0.10,    // 10% to borrowers
+  stakerYield: 0.07,     // 7% to liquidity providers
+  nim: 0.03,             // 3% Net Interest Margin (10% - 7%)
+};
+
+// Phase Mix Strategy (Blend for Liquidity Management)
+export const PHASE_MIX = {
+  phase1: { cash: 0.40, mortgage: 0.60, name: "Cash Heavy", timeline: "Years 1-2" },
+  phase2: { cash: 0.10, mortgage: 0.90, name: "Debt Scale", timeline: "Years 3-5" },
+  phase3: { cash: 0.05, mortgage: 0.95, name: "BlackRock Turn", timeline: "Year 5+" },
+};
 
 // Flip structure - exact 6 flips matching user's schedule
 interface Flip {
@@ -347,11 +361,11 @@ export function calculateScenario(inputs: ScenarioInputs, name: string): Scenari
 }
 
 /**
- * Pre-defined scenarios
+ * Pre-defined scenarios (Two-Pocket Model: 10% borrower rate)
  */
 export const SCENARIO_PRESETS = {
   current: {
-    apr: 11.0, // 11% flat mortgage rate
+    apr: 10.0, // 10% borrower rate (Two-Pocket: 7% staker yield + 3% NIM)
     cashPurchaseRate: 0.20,
     totalUnits: 112,
     avgPropertyPrice: 143000,
@@ -361,7 +375,7 @@ export const SCENARIO_PRESETS = {
     samShare: 0.15, // 15% SAM share
   },
   accelerated: {
-    apr: 11.0,
+    apr: 10.0,
     cashPurchaseRate: 0.20,
     totalUnits: 112,
     avgPropertyPrice: 143000,
@@ -371,7 +385,7 @@ export const SCENARIO_PRESETS = {
     samShare: 0.15,
   },
   hybrid: {
-    apr: 11.0,
+    apr: 10.0,
     cashPurchaseRate: 0.20,
     totalUnits: 112,
     avgPropertyPrice: 143000,
@@ -381,7 +395,7 @@ export const SCENARIO_PRESETS = {
     samShare: 0.15,
   },
   aggressive: {
-    apr: 11.0,
+    apr: 10.0,
     cashPurchaseRate: 0.30,
     totalUnits: 112,
     avgPropertyPrice: 143000,
@@ -391,7 +405,7 @@ export const SCENARIO_PRESETS = {
     samShare: 0.15,
   },
   tiered: {
-    apr: 11.0,
+    apr: 10.0,
     cashPurchaseRate: 0.25,
     totalUnits: 112,
     avgPropertyPrice: 143000,
@@ -402,13 +416,13 @@ export const SCENARIO_PRESETS = {
   },
   // Tiered portfolio presets with phased cash-to-mortgage evolution
   cashOptimized: {
-    apr: 11.0,
+    apr: 10.0,
     cashPurchaseRate: 0.40,
-    mortgageRate: 0.45,
-    samRate: 0.15,
-    mortgageAPR: 11.0,
+    mortgageRate: 0.60, // Phase 1: 40/60 cash/mortgage
+    samRate: 0,
+    mortgageAPR: 10.0,
     samAPR: 8.0,
-    samShare: 0.15, // Ancient keeps 15% of SAM appreciation
+    samShare: 0.15,
     totalUnits: 112,
     avgPropertyPrice: 143000,
     platformFeeRate: 0.035,
@@ -416,11 +430,11 @@ export const SCENARIO_PRESETS = {
     appreciationRate: 0.07,
   },
   mortgageHeavy: {
-    apr: 11.0,
-    cashPurchaseRate: 0.10, // Phased to 10% cash
-    mortgageRate: 0.75, // 75% mortgage
-    samRate: 0.15, // 15% SAM
-    mortgageAPR: 11.0,
+    apr: 10.0,
+    cashPurchaseRate: 0.10, // Phase 2: 10/90 cash/mortgage
+    mortgageRate: 0.90,
+    samRate: 0,
+    mortgageAPR: 10.0,
     samAPR: 8.0,
     samShare: 0.15,
     totalUnits: 112,
@@ -430,11 +444,11 @@ export const SCENARIO_PRESETS = {
     appreciationRate: 0.07,
   },
   helocStrategy: {
-    apr: 11.0,
+    apr: 10.0,
     cashPurchaseRate: 0.50,
-    mortgageRate: 0.35,
-    samRate: 0.15,
-    mortgageAPR: 11.0,
+    mortgageRate: 0.50,
+    samRate: 0,
+    mortgageAPR: 10.0,
     samAPR: 8.0,
     samShare: 0.15,
     totalUnits: 112,
