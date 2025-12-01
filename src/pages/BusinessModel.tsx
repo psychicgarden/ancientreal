@@ -36,6 +36,7 @@ import UnfairUnitEconomics from "@/components/UnfairUnitEconomics";
 import KillSwitch from "@/components/KillSwitch";
 import AWSPitch from "@/components/AWSPitch";
 import FinCoLiquidityPool from "@/components/FinCoLiquidityPool";
+import { LegalRegulatoryProofing } from "@/components/LegalRegulatoryProofing";
 
 // Import property images
 import villaTulum from "@/assets/villa-tulum.jpg";
@@ -1191,26 +1192,8 @@ const BusinessModel = () => {
                   </div>
                 </div>
 
-                {/* Legal Structuring Section */}
-                <div className="space-y-8">
-                  {/* Executive Summary */}
-                  <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
-                    <CardContent className="p-8">
-                      <div className="flex items-center gap-3 mb-6">
-                        <Shield className="w-8 h-8 text-primary" />
-                        <h3 className="text-3xl font-bold">Legal & Regulatory Proofing</h3>
-                      </div>
-                      <h4 className="text-xl font-semibold mb-4 text-primary">Global Real Estate Tokenization Structure</h4>
-                      <div className="bg-background/80 rounded-xl p-6 backdrop-blur-sm">
-                        <h5 className="font-semibold mb-3">Executive Summary: Proven Legal Framework</h5>
-                        <p className="text-muted-foreground leading-relaxed">
-                          Ancient Real Estate operates using the same battle-tested legal structure as $500M+ Tether Gold (XAUT) and leading tokenized real estate platforms globally. 
-                          Our model doesn't replace property law—it modernizes ownership records, cash flow distribution, and governance through blockchain technology while maintaining full legal compliance.
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
+                {/* Legal & Regulatory Proofing - Comprehensive Country-by-Country Analysis */}
+                <LegalRegulatoryProofing />
               </div>
             </TabsContent>
 
