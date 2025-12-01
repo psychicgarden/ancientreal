@@ -398,13 +398,13 @@ const BusinessModel = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <Badge variant="outline" className="mb-6 text-lg px-6 py-2">
-              Investment Thesis
+              Beyond the Headlines
             </Badge>
             <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-primary bg-clip-text text-transparent">
-              The Math is Done. The Risk is Clear.
+              You've Seen the What. Want the How?
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-12">
-              147 homes. $12M+ profit. 6 legal structures. The only question: do you want in?
+              Due diligence materials, technical architecture, and competitor analysis below.
             </p>
           </div>
 
