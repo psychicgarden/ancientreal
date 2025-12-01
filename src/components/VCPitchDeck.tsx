@@ -420,7 +420,7 @@ function Slide5Revenue() {
     { title: "Buyer Fee", value: "3.5%", desc: "Every buyer financing through Ancient", icon: Users },
     { title: "Servicing Fees", value: "15-30yr", desc: "Recurring revenue on every payment", icon: BarChart3 },
     { title: "OCCR Data Licensing", value: "∞", desc: "World's first borderless credit identity", icon: Database },
-    { title: "Construction Margin", value: "48%", desc: "Build ~$90K → sell ~$135K (bootstrapping)", icon: Rocket },
+    { title: "Construction Margin", value: "80%", desc: "Build $75K → sell $135K (bootstrapping)", icon: Rocket },
   ];
 
   return (
@@ -968,7 +968,7 @@ function Slide13Compounding() {
         <Badge variant="outline" className="mb-4">Slide 13</Badge>
         <h2 className="text-3xl lg:text-4xl font-bold mb-2">The Compounding Engine</h2>
         <p className="text-muted-foreground">
-          Because of Peru margins (~48%), capital snowballs
+          Because of Peru margins (~80% ROI), capital snowballs
         </p>
       </div>
 

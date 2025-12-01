@@ -79,7 +79,7 @@ const TechDueDiligence = () => {
     },
     {
       name: "Vertical Integration",
-      description: "48% gross margins from being the General Contractor",
+      description: "80% ROI from being the General Contractor ($75K build → $135K sale)",
       defensibility: "Customer acquisition subsidy competitors can't match",
       icon: Building2,
     },

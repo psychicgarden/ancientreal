@@ -27,7 +27,7 @@ const metrics: EconomicMetric[] = [
   },
   {
     label: "Build Cost (All-in)",
-    value: "$91,000",
+    value: "$75,000",
     subtext: "Vertically integrated",
     icon: Building2,
   },
@@ -39,8 +39,8 @@ const metrics: EconomicMetric[] = [
   },
   {
     label: "Gross Margin",
-    value: "32-48%",
-    subtext: "Construction arbitrage",
+    value: "44%",
+    subtext: "On sale price ($60K/$135K)",
     icon: Percent,
     highlight: true,
   },
@@ -121,10 +121,10 @@ export default function UnfairUnitEconomics() {
         {/* Profit Flow Visualization */}
         <div className="mt-12 grid md:grid-cols-4 gap-4">
           {[
-            { step: 1, label: "Build", value: "$91K", color: "text-muted-foreground" },
+            { step: 1, label: "Build", value: "$75K", color: "text-muted-foreground" },
             { step: 2, label: "Sell", value: "$135K", color: "text-blue-500" },
-            { step: 3, label: "Margin", value: "$44K", color: "text-green-500" },
-            { step: 4, label: "ROI", value: "48%", color: "text-primary" },
+            { step: 3, label: "Profit", value: "$60K", color: "text-green-500" },
+            { step: 4, label: "ROI", value: "80%", color: "text-primary" },
           ].map((item, idx) => (
             <div key={item.step} className="text-center p-4 bg-card/50 rounded-lg border border-border/50">
               <div className="text-xs text-muted-foreground mb-1">Step {item.step}</div>
