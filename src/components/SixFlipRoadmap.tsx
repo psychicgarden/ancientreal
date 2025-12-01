@@ -121,7 +121,7 @@ export default function SixFlipRoadmap() {
             The <span className="text-primary">"6 Flip" Roadmap</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            $1.75M Seed funds Flip 1. <span className="text-green-500 font-semibold">Recycled Profits</span> fund Flips 2-6. 
+            $1.9M Seed funds Flip 1. <span className="text-green-500 font-semibold">Recycled Profits</span> fund Flips 2-6. 
             Non-dilutive growth for early investors.
           </p>
         </div>
@@ -134,7 +134,7 @@ export default function SixFlipRoadmap() {
               <span className="font-bold text-green-500">Profit Recycling Flywheel</span>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
-              <Badge className="bg-primary/20 text-primary border-primary/30">$1.75M Seed</Badge>
+              <Badge className="bg-primary/20 text-primary border-primary/30">$1.9M Seed</Badge>
               <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
               <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">Flip 1: +$975K</Badge>
               <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />

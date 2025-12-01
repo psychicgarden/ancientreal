@@ -35,6 +35,7 @@ import TractionTrilogy from "@/components/TractionTrilogy";
 import UnfairUnitEconomics from "@/components/UnfairUnitEconomics";
 import KillSwitch from "@/components/KillSwitch";
 import AWSPitch from "@/components/AWSPitch";
+import FinCoLiquidityPool from "@/components/FinCoLiquidityPool";
 
 // Import property images
 import villaTulum from "@/assets/villa-tulum.jpg";
@@ -45,34 +46,36 @@ import villaBali from "@/assets/villa-bali.jpg";
 import penthouseMexico from "@/assets/penthouse-mexico.jpg";
 import ecoSmartCity from "@/assets/eco-smart-city.jpg";
 
-// Calculate dynamic flywheel data with rolling budget
-const INITIAL_CAPITAL = 3.0; // $3.0M initial capital
+// Calculate dynamic flywheel data with Two-Pocket Model
+// DevCo receives 100% gross sales from FinCo at closing
+const INITIAL_CAPITAL = 1.9; // $1.9M seed investment (DevCo only)
 
 const calculateFlywheelWithBudget = () => {
   const flywheel = calculateDevelopmentFlywheel();
   const images = [villaTulum, beachChalet, villaGreece, villaEriceira, villaBali, penthouseMexico];
   const locations = [
-    { name: "Mazunte, Mexico", flag: "🇲🇽", structure: "Mexican SAPI + Fideicomiso" },
-    { name: "Bahia, Brazil", flag: "🇧🇷", structure: "Brazilian LTDA" },
+    { name: "Pisac, Peru", flag: "🇵🇪", structure: "Peruvian SAC + Reserva de Dominio" },
+    { name: "Bahia, Brazil", flag: "🇧🇷", structure: "Brazilian LTDA + Alienação Fiduciária" },
     { name: "Corfu, Greece", flag: "🇬🇷", structure: "Greek IKE SPV" },
-    { name: "Mallorca, Spain", flag: "🇪🇸", structure: "Spanish SL" },
     { name: "Koh Phangan, Thailand", flag: "🇹🇭", structure: "30+30 Leasehold" },
+    { name: "Mazunte, Mexico", flag: "🇲🇽", structure: "Mexican SAPI + Fideicomiso" },
     { name: "Antalya, Turkey", flag: "🇹🇷", structure: "Turkish SPV" }
   ];
   
   const prices = [135000, 138000, 141000, 144000, 147000, 150000];
   
-  let remainingBudget = INITIAL_CAPITAL;
+  let runningCapital = INITIAL_CAPITAL;
   
   return flywheel.flips.map((flip, idx) => {
     const buildCostM = flip.buildCost / 1_000_000;
-    const immediateCashM = flip.immediateCash / 1_000_000;
+    const grossSalesM = flip.grossSales / 1_000_000;
     
-    // Calculate remaining budget BEFORE this flip
-    const budgetBefore = remainingBudget;
+    // TWO-POCKET MODEL: DevCo receives 100% gross sales from FinCo at closing
+    // FinCo handles mortgages separately with its own capital pool
+    const netProfitM = grossSalesM - buildCostM;
     
-    // Update remaining budget: subtract build cost, add immediate cash
-    remainingBudget = remainingBudget - buildCostM + immediateCashM;
+    // Capital compounds: start with seed, add net profit each flip
+    runningCapital = runningCapital + netProfitM;
     
     return {
       flip: flip.flip,
@@ -81,12 +84,16 @@ const calculateFlywheelWithBudget = () => {
       units: flip.units,
       pricePerUnit: prices[idx],
       buildCost: buildCostM,
-      salesPrice: flip.grossSales / 1_000_000,
-      cashIn: immediateCashM,
-      remaining: remainingBudget,
+      salesPrice: grossSalesM,
+      grossSales: grossSalesM, // 100% from FinCo at closing
+      netProfit: netProfitM,
+      runningCapital: runningCapital,
       platformFee: flip.platformFees / 1_000,
       image: images[idx],
       structure: locations[idx].structure,
+      // Legacy fields for compatibility
+      cashIn: flip.immediateCash / 1_000_000,
+      remaining: runningCapital,
       downPayments: flip.downPayments / 1_000_000,
       cashSales: flip.cashSales / 1_000_000,
       deferredPrincipal: flip.deferredPrincipal / 1_000_000
@@ -497,6 +504,9 @@ const BusinessModel = () => {
                 {/* DevCo/FinCo Two-Pocket Model */}
                 <DevCoFinCoModel />
 
+                {/* FinCo Liquidity Pool - Mortgage Capital */}
+                <FinCoLiquidityPool />
+
                 {/* Cash First Strategy Component */}
                 <CashFirstStrategy />
 
@@ -627,8 +637,8 @@ const BusinessModel = () => {
                 <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                   <CardContent className="p-6 text-center">
                     <TrendingUp className="w-8 h-8 text-primary mx-auto mb-3" />
-                    <div className="text-2xl font-bold text-foreground">$2.75M</div>
-                    <div className="text-sm text-muted-foreground">Initial Capital</div>
+                    <div className="text-2xl font-bold text-foreground">$1.9M</div>
+                    <div className="text-sm text-muted-foreground">DevCo Seed Capital</div>
                   </CardContent>
                 </Card>
                 <Card className="bg-card/50 backdrop-blur-sm border-border/50">
@@ -657,9 +667,12 @@ const BusinessModel = () => {
               {/* Flywheel Flow */}
               <div>
                 <div className="text-center mb-16">
+                  <Badge variant="outline" className="mb-4 border-emerald-500/50 text-emerald-400">
+                    Two-Pocket Model
+                  </Badge>
                   <h2 className="text-4xl font-bold mb-4">The Development Flywheel</h2>
                   <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                    Each flip generates cash to fund the next, creating momentum through strategic geographic sequencing
+                    DevCo receives 100% gross sales from FinCo at closing. Capital compounds from $1.9M → $12M+ across 6 flips.
                   </p>
                 </div>
 
@@ -712,26 +725,28 @@ const BusinessModel = () => {
                               </div>
                             </div>
 
-                            {/* Cash In Breakdown */}
-                            <div className="bg-primary/5 rounded-lg p-3">
-                              <div className="text-sm font-medium text-foreground mb-2">Cash In Breakdown</div>
+                            {/* Two-Pocket Model: DevCo receives 100% from FinCo */}
+                            <div className="bg-emerald-500/10 rounded-lg p-3 border border-emerald-500/20">
+                              <div className="text-sm font-medium text-emerald-400 mb-2 flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                DevCo receives 100% from FinCo at Closing
+                              </div>
                               <div className="space-y-1 text-sm">
                                 <div className="flex justify-between items-center">
-                                  <span className="text-muted-foreground">{Math.floor(flip.units * 0.8)} financed (20% down):</span>
-                                  <span className="font-mono font-semibold">${(flip.downPayments * 1000).toFixed(0)}K</span>
+                                  <span className="text-muted-foreground">Gross Sales ({flip.units} units):</span>
+                                  <span className="font-mono font-semibold text-foreground">${flip.grossSales?.toFixed(2) || flip.salesPrice?.toFixed(2)}M</span>
                                 </div>
                                 <div className="flex justify-between items-center">
-                                  <span className="text-muted-foreground">{flip.units - Math.floor(flip.units * 0.8)} cash purchases:</span>
-                                  <span className="font-mono font-semibold">${(flip.cashSales * 1000).toFixed(0)}K</span>
+                                  <span className="text-muted-foreground">Build Cost:</span>
+                                  <span className="font-mono font-semibold text-muted-foreground">-${flip.buildCost.toFixed(2)}M</span>
                                 </div>
-                                <div className="flex justify-between items-center">
-                                  <span className="text-muted-foreground">Platform fee (3.5%):</span>
-                                  <span className="font-mono font-semibold">${flip.platformFee.toFixed(0)}K</span>
+                                <div className="border-t border-emerald-500/30 pt-1.5 mt-1.5 flex justify-between items-center">
+                                  <span className="font-semibold text-foreground">Net Profit to DevCo:</span>
+                                  <span className="font-mono text-lg font-bold text-emerald-500">+${flip.netProfit?.toFixed(2) || (flip.salesPrice - flip.buildCost).toFixed(2)}M</span>
                                 </div>
-                                <div className="border-t pt-1.5 mt-1.5 flex justify-between items-center">
-                                  <span className="font-semibold text-foreground">Total Cash In:</span>
-                                  <span className="font-mono text-lg font-bold text-primary">${flip.cashIn.toFixed(2)}M</span>
-                                </div>
+                              </div>
+                              <div className="mt-3 text-xs text-muted-foreground bg-background/50 rounded p-2">
+                                💡 FinCo (DeFi stakers) provides mortgage capital separately at 7% yield
                               </div>
                             </div>
                           </div>
@@ -739,13 +754,16 @@ const BusinessModel = () => {
                           {/* Flow Indicator */}
                           <div className="p-8 flex flex-col justify-center items-center border-l border-border/50">
                             <div className="text-center mb-4">
-                              <div className="text-sm text-muted-foreground">Remaining Budget</div>
-                              <div className="text-2xl font-bold">${flip.remaining.toFixed(2)}M</div>
+                              <div className="text-sm text-muted-foreground">Running Capital</div>
+                              <div className="text-3xl font-bold text-emerald-500">${flip.runningCapital?.toFixed(2) || flip.remaining?.toFixed(2)}M</div>
+                              <div className="text-xs text-muted-foreground mt-1">
+                                Started with $1.9M seed
+                              </div>
                             </div>
                             
                             {index < flywheelData.length - 1 && <div className="flex flex-col items-center">
                                 <div className="text-sm text-muted-foreground mb-2">Funds Next Flip</div>
-                                <ArrowRight className="w-8 h-8 text-primary rotate-90 md:rotate-0" />
+                                <ArrowRight className="w-8 h-8 text-emerald-500 rotate-90 md:rotate-0" />
                               </div>}
                           </div>
                         </div>

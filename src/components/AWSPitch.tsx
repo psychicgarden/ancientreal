@@ -48,7 +48,7 @@ export default function AWSPitch() {
               {[
                 { label: "Units Live", value: "12", icon: Home, color: "text-green-500" },
                 { label: "Returns", value: "20%+", icon: Zap, color: "text-primary" },
-                { label: "Raise", value: "$1.75M", icon: Database, color: "text-orange-500" },
+                { label: "Raise", value: "$1.9M", icon: Database, color: "text-orange-500" },
                 { label: "Margins", value: "48%", icon: Globe, color: "text-blue-500" },
               ].map((stat) => (
                 <div key={stat.label} className="text-center p-4 bg-background/50 rounded-xl">
@@ -64,7 +64,7 @@ export default function AWSPitch() {
               <p className="text-lg md:text-xl leading-relaxed text-foreground">
                 "We have <span className="text-green-500 font-bold">12 units live</span>, generating{" "}
                 <span className="text-primary font-bold">20% returns</span>.
-                We are raising <span className="text-orange-500 font-bold">$1.75M</span> to build our flagship{" "}
+                We are raising <span className="text-orange-500 font-bold">$1.9M</span> to build our flagship{" "}
                 <span className="font-semibold">'Bitcoin Valley'</span> community.
               </p>
               <p className="text-lg md:text-xl leading-relaxed text-foreground mt-4">

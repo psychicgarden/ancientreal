@@ -16,7 +16,7 @@ export default function ReturnProfile() {
             The <span className="text-green-500">Return Profile</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            $1.75M Loan (Staked BTC) + 15% Equity Warrants
+            $1.9M Loan (Staked BTC) + 15% Equity Warrants
           </p>
         </div>
 

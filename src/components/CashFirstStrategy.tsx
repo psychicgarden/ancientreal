@@ -143,7 +143,7 @@ export default function CashFirstStrategy() {
             </div>
             <div className="space-y-1">
               <div className="font-medium text-primary">Faster Compounding</div>
-              <p className="text-muted-foreground text-xs">$1.75M → $10M+ treasury through rapid flip reinvestment</p>
+              <p className="text-muted-foreground text-xs">$1.9M → $12M+ treasury through rapid flip reinvestment</p>
             </div>
             <div className="space-y-1">
               <div className="font-medium text-orange-500">Protocol Validation</div>

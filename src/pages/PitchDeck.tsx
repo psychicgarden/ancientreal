@@ -361,7 +361,7 @@ export default function PitchDeck() {
                 </div>
               </div>
               <div className="bg-primary/10 rounded-xl p-4 text-center">
-                <p className="font-medium">Ancient receives: <span className="text-primary">$1.75M working capital</span> at zero debt</p>
+                <p className="font-medium">Ancient receives: <span className="text-primary">$1.9M working capital</span> at zero debt</p>
               </div>
             </div>
           </div>

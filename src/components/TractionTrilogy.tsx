@@ -37,7 +37,7 @@ const phases: TractionPhase[] = [
     title: "Proof of Protocol",
     status: "raising",
     metrics: "15 Custom Homes",
-    revenue: "$1.75M Raise",
+    revenue: "$1.9M Raise",
     purpose: "The 'Genesis Block' for the On-Chain Credit Score (OCCR).",
     icon: Rocket,
   },
