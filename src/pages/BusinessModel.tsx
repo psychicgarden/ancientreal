@@ -398,13 +398,13 @@ const BusinessModel = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <Badge variant="outline" className="mb-6 text-lg px-6 py-2">
-              Development Flywheel Model
+              Investment Thesis
             </Badge>
             <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-primary bg-clip-text text-transparent">
-              6 Locations, 6 Flips over 5 years
+              The Math is Done. The Risk is Clear.
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-12">
-              Borders wrote the last chapter of property; code writes the next
+              147 homes. $12M+ profit. 6 legal structures. The only question: do you want in?
             </p>
           </div>
 
