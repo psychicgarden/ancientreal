@@ -8,9 +8,9 @@ const FINCO_ECONOMICS = {
   borrowerRate: 10.0,    // 10% to borrowers
   stakerYield: 7.0,      // 7% to liquidity providers
   nim: 3.0,              // 3% Net Interest Margin
-  targetPoolSize: 5.0,   // $5M target liquidity pool
-  avgLoanSize: 108000,   // 80% of $135K avg price
-  mortgagesServiced: 88, // ~78% of 112 units financed
+  targetPoolSize: 7.5,   // $7.5M target liquidity pool (147 units)
+  avgLoanSize: 128000,   // 80% of $160K avg price
+  mortgagesServiced: 118, // ~80% of 147 units financed
 };
 
 interface FlowStep {
@@ -22,7 +22,7 @@ interface FlowStep {
 
 const flowSteps: FlowStep[] = [
   { icon: Users, label: "DeFi Stakers", value: "Deposit USDC", color: "text-blue-500" },
-  { icon: Wallet, label: "Liquidity Pool", value: "$5M Target", color: "text-green-500" },
+  { icon: Wallet, label: "Liquidity Pool", value: "$7.5M Target", color: "text-green-500" },
   { icon: Building2, label: "DevCo Purchase", value: "100% at Close", color: "text-primary" },
   { icon: DollarSign, label: "Mortgage Payments", value: "10% APR", color: "text-amber-500" },
   { icon: TrendingUp, label: "Staker Returns", value: "7% Yield", color: "text-emerald-500" },

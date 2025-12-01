@@ -74,7 +74,7 @@ export const DevelopmentFlywheel: React.FC = () => {
               <span className="text-sm text-muted-foreground">Total Net Profit</span>
             </div>
             <div className="text-2xl font-bold text-emerald-500">
-              ${((flywheel.totalGrossSales - (75000 * 112)) / 1_000_000).toFixed(2)}M
+              ${((flywheel.totalGrossSales - flywheel.totalConstructionCost) / 1_000_000).toFixed(2)}M
             </div>
             <div className="text-xs text-muted-foreground mt-1">
               Gross Sales - Build Costs

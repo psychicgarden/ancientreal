@@ -22,7 +22,7 @@ export const PHASE_MIX = {
   phase3: { cash: 0.05, mortgage: 0.95, name: "BlackRock Turn", timeline: "Year 5+" },
 };
 
-// Flip structure - exact 6 flips matching user's schedule
+// Canonical 6-flip structure matching SixFlipRoadmap
 interface Flip {
   flip: string;
   price: number;
@@ -32,16 +32,17 @@ interface Flip {
 }
 
 /**
- * Get exact 6-flip schedule with dynamic pricing $135k → $150k
+ * Get canonical 6-flip schedule (147 units total)
+ * Matches SixFlipRoadmap: Peru, Brazil, Greece, Thailand, Mexico, Turkey
  */
 function getFlips(): Flip[] {
   return [
-    { flip: 'Flip 1', price: 135_000, units: 15, financedUnits: 12, cashUnits: 3 },
-    { flip: 'Flip 2', price: 138_000, units: 21, financedUnits: 16, cashUnits: 5 },
-    { flip: 'Flip 3A', price: 141_000, units: 16, financedUnits: 12, cashUnits: 4 },
-    { flip: 'Flip 3B', price: 144_000, units: 15, financedUnits: 12, cashUnits: 3 },
-    { flip: 'Flip 4A', price: 147_000, units: 25, financedUnits: 20, cashUnits: 5 },
-    { flip: 'Flip 4B', price: 150_000, units: 20, financedUnits: 16, cashUnits: 4 },
+    { flip: 'Flip 1', price: 135_000, units: 15, financedUnits: 12, cashUnits: 3 }, // Peru - Genesis
+    { flip: 'Flip 2', price: 145_000, units: 21, financedUnits: 17, cashUnits: 4 }, // Brazil - Scale
+    { flip: 'Flip 3', price: 165_000, units: 16, financedUnits: 13, cashUnits: 3 }, // Greece - Club
+    { flip: 'Flip 4', price: 110_000, units: 25, financedUnits: 20, cashUnits: 5 }, // Thailand - Leasehold
+    { flip: 'Flip 5', price: 250_000, units: 20, financedUnits: 16, cashUnits: 4 }, // Mexico - Whale Haven
+    { flip: 'Flip 6', price: 160_000, units: 50, financedUnits: 40, cashUnits: 10 }, // Turkey - Citadel
   ];
 }
 
@@ -78,6 +79,7 @@ export function calculateDevelopmentFlywheel(): {
   totalImmediateCash: number;
   totalDeferredPrincipal: number;
   totalGrossSales: number;
+  totalConstructionCost: number;
 } {
   const flips = getFlips();
   const results: FlywheelFlip[] = [];
@@ -111,6 +113,7 @@ export function calculateDevelopmentFlywheel(): {
   const totalImmediateCash = results.reduce((sum, f) => sum + f.immediateCash, 0);
   const totalDeferredPrincipal = results.reduce((sum, f) => sum + f.deferredPrincipal, 0);
   const totalGrossSales = results.reduce((sum, f) => sum + f.grossSales, 0);
+  const totalConstructionCost = results.reduce((sum, f) => sum + f.buildCost, 0);
   
   return {
     flips: results,
@@ -119,6 +122,7 @@ export function calculateDevelopmentFlywheel(): {
     totalImmediateCash,
     totalDeferredPrincipal,
     totalGrossSales,
+    totalConstructionCost,
   };
 }
 
