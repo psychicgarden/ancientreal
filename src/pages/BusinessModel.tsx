@@ -792,6 +792,7 @@ const BusinessModel = () => {
                       </CardContent>
                     </Card>)}
                 </div>
+              </div>
 
               {/* Clean Revenue Model Showcase */}
               <div className="mb-16 mt-24">
