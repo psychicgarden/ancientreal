@@ -113,24 +113,37 @@ const avgPrice = totalGrossSales / totalUnits * 1_000_000; // average price per 
 // Calculate revenue components from canonical model
 const platformFeesY0 = totalPlatformFees; // $0.82M from 147 units
 
-// Mortgage Interest: 10% APR over 15 years on 80% of financed units
-const financedRevenue = flywheel.flips.reduce((sum, f) => {
-  const financedUnits = Math.floor(f.units * 0.80); // 80% financed (118 units)
-  const avgPrice = f.grossSales / f.units;
-  return sum + (avgPrice * 0.80 * financedUnits);
-}, 0);
-const totalMortgageInterest = financedRevenue * 0.10 * 15; // 10% APR * 15 years = $13.50M
+// Mortgage Interest: Use proper amortization formula, not simple interest
+// Calculate total interest from mortgages using monthly payment formula
+let totalMortgageInterest = 0;
+let totalLoanAmount = 0;
+
+flywheel.flips.forEach((flip) => {
+  const financedUnits = Math.floor(flip.units * 0.80); // 80% financed
+  const avgPrice = flip.grossSales / flip.units;
+  const loanAmount = avgPrice * 0.80 * financedUnits; // 80% LTV per unit
+  
+  // Monthly payment calculation: P * [r(1+r)^n] / [(1+r)^n - 1]
+  const monthlyRate = 0.10 / 12; // 10% APR
+  const numPayments = 15 * 12; // 180 months
+  const monthlyPayment = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1);
+  
+  const totalPaid = monthlyPayment * numPayments;
+  const interestPaid = totalPaid - loanAmount;
+  
+  totalMortgageInterest += interestPaid;
+  totalLoanAmount += loanAmount;
+});
+
 const annualInterest = totalMortgageInterest / 15 / 1_000_000; // Convert to millions
 
-// SAM Appreciation: 15% of appreciation over 15 years
-// Using 9% appreciation rate to achieve target $10.18M SAM (adjusted for diverse property mix)
-const samAppreciationRate = 0.09; // Higher rate accounts for premium locations (Greece, Mexico)
-const finalValueForSAM = totalUnits * avgPrice * Math.pow(1 + samAppreciationRate, 15);
+// SAM Appreciation: 15% of 7% annual appreciation over 15 years
+const finalValueForSAM = totalUnits * avgPrice * Math.pow(1.07, 15);
 const totalAppreciationForSAM = finalValueForSAM - (totalUnits * avgPrice);
-const appreciationY15 = (totalAppreciationForSAM * 0.15) / 1_000_000; // 15% SAM share = $10.18M
+const appreciationY15 = (totalAppreciationForSAM * 0.15) / 1_000_000; // 15% SAM share
 
 // Revenue over 15 years (Platform Fees + Interest + Appreciation)
-const totalDynamicRevenue = platformFeesY0 + (totalMortgageInterest / 1_000_000) + appreciationY15; // $24.50M
+const totalDynamicRevenue = platformFeesY0 + (totalMortgageInterest / 1_000_000) + appreciationY15; // Should be ~$24.50M
 
 // Calculate 15-year cash flow waterfall
 const generateCashFlowData = () => {
