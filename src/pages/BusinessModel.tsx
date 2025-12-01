@@ -1328,10 +1328,6 @@ const BusinessModel = () => {
               </div>
             </TabsContent>
 
-            <TabsContent value="product-comparison">
-              <MortgageOptionsCalculator />
-            </TabsContent>
-
             <TabsContent value="tech-due-diligence">
               <TechDueDiligence />
             </TabsContent>
