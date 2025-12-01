@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -8,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowRight, Globe, Menu, Home, Users, Briefcase, CreditCard, Plane, Code2, FileText, Settings, BarChart3 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import TenYearProjection from "@/components/TenYearProjection";
@@ -18,6 +20,12 @@ import TractionTrilogy from "@/components/TractionTrilogy";
 import UnfairUnitEconomics from "@/components/UnfairUnitEconomics";
 import KillSwitch from "@/components/KillSwitch";
 import AWSPitch from "@/components/AWSPitch";
+import VCPitchDeck from "@/components/VCPitchDeck";
+import CompetitiveLandscape from "@/components/CompetitiveLandscape";
+import { ProductComparison } from "@/components/ProductComparison";
+import DevCoFinCoModel from "@/components/DevCoFinCoModel";
+import FinCoLiquidityPool from "@/components/FinCoLiquidityPool";
+import TechDueDiligence from "@/components/TechDueDiligence";
 
 // Import property images
 import ecoSmartCity from "@/assets/eco-smart-city.jpg";
@@ -169,6 +177,127 @@ const BusinessModel = () => {
 
       {/* Return Profile for Investors */}
       <ReturnProfile />
+
+      {/* Deep Dive Tabs Section */}
+      <section className="py-20 px-4 bg-background">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <Badge className="mb-4">Deep Dive</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              The Complete Picture
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Explore the full business model, competitive landscape, revenue streams, and technical architecture
+            </p>
+          </div>
+          
+          <Tabs defaultValue="vc-pitch" className="w-full">
+            <TabsList className="w-full justify-start mb-8 bg-muted/50 p-1 flex-wrap h-auto">
+              <TabsTrigger value="vc-pitch" className="flex-1 min-w-[120px]">VC Pitch</TabsTrigger>
+              <TabsTrigger value="competition" className="flex-1 min-w-[120px]">Competition</TabsTrigger>
+              <TabsTrigger value="three-paths" className="flex-1 min-w-[120px]">Three Paths</TabsTrigger>
+              <TabsTrigger value="revenue" className="flex-1 min-w-[120px]">Revenue Model</TabsTrigger>
+              <TabsTrigger value="tech" className="flex-1 min-w-[120px]">Tech Due Diligence</TabsTrigger>
+              <TabsTrigger value="budget-legal" className="flex-1 min-w-[120px]">Budget & Legal</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="vc-pitch" className="mt-0">
+              <VCPitchDeck />
+            </TabsContent>
+            
+            <TabsContent value="competition" className="mt-0">
+              <CompetitiveLandscape />
+            </TabsContent>
+            
+            <TabsContent value="three-paths" className="mt-0">
+              <ProductComparison />
+            </TabsContent>
+            
+            <TabsContent value="revenue" className="mt-0">
+              <div className="space-y-8">
+                <DevCoFinCoModel />
+                <FinCoLiquidityPool />
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="tech" className="mt-0">
+              <TechDueDiligence />
+            </TabsContent>
+            
+            <TabsContent value="budget-legal" className="mt-0">
+              <div className="space-y-8">
+                <div className="bg-card rounded-xl border border-border p-8">
+                  <h3 className="text-2xl font-bold mb-6">Use of Funds: $1.9M Seed</h3>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div className="flex items-start gap-4">
+                        <div className="bg-primary/10 rounded-lg p-3">
+                          <span className="text-2xl font-bold text-primary">79%</span>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-2">Hard Assets ($1.50M)</h4>
+                          <p className="text-sm text-muted-foreground">Land acquisition and construction. The "Floor" - downside protection via debt-free real estate backing the loan.</p>
+                          <ul className="text-sm text-muted-foreground mt-2 space-y-1">
+                            <li>• Land Acquisition: $300K</li>
+                            <li>• Construction: $1,125K</li>
+                            <li>• Permits & Legal: $75K</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="flex items-start gap-4">
+                        <div className="bg-accent/10 rounded-lg p-3">
+                          <span className="text-2xl font-bold text-accent">21%</span>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-2">Tech & Legal ($400K)</h4>
+                          <p className="text-sm text-muted-foreground">Protocol engineering and multi-jurisdiction SPV setup. The "Ceiling" - venture upside from fintech scaling.</p>
+                          <ul className="text-sm text-muted-foreground mt-2 space-y-1">
+                            <li>• Protocol Engineering: $200K</li>
+                            <li>• Legal Structure (Peru SPV): $100K</li>
+                            <li>• Operations & Marketing: $100K</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-card rounded-xl border border-border p-8">
+                  <h3 className="text-2xl font-bold mb-6">Legal Structure</h3>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="font-semibold mb-3">OpCo: Ancient Protocol Inc</h4>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        The tech company housing software, brand, and credit algorithms. Valued at 20× revenue where VCs invest for equity.
+                      </p>
+                      <ul className="text-sm text-muted-foreground space-y-2">
+                        <li>• Delaware C-Corp</li>
+                        <li>• IP & Protocol ownership</li>
+                        <li>• OCCR credit algorithm</li>
+                        <li>• VC equity investment vehicle</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-3">PropCo: Liquidity Pool</h4>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        The asset fund holding title deeds to properties, funded by whale Bitcoin staking for yield and security at 1× net asset value.
+                      </p>
+                      <ul className="text-sm text-muted-foreground space-y-2">
+                        <li>• Peru: SAC (Title Retention)</li>
+                        <li>• Deed registry on-chain</li>
+                        <li>• Mortgage NFT issuance</li>
+                        <li>• DeFi staker funding</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </section>
 
       {/* CTA */}
       <section className="py-20 px-4 text-center bg-gradient-primary/5">
