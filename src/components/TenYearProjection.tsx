@@ -123,7 +123,7 @@ export default function TenYearProjection() {
             The Path to <span className="text-primary">$1 Billion Protocol</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            From $1.75M Seed Liquidity to Global Credit Bureau
+            From $1.9M Seed Liquidity to Global Credit Bureau
           </p>
         </div>
 

@@ -61,8 +61,8 @@ const compoundingData = [
 ];
 
 const useOfFundsData = [
-  { name: "Hard Assets (Land + Construction)", value: 79, color: "hsl(var(--primary))" },
-  { name: "Tech & Legal (Global Rails)", value: 21, color: "hsl(var(--chart-2))" },
+  { name: "Hard Assets (Land + Construction)", value: 79, color: "hsl(var(--primary))", amount: "$1.50M" },
+  { name: "Tech & Legal (Global Rails)", value: 21, color: "hsl(var(--chart-2))", amount: "$400K" },
 ];
 
 export default function VCPitchDeck() {
@@ -213,7 +213,7 @@ function Slide1Title() {
           <span className="text-blue-500 font-bold">35M Credit-Invisible Global Nomads</span>
         </p>
         <p className="text-sm text-muted-foreground mt-4">
-          Series Seed — $1.75M (Asset-Backed Venture Note)
+          Series Seed — $1.9M (Asset-Backed Venture Note)
         </p>
       </div>
     </div>
@@ -713,7 +713,7 @@ function Slide9Traction() {
       title: "Proof of Protocol", 
       status: "RAISING",
       metrics: "15 Custom Homes",
-      revenue: "$1.75M Raise",
+      revenue: "$1.9M Raise",
       purpose: "The 'Genesis Block' for OCCR.",
       color: "text-primary",
       bg: "from-primary/10 to-primary/5",
@@ -942,7 +942,7 @@ function Slide12Investment() {
           <div className="text-center">
             <p className="text-muted-foreground mb-2">Ancient Receives:</p>
             <div className="flex justify-center gap-6 text-sm">
-              <span><strong className="text-primary">$1.75M</strong> working capital</span>
+              <span><strong className="text-primary">$1.9M</strong> working capital</span>
               <span><strong className="text-primary">Zero</strong> debt</span>
               <span><strong className="text-primary">Minimal</strong> dilution</span>
               <span><strong className="text-primary">Permanent</strong> construction engine</span>
