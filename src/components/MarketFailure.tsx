@@ -127,6 +127,78 @@ export default function MarketFailure() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Why Now / Perfect Storm Section */}
+        <div className="mt-12">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              🌪 Perfect Storm: <span className="text-primary">Why Now?</span>
+            </h2>
+            <div className="max-w-4xl mx-auto text-xl text-muted-foreground">
+              <p>
+                <strong className="text-primary text-2xl">🌎 100M+ Digital Nomads by 2030, Zero Mortgage Infrastructure</strong>
+              </p>
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {[{
+              icon: "📈",
+              title: "Digital-Nomad Boom",
+              stat: "50M → 100M+",
+              desc: "6× growth since 2019, accelerating toward 100M+ by 2030"
+            }, {
+              icon: "⚖",
+              title: "Tokenized Real Estate",
+              stat: "$310M → $1.4T by 2030",
+              desc: "Real-estate RWAs have 4X'd in the past 18 months."
+            }, {
+              icon: "💻",
+              title: "Remote Work Default",
+              stat: "80%",
+              desc: "White-collar staff work hybrid/remote, severing income from geography"
+            }, {
+              icon: "🏠",
+              title: "Affordability Crisis",
+              stat: "8× Income",
+              desc: "Median home prices vs. household income—worst ratio in four decades"
+            }, {
+              icon: "🕰",
+              title: "Delayed Homeownership",
+              stat: "29 → 36",
+              desc: "U.S. first-time-buyer age climbed 7 years in a decade"
+            }, {
+              icon: "💰",
+              title: "Millennial Capital",
+              stat: "$5T Liquid",
+              desc: "Massive wealth, yet <50% own homes due to geographic constraints"
+            }, {
+              icon: "🏛",
+              title: "Institutional Scale-Up",
+              stat: "$5M → $1B+",
+              desc: "BlackRock's BUIDL Fund, launched Mar 2024, surpassed $1B AUM in under 12 months—a 200× growth, signaling rapid institutional adoption."
+            }, {
+              icon: "🗺",
+              title: "Visas & Tokenization Take Off",
+              stat: "50+ Countries",
+              desc: "Nomad visas have exploded from 6 to 66+ nations since 2019. At the same time, real estate tokenization has moved from pilots to legal frameworks in the US, UK, EU, UAE, Singapore, Switzerland, Mexico, Brazil, India—with new markets opening monthly."
+            }, {
+              icon: "💸",
+              title: "Global Mortgage Blackout",
+              stat: "$750B",
+              desc: "If just 10% of 50M digital nomads wanted $150K homes, that's a $750B TAM with a $250B immediate gap. Legacy banks leave the most mobile workforce locked out."
+            }].map(trend => (
+              <Card key={trend.title} className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-lg transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="text-3xl mb-3">{trend.icon}</div>
+                  <div className="text-2xl font-bold text-primary mb-2">{trend.stat}</div>
+                  <h3 className="text-lg font-semibold mb-2">{trend.title}</h3>
+                  <p className="text-sm text-muted-foreground">{trend.desc}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
