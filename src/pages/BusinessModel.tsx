@@ -16,6 +16,9 @@ import { useNavigate } from "react-router-dom";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, ComposedChart, PieChart, Pie, Cell } from "recharts";
 import SectionHeader from "@/components/SectionHeader";
 import TechDueDiligence from "@/components/TechDueDiligence";
+import TenYearProjection from "@/components/TenYearProjection";
+import ReturnProfile from "@/components/ReturnProfile";
+import SixFlipRoadmap from "@/components/SixFlipRoadmap";
 import { MortgageOptionsCalculator } from "@/components/MortgageOptionsCalculator";
 import { ScenarioComparison } from "@/components/ScenarioComparison";
 import { SensitivityDashboard } from "@/components/SensitivityDashboard";
@@ -350,6 +353,15 @@ const BusinessModel = () => {
 
       {/* AWS Pitch Section */}
       <AWSPitch />
+
+      {/* 6 Flip Roadmap - The Hardware Engine */}
+      <SixFlipRoadmap />
+
+      {/* 10-Year Financial Projection */}
+      <TenYearProjection />
+
+      {/* Return Profile for Investors */}
+      <ReturnProfile />
 
       {/* Why Now Section */}
       <section className="px-4 bg-background py-[50px]">

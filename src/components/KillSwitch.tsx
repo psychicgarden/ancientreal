@@ -29,6 +29,12 @@ const mitigations: RiskMitigation[] = [
     icon: Home,
     highlight: "2.5× Coverage",
   },
+  {
+    title: "DeFi Rate Hedging",
+    description: "Fixed-rate hedging via Pendle Swaps and Threshold USD (thUSD) locks our cost of capital at 0-6%.",
+    icon: Shield,
+    highlight: "Rate Protection",
+  },
 ];
 
 export default function KillSwitch() {
@@ -48,7 +54,7 @@ export default function KillSwitch() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {mitigations.map((item, idx) => (
             <Card 
               key={item.title} 
@@ -113,6 +119,43 @@ export default function KillSwitch() {
               <p className="text-muted-foreground">
                 Rental income covers debt service <span className="font-semibold">2.5×</span>. 
                 The investor gets paid <span className="text-green-500 font-semibold">even if the house doesn't sell</span>.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* DeFi Rate Hedging Detail */}
+        <Card className="mt-8 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-blue-500/10 border-blue-500/30">
+          <CardHeader>
+            <CardTitle className="text-center text-2xl">
+              <Shield className="h-6 w-6 inline-block mr-2 text-blue-500" />
+              DeFi Rate Spike Protection
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="p-4 bg-background/50 rounded-xl">
+                <div className="flex items-center gap-2 mb-3">
+                  <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">Pendle Swaps</Badge>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Lock in fixed yields on variable-rate DeFi positions. If stablecoin borrow rates spike, 
+                  our hedged position keeps cost of capital at <span className="text-green-400 font-semibold">6% max</span>.
+                </p>
+              </div>
+              <div className="p-4 bg-background/50 rounded-xl">
+                <div className="flex items-center gap-2 mb-3">
+                  <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">Threshold USD (thUSD)</Badge>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Hard-coded 0% borrowing against BTC collateral. Even in extreme market conditions, 
+                  our capital cost is <span className="text-green-400 font-semibold">locked at zero</span>.
+                </p>
+              </div>
+            </div>
+            <div className="mt-6 text-center p-4 bg-green-500/10 rounded-lg border border-green-500/30">
+              <p className="text-green-400 font-semibold">
+                Result: We borrow at 0-6%, lend at 10%. Spread protected in all market conditions.
               </p>
             </div>
           </CardContent>
