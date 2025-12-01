@@ -102,17 +102,16 @@ const calculateFlywheelWithBudget = () => {
 };
 
 const flywheelData = calculateFlywheelWithBudget();
-// Dynamic Pricing: $135k → $150k across 6 flips
-const dynamicPricingBreakdown = [
-  { flip: "Flip 1", units: 15, avgPrice: 135000, platformFee: 70875 },
-  { flip: "Flip 2", units: 21, avgPrice: 138000, platformFee: 101871 },
-  { flip: "Flip 3A", units: 16, avgPrice: 141000, platformFee: 78912 },
-  { flip: "Flip 3B", units: 15, avgPrice: 144000, platformFee: 75600 },
-  { flip: "Flip 4A", units: 25, avgPrice: 147000, platformFee: 128625 },
-  { flip: "Flip 4B", units: 20, avgPrice: 150000, platformFee: 105000 }
-];
+const flywheel = calculateDevelopmentFlywheel();
 
-const totalDynamicRevenue = 20.64; // Million (with 11.5% APR)
+// Calculate total units and revenue from canonical model
+const totalUnits = flywheel.flips.reduce((sum, f) => sum + f.units, 0); // 147 units
+const totalGrossSales = flywheel.totalGrossSales / 1_000_000; // in millions
+const totalPlatformFees = flywheel.totalPlatformFees / 1_000_000; // in millions
+const avgPrice = totalGrossSales / totalUnits * 1_000_000; // average price per unit
+
+// Revenue over 15 years (Platform Fees + Interest + Appreciation)
+const totalDynamicRevenue = 24.50; // Million (updated for 147 units)
 
 // Calculate 15-year cash flow waterfall
 const generateCashFlowData = () => {
@@ -644,7 +643,7 @@ const BusinessModel = () => {
                 <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                   <CardContent className="p-6 text-center">
                     <Building className="w-8 h-8 text-primary mx-auto mb-3" />
-                    <div className="text-2xl font-bold text-foreground">112</div>
+                    <div className="text-2xl font-bold text-foreground">{totalUnits}</div>
                     <div className="text-sm text-muted-foreground">Total Units</div>
                   </CardContent>
                 </Card>
@@ -658,8 +657,8 @@ const BusinessModel = () => {
                 <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                   <CardContent className="p-6 text-center">
                     <DollarSign className="w-8 h-8 text-primary mx-auto mb-3" />
-                    <div className="text-2xl font-bold text-foreground">$20.64M</div>
-                    <div className="text-sm text-muted-foreground">15-Year Revenue (11.5% APR)</div>
+                    <div className="text-2xl font-bold text-foreground">${totalDynamicRevenue}M</div>
+                    <div className="text-sm text-muted-foreground">15-Year Revenue</div>
                   </CardContent>
                 </Card>
               </div>
@@ -774,9 +773,9 @@ const BusinessModel = () => {
               {/* Clean Revenue Model Showcase */}
               <div className="mb-16 mt-24">
                 <div className="text-center mb-12">
-                  <h2 className="text-4xl font-bold mb-4">$20.64M Revenue Model</h2>
+                  <h2 className="text-4xl font-bold mb-4">${totalDynamicRevenue}M Revenue Model</h2>
                   <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                    Three revenue streams, dynamic pricing strategy, 11.5% APR, 23-26% IRR
+                    Three revenue streams across {totalUnits} units in 6 countries, 23-26% IRR
                   </p>
                 </div>
                 
@@ -788,11 +787,11 @@ const BusinessModel = () => {
                         <div className="text-5xl">🏛</div>
                         <div>
                           <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">Platform Fees</div>
-                          <div className="text-4xl font-bold text-primary mb-3">$561K</div>
+                          <div className="text-4xl font-bold text-primary mb-3">${totalPlatformFees.toFixed(2)}M</div>
                           <p className="text-sm text-muted-foreground">3.5% infrastructure fee on all sales</p>
                         </div>
                         <div className="bg-background/50 rounded-lg p-3 text-sm">
-                          <div className="text-muted-foreground">Immediate capture</div>
+                          <div className="text-muted-foreground">Immediate capture (Years 0-6)</div>
                         </div>
                       </div>
                     </CardContent>
@@ -804,8 +803,8 @@ const BusinessModel = () => {
                         <div className="text-5xl">🌐</div>
                         <div>
                           <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">Mortgage Interest</div>
-                          <div className="text-4xl font-bold text-primary mb-3">$11.32M</div>
-                          <p className="text-sm text-muted-foreground">11.5% APR on 15-year mortgages</p>
+                          <div className="text-4xl font-bold text-primary mb-3">$13.50M</div>
+                          <p className="text-sm text-muted-foreground">10% APR on 15-year mortgages</p>
                         </div>
                         <div className="bg-background/50 rounded-lg p-3 text-sm">
                           <div className="text-muted-foreground">15-year revenue stream</div>
@@ -819,12 +818,12 @@ const BusinessModel = () => {
                       <div className="text-center space-y-4">
                         <div className="text-5xl">🚀</div>
                         <div>
-                          <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">Appreciation Share</div>
-                          <div className="text-4xl font-bold text-primary mb-3">$8.76M</div>
-                          <p className="text-sm text-muted-foreground">30% SAM at 7% annual growth</p>
+                          <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">SAM Appreciation (15%)</div>
+                          <div className="text-4xl font-bold text-primary mb-3">$10.18M</div>
+                          <p className="text-sm text-muted-foreground">15% share of 7% annual appreciation at exit</p>
                         </div>
                         <div className="bg-background/50 rounded-lg p-3 text-sm">
-                          <div className="text-muted-foreground">Year 15 capture</div>
+                          <div className="text-muted-foreground">15-year capture (Year 15 exit)</div>
                         </div>
                       </div>
                     </CardContent>
@@ -836,7 +835,7 @@ const BusinessModel = () => {
                   <CardContent className="p-10">
                     <div className="text-center">
                       <div className="text-sm text-muted-foreground uppercase tracking-widest mb-3">15-Year Total Revenue</div>
-                      <div className="text-6xl font-bold text-primary mb-4">$20.64M</div>
+                      <div className="text-6xl font-bold text-primary mb-4">${totalDynamicRevenue}M</div>
                       <div className="flex items-center justify-center gap-8 text-sm">
                         <div>
                           <span className="text-muted-foreground">IRR:</span>
@@ -845,11 +844,11 @@ const BusinessModel = () => {
                         <div className="h-4 w-px bg-border"></div>
                         <div>
                           <span className="text-muted-foreground">Cash Multiple:</span>
-                          <span className="font-bold ml-2">6.9×</span>
+                          <span className="font-bold ml-2">7.2×</span>
                         </div>
                         <div className="h-4 w-px bg-border"></div>
                         <div>
-                          <span className="text-muted-foreground">112 Units:</span>
+                          <span className="text-muted-foreground">{totalUnits} Units:</span>
                           <span className="font-bold ml-2">6 Locations</span>
                         </div>
                       </div>
@@ -866,9 +865,9 @@ const BusinessModel = () => {
                         <div className="text-sm font-medium text-primary uppercase tracking-wider">Pricing Strategy</div>
                         <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary"></div>
                       </div>
-                      <h3 className="text-3xl font-bold mb-3">Dynamic Pricing: $135k → $150k</h3>
+                      <h3 className="text-3xl font-bold mb-3">Geographic Pricing Strategy</h3>
                       <p className="text-lg text-muted-foreground">
-                        Strategic $3k escalation per flip captures market growth and creates buyer urgency
+                        Market-based pricing across 6 locations: $110K (Thailand) → $250K (Mexico luxury)
                       </p>
                     </div>
                     
@@ -884,21 +883,21 @@ const BusinessModel = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {dynamicPricingBreakdown.map((flip, idx) => (
+                          {flywheel.flips.map((flip, idx) => (
                             <tr key={idx} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
                               <td className="py-4 px-4 font-semibold">{flip.flip}</td>
                               <td className="py-4 px-4">{flip.units}</td>
-                              <td className="py-4 px-4 text-right font-mono">${(flip.avgPrice / 1000).toFixed(0)}k</td>
-                              <td className="py-4 px-4 text-right font-mono text-primary">${(flip.platformFee / 1000).toFixed(1)}k</td>
-                              <td className="py-4 px-4 text-right font-mono font-semibold">${((flip.units * flip.avgPrice) / 1000000).toFixed(2)}M</td>
+                              <td className="py-4 px-4 text-right font-mono">${(flip.grossSales / flip.units / 1000).toFixed(0)}k</td>
+                              <td className="py-4 px-4 text-right font-mono text-primary">${(flip.platformFees / 1000).toFixed(1)}k</td>
+                              <td className="py-4 px-4 text-right font-mono font-semibold">${(flip.grossSales / 1000000).toFixed(2)}M</td>
                             </tr>
                           ))}
                           <tr className="font-bold bg-primary/5 border-t-2 border-primary/20">
                             <td className="py-4 px-4 text-lg">TOTAL</td>
-                            <td className="py-4 px-4 text-lg">112</td>
-                            <td className="py-4 px-4 text-right font-mono text-lg">$143k avg</td>
-                            <td className="py-4 px-4 text-right font-mono text-primary text-lg">$560.9K</td>
-                            <td className="py-4 px-4 text-right font-mono text-primary text-lg">$16.02M</td>
+                            <td className="py-4 px-4 text-lg">{totalUnits}</td>
+                            <td className="py-4 px-4 text-right font-mono text-lg">${(avgPrice / 1000).toFixed(0)}k avg</td>
+                            <td className="py-4 px-4 text-right font-mono text-primary text-lg">${totalPlatformFees.toFixed(2)}M</td>
+                            <td className="py-4 px-4 text-right font-mono text-primary text-lg">${totalGrossSales.toFixed(2)}M</td>
                           </tr>
                         </tbody>
                       </table>
