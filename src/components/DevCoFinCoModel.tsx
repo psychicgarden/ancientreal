@@ -146,7 +146,7 @@ export default function DevCoFinCoModel() {
               Result: DevCo gets <span className="text-primary font-bold">$135K cash immediately</span>
             </p>
             <p className="text-xs text-muted-foreground mt-1">
-              50% ROI on $90K build cost • Capital recycled for next build
+              80% ROI on $75K build cost • Capital recycled for next build
             </p>
           </div>
         </div>

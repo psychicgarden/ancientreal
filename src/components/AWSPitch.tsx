@@ -49,7 +49,7 @@ export default function AWSPitch() {
                 { label: "Units Live", value: "12", icon: Home, color: "text-green-500" },
                 { label: "Returns", value: "20%+", icon: Zap, color: "text-primary" },
                 { label: "Raise", value: "$1.9M", icon: Database, color: "text-orange-500" },
-                { label: "Margins", value: "48%", icon: Globe, color: "text-blue-500" },
+                { label: "Margins", value: "80%", icon: Globe, color: "text-blue-500" },
               ].map((stat) => (
                 <div key={stat.label} className="text-center p-4 bg-background/50 rounded-xl">
                   <stat.icon className={`h-6 w-6 mx-auto mb-2 ${stat.color}`} />
@@ -68,7 +68,7 @@ export default function AWSPitch() {
                 <span className="font-semibold">'Bitcoin Valley'</span> community.
               </p>
               <p className="text-lg md:text-xl leading-relaxed text-foreground mt-4">
-                Because we own the construction, we have <span className="text-primary font-bold">48% margins</span>.
+                Because we own the construction, we have <span className="text-primary font-bold">80% ROI margins</span>.
                 Because we own the title, we have <span className="text-green-500 font-bold">zero foreclosure risk</span>.
               </p>
               <p className="text-xl md:text-2xl font-semibold text-primary mt-6">

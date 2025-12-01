@@ -212,7 +212,7 @@ export default function PitchDeck() {
                 { name: "Buyer Fee", value: "3%", desc: "On property purchases" },
                 { name: "Servicing Fees", value: "20-30yr", desc: "Recurring on payments" },
                 { name: "OCCR Data Licensing", value: "Future", desc: "Borderless credit data" },
-                { name: "Construction Margin", value: "48%", desc: "Bootstrapping phase" },
+                { name: "Construction Margin", value: "80%", desc: "Bootstrapping phase" },
               ].map((item, i) => (
                 <div key={i} className="bg-card/50 rounded-lg p-4 border border-border/50">
                   <div className="text-2xl font-bold text-primary mb-1">{item.value}</div>
