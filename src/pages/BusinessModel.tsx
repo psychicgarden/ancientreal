@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Code, Target, Rocket, Building2, BarChart3, Zap, Network, Menu, Home, Users, Briefcase, CreditCard, Plane, Code2, FileText, Settings, Calendar } from "lucide-react";
+import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Code, Target, Rocket, Building2, BarChart3, Zap, Network, Menu, Home, Users, Briefcase, CreditCard, Plane, Code2, FileText, Settings, Calendar, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, ComposedChart, PieChart, Pie, Cell } from "recharts";
 import SectionHeader from "@/components/SectionHeader";
@@ -392,12 +392,11 @@ const BusinessModel = () => {
 
           {/* Tabbed Content */}
           <Tabs defaultValue="two-pocket-model" className="w-full">
-            <TabsList className="grid w-full grid-cols-5 mb-8">
+            <TabsList className="grid w-full grid-cols-4 lg:w-fit lg:mx-auto mb-8">
               <TabsTrigger value="two-pocket-model" className="text-xs lg:text-sm">Two-Pocket Model</TabsTrigger>
-              <TabsTrigger value="revenue-model" className="text-xs lg:text-sm">Revenue</TabsTrigger>
+              <TabsTrigger value="revenue-development" className="text-xs lg:text-sm">Revenue & Development</TabsTrigger>
               <TabsTrigger value="legal" className="text-xs lg:text-sm">Legal</TabsTrigger>
               <TabsTrigger value="tech" className="text-xs lg:text-sm">Tech</TabsTrigger>
-              <TabsTrigger value="hardware" className="text-xs lg:text-sm">Hardware Roadmap</TabsTrigger>
             </TabsList>
 
             {/* Two-Pocket Model Tab (formerly Tiered Portfolio) */}
@@ -428,7 +427,38 @@ const BusinessModel = () => {
               </div>
             </TabsContent>
 
-            <TabsContent value="revenue-model">
+            <TabsContent value="revenue-development">
+
+              {/* Profit Recycling Flywheel - from Hardware Roadmap */}
+              <Card className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/30 mb-12 overflow-hidden">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-center gap-2 mb-4">
+                    <RefreshCw className="h-5 w-5 text-green-500" />
+                    <span className="font-bold text-green-500">Profit Recycling Flywheel</span>
+                    <Badge variant="outline" className="ml-2 border-green-500/50 text-green-400">Non-Dilutive Growth</Badge>
+                  </div>
+                  <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
+                    <Badge className="bg-primary/20 text-primary border-primary/30">$1.9M Seed</Badge>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
+                    <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">Flip 1: +$0.9M</Badge>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
+                    <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">Flip 2: +$1.47M</Badge>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
+                    <Badge className="bg-pink-500/20 text-pink-400 border-pink-500/30">Flip 3: +$1.44M</Badge>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
+                    <Badge className="bg-orange-500/20 text-orange-400 border-orange-500/30">Flip 4: +$0.88M</Badge>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
+                    <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">Flip 5: +$3.5M</Badge>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
+                    <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Flip 6: +$4.25M</Badge>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
+                    <Badge className="bg-emerald-500/30 text-emerald-300 border-emerald-500/50 font-bold">$12.4M Total</Badge>
+                  </div>
+                  <p className="text-center text-sm text-muted-foreground mt-4">
+                    $1.9M Seed funds Flip 1. <span className="text-green-500 font-semibold">Recycled Profits</span> fund Flips 2-6.
+                  </p>
+                </CardContent>
+              </Card>
 
               {/* Stats Overview */}
               <div className="grid grid-cols-4 gap-6 mb-16">
@@ -733,28 +763,6 @@ const BusinessModel = () => {
                 </Card>
 
 
-                {/* Key Value Propositions */}
-                <div className="grid md:grid-cols-3 gap-6">
-                  <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-                    
-                  </Card>
-                  
-                  <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-                    
-                  </Card>
-                  
-                  <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-                    
-                  </Card>
-                </div>
-
-              {/* Scenario Comparison Section */}
-              <div className="mb-16 mt-20">
-                
-
-                
-              </div>
-
               {/* Sensitivity Dashboard */}
               <div className="mb-16">
                 <SensitivityDashboard />
@@ -762,10 +770,6 @@ const BusinessModel = () => {
 
               {/* Mortgage-Only Dashboard */}
               <div className="mb-16">
-                <div className="mb-8">
-                  
-                  
-                </div>
                 <MortgageOnlySensitivityDashboard />
               </div>
 
@@ -908,198 +912,6 @@ const BusinessModel = () => {
                </div>
 
 
-              {/* Infrastructure Investment Overview */}
-              <div className="mb-16 mt-16">
-                <div className="text-center mb-12">
-                  <h2 className="text-4xl font-bold mb-4">Infrastructure Investment Overview</h2>
-                  <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                    The foundation for building a $300M revenue platform by year 10
-                  </p>
-                </div>
-
-                {/* Big Picture Stats */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16 max-w-6xl mx-auto">
-                  <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-                    <CardContent className="p-6 text-center">
-                      <DollarSign className="w-8 h-8 text-primary mx-auto mb-3" />
-                      <div className="text-2xl font-bold text-foreground">$7M</div>
-                      <div className="text-sm text-muted-foreground">Total Infrastructure Investment</div>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-                    <CardContent className="p-6 text-center">
-                      <Building className="w-8 h-8 text-primary mx-auto mb-3" />
-                      <div className="text-2xl font-bold text-foreground">7,500</div>
-                      <div className="text-sm text-muted-foreground">Year 10 Target Homes</div>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-                    <CardContent className="p-6 text-center">
-                      <Globe className="w-8 h-8 text-primary mx-auto mb-3" />
-                      <div className="text-2xl font-bold text-foreground">2M</div>
-                      <div className="text-sm text-muted-foreground">Target Community Members</div>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-                    <CardContent className="p-6 text-center">
-                      <TrendingUp className="w-8 h-8 text-primary mx-auto mb-3" />
-                      <div className="text-2xl font-bold text-foreground">$827M</div>
-                      <div className="text-sm text-muted-foreground">Year 10 Annual Revenue</div>
-                    </CardContent>
-                  </Card>
-                </div>
-
-
-              </div>
-
-              {/* Three-Phase Evolution */}
-              <div className="mb-16">
-                <div className="text-center mb-12">
-                  <h2 className="text-4xl font-bold mb-4">From Engine → Ecosystem: 3-Phase Evolution</h2>
-                  <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                    Strategic roadmap from proof of concept to network state
-                  </p>
-                </div>
-                
-                <div className="max-w-6xl mx-auto">
-                  {/* Evolution Flow */}
-                  <div className="flex items-center justify-center mb-16">
-                    <div className="flex items-center space-x-4">
-                      <div className="bg-gradient-to-r from-primary to-purple-600 text-white px-4 py-2 rounded-lg font-semibold">
-                        Proof Engine
-                      </div>
-                      <ArrowRight className="w-6 h-6 text-muted-foreground" />
-                      <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-lg font-semibold">
-                        Developer Platform
-                      </div>
-                      <ArrowRight className="w-6 h-6 text-muted-foreground" />
-                      <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-lg font-semibold">
-                        Network State
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Phase Cards */}
-                  <div className="grid lg:grid-cols-3 gap-8">
-                    
-                    {/* Phase 1: Proof Engine */}
-                    <Card className="bg-card/50 backdrop-blur-sm border border-border/30 hover:border-primary/50 transition-all duration-300">
-                      <CardContent className="p-6">
-                        <div className="flex items-center justify-between mb-4">
-                          <Badge className="bg-primary/10 text-primary">Phase 1</Badge>
-                          <div className="text-sm text-muted-foreground">Years 0-3</div>
-                        </div>
-                        <h3 className="text-xl font-bold mb-2">Proof Engine</h3>
-                        <p className="text-muted-foreground mb-4">Validate the model with strategic property flips</p>
-                        
-                        <div className="space-y-3 mb-4">
-                          <div className="flex items-start space-x-3">
-                            <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                            <div className="text-sm">4 strategic property flips demonstrating model viability</div>
-                          </div>
-                          <div className="flex items-start space-x-3">
-                            <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                            <div className="text-sm">$7M infrastructure investment deployed</div>
-                          </div>
-                          <div className="flex items-start space-x-3">
-                            <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                            <div className="text-sm">Legal framework established across 3 jurisdictions</div>
-                          </div>
-                          <div className="flex items-start space-x-3">
-                            <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                            <div className="text-sm">Core platform and smart contracts launched</div>
-                          </div>
-                        </div>
-                        
-                        <div className="pt-4 border-t border-border/30">
-                          <div className="text-sm font-medium mb-2">Key Metrics</div>
-                          <div className="space-y-1 text-sm text-muted-foreground">
-                            <div>• 100+ early investors</div>
-                            <div>• $2M+ in property transactions</div>
-                            <div>• Regulatory approval in key markets</div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Phase 2: Platform Scale */}
-                    <Card className="bg-card/50 backdrop-blur-sm border border-border/30 hover:border-green-500/50 transition-all duration-300">
-                      <CardContent className="p-6">
-                        <div className="flex items-center justify-between mb-4">
-                          <Badge className="bg-green-500/10 text-green-600">Phase 2</Badge>
-                          <div className="text-sm text-muted-foreground">Years 3-7</div>
-                        </div>
-                        <h3 className="text-xl font-bold mb-2">Platform Scale</h3>
-                        <p className="text-muted-foreground mb-4">Open platform to developers and scale operations</p>
-                        
-                        <div className="space-y-3 mb-4">
-                          <div className="flex items-start space-x-3">
-                            <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                            <div className="text-sm">Developer platform launch with API access</div>
-                          </div>
-                          <div className="flex items-start space-x-3">
-                            <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                            <div className="text-sm">Mortgage platform for community members</div>
-                          </div>
-                          <div className="flex items-start space-x-3">
-                            <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                            <div className="text-sm">50+ developer partnerships established</div>
-                          </div>
-                          <div className="flex items-start space-x-3">
-                            <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                            <div className="text-sm">Expansion to 5+ countries</div>
-                          </div>
-                        </div>
-                        
-                        <div className="pt-4 border-t border-border/30">
-                          <div className="text-sm font-medium mb-2">Key Metrics</div>
-                          <div className="space-y-1 text-sm text-muted-foreground">
-                            <div>• 10,000+ community members</div>
-                            <div>• $50M+ in property transactions</div>
-                            <div>• 500+ properties in network</div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    {/* Phase 3: Network State */}
-                    <Card className="bg-card/50 backdrop-blur-sm border border-border/30 hover:border-blue-500/50 transition-all duration-300">
-                      <CardContent className="p-6">
-                        <div className="flex items-center justify-between mb-4">
-                          <Badge className="bg-blue-500/10 text-blue-600">Phase 3</Badge>
-                          <div className="text-sm text-muted-foreground">Years 7-10</div>
-                        </div>
-                        <h3 className="text-xl font-bold mb-2">Network State</h3>
-                        <p className="text-muted-foreground mb-4">Achieve network state status with global reach</p>
-                        
-                        <div className="space-y-3 mb-4">
-                          <div className="flex items-start space-x-3">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                            <div className="text-sm">10,000+ homes financed across 6+ countries</div>
-                          </div>
-                          <div className="flex items-start space-x-3">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                            <div className="text-sm">$300M annual protocol revenue</div>
-                          </div>
-                          <div className="flex items-start space-x-3">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                            <div className="text-sm">OCCR data licensing dominates revenue</div>
-                          </div>
-                        </div>
-                        
-                        <div className="pt-4 border-t border-border/30">
-                          <div className="text-sm font-medium mb-2">Key Metrics</div>
-                          <div className="space-y-1 text-sm text-muted-foreground">
-                            <div>• $1.5B+ GMV financed</div>
-                            <div>• 20× fintech valuation multiple</div>
-                            <div>• Global credit bureau status</div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              </div>
             </TabsContent>
 
             {/* Legal Tab - The Defensible Moat */}
@@ -1112,10 +924,6 @@ const BusinessModel = () => {
               <TechDueDiligence />
             </TabsContent>
 
-            {/* Hardware Roadmap Tab - 6 Flip Details */}
-            <TabsContent value="hardware">
-              <SixFlipRoadmap />
-            </TabsContent>
 
 
           </Tabs>
