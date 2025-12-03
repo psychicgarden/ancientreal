@@ -37,6 +37,7 @@ import KillSwitch from "@/components/KillSwitch";
 import AWSPitch from "@/components/AWSPitch";
 import FinCoLiquidityPool from "@/components/FinCoLiquidityPool";
 import { LegalRegulatoryProofing } from "@/components/LegalRegulatoryProofing";
+import VCExitScenarios from "@/components/VCExitScenarios";
 
 // Import property images
 import villaTulum from "@/assets/villa-tulum.jpg";
@@ -383,6 +384,9 @@ const BusinessModel = () => {
 
       {/* AWS Pitch Section */}
       <AWSPitch />
+
+      {/* VC Exit Scenarios - Moved Higher */}
+      <VCExitScenarios />
 
       {/* 6 Flip Roadmap - The Hardware Engine */}
       <SixFlipRoadmap />
