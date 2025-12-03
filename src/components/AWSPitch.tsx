@@ -72,16 +72,14 @@ export default function AWSPitch() {
 
             {/* Pitch Script */}
             <div className="bg-background/80 rounded-xl p-6 md:p-8 border border-border/50">
-              <p className="text-lg md:text-xl leading-relaxed text-foreground">
-                "We are the physical entry point to the world's first <span className="text-primary font-bold">On-Chain Credit Bureau</span>.
-              </p>
+              
               <p className="text-lg md:text-xl leading-relaxed text-foreground mt-4">
                 Banks require credit history. <span className="text-orange-500 font-bold">Nomads don't have one.</span> Crypto can't use one.
                 So we built the missing piece—<span className="text-primary font-bold">the repayment engine</span>.
               </p>
               <p className="text-lg md:text-xl leading-relaxed text-foreground mt-4">
                 <span className="text-green-500 font-bold">12 operational units</span> generating <span className="text-primary font-bold">20% real yields</span>.
-                <span className="text-orange-500 font-bold">$1.9M raise</span> to expand our high-margin, fully owned construction pipeline.
+                 to expand our high-margin, fully owned construction pipeline.
                 <span className="text-green-500 font-bold">Zero foreclosure risk</span> because we retain legal title end-to-end.
               </p>
               <p className="text-lg md:text-xl leading-relaxed text-foreground mt-4">
