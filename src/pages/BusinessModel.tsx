@@ -361,9 +361,6 @@ const BusinessModel = () => {
       {/* Kill Switch Risk Management Section */}
       <KillSwitch />
 
-      {/* 6 Flip Roadmap - The Hardware Engine */}
-      <SixFlipRoadmap />
-
       {/* 10-Year Financial Projection */}
       <TenYearProjection />
 
@@ -420,9 +417,10 @@ const BusinessModel = () => {
 
           {/* Tabbed Content */}
           <Tabs defaultValue="two-pocket-model" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-8">
+            <TabsList className="grid w-full grid-cols-4 mb-8">
               <TabsTrigger value="two-pocket-model" className="text-xs lg:text-sm">Two-Pocket Model</TabsTrigger>
               <TabsTrigger value="revenue-model" className="text-xs lg:text-sm">Revenue</TabsTrigger>
+              <TabsTrigger value="hardware" className="text-xs lg:text-sm">Hardware Roadmap</TabsTrigger>
               <TabsTrigger value="tech-legal" className="text-xs lg:text-sm">Tech & Legal</TabsTrigger>
             </TabsList>
 
@@ -1126,6 +1124,11 @@ const BusinessModel = () => {
                   </div>
                 </div>
               </div>
+            </TabsContent>
+
+            {/* Hardware Roadmap Tab - 6 Flip Details */}
+            <TabsContent value="hardware">
+              <SixFlipRoadmap />
             </TabsContent>
 
             {/* Tech & Legal Tab (merged Tech DD + Legal Structuring) */}
