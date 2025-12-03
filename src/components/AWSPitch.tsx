@@ -72,7 +72,7 @@ export default function AWSPitch() {
                 Because we own the title, we have <span className="text-green-500 font-bold">zero foreclosure risk</span>.
               </p>
               <p className="text-xl md:text-2xl font-semibold text-primary mt-6">
-                We aren't just a developer; we are building the financial rails for the next 100 million global citizens."
+                We aren't just a developer; we're building <span className="text-orange-500">$750B in mortgage infrastructure</span> that banks can't touch."
               </p>
             </div>
 

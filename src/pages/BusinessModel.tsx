@@ -351,23 +351,23 @@ const BusinessModel = () => {
         </div>
       </section>
 
+      {/* AWS Pitch Section - The 30-Second Elevator Pitch */}
+      <AWSPitch />
+
       {/* Market Failure Section */}
       <MarketFailure />
 
       {/* Traction Trilogy Section */}
       <TractionTrilogy />
 
+      {/* VC Exit Scenarios - What's In It For Investors */}
+      <VCExitScenarios />
+
       {/* Unfair Unit Economics Section */}
       <UnfairUnitEconomics />
 
       {/* Kill Switch Risk Management Section */}
       <KillSwitch />
-
-      {/* AWS Pitch Section */}
-      <AWSPitch />
-
-      {/* VC Exit Scenarios - Moved Higher */}
-      <VCExitScenarios />
 
       {/* 6 Flip Roadmap - The Hardware Engine */}
       <SixFlipRoadmap />

@@ -99,7 +99,7 @@ export default function MarketFailure() {
                 </div>
               </div>
               <div className="pt-4 border-t border-blue-500/20">
-                <p className="text-3xl font-bold text-blue-500">35M+</p>
+                <p className="text-3xl font-bold text-blue-500">50M+</p>
                 <p className="text-sm text-muted-foreground">Credit-Invisible Global Nomads</p>
               </div>
             </CardContent>
