@@ -343,8 +343,10 @@ const BusinessModel = () => {
           {/* Value Proposition - Positioned Lower */}
           <div className="max-w-3xl mx-auto mt-16">
             <div className="bg-black/30 backdrop-blur-xl rounded-2xl border border-white/10 px-6 py-4 shadow-2xl">
-              <p className="text-base lg:text-lg font-light leading-relaxed text-white/90">
-                <span className="font-semibold text-orange-400">50M nomads</span> burn <span className="font-semibold text-red-400">$900B/year</span> on dead rent. We convert that into <span className="font-semibold text-emerald-400">fractional, on-chain deeds</span>.
+              <p className="text-base lg:text-lg font-light leading-relaxed text-white/90">50M nomads burn $900B/year on dead rent. 
+
+
+We convert that into fractional, on-chain deeds.<span className="font-semibold text-orange-400">50M nomads</span> burn <span className="font-semibold text-red-400">$900B/year</span> on dead rent. We convert that into <span className="font-semibold text-emerald-400">fractional, on-chain deeds</span>.
               </p>
             </div>
           </div>
