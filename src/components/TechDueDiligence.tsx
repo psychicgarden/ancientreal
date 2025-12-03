@@ -172,12 +172,11 @@ const TechDueDiligence = () => {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="text-center space-y-2">
-        <h2 className="text-3xl font-bold text-foreground">Tech Due Diligence</h2>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
-          An honest assessment of what we've built, what's in development, and what's defensible.
-          VCs appreciate candor over marketing.
+      {/* Header - Simplified since parent provides context */}
+      <div className="text-center space-y-2 mb-4">
+        <h3 className="text-2xl font-bold text-foreground">Platform Architecture</h3>
+        <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+          An honest assessment of what we've built and what's defensible. VCs appreciate candor.
         </p>
       </div>
 

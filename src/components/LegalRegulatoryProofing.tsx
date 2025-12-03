@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Shield, Building2, FileCheck, Clock, Gavel, CheckCircle2 } from "lucide-react";
+import { Shield, Building2, FileCheck, Clock, Gavel, CheckCircle2, AlertTriangle } from "lucide-react";
 
 const countryStructures = [
   {
@@ -12,51 +12,59 @@ const countryStructures = [
     timeline: "30-60 days",
     traditionalTimeline: "2-3 years",
     legalBasis: "Peruvian Civil Code Art. 1583-1585",
-    color: "red"
+    color: "red",
+    validated: true
   },
   {
     country: "Brazil",
     flag: "🇧🇷",
     structure: "Alienação Fiduciária (Fiduciary Alienation)",
-    howItWorks: "Property is held in fiduciary trust with automatic reversion clause. Buyer has equitable ownership; legal title reverts on default.",
-    protection: "Extrajudicial (non-court) recovery process via notary public. No eviction lawsuit required.",
+    howItWorks: "Property is held in fiduciary trust with automatic reversion clause. Buyer has equitable ownership; legal title reverts on default. STF (Supreme Court) ruled constitutional in 2024.",
+    protection: "Extrajudicial (non-court) recovery process via notary public. No eviction lawsuit required. Strongest validated structure.",
     timeline: "60-90 days",
     traditionalTimeline: "3-5 years",
-    legalBasis: "Law 9.514/97 (Brazilian Real Estate Financing Law)",
-    color: "green"
+    legalBasis: "Law 9.514/97 (STF Constitutional Ruling 2024)",
+    color: "green",
+    validated: true
   },
   {
     country: "Greece",
     flag: "🇬🇷",
     structure: "Greek IKE SPV (Private Company)",
     howItWorks: "Property held in Greek IKE (private company). Buyer purchases shares, not direct property. Ancient controls the company.",
-    protection: "Share transfer revocation—no property transfer needed. Serviced accommodation model bypasses EU tenant protection.",
+    protection: "Share transfer revocation—no property transfer needed. Serviced accommodation model used (regulations evolving).",
     timeline: "30-60 days",
     traditionalTimeline: "2-4 years",
     legalBasis: "Greek Law 4072/2012 (IKE Companies)",
-    color: "blue"
+    color: "blue",
+    validated: false,
+    warning: "EU regulations evolving"
   },
   {
     country: "Thailand",
     flag: "🇹🇭",
-    structure: "30+30 Year Leasehold",
-    howItWorks: "Foreigners cannot own Thai land freehold. Pre-paid 30-year lease with 30-year renewal option provides de facto ownership.",
-    protection: "Lease termination clause—no land title transfer was ever made.",
+    structure: "30-Year Maximum Leasehold",
+    howItWorks: "Foreigners cannot own Thai land freehold. Single 30-year registered lease only. March 2025 Supreme Court ruling (Case 4655/2566) invalidated all pre-agreed renewal structures.",
+    protection: "Lease termination clause for default. Maximum legal tenure is 30 years—no guaranteed extensions beyond initial term.",
     timeline: "30-45 days",
     traditionalTimeline: "1-3 years",
-    legalBasis: "Thai Civil and Commercial Code, Section 540",
-    color: "purple"
+    legalBasis: "Thai Civil Code §540 (Supreme Court 2025)",
+    color: "amber",
+    validated: false,
+    warning: "30-year max tenure"
   },
   {
     country: "Mexico",
     flag: "🇲🇽",
     structure: "SAPI + Fideicomiso (Bank Trust)",
-    howItWorks: "Coastal/border properties require bank trust (Fideicomiso) for foreign ownership. SAPI corporate structure holds trust beneficial rights.",
-    protection: "Trust beneficiary substitution—bank transfers rights to Ancient without court.",
+    howItWorks: "Coastal/border properties require bank trust (Fideicomiso) for foreign ownership. SAPI corporate structure holds trust beneficial rights. Declarative registry—independent notary verification required.",
+    protection: "Trust beneficiary substitution—bank transfers rights to Ancient without court. Title insurance strongly recommended.",
     timeline: "60-90 days",
     traditionalTimeline: "2-4 years",
     legalBasis: "Mexican Foreign Investment Law Art. 10-A, 11",
-    color: "amber"
+    color: "amber",
+    validated: false,
+    warning: "Declarative registry"
   },
   {
     country: "Turkey",
@@ -67,7 +75,8 @@ const countryStructures = [
     timeline: "45-60 days",
     traditionalTimeline: "2-3 years",
     legalBasis: "Turkish Commercial Code No. 6102",
-    color: "rose"
+    color: "rose",
+    validated: true
   }
 ];
 
@@ -120,14 +129,21 @@ export function LegalRegulatoryProofing() {
         <h3 className="text-2xl font-bold text-center mb-8">Global Legal Architecture</h3>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {countryStructures.map((country) => (
-            <Card key={country.country} className="hover:shadow-lg transition-shadow border-border/50">
+            <Card key={country.country} className={`hover:shadow-lg transition-shadow ${country.validated ? 'border-green-500/30' : 'border-amber-500/30'}`}>
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <span className="text-4xl">{country.flag}</span>
                     <div>
                       <CardTitle className="text-xl">{country.country}</CardTitle>
-                      <Badge className="mt-1" variant="outline">{country.structure}</Badge>
+                      <div className="flex items-center gap-2 mt-1">
+                        <Badge variant="outline">{country.structure}</Badge>
+                        {country.validated ? (
+                          <Badge className="bg-green-500/20 text-green-400 border-green-500/30 text-xs">✓ Validated</Badge>
+                        ) : country.warning ? (
+                          <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30 text-xs">⚠️ {country.warning}</Badge>
+                        ) : null}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -306,7 +322,7 @@ export function LegalRegulatoryProofing() {
               <ul className="space-y-2 text-sm">
                 <li className="flex items-center gap-2">
                   <span className="text-xl">🇹🇭</span>
-                  <span>Thailand - Leasehold structure (30+30 years)</span>
+                  <span>Thailand - 30-year leasehold maximum (Supreme Court 2025)</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-xl">🇲🇽</span>
@@ -314,6 +330,78 @@ export function LegalRegulatoryProofing() {
                 </li>
               </ul>
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Risk Acknowledgments - Honest Disclosure */}
+      <Card className="border-amber-500/30 bg-amber-500/5">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <AlertTriangle className="h-5 w-5 text-amber-400" />
+            Risk Acknowledgments
+          </CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Sophisticated investors expect honest disclosure. Here's what you need to know.
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="space-y-3">
+              <div className="p-3 bg-background/50 rounded-lg border border-border/50">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-lg">🇹🇭</span>
+                  <span className="font-semibold text-sm">Thailand</span>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Maximum 30-year tenure. March 2025 Supreme Court ruling (Case 4655/2566) invalidated pre-agreed renewal clauses. 
+                  No legal guarantee of extension beyond initial 30 years.
+                </p>
+              </div>
+              <div className="p-3 bg-background/50 rounded-lg border border-border/50">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-lg">🇲🇽</span>
+                  <span className="font-semibold text-sm">Mexico</span>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Declarative registry system does not guarantee title. Independent notary verification and title insurance 
+                  strongly recommended. Ejido land restrictions apply in some regions.
+                </p>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <div className="p-3 bg-background/50 rounded-lg border border-border/50">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-lg">🇬🇷</span>
+                  <span className="font-semibold text-sm">Greece</span>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Serviced accommodation regulations evolving within EU framework. Ongoing compliance monitoring required. 
+                  Local counsel dependency for enforcement.
+                </p>
+              </div>
+              <div className="p-3 bg-background/50 rounded-lg border border-border/50">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-lg">🌍</span>
+                  <span className="font-semibold text-sm">All Markets</span>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Political risk, currency fluctuation, and enforcement require local counsel in each jurisdiction. 
+                  Legal structures do not eliminate country-specific macro risks.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="mt-4 p-3 bg-green-500/10 rounded-lg border border-green-500/30">
+            <div className="flex items-center gap-2 mb-1">
+              <CheckCircle2 className="h-4 w-4 text-green-400" />
+              <span className="font-semibold text-sm text-green-400">Strongest Validated Structures</span>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              <strong>Brazil (Alienação Fiduciária)</strong> — STF constitutional ruling 2024 validates extrajudicial recovery. 
+              <strong>Peru (Reserva de Dominio)</strong> — Codified in Civil Code Art. 1583-1585, battle-tested.
+              <strong>Turkey (SPV)</strong> — Corporate structure under Turkish Commercial Code, no land transfer required.
+            </p>
           </div>
         </CardContent>
       </Card>
