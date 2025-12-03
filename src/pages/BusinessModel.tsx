@@ -344,7 +344,9 @@ const BusinessModel = () => {
           <div className="max-w-3xl mx-auto mt-16">
             <div className="bg-black/20 backdrop-blur-xl rounded-3xl border border-white/10 p-6 lg:p-8 shadow-2xl">
               <p className="text-lg lg:text-xl xl:text-2xl font-light leading-relaxed text-white">
-                <span className="font-bold bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text text-transparent">50 million nomads</span> burn 
+50 million nomads burn $900B annually on dead rent.
+
+We convert that into fractional, on-chain deeds of dream properties.<span className="font-bold bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text text-transparent">50 million nomads</span> burn 
                 <span className="font-bold bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent"> $900B annually</span> on dead rent. 
                 We convert that into <span className="font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">fractional, on-chain deeds</span> of dream properties.
               </p>
