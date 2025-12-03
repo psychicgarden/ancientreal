@@ -1,165 +1,146 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, DollarSign, Percent, Calendar, Rocket, Shield, ArrowRight } from "lucide-react";
+import { TrendingUp, Target, Rocket, ArrowUpRight } from "lucide-react";
+
+// Exit scenarios data - the hero numbers VCs care about
+const exitScenarios = [
+  { year: 3, label: "Early M&A", valuation: 33, stakeValue: 5, multiple: 2.6, color: "orange" },
+  { year: 5, label: "Series B/C", valuation: 290, stakeValue: 43.5, multiple: 23, color: "blue" },
+  { year: 7, label: "IPO-Ready", valuation: 1100, stakeValue: 165, multiple: 87, color: "purple" },
+  { year: 10, label: "Full Scale", valuation: 4500, stakeValue: 675, multiple: 355, color: "green" },
+];
 
 export default function ReturnProfile() {
+  const getColorClass = (color: string, type: 'bg' | 'border' | 'text') => {
+    const colors: Record<string, Record<string, string>> = {
+      orange: { bg: 'bg-orange-500/10', border: 'border-orange-500/30', text: 'text-orange-400' },
+      blue: { bg: 'bg-blue-500/10', border: 'border-blue-500/30', text: 'text-blue-400' },
+      purple: { bg: 'bg-purple-500/10', border: 'border-purple-500/30', text: 'text-purple-400' },
+      green: { bg: 'bg-green-500/10', border: 'border-green-500/30', text: 'text-green-400' },
+    };
+    return colors[color]?.[type] || '';
+  };
+
   return (
     <section className="py-16 px-4 bg-muted/20">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
+        {/* Header - Lead with stake value */}
         <div className="text-center mb-12">
           <Badge variant="outline" className="mb-4 text-lg px-6 py-2 border-green-500/50 text-green-500">
-            Investor Returns
+            Exit Value
           </Badge>
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            The <span className="text-green-500">Return Profile</span>
+            Your 15% Stake: <span className="text-green-500">$5M → $675M</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            $1.9M Loan (Staked BTC) + 15% Equity Warrants
+            Exit value at each milestone on $1.9M working capital
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 mb-12">
-          {/* Cash-on-Cash Return */}
-          <Card className="bg-card/50 border-border/50 overflow-hidden">
-            <CardHeader className="bg-blue-500/10 border-b border-blue-500/20">
-              <CardTitle className="flex items-center gap-2 text-blue-400">
-                <DollarSign className="h-5 w-5" />
-                Cash-on-Cash Return (The Yield)
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              <div className="p-4 bg-muted/30 rounded-lg">
-                <p className="text-sm text-muted-foreground mb-2">Annual Distribution</p>
-                <p className="text-3xl font-bold text-blue-400">15% of Protocol Profits</p>
-                <p className="text-sm text-muted-foreground mt-1">Paid annually while loan is active</p>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">Year 1-3 Payout</span>
-                  </div>
-                  <span className="font-bold text-green-400">~$400K Total</span>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-muted/20 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <Shield className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm">Principal Return</span>
-                  </div>
-                  <span className="font-bold text-primary">$5M BTC by Year 3</span>
-                </div>
-              </div>
-
-              <div className="p-4 bg-green-500/10 border border-green-500/30 rounded-lg">
-                <p className="text-sm text-green-400 font-semibold">
-                  ✓ Zero Capital Deployed — BTC never sold, no tax event
+        {/* Exit Value Cards - Hero Section */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+          {exitScenarios.map((scenario) => (
+            <Card 
+              key={scenario.year} 
+              className={`${getColorClass(scenario.color, 'bg')} ${getColorClass(scenario.color, 'border')} border-2 overflow-hidden`}
+            >
+              <CardContent className="p-6 text-center">
+                <Badge className={`mb-3 ${getColorClass(scenario.color, 'bg')} ${getColorClass(scenario.color, 'text')} ${getColorClass(scenario.color, 'border')}`}>
+                  Year {scenario.year}
+                </Badge>
+                <p className="text-xs text-muted-foreground mb-2">{scenario.label}</p>
+                
+                {/* Hero Number - Stake Value */}
+                <p className={`text-4xl font-bold mb-1 ${getColorClass(scenario.color, 'text')}`}>
+                  ${scenario.stakeValue >= 1000 ? `${(scenario.stakeValue / 1000).toFixed(1)}B` : `${scenario.stakeValue}M`}
                 </p>
+                <p className="text-xs text-muted-foreground">15% stake value</p>
+                
+                <div className="mt-4 pt-4 border-t border-border/30">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Valuation</span>
+                    <span className="font-medium">
+                      ${scenario.valuation >= 1000 ? `${(scenario.valuation / 1000).toFixed(1)}B` : `${scenario.valuation}M`}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-sm mt-1">
+                    <span className="text-muted-foreground">Return</span>
+                    <span className="font-bold text-green-400">{scenario.multiple}×</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Summary Row */}
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
+          {/* BTC Return */}
+          <Card className="bg-card/50 border-border/50">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-lg bg-green-500/20">
+                  <Target className="h-5 w-5 text-green-400" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">BTC Collateral</p>
+                  <p className="text-2xl font-bold text-green-400">$5M Returned</p>
+                </div>
               </div>
+              <p className="text-xs text-muted-foreground">
+                Full principal return. Never sold, no tax event.
+              </p>
             </CardContent>
           </Card>
 
-          {/* Equity Return */}
-          <Card className="bg-card/50 border-border/50 overflow-hidden">
-            <CardHeader className="bg-purple-500/10 border-b border-purple-500/20">
-              <CardTitle className="flex items-center gap-2 text-purple-400">
-                <Percent className="h-5 w-5" />
-                Equity Return (The Warrants)
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              <div className="p-4 bg-muted/30 rounded-lg">
-                <p className="text-sm text-muted-foreground mb-2">Equity Stake</p>
-                <p className="text-3xl font-bold text-purple-400">15% of OpCo</p>
-                <p className="text-sm text-muted-foreground mt-1">Ancient Protocol Inc.</p>
-              </div>
-
-              <div className="space-y-4">
-                {/* Year 5 Exit */}
-                <div className="p-4 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-lg border border-purple-500/20">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">Year 5 Exit</Badge>
-                    <span className="text-xs text-muted-foreground">Series B/C</span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 mt-3">
-                    <div>
-                      <p className="text-xs text-muted-foreground">Valuation</p>
-                      <p className="text-xl font-bold">$290M</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground">15% Stake Value</p>
-                      <p className="text-xl font-bold text-green-400">$43.5M</p>
-                    </div>
-                  </div>
+          {/* Profit Share */}
+          <Card className="bg-card/50 border-border/50">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-lg bg-blue-500/20">
+                  <TrendingUp className="h-5 w-5 text-blue-400" />
                 </div>
-
-                {/* Year 10 Exit */}
-                <div className="p-4 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-lg border border-green-500/20">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Year 10 Exit</Badge>
-                    <span className="text-xs text-muted-foreground">IPO/Token</span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 mt-3">
-                    <div>
-                      <p className="text-xs text-muted-foreground">Valuation</p>
-                      <p className="text-xl font-bold">$4.5B</p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground">15% Stake Value</p>
-                      <p className="text-xl font-bold text-green-400">$675M</p>
-                    </div>
-                  </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Profit Share</p>
+                  <p className="text-2xl font-bold text-blue-400">15% Annual</p>
                 </div>
               </div>
+              <p className="text-xs text-muted-foreground">
+                ~$400K by Year 3 from protocol profits.
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Working Capital */}
+          <Card className="bg-card/50 border-border/50">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-lg bg-primary/20">
+                  <ArrowUpRight className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Working Capital</p>
+                  <p className="text-2xl font-bold text-primary">$1.9M</p>
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Borrowed from staked BTC. Returns 2.6× to 355×.
+              </p>
             </CardContent>
           </Card>
         </div>
 
-        {/* Return Scenarios Comparison */}
-        <Card className="bg-card/50 border-border/50">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-primary" />
-              Return Scenarios on Zero Deployed Capital
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-3 gap-6">
-              {/* Bear Case */}
-              <div className="p-6 bg-orange-500/10 border border-orange-500/30 rounded-xl text-center">
-                <Badge className="mb-4 bg-orange-500/20 text-orange-400 border-orange-500/30">BEAR</Badge>
-                <p className="text-sm text-muted-foreground mb-2">Conservative Exit</p>
-                <p className="text-4xl font-bold text-orange-400">$16.6M</p>
-                <p className="text-xs text-muted-foreground mt-2">Year 5 @ 3× multiple</p>
-              </div>
-
-              {/* Base Case */}
-              <div className="p-6 bg-primary/10 border border-primary/30 rounded-xl text-center">
-                <Badge className="mb-4 bg-primary/20 text-primary border-primary/30">BASE</Badge>
-                <p className="text-sm text-muted-foreground mb-2">Expected Outcome</p>
-                <p className="text-4xl font-bold text-primary">$63.3M</p>
-                <p className="text-xs text-muted-foreground mt-2">Year 7 @ 15× multiple</p>
-              </div>
-
-              {/* Bull Case */}
-              <div className="p-6 bg-green-500/10 border border-green-500/30 rounded-xl text-center">
-                <Badge className="mb-4 bg-green-500/20 text-green-400 border-green-500/30">BULL</Badge>
-                <p className="text-sm text-muted-foreground mb-2">Full Protocol Scale</p>
-                <p className="text-4xl font-bold text-green-400">$675M+</p>
-                <p className="text-xs text-muted-foreground mt-2">Year 10 @ 20× multiple</p>
-              </div>
-            </div>
-
-            {/* Key Point */}
-            <div className="mt-8 p-4 bg-muted/30 rounded-lg flex items-center gap-4">
-              <Rocket className="h-8 w-8 text-primary flex-shrink-0" />
+        {/* Key Point */}
+        <Card className="bg-gradient-to-r from-primary/10 to-green-500/10 border-primary/30">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-4">
+              <Rocket className="h-10 w-10 text-primary flex-shrink-0" />
               <div>
-                <p className="font-semibold">The "Venture Staking" Advantage</p>
-                <p className="text-sm text-muted-foreground">
-                  BTC collateral backs the debt (returned in full). Equity upside is unlimited. 
-                  <span className="text-green-400 font-semibold"> Risk: Zero. Upside: Infinite.</span>
+                <p className="font-semibold text-lg">The Venture Staking Advantage</p>
+                <p className="text-muted-foreground">
+                  BTC collateral backs the debt and is returned in full. Equity stake is pure upside.{" "}
+                  <span className="text-green-400 font-semibold">Zero capital at risk. Exit value: $5M - $675M.</span>
                 </p>
               </div>
             </div>
