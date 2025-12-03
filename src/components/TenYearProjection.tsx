@@ -14,6 +14,7 @@ const projectionData = [
     gmv: 2.0,
     devCoProfit: 0.9,
     originationFees: 0.06,
+    developerFee: 0,
     mortgageSpread: 0.05,
     dataLicensing: 0,
     totalRevenue: 1.0,
@@ -29,6 +30,7 @@ const projectionData = [
     gmv: 3.0,
     devCoProfit: 1.4,
     originationFees: 0.1,
+    developerFee: 0,
     mortgageSpread: 0.2,
     dataLicensing: 0,
     totalRevenue: 1.7,
@@ -44,9 +46,10 @@ const projectionData = [
     gmv: 18,
     devCoProfit: 2.0,
     originationFees: 0.5,
+    developerFee: 0.7,
     mortgageSpread: 1.5,
     dataLicensing: 0.2,
-    totalRevenue: 4.2,
+    totalRevenue: 4.9,
     multiple: 8,
     valuation: 33,
     phase: "platform"
@@ -59,9 +62,10 @@ const projectionData = [
     gmv: 85,
     devCoProfit: 4.0,
     originationFees: 2.5,
+    developerFee: 3.9,
     mortgageSpread: 8.0,
     dataLicensing: 5.0,
-    totalRevenue: 19.5,
+    totalRevenue: 23.4,
     multiple: 15,
     valuation: 290,
     phase: "platform"
@@ -74,9 +78,10 @@ const projectionData = [
     gmv: 400,
     devCoProfit: 0,
     originationFees: 12,
+    developerFee: 20,
     mortgageSpread: 25,
     dataLicensing: 20,
-    totalRevenue: 57,
+    totalRevenue: 77,
     multiple: 20,
     valuation: 1100,
     phase: "data"
@@ -89,9 +94,10 @@ const projectionData = [
     gmv: 1500,
     devCoProfit: 0,
     originationFees: 45,
+    developerFee: 75,
     mortgageSpread: 80,
     dataLicensing: 100,
-    totalRevenue: 225,
+    totalRevenue: 300,
     multiple: 20,
     valuation: 4500,
     phase: "data"
@@ -219,8 +225,16 @@ export default function TenYearProjection() {
                       </TableCell>
                     ))}
                   </TableRow>
+                  <TableRow className="border-border/30 bg-purple-500/5">
+                    <TableCell className="text-purple-400 font-semibold">Developer Fee (5%)</TableCell>
+                    {projectionData.map((row) => (
+                      <TableCell key={row.year} className="text-center text-purple-400">
+                        {row.developerFee > 0 ? `$${row.developerFee}M` : "—"}
+                      </TableCell>
+                    ))}
+                  </TableRow>
                   <TableRow className="border-border/30">
-                    <TableCell className="text-muted-foreground">Mortgage Spread (4%)</TableCell>
+                    <TableCell className="text-muted-foreground">Mortgage Spread (3% NIM)</TableCell>
                     {projectionData.map((row) => (
                       <TableCell key={row.year} className="text-center">
                         ${row.mortgageSpread}M
