@@ -1134,28 +1134,24 @@ const BusinessModel = () => {
                         <div className="space-y-3 mb-4">
                           <div className="flex items-start space-x-3">
                             <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                            <div className="text-sm">7,500 homes across 6+ countries</div>
+                            <div className="text-sm">10,000+ homes financed across 6+ countries</div>
                           </div>
                           <div className="flex items-start space-x-3">
                             <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                            <div className="text-sm">2M+ community members globally</div>
+                            <div className="text-sm">$225M annual protocol revenue</div>
                           </div>
                           <div className="flex items-start space-x-3">
                             <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                            <div className="text-sm">$827M annual revenue achieved</div>
-                          </div>
-                          <div className="flex items-start space-x-3">
-                            <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                            
+                            <div className="text-sm">OCCR data licensing dominates revenue</div>
                           </div>
                         </div>
                         
                         <div className="pt-4 border-t border-border/30">
                           <div className="text-sm font-medium mb-2">Key Metrics</div>
                           <div className="space-y-1 text-sm text-muted-foreground">
-                            
-                            <div>• $5B+ in managed assets</div>
-                            <div>• Global governance model</div>
+                            <div>• $1.5B+ GMV financed</div>
+                            <div>• 20× fintech valuation multiple</div>
+                            <div>• Global credit bureau status</div>
                           </div>
                         </div>
                       </CardContent>
@@ -2250,11 +2246,11 @@ const BusinessModel = () => {
                     <thead>
                       <tr className="border-b border-border/30">
                         <th className="text-left py-3 px-4 font-medium text-muted-foreground">Scenario</th>
-                        <th className="text-center py-3 px-4 font-medium text-muted-foreground">Volume Hit</th>
+                        <th className="text-center py-3 px-4 font-medium text-muted-foreground">Partner Units</th>
                         <th className="text-center py-3 px-4 font-medium text-muted-foreground">Year-10 Revenue</th>
-                        <th className="text-center py-3 px-4 font-medium text-muted-foreground">Valuation Multiple</th>
+                        <th className="text-center py-3 px-4 font-medium text-muted-foreground">Multiple</th>
                         <th className="text-center py-3 px-4 font-medium text-muted-foreground">Company EV</th>
-                        <th className="text-center py-3 px-4 font-medium text-muted-foreground">Your 50%</th>
+                        <th className="text-center py-3 px-4 font-medium text-muted-foreground">Your 15%</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -2269,13 +2265,12 @@ const BusinessModel = () => {
                           </div>
                         </td>
                         <td className="text-center py-4 px-4">
-                          <div className="font-medium">~2,500 homes</div>
-                          <div className="text-sm text-muted-foreground">1 M users</div>
+                          <div className="font-medium">5,000 units</div>
                         </td>
-                        <td className="text-center py-4 px-4 font-medium">$410 M</td>
-                        <td className="text-center py-4 px-4 font-medium">10 x</td>
-                        <td className="text-center py-4 px-4 font-bold text-foreground">$4.1 B</td>
-                        <td className="text-center py-4 px-4 font-bold text-primary">$2.0 B</td>
+                        <td className="text-center py-4 px-4 font-medium">$112M</td>
+                        <td className="text-center py-4 px-4 font-medium">15×</td>
+                        <td className="text-center py-4 px-4 font-bold text-foreground">$1.7B</td>
+                        <td className="text-center py-4 px-4 font-bold text-primary">$255M</td>
                       </tr>
                       <tr className="border-b border-border/20 bg-primary/5">
                         <td className="py-4 px-4">
@@ -2283,18 +2278,17 @@ const BusinessModel = () => {
                             <span className="text-lg">🟢</span>
                             <div>
                               <div className="font-medium text-primary">Base</div>
-                              <div className="text-sm text-muted-foreground italic">(road-map hit)</div>
+                              <div className="text-sm text-muted-foreground italic">(roadmap hit)</div>
                             </div>
                           </div>
                         </td>
                         <td className="text-center py-4 px-4">
-                          <div className="font-medium">~5,000 homes</div>
-                          <div className="text-sm text-muted-foreground">2 M users</div>
+                          <div className="font-medium">10,000 units</div>
                         </td>
-                        <td className="text-center py-4 px-4 font-medium">$827 M</td>
-                        <td className="text-center py-4 px-4 font-medium">13 x</td>
-                        <td className="text-center py-4 px-4 font-bold text-primary">$10.8 B</td>
-                        <td className="text-center py-4 px-4 font-bold text-primary">$5.4 B</td>
+                        <td className="text-center py-4 px-4 font-medium">$225M</td>
+                        <td className="text-center py-4 px-4 font-medium">20×</td>
+                        <td className="text-center py-4 px-4 font-bold text-primary">$4.5B</td>
+                        <td className="text-center py-4 px-4 font-bold text-primary">$675M</td>
                       </tr>
                       <tr>
                         <td className="py-4 px-4">
@@ -2307,13 +2301,12 @@ const BusinessModel = () => {
                           </div>
                         </td>
                         <td className="text-center py-4 px-4">
-                          <div className="font-medium">~7,500 homes</div>
-                          <div className="text-sm text-muted-foreground">3 M users</div>
+                          <div className="font-medium">15,000 units</div>
                         </td>
-                        <td className="text-center py-4 px-4 font-medium">$1.24 B</td>
-                        <td className="text-center py-4 px-4 font-medium">14 x</td>
-                        <td className="text-center py-4 px-4 font-bold text-foreground">$17.4 B</td>
-                        <td className="text-center py-4 px-4 font-bold text-primary">$8.7 B</td>
+                        <td className="text-center py-4 px-4 font-medium">$338M</td>
+                        <td className="text-center py-4 px-4 font-medium">20×</td>
+                        <td className="text-center py-4 px-4 font-bold text-foreground">$6.8B</td>
+                        <td className="text-center py-4 px-4 font-bold text-primary">$1.0B</td>
                       </tr>
                     </tbody>
                   </table>
