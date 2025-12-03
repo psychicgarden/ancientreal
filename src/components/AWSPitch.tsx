@@ -73,17 +73,23 @@ export default function AWSPitch() {
             {/* Pitch Script */}
             <div className="bg-background/80 rounded-xl p-6 md:p-8 border border-border/50">
               <p className="text-lg md:text-xl leading-relaxed text-foreground">
-                "We have <span className="text-green-500 font-bold">12 units live</span>, generating{" "}
-                <span className="text-primary font-bold">20% returns</span>.
-                We are raising <span className="text-orange-500 font-bold">$1.9M</span> to build our flagship{" "}
-                <span className="font-semibold">'Bitcoin Valley'</span> community.
+                "We are the physical entry point to the world's first <span className="text-primary font-bold">On-Chain Credit Bureau</span>.
               </p>
               <p className="text-lg md:text-xl leading-relaxed text-foreground mt-4">
-                Because we own the construction, we have <span className="text-primary font-bold">80% ROI margins</span>.
-                Because we own the title, we have <span className="text-green-500 font-bold">zero foreclosure risk</span>.
+                Banks require credit history. <span className="text-orange-500 font-bold">Nomads don't have one.</span> Crypto can't use one.
+                So we built the missing piece—<span className="text-primary font-bold">the repayment engine</span>.
+              </p>
+              <p className="text-lg md:text-xl leading-relaxed text-foreground mt-4">
+                <span className="text-green-500 font-bold">12 operational units</span> generating <span className="text-primary font-bold">20% real yields</span>.
+                <span className="text-orange-500 font-bold">$1.9M raise</span> to expand our high-margin, fully owned construction pipeline.
+                <span className="text-green-500 font-bold">Zero foreclosure risk</span> because we retain legal title end-to-end.
+              </p>
+              <p className="text-lg md:text-xl leading-relaxed text-foreground mt-4">
+                We build the houses <span className="text-muted-foreground">(the hardware)</span>. The users build repayment history <span className="text-muted-foreground">(the data)</span>.
+                Together, they create the <span className="text-primary font-bold">Global Credit Score</span>—a new identity layer for <span className="text-orange-500 font-bold">100M mobile workers</span>.
               </p>
               <p className="text-xl md:text-2xl font-semibold text-primary mt-6">
-                We aren't just a developer; we're building <span className="text-orange-500">$750B in mortgage infrastructure</span> that banks can't touch."
+                Ancient Protocol — Building hard assets to power digital finance."
               </p>
             </div>
 
