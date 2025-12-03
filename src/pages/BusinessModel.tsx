@@ -392,11 +392,12 @@ const BusinessModel = () => {
 
           {/* Tabbed Content */}
           <Tabs defaultValue="two-pocket-model" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 mb-8">
+            <TabsList className="grid w-full grid-cols-5 mb-8">
               <TabsTrigger value="two-pocket-model" className="text-xs lg:text-sm">Two-Pocket Model</TabsTrigger>
               <TabsTrigger value="revenue-model" className="text-xs lg:text-sm">Revenue</TabsTrigger>
+              <TabsTrigger value="legal" className="text-xs lg:text-sm">Legal</TabsTrigger>
+              <TabsTrigger value="tech" className="text-xs lg:text-sm">Tech</TabsTrigger>
               <TabsTrigger value="hardware" className="text-xs lg:text-sm">Hardware Roadmap</TabsTrigger>
-              <TabsTrigger value="tech-legal" className="text-xs lg:text-sm">Tech & Legal</TabsTrigger>
             </TabsList>
 
             {/* Two-Pocket Model Tab (formerly Tiered Portfolio) */}
@@ -1101,32 +1102,19 @@ const BusinessModel = () => {
               </div>
             </TabsContent>
 
+            {/* Legal Tab - The Defensible Moat */}
+            <TabsContent value="legal">
+              <LegalRegulatoryProofing />
+            </TabsContent>
+
+            {/* Tech Tab */}
+            <TabsContent value="tech">
+              <TechDueDiligence />
+            </TabsContent>
+
             {/* Hardware Roadmap Tab - 6 Flip Details */}
             <TabsContent value="hardware">
               <SixFlipRoadmap />
-            </TabsContent>
-
-            {/* Legal & Tech Tab - Lead with Legal (the moat) */}
-            <TabsContent value="tech-legal">
-              <div className="space-y-12">
-                {/* Legal Framework First - This is the defensible moat */}
-                <LegalRegulatoryProofing />
-
-                {/* Divider */}
-                <div className="relative py-8">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-border"></div>
-                  </div>
-                  <div className="relative flex justify-center">
-                    <div className="bg-background px-4">
-                      <Badge variant="outline">Technical Architecture</Badge>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Tech Due Diligence Second */}
-                <TechDueDiligence />
-              </div>
             </TabsContent>
 
 
