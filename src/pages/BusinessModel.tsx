@@ -343,9 +343,10 @@ const BusinessModel = () => {
           {/* Value Proposition - Positioned Lower */}
           <div className="max-w-3xl mx-auto mt-16">
             <div className="bg-black/20 backdrop-blur-xl rounded-3xl border border-white/10 p-6 lg:p-8 shadow-2xl">
-              <p className="text-lg lg:text-xl xl:text-2xl font-light leading-relaxed text-white">Crypto has $1 trillion stranded on-chain. 35M Nomads have $750B in locked-out demand. Emerging markets have the world's highest real yields.<span className="font-bold bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text text-transparent">$1 trillion stranded on-chain</span>. 
-                Nomads have <span className="font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">$750B in locked-out demand</span>. 
-                Emerging markets have the world's <span className="font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">highest real yields</span>.
+              <p className="text-lg lg:text-xl xl:text-2xl font-light leading-relaxed text-white">
+                <span className="font-bold bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text text-transparent">50 million nomads</span> burn 
+                <span className="font-bold bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent"> $900B annually</span> on dead rent. 
+                We convert that into <span className="font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">fractional, on-chain deeds</span> of dream properties.
               </p>
             </div>
           </div>
