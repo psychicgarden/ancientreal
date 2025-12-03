@@ -415,12 +415,12 @@ function Slide4Solution() {
 
 function Slide5Revenue() {
   const streams = [
-    { title: "Mortgage Interest Spread", value: "5%", desc: "Borrow at ~6% → lend at 11%", icon: TrendingUp },
+    { title: "Mortgage Interest Spread", value: "3% NIM", desc: "Borrow 7%, lend 10%", icon: TrendingUp },
     { title: "SAM Appreciation", value: "15%", desc: "15% of property appreciation at exit", icon: Building2 },
-    { title: "Buyer Fee", value: "3.5%", desc: "Every buyer financing through Ancient", icon: Users },
+    { title: "Buyer Fee", value: "3%", desc: "Every buyer financing through Ancient", icon: Users },
     { title: "Servicing Fees", value: "15-30yr", desc: "Recurring revenue on every payment", icon: BarChart3 },
     { title: "OCCR Data Licensing", value: "∞", desc: "World's first borderless credit identity", icon: Database },
-    { title: "Construction Margin", value: "80%", desc: "Build $75K → sell $135K (bootstrapping)", icon: Rocket },
+    { title: "Construction Margin", value: "80% ROI", desc: "Build $75K → sell $135K (bootstrapping)", icon: Rocket },
   ];
 
   return (

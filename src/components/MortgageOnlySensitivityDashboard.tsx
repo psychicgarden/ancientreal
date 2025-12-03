@@ -11,10 +11,10 @@ export const MortgageOnlySensitivityDashboard: React.FC = () => {
   const inputs: ScenarioInputs = {
     apr,
     cashPurchaseRate: cashRate / 100,
-    totalUnits: 112,
+    totalUnits: 147,
     avgPropertyPrice: 142366,
     // Weighted average across flips
-    platformFeeRate: 0.035,
+    platformFeeRate: 0.03,
     termYears,
     appreciationRate: 0.07,
     // Not used in mortgage-only
