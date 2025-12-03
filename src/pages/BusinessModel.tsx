@@ -3,14 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Code, Target, Rocket, Building2, BarChart3, Zap, Network, Menu, Home, Users, Briefcase, CreditCard, Plane, Code2, FileText, Settings, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, ComposedChart, PieChart, Pie, Cell } from "recharts";
@@ -55,30 +48,44 @@ const INITIAL_CAPITAL = 1.9; // $1.9M seed investment (DevCo only)
 const calculateFlywheelWithBudget = () => {
   const flywheel = calculateDevelopmentFlywheel();
   const images = [villaTulum, beachChalet, villaGreece, villaEriceira, villaBali, penthouseMexico];
-  const locations = [
-    { name: "Pisac, Peru", flag: "🇵🇪", structure: "Peruvian SAC + Reserva de Dominio" },
-    { name: "Bahia, Brazil", flag: "🇧🇷", structure: "Brazilian LTDA + Alienação Fiduciária" },
-    { name: "Corfu, Greece", flag: "🇬🇷", structure: "Greek IKE SPV" },
-    { name: "Koh Phangan, Thailand", flag: "🇹🇭", structure: "30+30 Leasehold" },
-    { name: "Mazunte, Mexico", flag: "🇲🇽", structure: "Mexican SAPI + Fideicomiso" },
-    { name: "Antalya, Turkey", flag: "🇹🇷", structure: "Turkish SPV" }
-  ];
-  
+  const locations = [{
+    name: "Pisac, Peru",
+    flag: "🇵🇪",
+    structure: "Peruvian SAC + Reserva de Dominio"
+  }, {
+    name: "Bahia, Brazil",
+    flag: "🇧🇷",
+    structure: "Brazilian LTDA + Alienação Fiduciária"
+  }, {
+    name: "Corfu, Greece",
+    flag: "🇬🇷",
+    structure: "Greek IKE SPV"
+  }, {
+    name: "Koh Phangan, Thailand",
+    flag: "🇹🇭",
+    structure: "30+30 Leasehold"
+  }, {
+    name: "Mazunte, Mexico",
+    flag: "🇲🇽",
+    structure: "Mexican SAPI + Fideicomiso"
+  }, {
+    name: "Antalya, Turkey",
+    flag: "🇹🇷",
+    structure: "Turkish SPV"
+  }];
   const prices = [135000, 145000, 165000, 110000, 250000, 160000]; // Canonical: Peru→Brazil→Greece→Thailand→Mexico→Turkey
-  
+
   let runningCapital = INITIAL_CAPITAL;
-  
   return flywheel.flips.map((flip, idx) => {
     const buildCostM = flip.buildCost / 1_000_000;
     const grossSalesM = flip.grossSales / 1_000_000;
-    
+
     // TWO-POCKET MODEL: DevCo receives 100% gross sales from FinCo at closing
     // FinCo handles mortgages separately with its own capital pool
     const netProfitM = grossSalesM - buildCostM;
-    
+
     // Capital compounds: start with seed, add net profit each flip
     runningCapital = runningCapital + netProfitM;
-    
     return {
       flip: flip.flip,
       location: locations[idx].name,
@@ -87,7 +94,8 @@ const calculateFlywheelWithBudget = () => {
       pricePerUnit: prices[idx],
       buildCost: buildCostM,
       salesPrice: grossSalesM,
-      grossSales: grossSalesM, // 100% from FinCo at closing
+      grossSales: grossSalesM,
+      // 100% from FinCo at closing
       netProfit: netProfitM,
       runningCapital: runningCapital,
       platformFee: flip.platformFees / 1_000,
@@ -102,7 +110,6 @@ const calculateFlywheelWithBudget = () => {
     };
   });
 };
-
 const flywheelData = calculateFlywheelWithBudget();
 const flywheel = calculateDevelopmentFlywheel();
 
@@ -119,63 +126,53 @@ const platformFeesY0 = totalPlatformFees; // $0.82M from 147 units
 // Calculate total interest from mortgages using monthly payment formula
 let totalMortgageInterest = 0;
 let totalLoanAmount = 0;
-
-flywheel.flips.forEach((flip) => {
+flywheel.flips.forEach(flip => {
   const financedUnits = Math.floor(flip.units * 0.80); // 80% financed
   const avgPrice = flip.grossSales / flip.units;
   const loanAmount = avgPrice * 0.80 * financedUnits; // 80% LTV per unit
-  
+
   // Monthly payment calculation: P * [r(1+r)^n] / [(1+r)^n - 1]
   const monthlyRate = 0.10 / 12; // 10% APR
   const numPayments = 15 * 12; // 180 months
   const monthlyPayment = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1);
-  
   const totalPaid = monthlyPayment * numPayments;
   const interestPaid = totalPaid - loanAmount;
-  
   totalMortgageInterest += interestPaid;
   totalLoanAmount += loanAmount;
 });
-
 const annualInterest = totalMortgageInterest / 15 / 1_000_000; // Convert to millions
 
 // SAM Appreciation: 15% of 7% annual appreciation over 15 years
 const finalValueForSAM = totalUnits * avgPrice * Math.pow(1.07, 15);
-const totalAppreciationForSAM = finalValueForSAM - (totalUnits * avgPrice);
-const appreciationY15 = (totalAppreciationForSAM * 0.15) / 1_000_000; // 15% SAM share
+const totalAppreciationForSAM = finalValueForSAM - totalUnits * avgPrice;
+const appreciationY15 = totalAppreciationForSAM * 0.15 / 1_000_000; // 15% SAM share
 
 // Revenue over 15 years (Platform Fees + Interest + Appreciation)
-const totalDynamicRevenue = platformFeesY0 + (totalMortgageInterest / 1_000_000) + appreciationY15; // Should be ~$24.50M
+const totalDynamicRevenue = platformFeesY0 + totalMortgageInterest / 1_000_000 + appreciationY15; // Should be ~$24.50M
 
 // Calculate 15-year cash flow waterfall
 const generateCashFlowData = () => {
   const data = [];
   let cumulativeRevenue = 0;
-  
   for (let year = 0; year <= 15; year++) {
     let platformFees = 0;
     let interest = 0;
     let appreciation = 0;
-    
     if (year === 0) {
       platformFees = platformFeesY0;
     }
-    
     if (year >= 1 && year <= 15) {
       interest = annualInterest;
     }
-    
     if (year === 15) {
       appreciation = appreciationY15;
     }
-    
     const yearlyRevenue = platformFees + interest + appreciation;
     cumulativeRevenue += yearlyRevenue;
-    
+
     // Calculate IRR at this point (simplified)
     const yearsElapsed = year || 0.5;
     const irr = ((cumulativeRevenue / 2.75) ** (1 / yearsElapsed) - 1) * 100;
-    
     data.push({
       year: year === 0 ? "Y0" : `Y${year}`,
       platformFees: platformFees,
@@ -186,12 +183,9 @@ const generateCashFlowData = () => {
       irr: Math.min(irr, 25) // Cap at 25% for visualization
     });
   }
-  
   return data;
 };
-
 const cashFlowData = generateCashFlowData();
-
 const revenueStreams = [{
   title: "Platform Fees",
   amount: `$${totalPlatformFees.toFixed(2)}M`,
@@ -256,20 +250,12 @@ const BusinessModel = () => {
       <div className="fixed top-4 right-4 z-50">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button 
-              variant="outline" 
-              size="icon" 
-              className="h-12 w-12 bg-background/80 backdrop-blur-sm border-border/50 hover:bg-background/90 shadow-lg"
-            >
+            <Button variant="outline" size="icon" className="h-12 w-12 bg-background/80 backdrop-blur-sm border-border/50 hover:bg-background/90 shadow-lg">
               <Menu className="h-5 w-5" />
               <span className="sr-only">Open navigation menu</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent 
-            align="end" 
-            className="w-56 bg-background/95 backdrop-blur-sm border-border/50 shadow-xl"
-            sideOffset={8}
-          >
+          <DropdownMenuContent align="end" className="w-56 bg-background/95 backdrop-blur-sm border-border/50 shadow-xl" sideOffset={8}>
             <DropdownMenuLabel className="font-semibold">Navigate to</DropdownMenuLabel>
             <DropdownMenuSeparator />
             
@@ -349,8 +335,8 @@ const BusinessModel = () => {
           {/* Main Hero Text */}
           <div className="space-y-4 mb-12">
             <h1 className="text-5xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight">
-              <span className="block text-white drop-shadow-2xl">Hardware-Enabled</span>
-              <span className="block bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent drop-shadow-2xl">Mortgage Network</span>
+              <span className="block text-white drop-shadow-2xl">The RWA Mortgage Rail</span>
+              <span className="block bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent drop-shadow-2xl">for the Borderless Economy</span>
             </h1>
           </div>
           
@@ -743,15 +729,13 @@ const BusinessModel = () => {
                           </tr>
                         </thead>
                         <tbody>
-                          {flywheel.flips.map((flip, idx) => (
-                            <tr key={idx} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
+                          {flywheel.flips.map((flip, idx) => <tr key={idx} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
                               <td className="py-4 px-4 font-semibold">{flip.flip}</td>
                               <td className="py-4 px-4">{flip.units}</td>
                               <td className="py-4 px-4 text-right font-mono">${(flip.grossSales / flip.units / 1000).toFixed(0)}k</td>
                               <td className="py-4 px-4 text-right font-mono text-primary">${(flip.platformFees / 1000).toFixed(1)}k</td>
                               <td className="py-4 px-4 text-right font-mono font-semibold">${(flip.grossSales / 1000000).toFixed(2)}M</td>
-                            </tr>
-                          ))}
+                            </tr>)}
                           <tr className="font-bold bg-primary/5 border-t-2 border-primary/20">
                             <td className="py-4 px-4 text-lg">TOTAL</td>
                             <td className="py-4 px-4 text-lg">{totalUnits}</td>
