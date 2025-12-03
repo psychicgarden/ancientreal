@@ -1131,24 +1131,11 @@ const BusinessModel = () => {
               <SixFlipRoadmap />
             </TabsContent>
 
-            {/* Tech & Legal Tab (merged Tech DD + Legal Structuring) */}
+            {/* Legal & Tech Tab - Lead with Legal (the moat) */}
             <TabsContent value="tech-legal">
               <div className="space-y-12">
-                {/* Tech Due Diligence Section */}
-                <div>
-                  <div className="text-center mb-8">
-                    <Badge variant="outline" className="mb-4">
-                      Technical Architecture
-                    </Badge>
-                    <h2 className="text-4xl font-bold mb-4">
-                      Tech Due Diligence
-                    </h2>
-                    <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                      Platform assessment and technical architecture review
-                    </p>
-                  </div>
-                  <TechDueDiligence />
-                </div>
+                {/* Legal Framework First - This is the defensible moat */}
+                <LegalRegulatoryProofing />
 
                 {/* Divider */}
                 <div className="relative py-8">
@@ -1157,13 +1144,13 @@ const BusinessModel = () => {
                   </div>
                   <div className="relative flex justify-center">
                     <div className="bg-background px-4">
-                      <Badge variant="outline">Legal Framework</Badge>
+                      <Badge variant="outline">Technical Architecture</Badge>
                     </div>
                   </div>
                 </div>
 
-                {/* Legal & Regulatory Proofing - Comprehensive Country-by-Country Analysis */}
-                <LegalRegulatoryProofing />
+                {/* Tech Due Diligence Second */}
+                <TechDueDiligence />
               </div>
             </TabsContent>
 
