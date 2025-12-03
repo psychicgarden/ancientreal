@@ -346,6 +346,9 @@ const BusinessModel = () => {
       {/* Market Failure Section */}
       <MarketFailure />
 
+      {/* Competitive Intelligence - Market Validation */}
+      <CompetitiveLandscape />
+
       {/* Traction Trilogy Section */}
       <TractionTrilogy />
 
@@ -416,18 +419,12 @@ const BusinessModel = () => {
           </div>
 
           {/* Tabbed Content */}
-          <Tabs defaultValue="competition" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 mb-8">
-              <TabsTrigger value="competition" className="text-xs lg:text-sm">Competition</TabsTrigger>
+          <Tabs defaultValue="two-pocket-model" className="w-full">
+            <TabsList className="grid w-full grid-cols-3 mb-8">
               <TabsTrigger value="two-pocket-model" className="text-xs lg:text-sm">Two-Pocket Model</TabsTrigger>
               <TabsTrigger value="revenue-model" className="text-xs lg:text-sm">Revenue</TabsTrigger>
               <TabsTrigger value="tech-legal" className="text-xs lg:text-sm">Tech & Legal</TabsTrigger>
             </TabsList>
-
-            {/* Competition Tab */}
-            <TabsContent value="competition">
-              <CompetitiveLandscape />
-            </TabsContent>
 
             {/* Two-Pocket Model Tab (formerly Tiered Portfolio) */}
             <TabsContent value="two-pocket-model">
