@@ -189,7 +189,7 @@ const cashFlowData = generateCashFlowData();
 const revenueStreams = [{
   title: "Platform Fees",
   amount: `$${totalPlatformFees.toFixed(2)}M`,
-  description: "3.5% fee on all sales (147 units, canonical pricing)",
+  description: "3% fee on all sales (147 units, canonical pricing)",
   timeline: "Immediate capture",
   icon: "🏛"
 }, {
@@ -498,7 +498,7 @@ const BusinessModel = () => {
                 <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                   <CardContent className="p-6 text-center">
                     <DollarSign className="w-8 h-8 text-primary mx-auto mb-3" />
-                    <div className="text-2xl font-bold text-foreground">${totalDynamicRevenue}M</div>
+                    <div className="text-2xl font-bold text-foreground">${totalDynamicRevenue.toFixed(2)}M</div>
                     <div className="text-sm text-muted-foreground">15-Year Revenue</div>
                   </CardContent>
                 </Card>
@@ -512,7 +512,7 @@ const BusinessModel = () => {
                   </Badge>
                   <h2 className="text-4xl font-bold mb-4">The Development Flywheel</h2>
                   <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                    DevCo receives 100% gross sales from FinCo at closing. Capital compounds from $1.9M → $12M+ across 6 flips.
+                    DevCo receives 100% gross sales from FinCo at closing. Capital compounds from $1.9M → $14M+ across 6 flips.
                   </p>
                 </div>
 
@@ -614,7 +614,7 @@ const BusinessModel = () => {
               {/* Clean Revenue Model Showcase */}
               <div className="mb-16 mt-24">
                 <div className="text-center mb-12">
-                  <h2 className="text-4xl font-bold mb-4">${totalDynamicRevenue}M Revenue Model</h2>
+                  <h2 className="text-4xl font-bold mb-4">${totalDynamicRevenue.toFixed(2)}M Revenue Model</h2>
                   <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                     Three revenue streams across {totalUnits} units in 6 countries, 23-26% IRR
                   </p>
@@ -629,7 +629,7 @@ const BusinessModel = () => {
                         <div>
                           <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">Platform Fees</div>
                           <div className="text-4xl font-bold text-primary mb-3">${totalPlatformFees.toFixed(2)}M</div>
-                          <p className="text-sm text-muted-foreground">3.5% infrastructure fee on all sales</p>
+                          <p className="text-sm text-muted-foreground">3% infrastructure fee on all sales</p>
                         </div>
                         <div className="bg-background/50 rounded-lg p-3 text-sm">
                           <div className="text-muted-foreground">Immediate capture (Years 0-6)</div>
@@ -676,7 +676,7 @@ const BusinessModel = () => {
                   <CardContent className="p-10">
                     <div className="text-center">
                       <div className="text-sm text-muted-foreground uppercase tracking-widest mb-3">15-Year Total Revenue</div>
-                      <div className="text-6xl font-bold text-primary mb-4">${totalDynamicRevenue}M</div>
+                      <div className="text-6xl font-bold text-primary mb-4">${totalDynamicRevenue.toFixed(2)}M</div>
                       <div className="flex items-center justify-center gap-8 text-sm">
                         <div>
                           <span className="text-muted-foreground">IRR:</span>

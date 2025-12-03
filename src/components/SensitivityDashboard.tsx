@@ -11,9 +11,9 @@ export const SensitivityDashboard: React.FC = () => {
   const inputs: ScenarioInputs = {
     apr,
     cashPurchaseRate: cashRate / 100,
-    totalUnits: 112,
+    totalUnits: 147,
     avgPropertyPrice: 143000,
-    platformFeeRate: 0.035,
+    platformFeeRate: 0.03,
     termYears,
     appreciationRate: 0.07,
     samShare: 0.30
