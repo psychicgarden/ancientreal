@@ -748,46 +748,24 @@ const BusinessModel = () => {
                 {/* Key Value Propositions */}
                 <div className="grid md:grid-cols-3 gap-6">
                   <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-                    <CardContent className="p-6">
-                      <div className="text-3xl mb-3">⚡</div>
-                      <h4 className="font-bold text-lg mb-2">Urgency Driver</h4>
-                      <p className="text-sm text-muted-foreground">Early buyers save $15k+ vs. later flips, accelerating conversion velocity</p>
-                    </CardContent>
+                    
                   </Card>
                   
                   <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-                    <CardContent className="p-6">
-                      <div className="text-3xl mb-3">📈</div>
-                      <h4 className="font-bold text-lg mb-2">Market Reality</h4>
-                      <p className="text-sm text-muted-foreground">Pricing reflects 18-month construction inflation and land appreciation</p>
-                    </CardContent>
+                    
                   </Card>
                   
                   <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-                    <CardContent className="p-6">
-                      <div className="text-3xl mb-3">🤝</div>
-                      <h4 className="font-bold text-lg mb-2">Competitive SAM</h4>
-                      <p className="text-sm text-muted-foreground">30% SAM vs. 50% industry standard = buyers keep 70% appreciation</p>
-                    </CardContent>
+                    
                   </Card>
                 </div>
               </div>
 
               {/* Scenario Comparison Section */}
               <div className="mb-16 mt-20">
-                <div className="text-center mb-12">
-                  <div className="inline-flex items-center space-x-2 mb-4">
-                    <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary"></div>
-                    <div className="text-sm font-medium text-primary uppercase tracking-wider">Revenue Optimization</div>
-                    <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary"></div>
-                  </div>
-                  <h2 className="text-4xl font-bold mb-4">Revenue Strategy: Conservative, Aggressive, or Tiered?</h2>
-                  <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                    Three distinct paths to profitability - choose based on market positioning and growth speed
-                  </p>
-                </div>
+                
 
-                <ScenarioComparison scenarios={[currentScenario, getAggressiveScenario(), getTieredScenario()]} />
+                
               </div>
 
               {/* Sensitivity Dashboard - SAM Model */}
@@ -798,10 +776,8 @@ const BusinessModel = () => {
               {/* Mortgage-Only Dashboard */}
               <div className="mb-16">
                 <div className="mb-8">
-                  <h2 className="text-3xl font-bold mb-4 text-foreground">Conservative Alternative</h2>
-                  <p className="text-lg text-muted-foreground">
-                    For buyers who prefer traditional mortgages without shared appreciation
-                  </p>
+                  
+                  
                 </div>
                 <MortgageOnlySensitivityDashboard />
               </div>
