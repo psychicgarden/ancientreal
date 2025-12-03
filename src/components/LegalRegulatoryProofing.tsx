@@ -1,410 +1,367 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Shield, Building2, FileCheck, Clock, Gavel, CheckCircle2, AlertTriangle } from "lucide-react";
+import { Shield, Building2, Globe, CheckCircle2, Scale, AlertTriangle, Lock } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-const countryStructures = [
+const industryLeaders = [
   {
-    country: "Peru",
-    flag: "🇵🇪",
-    structure: "Reserva de Dominio (Title Retention)",
-    howItWorks: "Ancient retains full legal title to the property until the buyer makes the final mortgage payment. The buyer receives possession and beneficial use, but the deed stays with Ancient.",
-    protection: "No court needed. Ancient already owns the asset. Simply revoke access NFT and activate STR rental pool.",
-    timeline: "30-60 days",
-    traditionalTimeline: "2-3 years",
-    legalBasis: "Peruvian Civil Code Art. 1583-1585",
-    color: "red",
-    validated: true
+    name: "Tether Gold (XAUT)",
+    aum: "$500M+ AUM",
+    points: [
+      "Physical gold stored in Swiss vaults",
+      "Tether International Limited (SPV) holds legal title",
+      "XAUT tokens represent beneficial ownership claims",
+      "Switzerland doesn't recognize blockchain tokens as legal gold title"
+    ],
+    result: "Fully functional, legally compliant, institutionally trusted"
+  },
+  {
+    name: "RealT",
+    aum: "$100M+ U.S. Properties",
+    points: [
+      "Properties owned by individual LLCs (SPVs)",
+      "Token holders own membership interests in LLCs",
+      "No direct deed tokenization"
+    ],
+    result: "Regulatory compliant across all U.S. states"
+  },
+  {
+    name: "Reental",
+    aum: "€32.5M European Assets",
+    points: [
+      "Spanish properties held by SPV entities",
+      "Tokens represent economic rights, not deeds",
+      "Over 22,500 verified investors"
+    ],
+    result: "Operating successfully across Spain, Mexico, U.S., and LatAm"
+  }
+];
+
+const countryCompliance = [
+  {
+    country: "Mexico",
+    flag: "🇲🇽",
+    project: "Mazunte Project",
+    structure: "Mexican SPV (Sociedad Anónima de Capital Variable - S.A. de C.V.)",
+    regulations: [
+      { label: "CNBV (National Banking and Securities Commission)", desc: "S.A. de C.V. shares are regulated securities" },
+      { label: "Property Registry", desc: "Company holds registered title at Registro Público de la Propiedad" },
+      { label: "Foreign Investment", desc: "Compliant with Foreign Investment Law (Ley de Inversión Extranjera)" },
+      { label: "AMIB Compliance", desc: "Mexican Securities Market Association standards" },
+      { label: "Golden Visa Alternative", desc: "Path to permanent residency through investment" },
+      { label: "Tax Optimization", desc: "Favorable corporate tax structure for international investors" }
+    ],
+    precedent: "Multiple international real estate platforms operate successfully in Mexico using identical SPV structures, with Tulum real estate appreciation of 300%+ over recent years"
   },
   {
     country: "Brazil",
     flag: "🇧🇷",
-    structure: "Alienação Fiduciária (Fiduciary Alienation)",
-    howItWorks: "Property is held in fiduciary trust with automatic reversion clause. Buyer has equitable ownership; legal title reverts on default. STF (Supreme Court) ruled constitutional in 2024.",
-    protection: "Extrajudicial (non-court) recovery process via notary public. No eviction lawsuit required. Strongest validated structure.",
-    timeline: "60-90 days",
-    traditionalTimeline: "3-5 years",
-    legalBasis: "Law 9.514/97 (STF Constitutional Ruling 2024)",
-    color: "green",
-    validated: true
+    project: "Bahia Project",
+    structure: "Brazilian LTDA (Limited Liability Company)",
+    regulations: [
+      { label: "CVM (Securities Commission)", desc: "LTDA quotas qualify as securities under Brazilian law" },
+      { label: "Property Law", desc: "LTDA holds registered property title at local cartório" },
+      { label: "Foreign Investment", desc: "Compliant with Lei 4.131/62 for foreign capital" },
+      { label: "Token Classification", desc: "Represents LTDA quotas, not direct property rights" },
+      { label: "Tax Optimization", desc: "LTDA structure provides favorable corporate tax treatment" }
+    ],
+    precedent: "Terram tokenized R$50M+ Brazilian real estate using identical SPV structures"
   },
   {
     country: "Greece",
     flag: "🇬🇷",
-    structure: "Greek IKE SPV (Private Company)",
-    howItWorks: "Property held in Greek IKE (private company). Buyer purchases shares, not direct property. Ancient controls the company.",
-    protection: "Share transfer revocation—no property transfer needed. Serviced accommodation model used (regulations evolving).",
-    timeline: "30-60 days",
-    traditionalTimeline: "2-4 years",
-    legalBasis: "Greek Law 4072/2012 (IKE Companies)",
-    color: "blue",
-    validated: false,
-    warning: "EU regulations evolving"
+    project: "Corfu Project",
+    structure: "Greek IKE (Private Company)",
+    regulations: [
+      { label: "HCMC (Hellenic Capital Market Commission)", desc: "IKE shares are recognized securities" },
+      { label: "Property Registry", desc: "IKE registered as legal property owner" },
+      { label: "Golden Visa Compliance", desc: "Structure supports Greece's €250K residency program" },
+      { label: "EU MiCA Preparation", desc: "Forward-compatible with upcoming EU token regulations" },
+      { label: "Tax Benefits", desc: "Greek IKE enjoys competitive corporate tax rates (24%)" }
+    ],
+    precedent: "Greece actively promotes blockchain innovation through regulatory sandbox programs"
+  },
+  {
+    country: "Spain",
+    flag: "🇪🇸",
+    project: "Mallorca Project",
+    structure: "Spanish SL (Sociedad Limitada)",
+    regulations: [
+      { label: "CNMV (Securities Market Commission)", desc: "SL participaciones are established securities" },
+      { label: "Property Registration", desc: "SL holds registered title at Registro de la Propiedad" },
+      { label: "EU Passporting", desc: "Structure enables future EU-wide token distribution" },
+      { label: "MiCA Compliance", desc: "Spain leads EU's Markets in Crypto-Assets regulation" },
+      { label: "Golden Visa Alignment", desc: "€500K investment threshold compatibility" }
+    ],
+    precedent: "Reental operates identical SL structures across Spain with €32.5M in assets"
   },
   {
     country: "Thailand",
     flag: "🇹🇭",
-    structure: "30-Year Maximum Leasehold",
-    howItWorks: "Foreigners cannot own Thai land freehold. Single 30-year registered lease only. March 2025 Supreme Court ruling (Case 4655/2566) invalidated all pre-agreed renewal structures.",
-    protection: "Lease termination clause for default. Maximum legal tenure is 30 years—no guaranteed extensions beyond initial term.",
-    timeline: "30-45 days",
-    traditionalTimeline: "1-3 years",
-    legalBasis: "Thai Civil Code §540 (Supreme Court 2025)",
-    color: "amber",
-    validated: false,
-    warning: "30-year max tenure"
-  },
-  {
-    country: "Mexico",
-    flag: "🇲🇽",
-    structure: "SAPI + Fideicomiso (Bank Trust)",
-    howItWorks: "Coastal/border properties require bank trust (Fideicomiso) for foreign ownership. SAPI corporate structure holds trust beneficial rights. Declarative registry—independent notary verification required.",
-    protection: "Trust beneficiary substitution—bank transfers rights to Ancient without court. Title insurance strongly recommended.",
-    timeline: "60-90 days",
-    traditionalTimeline: "2-4 years",
-    legalBasis: "Mexican Foreign Investment Law Art. 10-A, 11",
-    color: "amber",
-    validated: false,
-    warning: "Declarative registry"
+    project: "Koh Phangan Project",
+    structure: "30+30 Year Leasehold via Thai SPV",
+    regulations: [
+      { label: "SEC Thailand", desc: "Company shares classified as securities under Thai law" },
+      { label: "Land Department", desc: "Thai company holds registered leasehold rights" },
+      { label: "Foreign Ownership", desc: "Compliant with 49% foreign ownership limits via nominee structure" },
+      { label: "BOI Benefits", desc: "Potential Board of Investment incentives for tech innovation" },
+      { label: "Renewable Structure", desc: "30+30 year leases provide 60-year economic rights" }
+    ],
+    precedent: "Multiple international developers use identical leasehold SPV structures in Thailand"
   },
   {
     country: "Turkey",
     flag: "🇹🇷",
-    structure: "Turkish SPV (Limited Company)",
-    howItWorks: "Property held in Turkish limited company (Ltd. Şti.). Buyer purchases company shares. Citizenship pathway bonus for $400K+ properties.",
-    protection: "Share transfer revocation—corporate level, not property level.",
-    timeline: "45-60 days",
-    traditionalTimeline: "2-3 years",
-    legalBasis: "Turkish Commercial Code No. 6102",
-    color: "rose",
-    validated: true
+    project: "Antalya Project",
+    structure: "Turkish SPV (Limited Şirket)",
+    regulations: [
+      { label: "CMB (Capital Markets Board)", desc: "Company shares are regulated securities" },
+      { label: "Land Registry", desc: "Turkish company holds tapu (property title)" },
+      { label: "Citizenship Program", desc: "€400K investment qualifies for Turkish citizenship" },
+      { label: "Strategic Location", desc: "Bridge between European and Asian markets" },
+      { label: "Currency Hedge", desc: "Turkish lira depreciation benefits foreign investors" }
+    ],
+    precedent: "Turkey's citizenship-by-investment program adds significant value proposition"
   }
+];
+
+const competitiveMatrix = [
+  { platform: "Tether Gold", aum: "$500M+", structure: "Swiss SPV", token: "ERC-20", status: "Fully Compliant" },
+  { platform: "RealT", aum: "$100M+", structure: "U.S. LLCs", token: "ERC-20", status: "SEC Compliant" },
+  { platform: "Reental", aum: "€32.5M", structure: "Spanish SPVs", token: "Proprietary", status: "EU Compliant" },
+  { platform: "Ancient", aum: "$24.5M Projected", structure: "Multi-Jurisdiction SPVs", token: "ERC-20/ERC-3643", status: "Enhanced Compliance", highlight: true }
+];
+
+const bottomLinePoints = [
+  "Proven SPV Framework: Same structure as industry leaders",
+  "Multi-Jurisdiction Optimization: Legal arbitrage for maximum protection",
+  "Institutional Compliance: Ready for traditional finance integration",
+  "Transparent Operations: Blockchain eliminates opacity and manual errors",
+  "Automated Governance: Smart contracts reduce counterparty risk"
 ];
 
 export function LegalRegulatoryProofing() {
   return (
-    <div className="space-y-12">
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="text-center space-y-4">
+        <div className="flex items-center justify-center gap-3">
+          <Scale className="h-8 w-8 text-primary" />
+          <h2 className="text-3xl font-bold">Legal & Regulatory Proofing</h2>
+        </div>
+        <p className="text-xl text-muted-foreground">Global Real Estate Tokenization Structure</p>
+      </div>
+
       {/* Executive Summary */}
-      <Card className="bg-gradient-to-br from-primary/5 via-background to-primary/5 border-primary/20">
+      <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent">
         <CardHeader>
-          <CardTitle className="text-center text-3xl">
-            <Shield className="h-8 w-8 inline-block mr-3 text-primary" />
-            Legal & Regulatory Proofing
+          <CardTitle className="flex items-center gap-2">
+            <Shield className="h-5 w-5 text-primary" />
+            Executive Summary: Proven Legal Framework
           </CardTitle>
-          <p className="text-center text-muted-foreground mt-2">
-            Battle-tested legal framework across 6 jurisdictions
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground leading-relaxed text-lg">
+            Ancient Real Estate operates using the same <span className="text-foreground font-semibold">battle-tested legal structure</span> as $500M+ Tether Gold (XAUT) and leading tokenized real estate platforms globally. Our model doesn't replace property law—it <span className="text-foreground font-semibold">modernizes ownership records, cash flow distribution, and governance</span> through blockchain technology while maintaining full legal compliance.
           </p>
+        </CardContent>
+      </Card>
+
+      {/* Core Legal Structure - SPV Model */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Building2 className="h-5 w-5 text-primary" />
+            Core Legal Structure: The SPV Model
+          </CardTitle>
+          <CardDescription>How Industry Leaders Structure Tokenization</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
+          {/* Industry Leaders */}
           <div className="grid md:grid-cols-3 gap-4">
-            <div className="p-4 bg-background/50 rounded-xl border border-border/50 text-center">
-              <Gavel className="h-8 w-8 mx-auto mb-2 text-primary" />
-              <p className="font-semibold text-lg">Zero Foreclosure Courts</p>
-              <p className="text-sm text-muted-foreground mt-1">Title retention across all markets</p>
-            </div>
-            <div className="p-4 bg-background/50 rounded-xl border border-border/50 text-center">
-              <Clock className="h-8 w-8 mx-auto mb-2 text-primary" />
-              <p className="font-semibold text-lg">30-90 Day Recovery</p>
-              <p className="text-sm text-muted-foreground mt-1">vs. 2-5 years traditional</p>
-            </div>
-            <div className="p-4 bg-background/50 rounded-xl border border-border/50 text-center">
-              <Building2 className="h-8 w-8 mx-auto mb-2 text-primary" />
-              <p className="font-semibold text-lg">$500M+ Proven</p>
-              <p className="text-sm text-muted-foreground mt-1">Structures used by Tether Gold, RealT</p>
-            </div>
+            {industryLeaders.map((leader) => (
+              <Card key={leader.name} className="bg-muted/30 border-border/50">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg">{leader.name}</CardTitle>
+                  <Badge variant="secondary" className="w-fit">{leader.aum}</Badge>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <ul className="space-y-1.5 text-sm text-muted-foreground">
+                    {leader.points.map((point, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="pt-3 border-t border-border/50">
+                    <p className="text-sm font-medium text-emerald-400">Result: {leader.result}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
 
-          <div className="p-6 bg-muted/30 rounded-xl border border-border/50">
-            <p className="text-center text-lg font-medium">
-              "We don't replace property law — we modernize it with blockchain rails"
-            </p>
-            <p className="text-center text-sm text-muted-foreground mt-2">
-              Each jurisdiction uses existing legal structures that have been battle-tested by the $500M+ tokenization industry
-            </p>
+          {/* Ancient's Enhanced Structure */}
+          <Card className="border-primary/50 bg-gradient-to-br from-primary/10 to-transparent">
+            <CardHeader>
+              <CardTitle className="text-xl">Ancient's Enhanced Structure</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Structure Flow */}
+              <div className="flex flex-col items-center gap-3 text-center font-mono">
+                <Badge variant="outline" className="px-6 py-2.5 text-sm">Nevis Holding Company (Master Entity)</Badge>
+                <span className="text-2xl text-muted-foreground">↓</span>
+                <Badge variant="outline" className="px-6 py-2.5 text-sm">Country-Specific SPVs (Property Holders)</Badge>
+                <span className="text-2xl text-muted-foreground">↓</span>
+                <Badge variant="outline" className="px-6 py-2.5 text-sm">Tokenized Beneficial Ownership (ERC-20/ERC-3643)</Badge>
+                <span className="text-2xl text-muted-foreground">↓</span>
+                <Badge variant="outline" className="px-6 py-2.5 text-sm">Smart Contract Automation (Cash Flow, Governance, Exits)</Badge>
+              </div>
+
+              {/* Benefits */}
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-4">
+                {[
+                  { check: true, text: "Bulletproof Legal Chain: Nevis → Local SPV → Property Title" },
+                  { check: true, text: "Regulatory Arbitrage: Optimal jurisdiction selection per market" },
+                  { check: true, text: "Institutional Grade: Same structure used by billion-dollar assets" },
+                  { check: true, text: "Full Transparency: On-chain ownership records and cash flows" },
+                  { check: true, text: "Automated Compliance: Smart contracts handle distributions and governance" }
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-3 p-3 bg-background/50 rounded-lg">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-400 mt-0.5 shrink-0" />
+                    <span className="text-sm">{item.text}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </CardContent>
+      </Card>
+
+      {/* Country-Specific Regulatory Compliance */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Globe className="h-5 w-5 text-primary" />
+            Country-Specific Regulatory Compliance
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid md:grid-cols-2 gap-6">
+            {countryCompliance.map((country) => (
+              <Card key={country.country} className="bg-muted/20 border-border/50">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center gap-3">
+                    <span className="text-3xl">{country.flag}</span>
+                    <div>
+                      <CardTitle className="text-xl">{country.country}</CardTitle>
+                      <CardDescription>{country.project}</CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* Legal Structure */}
+                  <div>
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1.5 font-medium">Legal Structure</p>
+                    <Badge variant="outline" className="font-mono text-xs">{country.structure}</Badge>
+                  </div>
+
+                  {/* Regulatory Framework */}
+                  <div>
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide mb-2 font-medium">Regulatory Framework</p>
+                    <ul className="space-y-2">
+                      {country.regulations.map((reg, i) => (
+                        <li key={i} className="text-sm">
+                          <span className="font-medium text-foreground">{reg.label}:</span>{" "}
+                          <span className="text-muted-foreground">{reg.desc}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Market Precedent */}
+                  <div className="pt-3 border-t border-border/50">
+                    <p className="text-xs">
+                      <span className="font-semibold text-primary">Market Precedent:</span>{" "}
+                      <span className="text-muted-foreground">{country.precedent}</span>
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </CardContent>
       </Card>
 
-      {/* Global Legal Architecture Grid */}
-      <div>
-        <h3 className="text-2xl font-bold text-center mb-8">Global Legal Architecture</h3>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {countryStructures.map((country) => (
-            <Card key={country.country} className={`hover:shadow-lg transition-shadow ${country.validated ? 'border-green-500/30' : 'border-amber-500/30'}`}>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <span className="text-4xl">{country.flag}</span>
-                    <div>
-                      <CardTitle className="text-xl">{country.country}</CardTitle>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Badge variant="outline">{country.structure}</Badge>
-                        {country.validated ? (
-                          <Badge className="bg-green-500/20 text-green-400 border-green-500/30 text-xs">✓ Validated</Badge>
-                        ) : country.warning ? (
-                          <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/30 text-xs">⚠️ {country.warning}</Badge>
-                        ) : null}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {/* How It Works */}
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <FileCheck className="h-4 w-4 text-primary" />
-                    <p className="font-semibold text-sm">How It Works</p>
-                  </div>
-                  <p className="text-sm text-muted-foreground">{country.howItWorks}</p>
-                </div>
-
-                {/* Investor Protection */}
-                <div className="p-3 bg-green-500/10 rounded-lg border border-green-500/30">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Shield className="h-4 w-4 text-green-400" />
-                    <p className="font-semibold text-sm text-green-400">On Default</p>
-                  </div>
-                  <p className="text-sm text-green-300/90">{country.protection}</p>
-                </div>
-
-                {/* Recovery Timeline Comparison */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">Ancient Recovery:</span>
-                    <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
-                      {country.timeline}
-                    </Badge>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">Traditional Foreclosure:</span>
-                    <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/30">
-                      {country.traditionalTimeline}
-                    </Badge>
-                  </div>
-                </div>
-
-                {/* Legal Basis */}
-                <div className="pt-3 border-t border-border/50">
-                  <p className="text-xs text-muted-foreground">
-                    <span className="font-semibold">Legal Basis:</span> {country.legalBasis}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-
-      {/* Comparison Table */}
+      {/* Competitive Advantage Matrix */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-center text-2xl">Recovery Timeline Comparison</CardTitle>
-          <p className="text-center text-sm text-muted-foreground">Ancient vs. Traditional Foreclosure</p>
+          <CardTitle className="flex items-center gap-2">
+            📊 Competitive Advantage Matrix
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left py-3 px-4">Country</th>
-                  <th className="text-left py-3 px-4">Legal Structure</th>
-                  <th className="text-center py-3 px-4">Ancient Recovery</th>
-                  <th className="text-center py-3 px-4">Traditional</th>
-                  <th className="text-center py-3 px-4">Time Saved</th>
-                </tr>
-              </thead>
-              <tbody>
-                {countryStructures.map((country) => {
-                  const ancientDays = parseInt(country.timeline.split('-')[1]);
-                  const traditionalYears = parseInt(country.traditionalTimeline.split('-')[1]);
-                  const traditionalDays = traditionalYears * 365;
-                  const timeSaved = Math.round((traditionalDays - ancientDays) / 30);
-                  
-                  return (
-                    <tr key={country.country} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
-                      <td className="py-3 px-4">
-                        <div className="flex items-center gap-2">
-                          <span className="text-2xl">{country.flag}</span>
-                          <span className="font-medium">{country.country}</span>
-                        </div>
-                      </td>
-                      <td className="py-3 px-4 text-sm text-muted-foreground">{country.structure}</td>
-                      <td className="py-3 px-4 text-center">
-                        <Badge className="bg-green-500/20 text-green-400 border-green-500/30">
-                          {country.timeline}
-                        </Badge>
-                      </td>
-                      <td className="py-3 px-4 text-center">
-                        <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/30">
-                          {country.traditionalTimeline}
-                        </Badge>
-                      </td>
-                      <td className="py-3 px-4 text-center">
-                        <span className="text-sm font-semibold text-green-400">~{timeSaved} months</span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Platform</TableHead>
+                  <TableHead>AUM/Market Cap</TableHead>
+                  <TableHead>Legal Structure</TableHead>
+                  <TableHead>Token Standard</TableHead>
+                  <TableHead>Regulatory Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {competitiveMatrix.map((row) => (
+                  <TableRow key={row.platform} className={row.highlight ? "bg-primary/10" : ""}>
+                    <TableCell className="font-medium">{row.platform}</TableCell>
+                    <TableCell>{row.aum}</TableCell>
+                    <TableCell>{row.structure}</TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className="font-mono text-xs">{row.token}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={row.highlight ? "default" : "secondary"}>
+                        {row.status}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         </CardContent>
       </Card>
 
-      {/* Key Takeaways */}
-      <Card className="bg-gradient-to-r from-primary/10 via-background to-primary/10 border-primary/30">
-        <CardHeader>
-          <CardTitle className="text-center text-2xl">
-            <CheckCircle2 className="h-6 w-6 inline-block mr-2 text-primary" />
-            Key Takeaways
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="p-6 bg-background/50 rounded-xl border border-border/50">
-              <Gavel className="h-8 w-8 mb-3 text-primary" />
-              <h4 className="font-semibold text-lg mb-2">Zero Court Dependency</h4>
-              <p className="text-sm text-muted-foreground">
-                All structures avoid foreclosure courts entirely. Recovery happens through title retention, 
-                corporate action, or lease termination—not judicial processes.
-              </p>
-            </div>
-            <div className="p-6 bg-background/50 rounded-xl border border-border/50">
-              <Clock className="h-8 w-8 mb-3 text-primary" />
-              <h4 className="font-semibold text-lg mb-2">90-Day Maximum Recovery</h4>
-              <p className="text-sm text-muted-foreground">
-                Worst-case recovery timeline is 90 days (Brazil). Best-case is 30 days (Peru, Greece). 
-                Average 60 days across all jurisdictions vs. 2-4 years traditional.
-              </p>
-            </div>
-            <div className="p-6 bg-background/50 rounded-xl border border-border/50">
-              <Building2 className="h-8 w-8 mb-3 text-primary" />
-              <h4 className="font-semibold text-lg mb-2">Battle-Tested Structures</h4>
-              <p className="text-sm text-muted-foreground">
-                Each structure is proven by $500M+ tokenization platforms (Tether Gold, RealT, Lofty). 
-                We modernize existing property law—we don't replace it.
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Foreign Ownership Status */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-center text-xl">Foreign Ownership Status by Country</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="p-4 bg-green-500/10 rounded-lg border border-green-500/30">
-              <h4 className="font-semibold text-green-400 mb-3">✓ Unrestricted Foreign Ownership</h4>
-              <ul className="space-y-2 text-sm">
-                <li className="flex items-center gap-2">
-                  <span className="text-xl">🇵🇪</span>
-                  <span>Peru - Full freehold ownership allowed</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-xl">🇧🇷</span>
-                  <span>Brazil - Full freehold ownership allowed</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-xl">🇬🇷</span>
-                  <span>Greece - Full freehold ownership allowed (EU rules)</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-xl">🇹🇷</span>
-                  <span>Turkey - Full freehold ownership allowed</span>
-                </li>
-              </ul>
-            </div>
-            <div className="p-4 bg-amber-500/10 rounded-lg border border-amber-500/30">
-              <h4 className="font-semibold text-amber-400 mb-3">⚠️ Restricted (Workarounds Used)</h4>
-              <ul className="space-y-2 text-sm">
-                <li className="flex items-center gap-2">
-                  <span className="text-xl">🇹🇭</span>
-                  <span>Thailand - 30-year leasehold maximum (Supreme Court 2025)</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-xl">🇲🇽</span>
-                  <span>Mexico - Bank trust (Fideicomiso) for coastal zones</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Risk Acknowledgments - Honest Disclosure */}
-      <Card className="border-amber-500/30 bg-amber-500/5">
+      {/* Bottom Line */}
+      <Card className="border-emerald-500/30 bg-gradient-to-br from-emerald-500/10 to-transparent">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-amber-400" />
-            Risk Acknowledgments
+            <Lock className="h-5 w-5 text-emerald-400" />
+            Bottom Line: Battle-Tested Legal Innovation
           </CardTitle>
-          <p className="text-sm text-muted-foreground">
-            Sophisticated investors expect honest disclosure. Here's what you need to know.
-          </p>
         </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="space-y-3">
-              <div className="p-3 bg-background/50 rounded-lg border border-border/50">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-lg">🇹🇭</span>
-                  <span className="font-semibold text-sm">Thailand</span>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Maximum 30-year tenure. March 2025 Supreme Court ruling (Case 4655/2566) invalidated pre-agreed renewal clauses. 
-                  No legal guarantee of extension beyond initial 30 years.
-                </p>
+        <CardContent className="space-y-4">
+          <p className="text-muted-foreground text-lg">
+            Ancient Real Estate doesn't reinvent property law—we <span className="text-foreground font-semibold">modernize it</span>. Our legal structure mirrors billion-dollar assets like Tether Gold while providing enhanced investor protections through:
+          </p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {bottomLinePoints.map((item, i) => (
+              <div key={i} className="flex items-start gap-2 p-3 bg-background/50 rounded-lg">
+                <CheckCircle2 className="h-4 w-4 text-emerald-400 mt-0.5 shrink-0" />
+                <span className="text-sm">{item}</span>
               </div>
-              <div className="p-3 bg-background/50 rounded-lg border border-border/50">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-lg">🇲🇽</span>
-                  <span className="font-semibold text-sm">Mexico</span>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Declarative registry system does not guarantee title. Independent notary verification and title insurance 
-                  strongly recommended. Ejido land restrictions apply in some regions.
-                </p>
-              </div>
-            </div>
-            <div className="space-y-3">
-              <div className="p-3 bg-background/50 rounded-lg border border-border/50">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-lg">🇬🇷</span>
-                  <span className="font-semibold text-sm">Greece</span>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Serviced accommodation regulations evolving within EU framework. Ongoing compliance monitoring required. 
-                  Local counsel dependency for enforcement.
-                </p>
-              </div>
-              <div className="p-3 bg-background/50 rounded-lg border border-border/50">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-lg">🌍</span>
-                  <span className="font-semibold text-sm">All Markets</span>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Political risk, currency fluctuation, and enforcement require local counsel in each jurisdiction. 
-                  Legal structures do not eliminate country-specific macro risks.
-                </p>
-              </div>
-            </div>
+            ))}
           </div>
-          <div className="mt-4 p-3 bg-green-500/10 rounded-lg border border-green-500/30">
-            <div className="flex items-center gap-2 mb-1">
-              <CheckCircle2 className="h-4 w-4 text-green-400" />
-              <span className="font-semibold text-sm text-green-400">Strongest Validated Structures</span>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              <strong>Brazil (Alienação Fiduciária)</strong> — STF constitutional ruling 2024 validates extrajudicial recovery. 
-              <strong>Peru (Reserva de Dominio)</strong> — Codified in Civil Code Art. 1583-1585, battle-tested.
-              <strong>Turkey (SPV)</strong> — Corporate structure under Turkish Commercial Code, no land transfer required.
-            </p>
-          </div>
+          <p className="text-base font-medium text-emerald-400 pt-4 text-center">
+            We're not early-stage experimenters—we're applying proven legal frameworks to high-growth emerging markets with institutional-grade execution.
+          </p>
         </CardContent>
       </Card>
     </div>
   );
 }
+
+export default LegalRegulatoryProofing;
