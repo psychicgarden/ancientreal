@@ -5,11 +5,7 @@ import { Server, Home, Database, Globe, ArrowRight, Zap } from "lucide-react";
 export default function AWSPitch() {
   return <section className="py-16 px-4 bg-gradient-to-br from-primary/5 via-background to-orange-500/5">
       <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-8">
-          <Badge variant="outline" className="mb-4 text-lg px-6 py-2 border-primary/50">
-            The 30-Second Pitch
-          </Badge>
-        </div>
+        
 
         <Card className="bg-gradient-to-r from-primary/10 via-orange-500/10 to-primary/10 border-primary/30 overflow-hidden">
           <CardContent className="p-8 md:p-12">
