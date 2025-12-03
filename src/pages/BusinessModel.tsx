@@ -370,36 +370,11 @@ const BusinessModel = () => {
       {/* Business Model Content with Tabs */}
       <section className="px-4 bg-background py-[50px]">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <Badge variant="outline" className="mb-6 text-lg px-6 py-2">
-              Beyond the Headlines
-            </Badge>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-primary bg-clip-text text-transparent">
-              You've Seen the What. Want the How?
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-12">
-              Due diligence materials, technical architecture, and competitor analysis below.
-            </p>
-          </div>
+          
 
           {/* CTA Section Before Deep Dive */}
           <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/30 border-2 mb-16">
-            <CardContent className="p-12 text-center">
-              <h3 className="text-3xl font-bold mb-4">Ready to Dive Deeper?</h3>
-              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Schedule a call to discuss the investment opportunity or download the complete pitch deck.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="text-lg px-8">
-                  <Calendar className="w-5 h-5 mr-2" />
-                  Schedule Call
-                </Button>
-                <Button size="lg" variant="outline" className="text-lg px-8">
-                  <FileText className="w-5 h-5 mr-2" />
-                  Download Deck
-                </Button>
-              </div>
-            </CardContent>
+            
           </Card>
 
           {/* Deep Dive Section Header */}
