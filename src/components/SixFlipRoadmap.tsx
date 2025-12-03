@@ -29,7 +29,7 @@ const flips: FlipData[] = [
     buildCost: 75000,
     salePrice: 135000,
     margin: "44%",
-    netProfit: 975000,
+    netProfit: 900000,
     innovation: "Title Retention legal structure + Credit Score beta launch",
     structure: "Reserva de Dominio"
   },
@@ -71,7 +71,7 @@ const flips: FlipData[] = [
     buildCost: 60000,
     salePrice: 110000,
     margin: "45%",
-    netProfit: 1500000,
+    netProfit: 1250000,
     innovation: "30-Year Pre-Paid Lease structure (high volume)",
     structure: "30+30 Leasehold"
   },

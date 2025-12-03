@@ -55,7 +55,7 @@ export default function AWSPitch() {
               icon: Database,
               color: "text-orange-500"
             }, {
-              label: "Margins",
+              label: "ROI",
               value: "80%",
               icon: Globe,
               color: "text-blue-500"
@@ -80,7 +80,7 @@ export default function AWSPitch() {
               </p>
               <p className="text-lg md:text-xl leading-relaxed text-foreground mt-4">
                 We build the houses <span className="text-muted-foreground">(the hardware)</span>. The users build repayment history <span className="text-muted-foreground">(the data)</span>.
-                Together, they create the <span className="text-primary font-bold">Global Credit Score</span>—a new identity layer for <span className="text-orange-500 font-bold">100M mobile workers</span>.
+                Together, they create the <span className="text-primary font-bold">Global Credit Score</span>—a new identity layer for <span className="text-orange-500 font-bold">50M+ mobile workers</span>.
               </p>
               <p className="text-xl md:text-2xl font-semibold text-primary mt-6">
                 Ancient Protocol — Building hard assets to power digital finance."
