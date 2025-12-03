@@ -2,10 +2,8 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Server, Home, Database, Globe, ArrowRight, Zap } from "lucide-react";
-
 export default function AWSPitch() {
-  return (
-    <section className="py-16 px-4 bg-gradient-to-br from-primary/5 via-background to-orange-500/5">
+  return <section className="py-16 px-4 bg-gradient-to-br from-primary/5 via-background to-orange-500/5">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-8">
           <Badge variant="outline" className="mb-4 text-lg px-6 py-2 border-primary/50">
@@ -45,18 +43,31 @@ export default function AWSPitch() {
 
             {/* Key Stats */}
             <div className="grid md:grid-cols-4 gap-4 mb-12">
-              {[
-                { label: "Units Live", value: "12", icon: Home, color: "text-green-500" },
-                { label: "Returns", value: "20%+", icon: Zap, color: "text-primary" },
-                { label: "Raise", value: "$1.9M", icon: Database, color: "text-orange-500" },
-                { label: "Margins", value: "80%", icon: Globe, color: "text-blue-500" },
-              ].map((stat) => (
-                <div key={stat.label} className="text-center p-4 bg-background/50 rounded-xl">
+              {[{
+              label: "Units Live",
+              value: "12",
+              icon: Home,
+              color: "text-green-500"
+            }, {
+              label: "Returns",
+              value: "20%+",
+              icon: Zap,
+              color: "text-primary"
+            }, {
+              label: "Raise",
+              value: "$1.9M",
+              icon: Database,
+              color: "text-orange-500"
+            }, {
+              label: "Margins",
+              value: "80%",
+              icon: Globe,
+              color: "text-blue-500"
+            }].map(stat => <div key={stat.label} className="text-center p-4 bg-background/50 rounded-xl">
                   <stat.icon className={`h-6 w-6 mx-auto mb-2 ${stat.color}`} />
                   <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
                   <p className="text-xs text-muted-foreground">{stat.label}</p>
-                </div>
-              ))}
+                </div>)}
             </div>
 
             {/* Pitch Script */}
@@ -81,13 +92,10 @@ export default function AWSPitch() {
               <p className="text-2xl font-bold text-muted-foreground">
                 <span className="text-primary">ANCIENT PROTOCOL</span>
               </p>
-              <p className="text-lg text-muted-foreground italic mt-2">
-                Building the Hardware to Power the Software.
-              </p>
+              <p className="text-lg text-muted-foreground italic mt-2">Building the Hardware to Power the Software for the worlds first On Chain Credit Score.</p>
             </div>
           </CardContent>
         </Card>
       </div>
-    </section>
-  );
+    </section>;
 }
