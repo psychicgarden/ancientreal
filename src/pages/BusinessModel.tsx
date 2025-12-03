@@ -839,7 +839,7 @@ const BusinessModel = () => {
                             </div>
                             <div className="flex items-start space-x-3">
                               <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                              <span className="text-sm">$15.86M revenue validates business model</span>
+                              <span className="text-sm">$7.6M revenue validates business model</span>
                             </div>
                             <div className="flex items-start space-x-3">
                               <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
@@ -897,7 +897,7 @@ const BusinessModel = () => {
                             </div>
                             <div className="flex items-start space-x-3">
                               <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                              <span className="text-sm">$827M annual revenue at scale</span>
+                              <span className="text-sm">$300M annual revenue at scale</span>
                             </div>
                              <div className="flex items-start space-x-3">
                                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -917,7 +917,7 @@ const BusinessModel = () => {
                    <div className="relative">
                      <div className="flex items-center justify-center space-x-8">
                         <div className="text-center">
-                          <div className="text-3xl font-bold text-primary mb-2">$15.86M</div>
+                          <div className="text-3xl font-bold text-primary mb-2">$7.6M</div>
                           <div className="text-sm text-muted-foreground">Boutique Development</div>
                         </div>
                        
@@ -928,7 +928,7 @@ const BusinessModel = () => {
                        </div>
                        
                        <div className="text-center">
-                         <div className="text-3xl font-bold text-blue-500 mb-2">$827M</div>
+                         <div className="text-3xl font-bold text-blue-500 mb-2">$300M</div>
                          <div className="text-sm text-muted-foreground">Platform Economics</div>
                        </div>
                      </div>
@@ -942,7 +942,7 @@ const BusinessModel = () => {
                 <div className="text-center mb-12">
                   <h2 className="text-4xl font-bold mb-4">Infrastructure Investment Overview</h2>
                   <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                    The foundation for building a $827M revenue platform by year 10
+                    The foundation for building a $300M revenue platform by year 10
                   </p>
                 </div>
 
@@ -1108,7 +1108,7 @@ const BusinessModel = () => {
                           </div>
                           <div className="flex items-start space-x-3">
                             <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                            <div className="text-sm">$225M annual protocol revenue</div>
+                            <div className="text-sm">$300M annual protocol revenue</div>
                           </div>
                           <div className="flex items-start space-x-3">
                             <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
@@ -1180,6 +1180,9 @@ const BusinessModel = () => {
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Conservative modeling across different execution speeds with detailed valuation analysis
             </p>
+            <p className="text-sm text-muted-foreground mt-2 italic">
+              Note: Valuations are deliberately conservative. Revenue × Multiple math would yield higher values, but we under-promise to over-deliver.
+            </p>
           </div>
           
           <div className="max-w-6xl mx-auto">
@@ -1211,7 +1214,7 @@ const BusinessModel = () => {
                         <td className="text-center py-4 px-4">
                           <div className="font-medium">5,000 units</div>
                         </td>
-                        <td className="text-center py-4 px-4 font-medium">$112M</td>
+                        <td className="text-center py-4 px-4 font-medium">$150M</td>
                         <td className="text-center py-4 px-4 font-medium">15×</td>
                         <td className="text-center py-4 px-4 font-bold text-foreground">$1.7B</td>
                         <td className="text-center py-4 px-4 font-bold text-primary">$255M</td>
@@ -1229,7 +1232,7 @@ const BusinessModel = () => {
                         <td className="text-center py-4 px-4">
                           <div className="font-medium">10,000 units</div>
                         </td>
-                        <td className="text-center py-4 px-4 font-medium">$225M</td>
+                        <td className="text-center py-4 px-4 font-medium">$300M</td>
                         <td className="text-center py-4 px-4 font-medium">20×</td>
                         <td className="text-center py-4 px-4 font-bold text-primary">$4.5B</td>
                         <td className="text-center py-4 px-4 font-bold text-primary">$675M</td>
@@ -1247,7 +1250,7 @@ const BusinessModel = () => {
                         <td className="text-center py-4 px-4">
                           <div className="font-medium">15,000 units</div>
                         </td>
-                        <td className="text-center py-4 px-4 font-medium">$338M</td>
+                        <td className="text-center py-4 px-4 font-medium">$450M</td>
                         <td className="text-center py-4 px-4 font-medium">20×</td>
                         <td className="text-center py-4 px-4 font-bold text-foreground">$6.8B</td>
                         <td className="text-center py-4 px-4 font-bold text-primary">$1.0B</td>

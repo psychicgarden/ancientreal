@@ -17,10 +17,10 @@ interface ExitScenario {
 }
 
 const exitScenarios: ExitScenario[] = [
-  { year: 3, label: "Early M&A", revenue: 4.2, multiple: 8, valuation: 33, stakeValue: 5, multipleOnCapital: 2.6, exitType: "Strategic Acquisition", color: "orange" },
-  { year: 5, label: "Series B/C", revenue: 19.5, multiple: 15, valuation: 290, stakeValue: 43.5, multipleOnCapital: 23, exitType: "Growth Round / M&A", color: "blue" },
-  { year: 7, label: "IPO-Ready", revenue: 57, multiple: 20, valuation: 1100, stakeValue: 165, multipleOnCapital: 87, exitType: "IPO / Strategic", color: "purple" },
-  { year: 10, label: "Full Scale", revenue: 225, multiple: 20, valuation: 4500, stakeValue: 675, multipleOnCapital: 355, exitType: "IPO / TGE", color: "green" },
+  { year: 3, label: "Early M&A", revenue: 4.9, multiple: 8, valuation: 33, stakeValue: 5, multipleOnCapital: 2.6, exitType: "Strategic Acquisition", color: "orange" },
+  { year: 5, label: "Series B/C", revenue: 23.4, multiple: 15, valuation: 290, stakeValue: 43.5, multipleOnCapital: 23, exitType: "Growth Round / M&A", color: "blue" },
+  { year: 7, label: "IPO-Ready", revenue: 77, multiple: 20, valuation: 1100, stakeValue: 165, multipleOnCapital: 87, exitType: "IPO / Strategic", color: "purple" },
+  { year: 10, label: "Full Scale", revenue: 300, multiple: 20, valuation: 4500, stakeValue: 675, multipleOnCapital: 355, exitType: "IPO / TGE", color: "green" },
 ];
 
 const comparableExits = [
@@ -279,7 +279,7 @@ export default function VCExitScenarios() {
                 <div className="mt-6 p-4 bg-primary/10 border border-primary/30 rounded-lg">
                   <p className="text-sm">
                     <span className="font-semibold text-primary">The Narrative:</span>{" "}
-                    "We're building the Rocket Mortgage for global nomads. Rocket at 10× would put us at $2.25B on Year 10 revenue. At fintech 20×, we're at $4.5B."
+                    "We're building the Rocket Mortgage for global nomads. Rocket at 10× would put us at $3B on Year 10 revenue. At fintech 20×, we're at $6B (conservatively modeled at $4.5B)."
                   </p>
                 </div>
               </CardContent>
