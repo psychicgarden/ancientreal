@@ -40,10 +40,10 @@ const flips: FlipData[] = [
     flag: "🇧🇷",
     year: "Year 2",
     units: 21,
-    buildCost: 80000,
+    buildCost: 75000,
     salePrice: 145000,
-    margin: "45%",
-    netProfit: 1400000,
+    margin: "48%",
+    netProfit: 1470000,
     innovation: "Alienação Fiduciária (Fast Eviction) smart contracts",
     structure: "Brazilian LTDA"
   },
@@ -54,10 +54,10 @@ const flips: FlipData[] = [
     flag: "🇬🇷",
     year: "Year 3",
     units: 16,
-    buildCost: 90000,
+    buildCost: 75000,
     salePrice: 165000,
-    margin: "45%",
-    netProfit: 1200000,
+    margin: "55%",
+    netProfit: 1440000,
     innovation: "Serviced Accommodation model (bypass EU tenant laws)",
     structure: "Greek IKE SPV"
   },
@@ -68,10 +68,10 @@ const flips: FlipData[] = [
     flag: "🇹🇭",
     year: "Year 4",
     units: 25,
-    buildCost: 60000,
+    buildCost: 75000,
     salePrice: 110000,
-    margin: "45%",
-    netProfit: 1250000,
+    margin: "32%",
+    netProfit: 875000,
     innovation: "30-Year Pre-Paid Lease structure (high volume)",
     structure: "30+30 Leasehold"
   },
@@ -82,10 +82,10 @@ const flips: FlipData[] = [
     flag: "🇲🇽",
     year: "Year 5",
     units: 20,
-    buildCost: 125000,
+    buildCost: 75000,
     salePrice: 250000,
-    margin: "50%",
-    netProfit: 2500000,
+    margin: "70%",
+    netProfit: 3500000,
     innovation: "Luxury $250K+ market for matured Crypto Whales",
     structure: "Mexican SAPI + Fideicomiso"
   },
@@ -96,10 +96,10 @@ const flips: FlipData[] = [
     flag: "🇹🇷",
     year: "Year 6",
     units: 50,
-    buildCost: 80000,
+    buildCost: 75000,
     salePrice: 160000,
-    margin: "50%",
-    netProfit: 4000000,
+    margin: "53%",
+    netProfit: 4250000,
     innovation: "Fully autonomous On-Chain City with governance tokens",
     structure: "Turkish SPV"
   }
@@ -136,17 +136,17 @@ export default function SixFlipRoadmap() {
             <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
               <Badge className="bg-primary/20 text-primary border-primary/30">$1.9M Seed</Badge>
               <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
-              <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">Flip 1: +$975K</Badge>
+              <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">Flip 1: +$0.9M</Badge>
               <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
-              <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">Flip 2: +$1.4M</Badge>
+              <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">Flip 2: +$1.47M</Badge>
               <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
-              <Badge className="bg-pink-500/20 text-pink-400 border-pink-500/30">Flip 3: +$1.2M</Badge>
+              <Badge className="bg-pink-500/20 text-pink-400 border-pink-500/30">Flip 3: +$1.44M</Badge>
               <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
-              <Badge className="bg-orange-500/20 text-orange-400 border-orange-500/30">Flip 4: +$1.5M</Badge>
+              <Badge className="bg-orange-500/20 text-orange-400 border-orange-500/30">Flip 4: +$0.88M</Badge>
               <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
-              <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">Flip 5: +$2.5M</Badge>
+              <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">Flip 5: +$3.5M</Badge>
               <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
-              <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Flip 6: +$4M</Badge>
+              <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Flip 6: +$4.25M</Badge>
             </div>
             <p className="text-center text-muted-foreground text-sm mt-4">
               Total Accumulated Profit: <span className="text-green-500 font-bold">${(totalProfit / 1_000_000).toFixed(1)}M</span> from {totalUnits} units
