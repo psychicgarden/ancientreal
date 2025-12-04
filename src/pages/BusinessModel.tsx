@@ -34,6 +34,9 @@ import AWSPitch from "@/components/AWSPitch";
 import FinCoLiquidityPool from "@/components/FinCoLiquidityPool";
 import { LegalRegulatoryProofing } from "@/components/LegalRegulatoryProofing";
 import VCExitScenarios from "@/components/VCExitScenarios";
+import CapitalStackExplainer from "@/components/CapitalStackExplainer";
+import VentureStakingExplainer from "@/components/VentureStakingExplainer";
+import ModelAssumptions from "@/components/ModelAssumptions";
 
 // Import property images
 import villaTulum from "@/assets/villa-tulum.jpg";
@@ -358,8 +361,14 @@ const BusinessModel = () => {
       {/* Traction Trilogy Section */}
       <TractionTrilogy />
 
+      {/* Capital Stack Explainer - Answer VC Question: "How does $1.9M fund $2.4M?" */}
+      <CapitalStackExplainer />
+
       {/* VC Exit Scenarios - What's In It For Investors */}
       <VCExitScenarios />
+
+      {/* Venture Staking Mechanics - How BTC becomes USDC */}
+      <VentureStakingExplainer />
 
       {/* Two-Product Mortgage Protocol */}
       <TwoProductMortgage />
@@ -381,6 +390,9 @@ const BusinessModel = () => {
 
       {/* Return Profile for Investors */}
       <ReturnProfile />
+
+      {/* Model Assumptions & Dependencies - Full Transparency */}
+      <ModelAssumptions />
 
       {/* Business Model Content with Tabs */}
       <section className="px-4 bg-background py-[50px]">

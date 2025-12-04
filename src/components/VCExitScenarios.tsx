@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrendingUp, Target, Building2, Coins, ArrowRight, CheckCircle2, Info, AlertCircle } from "lucide-react";
-import { EXIT_SCENARIOS, SEED_PHASE, MULTIPLE_JUSTIFICATION, formatCurrency } from "@/lib/businessModelConstants";
+import { TrendingUp, Target, Building2, Coins, ArrowRight, CheckCircle2, Info, AlertCircle, ToggleLeft } from "lucide-react";
+import { EXIT_SCENARIOS, EXIT_SCENARIOS_TIERED, SEED_PHASE, MULTIPLE_JUSTIFICATION, formatCurrency } from "@/lib/businessModelConstants";
 
 interface ExitScenario {
   year: number;
@@ -19,7 +19,26 @@ interface ExitScenario {
   note: string;
 }
 
-// Convert constants to array format for display
+type ScenarioType = "conservative" | "base" | "optimistic";
+
+const getExitScenariosForType = (type: ScenarioType): ExitScenario[] => {
+  const tiered = EXIT_SCENARIOS_TIERED[type] as Record<string, unknown>;
+  const scenarios: ExitScenario[] = [];
+  
+  if ('year3' in tiered && tiered.year3) {
+    scenarios.push({ year: 3, ...(tiered.year3 as Omit<ExitScenario, 'year' | 'color'>), color: "orange" });
+  }
+  if ('year5' in tiered && tiered.year5) {
+    scenarios.push({ year: 5, ...(tiered.year5 as Omit<ExitScenario, 'year' | 'color'>), color: "blue" });
+  }
+  if ('year10' in tiered && tiered.year10) {
+    scenarios.push({ year: 10, ...(tiered.year10 as Omit<ExitScenario, 'year' | 'color'>), color: "green" });
+  }
+  
+  return scenarios;
+};
+
+// Default to base scenario
 const exitScenarios: ExitScenario[] = [
   { year: 3, ...EXIT_SCENARIOS.year3, color: "orange" },
   { year: 5, ...EXIT_SCENARIOS.year5, color: "blue" },
@@ -38,7 +57,10 @@ const comparableExits = [
 
 export default function VCExitScenarios() {
   const [selectedExit, setSelectedExit] = useState<number>(5);
-  const currentScenario = exitScenarios.find(s => s.year === selectedExit) || exitScenarios[1];
+  const [scenarioType, setScenarioType] = useState<ScenarioType>("base");
+  
+  const activeScenarios = scenarioType === "base" ? exitScenarios : getExitScenariosForType(scenarioType);
+  const currentScenario = activeScenarios.find(s => s.year === selectedExit) || activeScenarios[0];
 
   const getColorClass = (color: string, type: 'bg' | 'border' | 'text') => {
     const colors: Record<string, Record<string, string>> = {
@@ -65,6 +87,47 @@ export default function VCExitScenarios() {
             $1.9M working capital → potential ${formatCurrency(EXIT_SCENARIOS.year10.stakeValue)} stake value
           </p>
         </div>
+
+        {/* Scenario Type Selector */}
+        <Card className="bg-card/50 border-border/50 mb-8">
+          <CardContent className="p-6">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <ToggleLeft className="h-5 w-5 text-primary" />
+                <span className="font-semibold">Select Scenario Type</span>
+              </div>
+              <div className="flex gap-2">
+                {(["conservative", "base", "optimistic"] as ScenarioType[]).map((type) => (
+                  <button
+                    key={type}
+                    onClick={() => {
+                      setScenarioType(type);
+                      // Reset to first available exit year for this scenario
+                      const newScenarios = getExitScenariosForType(type);
+                      if (!newScenarios.find(s => s.year === selectedExit)) {
+                        setSelectedExit(newScenarios[0]?.year || 3);
+                      }
+                    }}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all capitalize ${
+                      scenarioType === type
+                        ? type === "conservative"
+                          ? "bg-green-500/20 border-2 border-green-500/50 text-green-400"
+                          : type === "base"
+                          ? "bg-primary/20 border-2 border-primary/50 text-primary"
+                          : "bg-purple-500/20 border-2 border-purple-500/50 text-purple-400"
+                        : "bg-muted/30 border border-border/50 text-muted-foreground hover:bg-muted/50"
+                    }`}
+                  >
+                    {type}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground mt-3 text-center md:text-left">
+              {EXIT_SCENARIOS_TIERED[scenarioType].description}
+            </p>
+          </CardContent>
+        </Card>
 
         {/* Platform Pivot Explanation */}
         <Card className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-primary/30 mb-8">
@@ -95,7 +158,7 @@ export default function VCExitScenarios() {
               
               {/* Timeline */}
               <div className="flex items-center gap-2 md:gap-4 overflow-x-auto pb-2">
-                {exitScenarios.map((scenario, index) => (
+                {activeScenarios.map((scenario, index) => (
                   <React.Fragment key={scenario.year}>
                     <button
                       onClick={() => setSelectedExit(scenario.year)}
@@ -113,7 +176,7 @@ export default function VCExitScenarios() {
                         <span className="text-[10px] text-amber-400 mt-1">Institutional</span>
                       )}
                     </button>
-                    {index < exitScenarios.length - 1 && (
+                    {index < activeScenarios.length - 1 && (
                       <ArrowRight className="h-4 w-4 text-muted-foreground flex-shrink-0 hidden md:block" />
                     )}
                   </React.Fragment>
@@ -226,7 +289,7 @@ export default function VCExitScenarios() {
                   </tr>
                 </thead>
                 <tbody>
-                  {exitScenarios.map((scenario) => (
+                  {activeScenarios.map((scenario) => (
                     <tr 
                       key={scenario.year} 
                       className={`border-b border-border/30 ${selectedExit === scenario.year ? getColorClass(scenario.color, 'bg') : ''}`}
