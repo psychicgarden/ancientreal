@@ -1,14 +1,15 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, Target, Rocket, ArrowUpRight } from "lucide-react";
+import { TrendingUp, Target, Rocket, ArrowUpRight, AlertCircle } from "lucide-react";
+import { EXIT_SCENARIOS, SEED_PHASE, formatCurrency } from "@/lib/businessModelConstants";
 
-// Exit scenarios data - the hero numbers VCs care about
+// Exit scenarios data from constants
 const exitScenarios = [
-  { year: 3, label: "Early M&A", valuation: 33, stakeValue: 5, multiple: 2.6, color: "orange" },
-  { year: 5, label: "Series B/C", valuation: 290, stakeValue: 43.5, multiple: 23, color: "blue" },
-  { year: 7, label: "IPO-Ready", valuation: 1100, stakeValue: 165, multiple: 87, color: "purple" },
-  { year: 10, label: "Full Scale", valuation: 4500, stakeValue: 675, multiple: 355, color: "green" },
+  { year: 3, ...EXIT_SCENARIOS.year3, color: "orange" },
+  { year: 5, ...EXIT_SCENARIOS.year5, color: "blue" },
+  { year: 7, ...EXIT_SCENARIOS.year7, color: "purple" },
+  { year: 10, ...EXIT_SCENARIOS.year10, color: "green" },
 ];
 
 export default function ReturnProfile() {
@@ -31,15 +32,15 @@ export default function ReturnProfile() {
             Exit Value
           </Badge>
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Your 15% Stake: <span className="text-green-500">$5M → $675M</span>
+            Your 15% Stake: <span className="text-green-500">${formatCurrency(EXIT_SCENARIOS.year3.stakeValue)} → ${formatCurrency(EXIT_SCENARIOS.year10.stakeValue)}</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Exit value at each milestone on $1.9M working capital
+            Exit value at each milestone on ${SEED_PHASE.capital}M working capital
           </p>
         </div>
 
         {/* Exit Value Cards - Hero Section */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {exitScenarios.map((scenario) => (
             <Card 
               key={scenario.year} 
@@ -53,7 +54,7 @@ export default function ReturnProfile() {
                 
                 {/* Hero Number - Stake Value */}
                 <p className={`text-4xl font-bold mb-1 ${getColorClass(scenario.color, 'text')}`}>
-                  ${scenario.stakeValue >= 1000 ? `${(scenario.stakeValue / 1000).toFixed(1)}B` : `${scenario.stakeValue}M`}
+                  {formatCurrency(scenario.stakeValue)}
                 </p>
                 <p className="text-xs text-muted-foreground">15% stake value</p>
                 
@@ -61,17 +62,38 @@ export default function ReturnProfile() {
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Valuation</span>
                     <span className="font-medium">
-                      ${scenario.valuation >= 1000 ? `${(scenario.valuation / 1000).toFixed(1)}B` : `${scenario.valuation}M`}
+                      {formatCurrency(scenario.valuation)}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm mt-1">
                     <span className="text-muted-foreground">Return</span>
-                    <span className="font-bold text-green-400">{scenario.multiple}×</span>
+                    <span className="font-bold text-green-400">{scenario.multipleOnCapital}×</span>
                   </div>
                 </div>
+
+                {/* Institutional Badge */}
+                {scenario.phase !== "seed" && (
+                  <div className="mt-3 pt-3 border-t border-border/30">
+                    <span className="text-[10px] text-amber-400">Requires Institutional Capital</span>
+                  </div>
+                )}
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        {/* Institutional Capital Note */}
+        <div className="mb-8 p-4 bg-amber-500/10 border border-amber-500/30 rounded-lg">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 text-amber-400 flex-shrink-0 mt-0.5" />
+            <div className="text-sm">
+              <span className="font-semibold text-amber-400">Scale-Phase Dependency: </span>
+              <span className="text-muted-foreground">
+                Year 3+ exit values require institutional capital deployment (MakerDAO, Centrifuge) 
+                targeted for Month 18-24. Year 3 exit is achievable with seed phase alone.
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* Summary Row */}
@@ -121,11 +143,11 @@ export default function ReturnProfile() {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Working Capital</p>
-                  <p className="text-2xl font-bold text-primary">$1.9M</p>
+                  <p className="text-2xl font-bold text-primary">${SEED_PHASE.capital}M</p>
                 </div>
               </div>
               <p className="text-xs text-muted-foreground">
-                Borrowed from staked BTC. Returns 2.6× to 355×.
+                Borrowed from staked BTC. Returns {EXIT_SCENARIOS.year3.multipleOnCapital}× to {EXIT_SCENARIOS.year10.multipleOnCapital}×.
               </p>
             </CardContent>
           </Card>
@@ -140,7 +162,9 @@ export default function ReturnProfile() {
                 <p className="font-semibold text-lg">The Venture Staking Advantage</p>
                 <p className="text-muted-foreground">
                   BTC collateral backs the debt and is returned in full. Equity stake is pure upside.{" "}
-                  <span className="text-green-400 font-semibold">Zero capital at risk. Exit value: $5M - $675M.</span>
+                  <span className="text-green-400 font-semibold">
+                    Principal protected by real estate. Exit value: ${formatCurrency(EXIT_SCENARIOS.year3.stakeValue)} - ${formatCurrency(EXIT_SCENARIOS.year10.stakeValue)}.
+                  </span>
                 </p>
               </div>
             </div>

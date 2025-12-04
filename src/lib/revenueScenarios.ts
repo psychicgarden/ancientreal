@@ -143,11 +143,12 @@ export function calculateDevelopmentFlywheel(): {
   for (const flip of flips) {
     const buildCost = BUILD_COST * flip.units;
     const grossSales = flip.price * flip.units;
-    const downPayments = flip.price * 0.20 * flip.financedUnits;
+    // FIXED: 30% down payment (uniform across all financed buyers)
+    const downPayments = flip.price * DOWN_PAYMENTS.NOMAD * flip.financedUnits;
     const cashSales = flip.price * flip.cashUnits;
     const platformFees = FEE_RATE * grossSales;
     const immediateCash = downPayments + cashSales + platformFees;
-    const deferredPrincipal = flip.price * 0.80 * flip.financedUnits;
+    const deferredPrincipal = flip.price * (1 - DOWN_PAYMENTS.NOMAD) * flip.financedUnits;
     const constructionProfit = (flip.price - BUILD_COST) * flip.units;
     
     results.push({
@@ -339,9 +340,9 @@ export function calculateScenario(inputs: ScenarioInputs, name: string): Scenari
     return sum + (flip.price * flip.cashUnits);
   }, 0);
   
-  // Calculate down payments from financed units (20% down)
+  // Calculate down payments from financed units (30% down - uniform)
   const downPaymentRevenue = flips.reduce((sum, flip) => {
-    return sum + (flip.price * 0.20 * flip.financedUnits);
+    return sum + (flip.price * DOWN_PAYMENTS.NOMAD * flip.financedUnits);
   }, 0);
 
   // Platform fees (3.5% on ALL sales)
@@ -352,7 +353,7 @@ export function calculateScenario(inputs: ScenarioInputs, name: string): Scenari
   let totalMortgageInterest = 0;
   
   for (const flip of flips) {
-    const loanPerUnit = flip.price * 0.80; // 20% down
+    const loanPerUnit = flip.price * (1 - DOWN_PAYMENTS.NOMAD); // 30% down = 70% financed
     const loanAmount = loanPerUnit * flip.financedUnits;
     totalLoanAmount += loanAmount;
     
