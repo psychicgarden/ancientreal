@@ -1,49 +1,105 @@
 /**
  * Revenue Model Scenario Calculations
- * Two-Pocket Model: DevCo (Development) + FinCo (Protocol/Liquidity Pool)
+ * Two-Product Mortgage Model: $1.9M → 2 Flips (32 units) → 26 Mortgages
  */
 
 // Business Model Constants
 const BUILD_COST = 75_000; // $75k all-in build cost per unit (land + construction)
 const FEE_RATE = 0.03; // 3% platform fee on all sales
-const INITIAL_CAPITAL = 1.9; // $1.9M seed investment (Two-Pocket: DevCo only)
+const INITIAL_CAPITAL = 1.9; // $1.9M seed investment
 
-// FinCo Economics (Two-Pocket Model)
+// Two-Product Mortgage Model Constants
+export const BUYER_SEGMENTS = {
+  CASH: 0.20,           // 20% cash buyers (whales)
+  BTC_COLLATERAL: 0.50, // 50% BTC-collateralized mortgages (30% down)
+  NOMAD: 0.30,          // 30% Nomad OCCR mortgages (30% down)
+};
+
+export const DOWN_PAYMENTS = {
+  CASH: 1.00,           // 100% cash
+  BTC_COLLATERAL: 0.30, // 30% down (borrow against BTC)
+  NOMAD: 0.30,          // 30% down (uniform)
+};
+
+// Seed-funded model constants
+export const SEED_FUNDED_CONSTANTS = {
+  SEED_CAPITAL: 1.9,           // $1.9M seed
+  SEED_FUNDED_UNITS: 32,       // 15 + 17 units
+  SEED_FUNDED_MORTGAGES: 26,   // 80% of 32
+  MORTGAGE_BOOK_TOTAL: 2.55,   // $2.55M mortgage book
+  ANNUAL_MORTGAGE_REVENUE: 0.255, // $255K at 10% APR
+};
+
+// FinCo Economics (Two-Pocket Model) - VC acts as bridge lender until institutional capital
 export const FINCO_ECONOMICS = {
   borrowerRate: 0.10,    // 10% to borrowers
-  stakerYield: 0.07,     // 7% to liquidity providers
+  stakerYield: 0.07,     // 7% to liquidity providers (future)
   nim: 0.03,             // 3% Net Interest Margin (10% - 7%)
+  vcBridgeRate: 0.10,    // VC earns 10% as bridge lender
 };
 
-// Phase Mix Strategy (Blend for Liquidity Management)
+// Two-Product Mortgage Mix Strategy
 export const PHASE_MIX = {
-  phase1: { cash: 0.40, mortgage: 0.60, name: "Cash Heavy", timeline: "Years 1-2" },
-  phase2: { cash: 0.10, mortgage: 0.90, name: "Debt Scale", timeline: "Years 3-5" },
-  phase3: { cash: 0.05, mortgage: 0.95, name: "BlackRock Turn", timeline: "Year 5+" },
+  phase1: { cash: 0.20, btcCollateral: 0.50, nomad: 0.30, name: "Two-Product Protocol", timeline: "Years 1-2" },
+  phase2: { cash: 0.10, btcCollateral: 0.50, nomad: 0.40, name: "Institutional Scale", timeline: "Years 3-5" },
+  phase3: { cash: 0.05, btcCollateral: 0.45, nomad: 0.50, name: "Protocol Dominance", timeline: "Year 5+" },
 };
 
-// Canonical 6-flip structure matching SixFlipRoadmap
+// Canonical flip structure
 interface Flip {
   flip: string;
   price: number;
   units: number;
   financedUnits: number;
   cashUnits: number;
+  btcUnits: number;
+  nomadUnits: number;
 }
 
 /**
- * Get canonical 6-flip schedule (147 units total)
- * Matches SixFlipRoadmap: Peru, Brazil, Greece, Thailand, Mexico, Turkey
+ * Get seed-funded flips (32 units total across 2 flips)
+ * Peru 15 units + Brazil 17 units
+ */
+export function getSeedFundedFlips(): Flip[] {
+  return [
+    { 
+      flip: 'Flip 1', 
+      price: 135_000, 
+      units: 15, 
+      cashUnits: Math.round(15 * BUYER_SEGMENTS.CASH), // 3
+      btcUnits: Math.round(15 * BUYER_SEGMENTS.BTC_COLLATERAL), // 8
+      nomadUnits: 15 - Math.round(15 * BUYER_SEGMENTS.CASH) - Math.round(15 * BUYER_SEGMENTS.BTC_COLLATERAL), // 4
+      financedUnits: 15 - Math.round(15 * BUYER_SEGMENTS.CASH), // 12
+    },
+    { 
+      flip: 'Flip 2', 
+      price: 145_000, 
+      units: 17, 
+      cashUnits: Math.round(17 * BUYER_SEGMENTS.CASH), // 3
+      btcUnits: Math.round(17 * BUYER_SEGMENTS.BTC_COLLATERAL), // 9
+      nomadUnits: 17 - Math.round(17 * BUYER_SEGMENTS.CASH) - Math.round(17 * BUYER_SEGMENTS.BTC_COLLATERAL), // 5
+      financedUnits: 17 - Math.round(17 * BUYER_SEGMENTS.CASH), // 14
+    },
+  ];
+}
+
+/**
+ * Get future flips (funded by profits + institutional capital)
+ */
+export function getFutureFlips(): Flip[] {
+  return [
+    { flip: 'Flip 3', price: 165_000, units: 16, financedUnits: 13, cashUnits: 3, btcUnits: 8, nomadUnits: 5 },
+    { flip: 'Flip 4', price: 110_000, units: 25, financedUnits: 20, cashUnits: 5, btcUnits: 12, nomadUnits: 8 },
+    { flip: 'Flip 5', price: 250_000, units: 20, financedUnits: 16, cashUnits: 4, btcUnits: 10, nomadUnits: 6 },
+    { flip: 'Flip 6', price: 160_000, units: 50, financedUnits: 40, cashUnits: 10, btcUnits: 25, nomadUnits: 15 },
+  ];
+}
+
+/**
+ * Get all flips (seed-funded + future)
  */
 function getFlips(): Flip[] {
-  return [
-    { flip: 'Flip 1', price: 135_000, units: 15, financedUnits: 12, cashUnits: 3 }, // Peru - Genesis
-    { flip: 'Flip 2', price: 145_000, units: 21, financedUnits: 17, cashUnits: 4 }, // Brazil - Scale
-    { flip: 'Flip 3', price: 165_000, units: 16, financedUnits: 13, cashUnits: 3 }, // Greece - Club
-    { flip: 'Flip 4', price: 110_000, units: 25, financedUnits: 20, cashUnits: 5 }, // Thailand - Leasehold
-    { flip: 'Flip 5', price: 250_000, units: 20, financedUnits: 16, cashUnits: 4 }, // Mexico - Whale Haven
-    { flip: 'Flip 6', price: 160_000, units: 50, financedUnits: 40, cashUnits: 10 }, // Turkey - Citadel
-  ];
+  return [...getSeedFundedFlips(), ...getFutureFlips()];
 }
 
 /**

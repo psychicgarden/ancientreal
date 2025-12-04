@@ -12,6 +12,9 @@ import TechDueDiligence from "@/components/TechDueDiligence";
 import TenYearProjection from "@/components/TenYearProjection";
 import ReturnProfile from "@/components/ReturnProfile";
 import SixFlipRoadmap from "@/components/SixFlipRoadmap";
+import TwoProductMortgage from "@/components/TwoProductMortgage";
+import SeedFundedRoadmap from "@/components/SeedFundedRoadmap";
+import InstitutionalCapitalTimeline from "@/components/InstitutionalCapitalTimeline";
 import { MortgageOptionsCalculator } from "@/components/MortgageOptionsCalculator";
 import { ScenarioComparison } from "@/components/ScenarioComparison";
 import { SensitivityDashboard } from "@/components/SensitivityDashboard";
@@ -354,6 +357,15 @@ const BusinessModel = () => {
 
       {/* VC Exit Scenarios - What's In It For Investors */}
       <VCExitScenarios />
+
+      {/* Two-Product Mortgage Protocol */}
+      <TwoProductMortgage />
+
+      {/* Seed-Funded Roadmap */}
+      <SeedFundedRoadmap />
+
+      {/* Institutional Capital Timeline */}
+      <InstitutionalCapitalTimeline />
 
       {/* Unfair Unit Economics Section */}
       <UnfairUnitEconomics />
