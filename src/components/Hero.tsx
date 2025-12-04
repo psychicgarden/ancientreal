@@ -52,34 +52,37 @@ const Hero = () => {
             </Button>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-2xl mx-auto px-4">
+          {/* Stats - Real Traction */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-3xl mx-auto px-4">
             <div className="text-center">
               <div className="flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-accent-foreground/10 backdrop-blur-sm rounded-xl mx-auto mb-3 sm:mb-4">
                 <Home className="w-6 h-6 sm:w-8 sm:h-8 text-gold" />
               </div>
-              <div className="text-2xl sm:text-3xl font-bold text-accent-foreground mb-1 sm:mb-2">500+*</div>
-              <div className="text-sm sm:text-base text-accent-foreground/70">Premium Properties</div>
+              <div className="text-2xl sm:text-3xl font-bold text-accent-foreground mb-1 sm:mb-2">12 Units</div>
+              <div className="text-sm sm:text-base text-accent-foreground/70">Live & Generating Income</div>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-accent-foreground/10 backdrop-blur-sm rounded-xl mx-auto mb-3 sm:mb-4">
                 <TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-gold" />
               </div>
-              <div className="text-2xl sm:text-3xl font-bold text-accent-foreground mb-1 sm:mb-2">12.5%*</div>
-              <div className="text-sm sm:text-base text-accent-foreground/70">Average Returns</div>
+              <div className="text-2xl sm:text-3xl font-bold text-accent-foreground mb-1 sm:mb-2">18.75%</div>
+              <div className="text-sm sm:text-base text-accent-foreground/70">Net Verified Yields</div>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-accent-foreground/10 backdrop-blur-sm rounded-xl mx-auto mb-3 sm:mb-4">
                 <Shield className="w-6 h-6 sm:w-8 sm:h-8 text-gold" />
               </div>
-              <div className="text-2xl sm:text-3xl font-bold text-accent-foreground mb-1 sm:mb-2">$2B+*</div>
-              <div className="text-sm sm:text-base text-accent-foreground/70">Assets Managed</div>
+              <div className="text-2xl sm:text-3xl font-bold text-accent-foreground mb-1 sm:mb-2">35M+</div>
+              <div className="text-sm sm:text-base text-accent-foreground/70">Nomads Need Mortgages</div>
             </div>
           </div>
           
-          {/* Disclaimer Notice */}
-          <div className="mt-6 sm:mt-8 text-center text-xs text-accent-foreground/60 max-w-2xl mx-auto px-4">
-            <p>*Projected figures for demonstration purposes. Past performance does not guarantee future results. All investments carry risk of loss.</p>
+          {/* Traction Badge */}
+          <div className="mt-6 sm:mt-8 text-center px-4">
+            <span className="inline-flex items-center gap-2 px-4 py-2 bg-accent-foreground/10 backdrop-blur-sm rounded-full text-sm text-accent-foreground/80">
+              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+              32 units funded across Peru & Brazil
+            </span>
           </div>
         </div>
       </div>
