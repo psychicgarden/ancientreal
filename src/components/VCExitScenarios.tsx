@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrendingUp, Target, Building2, Coins, ArrowRight, CheckCircle2, Info } from "lucide-react";
+import { TrendingUp, Target, Building2, Coins, ArrowRight, CheckCircle2, Info, AlertCircle } from "lucide-react";
+import { EXIT_SCENARIOS, SEED_PHASE, MULTIPLE_JUSTIFICATION, formatCurrency } from "@/lib/businessModelConstants";
 
 interface ExitScenario {
   year: number;
@@ -14,13 +15,16 @@ interface ExitScenario {
   multipleOnCapital: number;
   exitType: string;
   color: string;
+  phase: string;
+  note: string;
 }
 
+// Convert constants to array format for display
 const exitScenarios: ExitScenario[] = [
-  { year: 3, label: "Early M&A", revenue: 4.9, multiple: 8, valuation: 33, stakeValue: 5, multipleOnCapital: 2.6, exitType: "Strategic Acquisition", color: "orange" },
-  { year: 5, label: "Series B/C", revenue: 23.4, multiple: 15, valuation: 290, stakeValue: 43.5, multipleOnCapital: 23, exitType: "Growth Round / M&A", color: "blue" },
-  { year: 7, label: "IPO-Ready", revenue: 77, multiple: 20, valuation: 1100, stakeValue: 165, multipleOnCapital: 87, exitType: "IPO / Strategic", color: "purple" },
-  { year: 10, label: "Full Scale", revenue: 300, multiple: 20, valuation: 4500, stakeValue: 675, multipleOnCapital: 355, exitType: "IPO / TGE", color: "green" },
+  { year: 3, ...EXIT_SCENARIOS.year3, color: "orange" },
+  { year: 5, ...EXIT_SCENARIOS.year5, color: "blue" },
+  { year: 7, ...EXIT_SCENARIOS.year7, color: "purple" },
+  { year: 10, ...EXIT_SCENARIOS.year10, color: "green" },
 ];
 
 const comparableExits = [
@@ -30,12 +34,6 @@ const comparableExits = [
   { name: "Divvy Homes", year: 2025, type: "M&A", valuation: 1.0, revenue: 0.15, multiple: 6.7, category: "PropTech" },
   { name: "MakerDAO", year: 2024, type: "FDV", valuation: 6.0, revenue: 0.2, multiple: 30, category: "DeFi/RWA" },
   { name: "Centrifuge", year: 2024, type: "FDV", valuation: 0.4, revenue: 0.02, multiple: 20, category: "RWA" },
-];
-
-const multipleJustification = [
-  { years: "1-3", multiple: "4-8×", reason: "Real estate company. Revenue from asset sales. RE multiples apply.", icon: Building2 },
-  { years: "3-5", multiple: "8-15×", reason: "Platform revenue grows (origination, spread). We're Rocket Mortgage.", icon: TrendingUp },
-  { years: "7-10", multiple: "20×", reason: "OCCR data licensing dominates. We're Experian for global credit.", icon: Coins },
 ];
 
 export default function VCExitScenarios() {
@@ -64,9 +62,27 @@ export default function VCExitScenarios() {
             Your <span className="text-green-500">15% Stake</span> at Exit
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            $1.9M working capital → potential $675M+ stake value
+            $1.9M working capital → potential ${formatCurrency(EXIT_SCENARIOS.year10.stakeValue)} stake value
           </p>
         </div>
+
+        {/* Platform Pivot Explanation */}
+        <Card className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border-primary/30 mb-8">
+          <CardContent className="p-6">
+            <div className="flex items-start gap-4">
+              <AlertCircle className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
+              <div>
+                <h3 className="font-bold text-lg mb-2">Why Exit Value Remains High with Just 32 Units</h3>
+                <p className="text-sm text-muted-foreground">
+                  Your exit value comes from <span className="text-purple-400 font-semibold">platform scaling</span>, not internal construction.
+                  32 units prove the rails work (legal, tech, OCCR). After Year 2, Ancient becomes a pure protocol—financing 
+                  <span className="text-green-400 font-semibold"> 10,000+ partner units</span> without building another home.
+                  <span className="text-primary font-semibold"> Less capital at risk. Same exit upside.</span>
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Exit Timeline Selector */}
         <Card className="bg-card/50 border-border/50 mb-8">
@@ -93,6 +109,9 @@ export default function VCExitScenarios() {
                         Y{scenario.year}
                       </span>
                       <span className="text-xs text-muted-foreground mt-1">{scenario.label}</span>
+                      {scenario.phase !== "seed" && (
+                        <span className="text-[10px] text-amber-400 mt-1">Institutional</span>
+                      )}
                     </button>
                     {index < exitScenarios.length - 1 && (
                       <ArrowRight className="h-4 w-4 text-muted-foreground flex-shrink-0 hidden md:block" />
@@ -114,6 +133,11 @@ export default function VCExitScenarios() {
                   Year {currentScenario.year} Exit
                 </Badge>
                 <span className="text-sm text-muted-foreground">{currentScenario.exitType}</span>
+                {currentScenario.phase !== "seed" && (
+                  <Badge variant="outline" className="text-amber-400 border-amber-500/30 text-xs">
+                    Requires Institutional Capital
+                  </Badge>
+                )}
               </div>
 
               <div className="grid md:grid-cols-2 gap-8">
@@ -121,7 +145,7 @@ export default function VCExitScenarios() {
                 <div>
                   <p className="text-sm text-muted-foreground mb-2">Your 15% Stake Value</p>
                   <p className={`text-5xl md:text-6xl font-bold ${getColorClass(currentScenario.color, 'text')}`}>
-                    ${currentScenario.stakeValue >= 1000 ? `${(currentScenario.stakeValue / 1000).toFixed(1)}B` : `${currentScenario.stakeValue}M`}
+                    {formatCurrency(currentScenario.stakeValue)}
                   </p>
                   <p className="text-sm text-muted-foreground mt-2">
                     {currentScenario.multipleOnCapital}× on $1.9M working capital
@@ -140,9 +164,14 @@ export default function VCExitScenarios() {
                   </div>
                   <div className="flex justify-between items-center p-3 bg-background/50 rounded-lg">
                     <span className="text-sm text-muted-foreground">Enterprise Value</span>
-                    <span className="font-bold">${currentScenario.valuation >= 1000 ? `${(currentScenario.valuation / 1000).toFixed(1)}B` : `${currentScenario.valuation}M`}</span>
+                    <span className="font-bold">{formatCurrency(currentScenario.valuation)}</span>
                   </div>
                 </div>
+              </div>
+
+              {/* Scenario Note */}
+              <div className="mt-6 p-3 bg-background/30 rounded-lg">
+                <p className="text-sm text-muted-foreground italic">{currentScenario.note}</p>
               </div>
             </CardContent>
           </Card>
@@ -168,7 +197,7 @@ export default function VCExitScenarios() {
               </div>
               <div className="p-3 bg-primary/10 border border-primary/30 rounded-lg text-center">
                 <p className="text-xs text-primary font-semibold">
-                  Zero capital at risk
+                  Principal protected by real estate collateral
                 </p>
               </div>
             </CardContent>
@@ -208,15 +237,18 @@ export default function VCExitScenarios() {
                             Year {scenario.year}
                           </Badge>
                           <span className="text-sm">{scenario.label}</span>
+                          {scenario.phase !== "seed" && (
+                            <span className="text-[10px] text-amber-400">(Inst.)</span>
+                          )}
                         </div>
                       </td>
                       <td className="text-right py-4 px-4 font-medium">${scenario.revenue}M</td>
                       <td className="text-right py-4 px-4 font-medium">{scenario.multiple}×</td>
                       <td className="text-right py-4 px-4 font-medium">
-                        ${scenario.valuation >= 1000 ? `${(scenario.valuation / 1000).toFixed(1)}B` : `${scenario.valuation}M`}
+                        {formatCurrency(scenario.valuation)}
                       </td>
                       <td className={`text-right py-4 px-4 font-bold ${getColorClass(scenario.color, 'text')}`}>
-                        ${scenario.stakeValue >= 1000 ? `${(scenario.stakeValue / 1000).toFixed(0)}M` : `${scenario.stakeValue}M`}
+                        {formatCurrency(scenario.stakeValue)}
                       </td>
                       <td className="text-right py-4 px-4 font-bold text-green-400">
                         {scenario.multipleOnCapital}×
@@ -233,7 +265,7 @@ export default function VCExitScenarios() {
         <Tabs defaultValue="comparables" className="w-full">
           <TabsList className="grid w-full grid-cols-2 mb-6">
             <TabsTrigger value="comparables">Comparable Exits</TabsTrigger>
-            <TabsTrigger value="multiples">Why 20× Multiple?</TabsTrigger>
+            <TabsTrigger value="multiples">Why These Multiples?</TabsTrigger>
           </TabsList>
 
           <TabsContent value="comparables">
@@ -279,7 +311,7 @@ export default function VCExitScenarios() {
                 <div className="mt-6 p-4 bg-primary/10 border border-primary/30 rounded-lg">
                   <p className="text-sm">
                     <span className="font-semibold text-primary">The Narrative:</span>{" "}
-                    "We're building the Rocket Mortgage for global nomads. Rocket at 10× would put us at $3B on Year 10 revenue. At fintech 20×, we're at $6B (conservatively modeled at $4.5B)."
+                    "We're building the Rocket Mortgage for global nomads. At Year 10 with $150M revenue and a 20× fintech multiple, we're at $3B valuation."
                   </p>
                 </div>
               </CardContent>
@@ -299,10 +331,12 @@ export default function VCExitScenarios() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {multipleJustification.map((stage, index) => (
+                  {MULTIPLE_JUSTIFICATION.map((stage) => (
                     <div key={stage.years} className="flex items-start gap-4 p-4 bg-muted/30 rounded-lg border border-border/50">
                       <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary/20 flex-shrink-0">
-                        <stage.icon className="h-6 w-6 text-primary" />
+                        {stage.phase === "seed" && <Building2 className="h-6 w-6 text-blue-400" />}
+                        {stage.phase === "platform" && <TrendingUp className="h-6 w-6 text-purple-400" />}
+                        {stage.phase === "data" && <Coins className="h-6 w-6 text-green-400" />}
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
@@ -331,8 +365,8 @@ export default function VCExitScenarios() {
                       <p className="font-bold">8× (growth)</p>
                     </div>
                     <div>
-                      <p className="text-muted-foreground">Early Fintech</p>
-                      <p className="font-bold text-primary">15-20× (pre-profit)</p>
+                      <p className="text-muted-foreground">MakerDAO</p>
+                      <p className="font-bold">30× (DeFi)</p>
                     </div>
                   </div>
                 </div>

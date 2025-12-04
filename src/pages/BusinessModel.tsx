@@ -116,14 +116,17 @@ const calculateFlywheelWithBudget = () => {
 const flywheelData = calculateFlywheelWithBudget();
 const flywheel = calculateDevelopmentFlywheel();
 
-// Calculate total units and revenue from canonical model
-const totalUnits = flywheel.flips.reduce((sum, f) => sum + f.units, 0); // 147 units
-const totalGrossSales = flywheel.totalGrossSales / 1_000_000; // in millions
-const totalPlatformFees = flywheel.totalPlatformFees / 1_000_000; // in millions
-const avgPrice = totalGrossSales / totalUnits * 1_000_000; // average price per unit
+// SEED-FUNDED MODEL: 32 units across 2 flips (Peru + Brazil)
+// Full 6-flip model only for reference - seed phase is the investor focus
+const seedFundedUnits = 32; // 15 Peru + 17 Brazil
+const totalUnits = flywheel.flips.reduce((sum, f) => sum + f.units, 0); // All flips for reference
+const totalGrossSales = flywheel.totalGrossSales / 1_000_000;
+const totalPlatformFees = flywheel.totalPlatformFees / 1_000_000;
+const avgPrice = totalGrossSales / totalUnits * 1_000_000;
 
-// Calculate revenue components from canonical model
-const platformFeesY0 = totalPlatformFees; // $0.82M from 147 units
+// Seed-phase platform fees: 3% on 32 units (~$4.5M gross sales)
+const seedPhasePlatformFees = 0.135; // $135K from 32 seed-funded units
+const platformFeesY0 = seedPhasePlatformFees;
 
 // Mortgage Interest: Use proper amortization formula, not simple interest
 // Calculate total interest from mortgages using monthly payment formula
@@ -186,9 +189,9 @@ const generateCashFlowData = () => {
 const cashFlowData = generateCashFlowData();
 const revenueStreams = [{
   title: "Platform Fees",
-  amount: `$${totalPlatformFees.toFixed(2)}M`,
-  description: "3% fee on all sales (147 units)",
-  timeline: "Immediate capture (Years 0-6)",
+  amount: `$${seedPhasePlatformFees.toFixed(2)}M`,
+  description: "3% fee on seed-funded sales (32 units)",
+  timeline: "Immediate capture (Years 1-2)",
   icon: "🏛"
 }, {
   title: "Net Interest Margin (3% NIM)",
