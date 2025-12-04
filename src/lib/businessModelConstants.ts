@@ -6,6 +6,36 @@
  */
 
 // ===========================================
+// CAPITAL STACK (VC Audit Response)
+// ===========================================
+export const CAPITAL_STACK = {
+  seedCapital: 1.9,           // VC seed borrowed against BTC
+  btcCollateral: 5.0,         // $5M BTC deposited
+  ltv: 0.35,                  // 35% LTV (conservative)
+  liquidationThreshold: 1.5,  // 150% LTV triggers liquidation
+  interestRate: 0.10,         // ~10% APR on borrowed USDC
+  
+  buyerCashFlow: {
+    cashSalesUnits: 6,        // 20% of 32 units
+    cashSalesRevenue: 0.84,   // 6 × $140K avg
+    downPaymentUnits: 26,     // 80% of 32 units (financed)
+    downPaymentPercent: 0.30, // 30% down
+    downPaymentRevenue: 1.09, // 26 × 30% × $140K
+    total: 1.93,              // Total buyer cash at closing
+  },
+  
+  totalCapitalAvailable: 3.83, // Seed + buyer cash flow
+  
+  uses: {
+    construction: 2.4,        // 32 × $75K
+    techLegal: 0.4,           // Protocol, SPVs, legal
+    teamOps: 0.1,             // Team salaries
+    marketing: 0.1,           // HELOC partnerships
+    contingency: 0.05,        // Buffer
+  },
+};
+
+// ===========================================
 // SEED PHASE ECONOMICS (Years 1-2)
 // ===========================================
 export const SEED_PHASE = {
@@ -62,53 +92,113 @@ export const VC_BRIDGE = {
 };
 
 // ===========================================
-// EXIT SCENARIOS (Corrected for Platform Pivot)
+// EXIT SCENARIOS - TIERED (Conservative/Base/Optimistic)
 // ===========================================
+export const EXIT_SCENARIOS_TIERED = {
+  conservative: {
+    description: "Achievable with seed phase only. No institutional capital required.",
+    year3: {
+      label: "Seed Exit",
+      revenue: 1.5,
+      multiple: 5,
+      valuation: 7.5,
+      stakeValue: 1.125,
+      multipleOnCapital: 0.6,
+      exitType: "M&A / Acqui-hire",
+      phase: "seed",
+      note: "32 units built, $2M DevCo profit, protocol proven",
+    },
+    year5: {
+      label: "Modest Growth",
+      revenue: 5,
+      multiple: 8,
+      valuation: 40,
+      stakeValue: 6,
+      multipleOnCapital: 3.2,
+      exitType: "M&A",
+      phase: "platform",
+      note: "Limited platform scaling, 50-100 partner units",
+    },
+  },
+  base: {
+    description: "Requires $5-20M institutional facility by Year 3.",
+    year3: {
+      label: "Platform Launch",
+      revenue: 2.5,
+      multiple: 6,
+      valuation: 15,
+      stakeValue: 2.25,
+      multipleOnCapital: 1.2,
+      exitType: "Series A / M&A",
+      phase: "platform",
+      note: "Institutional capital secured, 100 partner units",
+    },
+    year5: {
+      label: "Series B/C",
+      revenue: 15,
+      multiple: 10,
+      valuation: 150,
+      stakeValue: 22.5,
+      multipleOnCapital: 12,
+      exitType: "Growth Round / M&A",
+      phase: "platform",
+      note: "500 partner units, proven OCCR data",
+    },
+    year10: {
+      label: "Full Scale",
+      revenue: 100,
+      multiple: 15,
+      valuation: 1500,
+      stakeValue: 225,
+      multipleOnCapital: 118,
+      exitType: "IPO / Strategic",
+      phase: "data",
+      note: "5,000+ partner units, OCCR licensing ($15M)",
+    },
+  },
+  optimistic: {
+    description: "Requires platform dominance + OCCR becoming global standard.",
+    year5: {
+      label: "Breakout Growth",
+      revenue: 25,
+      multiple: 12,
+      valuation: 300,
+      stakeValue: 45,
+      multipleOnCapital: 24,
+      exitType: "Series C / Pre-IPO",
+      phase: "platform",
+      note: "1,000 partner units, institutional adoption",
+    },
+    year10: {
+      label: "Global Standard",
+      revenue: 150,
+      multiple: 20,
+      valuation: 3000,
+      stakeValue: 450,
+      multipleOnCapital: 237,
+      exitType: "IPO / TGE",
+      phase: "data",
+      note: "10,000 units, OCCR = global credit identity",
+    },
+  },
+};
+
+// Legacy format for backward compatibility
 export const EXIT_SCENARIOS = {
-  year3: {
-    label: "Early M&A",
-    revenue: 5,              // $5M (platform launching)
-    multiple: 5,
-    valuation: 25,           // $25M
-    stakeValue: 3.75,        // $3.75M (15%)
-    multipleOnCapital: 2,
-    exitType: "Strategic Acquisition",
-    phase: "seed",
-    note: "Seed phase complete, platform launching",
-  },
-  year5: {
-    label: "Series B/C",
-    revenue: 15,             // $15M (500 partner units)
-    multiple: 10,
-    valuation: 150,          // $150M
-    stakeValue: 22.5,        // $22.5M (15%)
-    multipleOnCapital: 12,
-    exitType: "Growth Round / M&A",
-    phase: "platform",
-    note: "Requires institutional capital deployment",
-  },
+  year3: EXIT_SCENARIOS_TIERED.base.year3,
+  year5: EXIT_SCENARIOS_TIERED.base.year5,
   year7: {
     label: "IPO-Ready",
-    revenue: 50,             // $50M (2,500 partner units)
+    revenue: 50,
     multiple: 15,
-    valuation: 750,          // $750M
-    stakeValue: 112.5,       // $112.5M (15%)
+    valuation: 750,
+    stakeValue: 112.5,
     multipleOnCapital: 59,
     exitType: "IPO / Strategic",
     phase: "platform",
     note: "Platform dominance, OCCR data growing",
   },
-  year10: {
-    label: "Full Scale",
-    revenue: 150,            // $150M (10,000 partner units)
-    multiple: 20,
-    valuation: 3000,         // $3B
-    stakeValue: 450,         // $450M (15%)
-    multipleOnCapital: 237,
-    exitType: "IPO / TGE",
-    phase: "data",
-    note: "OCCR data licensing dominates",
-  },
+  year10: EXIT_SCENARIOS_TIERED.base.year10,
 };
 
 // ===========================================
@@ -209,13 +299,14 @@ export const TEN_YEAR_PROJECTION = [
     devCoProfit: 0,
     originationFees: 45,
     developerFee: 60,
-    mortgageSpread: 45,
-    dataLicensing: 75,
-    totalRevenue: 225,
-    multiple: 20,
-    valuation: 4500,
+    mortgageSpread: 30,
+    dataLicensing: 15,       // REDUCED from $75M - strategic optionality, not core thesis
+    totalRevenue: 150,       // Adjusted total
+    multiple: 15,            // Adjusted multiple (more conservative)
+    valuation: 2250,         // Adjusted valuation
     phase: "data",
     funded: "institutional",
+    note: "Data licensing = optionality, not requirement",
   },
 ];
 
