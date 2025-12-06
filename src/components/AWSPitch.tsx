@@ -45,34 +45,39 @@ export default function AWSPitch() {
             <div className="grid md:grid-cols-4 gap-4 mb-12">
               {[
                 {
-                  label: "Units Live",
-                  value: "12",
+                  label: "TAM (Annual)",
+                  value: "$300B+",
+                  sublabel: "Global nomad housing demand",
+                  icon: Globe,
+                  color: "text-blue-500"
+                },
+                {
+                  label: "Target Market",
+                  value: "35M+",
+                  sublabel: "Credit-invisible nomads",
                   icon: Home,
                   color: "text-green-500"
                 },
                 {
-                  label: "Returns",
-                  value: "20%+",
+                  label: "Gross Margins",
+                  value: "44%",
+                  sublabel: "Unfair unit economics",
                   icon: Zap,
                   color: "text-primary"
                 },
                 {
-                  label: "Raise",
-                  value: "$1.9M",
+                  label: "Units Operational",
+                  value: "12",
+                  sublabel: "Proving the model",
                   icon: Rocket,
                   color: "text-orange-500"
-                },
-                {
-                  label: "ROI",
-                  value: "80%",
-                  icon: Globe,
-                  color: "text-blue-500"
                 }
               ].map((stat) => (
                 <div key={stat.label} className="text-center p-4 bg-background/50 rounded-xl">
                   <stat.icon className={`h-6 w-6 mx-auto mb-2 ${stat.color}`} />
                   <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
-                  <p className="text-xs text-muted-foreground">{stat.label}</p>
+                  <p className="text-xs font-medium text-foreground">{stat.label}</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">{stat.sublabel}</p>
                 </div>
               ))}
             </div>
