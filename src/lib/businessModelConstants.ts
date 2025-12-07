@@ -41,8 +41,10 @@ export const CAPITAL_STACK = {
 export const SEED_PHASE = {
   capital: 1.9,              // $1.9M seed investment
   units: 32,                 // 15 Peru + 17 Brazil
-  mortgages: 26,             // 80% of 32 = ~26 mortgages
-  mortgageBook: 2.55,        // $2.55M total mortgage principal
+  mortgages: 32,             // ALL 32 units generate mortgages (per deck)
+  mortgageBook: 3.46,        // $3.46M total mortgage principal (per deck)
+  annualRevenue: 0.345,      // $345K/year @ 10% APR (per deck)
+  treasuryRemaining: 0.494,  // $494K treasury after seed round (per deck)
   downPaymentPercent: 0.30,  // 30% down payment (uniform)
   flips: 2,                  // Peru + Brazil only
   countries: 2,
@@ -87,118 +89,166 @@ export const BUYER_SEGMENTS = {
 // ===========================================
 export const VC_BRIDGE = {
   rate: 0.10,               // 10% APR to borrowers
-  annualRevenue: 0.255,     // $255K/year on $2.55M book
+  annualRevenue: 0.345,     // $345K/year on $3.46M book (per deck)
   targetInstitutional: 24,  // Month 18-24 for credit facility
 };
 
 // ===========================================
 // EXIT SCENARIOS - TIERED (Conservative/Base/Optimistic)
 // ===========================================
+// EXIT SCENARIOS - Aligned with Pitch Deck Slide 19
 export const EXIT_SCENARIOS_TIERED = {
   conservative: {
     description: "Achievable with seed phase only. No institutional capital required.",
     year3: {
       label: "Seed Exit",
-      revenue: 1.5,
+      revenue: 2,
       multiple: 5,
-      valuation: 7.5,
-      stakeValue: 1.125,
-      multipleOnCapital: 0.6,
+      valuation: 10,           // $10-12M per deck
+      stakeValue: 1.5,
+      multipleOnCapital: 0.8,
       exitType: "M&A / Acqui-hire",
       phase: "seed",
       note: "32 units built, $2M DevCo profit, protocol proven",
     },
     year5: {
       label: "Modest Growth",
-      revenue: 5,
-      multiple: 8,
-      valuation: 40,
-      stakeValue: 6,
-      multipleOnCapital: 3.2,
+      revenue: 10,
+      multiple: 7,
+      valuation: 70,           // Low end of $70-100M
+      stakeValue: 10.5,
+      multipleOnCapital: 5.5,
       exitType: "M&A",
       phase: "platform",
       note: "Limited platform scaling, 50-100 partner units",
     },
   },
   base: {
-    description: "Requires $5-20M institutional facility by Year 3.",
-    year3: {
-      label: "Platform Launch",
-      revenue: 2.5,
-      multiple: 6,
-      valuation: 15,
-      stakeValue: 2.25,
-      multipleOnCapital: 1.2,
+    description: "Requires $5-20M institutional facility by Year 3. Deck-aligned valuations.",
+    seed: {
+      label: "Seed",
+      revenue: 2,
+      multiple: 5,
+      valuation: 11,           // $10-12M per deck
+      stakeValue: 1.65,
+      multipleOnCapital: 0.9,
+      exitType: "Seed Round",
+      phase: "seed",
+      note: "32 mortgages, $3.46M book, protocol proven",
+    },
+    seriesA: {
+      label: "Series A",
+      revenue: 8,
+      multiple: 10,
+      valuation: 85,           // $70-100M per deck (Post 2 Flips)
+      stakeValue: 12.75,
+      multipleOnCapital: 6.7,
       exitType: "Series A / M&A",
       phase: "platform",
-      note: "Institutional capital secured, 100 partner units",
+      note: "Post 2 Flips, Credit Line Secured",
     },
-    year5: {
-      label: "Series B/C",
-      revenue: 15,
-      multiple: 10,
-      valuation: 150,
-      stakeValue: 22.5,
-      multipleOnCapital: 12,
-      exitType: "Growth Round / M&A",
+    seriesB: {
+      label: "Series B",
+      revenue: 50,
+      multiple: 8,
+      valuation: 400,          // $300-500M per deck (5k+ Mortgages)
+      stakeValue: 60,
+      multipleOnCapital: 32,
+      exitType: "Series B / Growth",
       phase: "platform",
-      note: "500 partner units, proven OCCR data",
+      note: "5,000+ mortgages originated",
     },
-    year10: {
-      label: "Full Scale",
-      revenue: 100,
+    exit: {
+      label: "Exit / IPO",
+      revenue: 150,
       multiple: 15,
-      valuation: 1500,
-      stakeValue: 225,
-      multipleOnCapital: 118,
+      valuation: 2250,         // $1.5B-$3B per deck
+      stakeValue: 337.5,
+      multipleOnCapital: 178,
       exitType: "IPO / Strategic",
       phase: "data",
-      note: "5,000+ partner units, OCCR licensing ($15M)",
+      note: "Global Mortgage Bank or On-Chain Credit Bureau",
     },
   },
   optimistic: {
     description: "Requires platform dominance + OCCR becoming global standard.",
-    year5: {
-      label: "Breakout Growth",
-      revenue: 25,
-      multiple: 12,
-      valuation: 300,
-      stakeValue: 45,
-      multipleOnCapital: 24,
-      exitType: "Series C / Pre-IPO",
+    seriesA: {
+      label: "Series A",
+      revenue: 10,
+      multiple: 10,
+      valuation: 100,          // High end of $70-100M
+      stakeValue: 15,
+      multipleOnCapital: 7.9,
+      exitType: "Series A",
       phase: "platform",
-      note: "1,000 partner units, institutional adoption",
+      note: "Strong credit facility, validated OCCR",
     },
-    year10: {
-      label: "Global Standard",
-      revenue: 150,
-      multiple: 20,
-      valuation: 3000,
+    seriesB: {
+      label: "Series B",
+      revenue: 60,
+      multiple: 8,
+      valuation: 500,          // High end of $300-500M
+      stakeValue: 75,
+      multipleOnCapital: 39,
+      exitType: "Series B / Pre-IPO",
+      phase: "platform",
+      note: "5,000+ mortgages, institutional adoption",
+    },
+    exit: {
+      label: "Exit / IPO",
+      revenue: 200,
+      multiple: 15,
+      valuation: 3000,         // High end of $1.5B-$3B
       stakeValue: 450,
       multipleOnCapital: 237,
       exitType: "IPO / TGE",
       phase: "data",
-      note: "10,000 units, OCCR = global credit identity",
+      note: "Global standard for borderless credit",
     },
   },
 };
 
-// Legacy format for backward compatibility
+// Legacy format for backward compatibility - Deck-aligned milestones
 export const EXIT_SCENARIOS = {
-  year3: EXIT_SCENARIOS_TIERED.base.year3,
-  year5: EXIT_SCENARIOS_TIERED.base.year5,
-  year7: {
-    label: "IPO-Ready",
-    revenue: 50,
-    multiple: 15,
-    valuation: 750,
-    stakeValue: 112.5,
-    multipleOnCapital: 59,
-    exitType: "IPO / Strategic",
+  seed: EXIT_SCENARIOS_TIERED.base.seed,
+  seriesA: EXIT_SCENARIOS_TIERED.base.seriesA,
+  seriesB: EXIT_SCENARIOS_TIERED.base.seriesB,
+  exit: EXIT_SCENARIOS_TIERED.base.exit,
+  // Legacy year-based format
+  year3: {
+    label: "Series A",
+    revenue: 8,
+    multiple: 10,
+    valuation: 85,
+    stakeValue: 12.75,
+    multipleOnCapital: 6.7,
+    exitType: "Series A / M&A",
     phase: "platform",
+    note: "Post 2 Flips, Credit Line Secured",
+  },
+  year5: {
+    label: "Series B",
+    revenue: 50,
+    multiple: 8,
+    valuation: 400,
+    stakeValue: 60,
+    multipleOnCapital: 32,
+    exitType: "Series B / Growth",
+    phase: "platform",
+    note: "5,000+ mortgages originated",
+  },
+  year7: {
+    label: "Pre-IPO",
+    revenue: 100,
+    multiple: 12,
+    valuation: 1200,
+    stakeValue: 180,
+    multipleOnCapital: 95,
+    exitType: "Pre-IPO / Strategic",
+    phase: "data",
     note: "Platform dominance, OCCR data growing",
   },
-  year10: EXIT_SCENARIOS_TIERED.base.year10,
+  year10: EXIT_SCENARIOS_TIERED.base.exit,
 };
 
 // ===========================================

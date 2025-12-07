@@ -2,10 +2,14 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, MapPin, DollarSign, Home, Building2, FileCheck, TrendingUp, Wallet } from "lucide-react";
+import { SEED_PHASE } from "@/lib/businessModelConstants";
 
-// Seed-funded constants (Two Flips with $1.9M)
-const SEED_CAPITAL = 1.9; // $1.9M
-const BUILD_COST = 75_000; // $75K per unit
+// Seed-funded constants aligned with Pitch Deck Slide 10
+const SEED_CAPITAL = SEED_PHASE.capital; // $1.9M
+const TOTAL_MORTGAGES = SEED_PHASE.mortgages; // 32 (per deck)
+const MORTGAGE_BOOK = SEED_PHASE.mortgageBook; // $3.46M (per deck)
+const ANNUAL_REVENUE = SEED_PHASE.annualRevenue; // $345K (per deck)
+const TREASURY_REMAINING = SEED_PHASE.treasuryRemaining; // $494K (per deck)
 
 const SEED_FUNDED_FLIPS = [
   {
@@ -30,158 +34,109 @@ const SEED_FUNDED_FLIPS = [
   },
 ];
 
-// Buyer segment distribution
-const BUYER_MIX = {
-  CASH: 0.20,
-  BTC_COLLATERAL: 0.50,
-  NOMAD: 0.30,
-};
-const DOWN_PAYMENT = 0.30; // 30% for all financed buyers
-
-interface FlipFinancials {
-  flip: string;
-  units: number;
-  buildCost: number;
-  grossSales: number;
-  cashUnits: number;
-  btcUnits: number;
-  nomadUnits: number;
-  cashRevenue: number;
-  downPayments: number;
-  totalImmediate: number;
-  mortgageBook: number;
-  netProfit: number;
-}
-
-function calculateFlipFinancials(flip: typeof SEED_FUNDED_FLIPS[0]): FlipFinancials {
-  const buildCost = flip.units * BUILD_COST;
-  const grossSales = flip.units * flip.salePrice;
-  
-  const cashUnits = Math.round(flip.units * BUYER_MIX.CASH);
-  const btcUnits = Math.round(flip.units * BUYER_MIX.BTC_COLLATERAL);
-  const nomadUnits = flip.units - cashUnits - btcUnits;
-  
-  const cashRevenue = cashUnits * flip.salePrice;
-  const financedUnits = btcUnits + nomadUnits;
-  const downPayments = financedUnits * flip.salePrice * DOWN_PAYMENT;
-  const totalImmediate = cashRevenue + downPayments;
-  const mortgageBook = financedUnits * flip.salePrice * (1 - DOWN_PAYMENT);
-  const netProfit = grossSales - buildCost;
-  
-  return {
-    flip: flip.flip,
-    units: flip.units,
-    buildCost,
-    grossSales,
-    cashUnits,
-    btcUnits,
-    nomadUnits,
-    cashRevenue,
-    downPayments,
-    totalImmediate,
-    mortgageBook,
-    netProfit,
-  };
-}
-
 export const SeedFundedRoadmap: React.FC = () => {
-  const flip1 = calculateFlipFinancials(SEED_FUNDED_FLIPS[0]);
-  const flip2 = calculateFlipFinancials(SEED_FUNDED_FLIPS[1]);
+  const totalUnits = SEED_FUNDED_FLIPS.reduce((sum, flip) => sum + flip.units, 0);
   
-  const totalUnits = flip1.units + flip2.units;
-  const totalMortgages = (flip1.btcUnits + flip1.nomadUnits) + (flip2.btcUnits + flip2.nomadUnits);
-  const totalMortgageBook = (flip1.mortgageBook + flip2.mortgageBook) / 1_000_000;
+  // Calculate flip financials
+  const flip1BuildCost = 15 * 75_000; // $1.125M
+  const flip1GrossSales = 15 * 135_000; // $2.025M
+  const flip2BuildCost = 17 * 75_000; // $1.275M
+  const flip2GrossSales = 17 * 145_000; // $2.465M
   
-  // Capital flow calculation
-  const afterFlip1Build = SEED_CAPITAL - (flip1.buildCost / 1_000_000);
-  const afterFlip1Sales = afterFlip1Build + (flip1.totalImmediate / 1_000_000);
-  const afterFlip2Build = afterFlip1Sales - (flip2.buildCost / 1_000_000);
-  const afterFlip2Sales = afterFlip2Build + (flip2.totalImmediate / 1_000_000);
+  const totalBuildCost = (flip1BuildCost + flip2BuildCost) / 1_000_000; // $2.4M
+  const totalGrossSales = (flip1GrossSales + flip2GrossSales) / 1_000_000; // $4.49M
 
   return (
     <section className="py-16 px-4 bg-background">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
+        {/* Header - Aligned with Deck Slide 10 */}
         <div className="text-center mb-12">
           <Badge variant="outline" className="mb-4 text-lg px-6 py-2 border-emerald-500/50 text-emerald-400">
-            Seed-Funded Execution
+            The $1.9M Seed Plan
           </Badge>
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            $1.9M → <span className="text-primary">2 Flips</span> → {totalMortgages} Mortgages
+            Building the First <span className="text-primary">Data Set</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            32 units across Peru and Brazil. <span className="text-emerald-400 font-semibold">${totalMortgageBook.toFixed(2)}M mortgage book</span> proves traction for institutional capital.
+            2 Flips, 32 Homes across Peru and Brazil. <span className="text-emerald-400 font-semibold">${MORTGAGE_BOOK}M mortgage book</span> proves traction for institutional capital.
           </p>
         </div>
 
-        {/* Summary Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        {/* Key Outcomes - Deck Slide 10 Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
           <Card className="bg-card/50 border-border/50">
             <CardContent className="p-4 text-center">
               <Wallet className="h-6 w-6 mx-auto mb-2 text-emerald-500" />
-              <p className="text-3xl font-bold text-emerald-500">${SEED_CAPITAL}M</p>
-              <p className="text-sm text-muted-foreground">Seed Capital</p>
+              <p className="text-2xl font-bold text-emerald-500">${SEED_CAPITAL}M</p>
+              <p className="text-xs text-muted-foreground">Seed Capital</p>
             </CardContent>
           </Card>
           <Card className="bg-card/50 border-border/50">
             <CardContent className="p-4 text-center">
               <Home className="h-6 w-6 mx-auto mb-2 text-primary" />
-              <p className="text-3xl font-bold text-primary">{totalUnits}</p>
-              <p className="text-sm text-muted-foreground">Total Units</p>
+              <p className="text-2xl font-bold text-primary">{totalUnits}</p>
+              <p className="text-xs text-muted-foreground">Units Built & Sold</p>
             </CardContent>
           </Card>
           <Card className="bg-card/50 border-border/50">
             <CardContent className="p-4 text-center">
               <FileCheck className="h-6 w-6 mx-auto mb-2 text-purple-400" />
-              <p className="text-3xl font-bold text-purple-400">{totalMortgages}</p>
-              <p className="text-sm text-muted-foreground">Mortgages</p>
+              <p className="text-2xl font-bold text-purple-400">{TOTAL_MORTGAGES}</p>
+              <p className="text-xs text-muted-foreground">Mortgages Originated</p>
             </CardContent>
           </Card>
           <Card className="bg-card/50 border-border/50">
             <CardContent className="p-4 text-center">
               <TrendingUp className="h-6 w-6 mx-auto mb-2 text-amber-500" />
-              <p className="text-3xl font-bold text-amber-500">${totalMortgageBook.toFixed(2)}M</p>
-              <p className="text-sm text-muted-foreground">Mortgage Book</p>
+              <p className="text-2xl font-bold text-amber-500">${MORTGAGE_BOOK}M</p>
+              <p className="text-xs text-muted-foreground">Mortgage Book</p>
+            </CardContent>
+          </Card>
+          <Card className="bg-card/50 border-border/50">
+            <CardContent className="p-4 text-center">
+              <DollarSign className="h-6 w-6 mx-auto mb-2 text-green-400" />
+              <p className="text-2xl font-bold text-green-400">${ANNUAL_REVENUE}M</p>
+              <p className="text-xs text-muted-foreground">Annual Revenue @ 10%</p>
             </CardContent>
           </Card>
         </div>
 
-        {/* Capital Flow Visualization */}
+        {/* Treasury Remaining Highlight */}
         <Card className="bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border-emerald-500/30 mb-8">
           <CardContent className="p-6">
-            <h3 className="font-bold text-lg mb-4 text-center">Capital Flow Timeline</h3>
+            <h3 className="font-bold text-lg mb-4 text-center">Capital is Recycled Into Assets</h3>
             <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
               <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 py-2 px-4">
                 Start: ${SEED_CAPITAL}M
               </Badge>
               <ArrowRight className="h-4 w-4 text-muted-foreground" />
-              <Badge className="bg-red-500/20 text-red-400 border-red-500/30 py-2 px-4">
-                Build F1: -${(flip1.buildCost / 1_000_000).toFixed(2)}M
+              <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30 py-2 px-4">
+                Build 32 Units: ${totalBuildCost.toFixed(1)}M
               </Badge>
               <ArrowRight className="h-4 w-4 text-muted-foreground" />
-              <Badge className="bg-green-500/20 text-green-400 border-green-500/30 py-2 px-4">
-                Sell F1: +${(flip1.totalImmediate / 1_000_000).toFixed(2)}M
-              </Badge>
-              <ArrowRight className="h-4 w-4 text-muted-foreground" />
-              <Badge className="bg-red-500/20 text-red-400 border-red-500/30 py-2 px-4">
-                Build F2: -${(flip2.buildCost / 1_000_000).toFixed(2)}M
-              </Badge>
-              <ArrowRight className="h-4 w-4 text-muted-foreground" />
-              <Badge className="bg-green-500/20 text-green-400 border-green-500/30 py-2 px-4">
-                Sell F2: +${(flip2.totalImmediate / 1_000_000).toFixed(2)}M
+              <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30 py-2 px-4">
+                Generate: ${MORTGAGE_BOOK}M Book
               </Badge>
               <ArrowRight className="h-4 w-4 text-muted-foreground" />
               <Badge className="bg-primary/20 text-primary border-primary/30 py-2 px-4">
-                Final: ${afterFlip2Sales.toFixed(2)}M + ${totalMortgageBook.toFixed(2)}M book
+                Treasury: ${TREASURY_REMAINING}M
               </Badge>
             </div>
+            <p className="text-center text-sm text-muted-foreground mt-4">
+              This initial mortgage book provides <span className="text-emerald-400 font-semibold">12+ months of repayment and enforcement data</span>, 
+              proving the model to institutional credit providers like MakerDAO and Centrifuge.
+            </p>
           </CardContent>
         </Card>
 
         {/* Flip Cards */}
         <div className="grid md:grid-cols-2 gap-6">
-          {SEED_FUNDED_FLIPS.map((flip, idx) => {
-            const financials = idx === 0 ? flip1 : flip2;
+          {SEED_FUNDED_FLIPS.map((flip) => {
+            const buildCost = flip.units * 75_000;
+            const grossSales = flip.units * flip.salePrice;
+            const netProfit = grossSales - buildCost;
+            const mortgageBook = flip.units * flip.salePrice * 0.70; // 70% financed after 30% down
+            
             return (
               <Card key={flip.codename} className="bg-card/50 border-border/50">
                 <CardHeader className="pb-3">
@@ -199,47 +154,35 @@ export const SeedFundedRoadmap: React.FC = () => {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {/* Unit Breakdown */}
-                  <div className="grid grid-cols-4 gap-2 text-center">
-                    <div className="p-2 bg-muted/30 rounded-lg">
-                      <p className="text-lg font-bold">{financials.units}</p>
-                      <p className="text-xs text-muted-foreground">Total</p>
+                  {/* Unit Stats */}
+                  <div className="grid grid-cols-2 gap-4 text-center">
+                    <div className="p-3 bg-muted/30 rounded-lg">
+                      <p className="text-2xl font-bold text-primary">{flip.units}</p>
+                      <p className="text-xs text-muted-foreground">Units</p>
                     </div>
-                    <div className="p-2 bg-amber-500/10 rounded-lg">
-                      <p className="text-lg font-bold text-amber-500">{financials.cashUnits}</p>
-                      <p className="text-xs text-muted-foreground">Cash</p>
-                    </div>
-                    <div className="p-2 bg-orange-500/10 rounded-lg">
-                      <p className="text-lg font-bold text-orange-500">{financials.btcUnits}</p>
-                      <p className="text-xs text-muted-foreground">BTC</p>
-                    </div>
-                    <div className="p-2 bg-purple-500/10 rounded-lg">
-                      <p className="text-lg font-bold text-purple-500">{financials.nomadUnits}</p>
-                      <p className="text-xs text-muted-foreground">Nomad</p>
+                    <div className="p-3 bg-muted/30 rounded-lg">
+                      <p className="text-2xl font-bold text-purple-400">{flip.units}</p>
+                      <p className="text-xs text-muted-foreground">Mortgages</p>
                     </div>
                   </div>
 
                   {/* Financials */}
                   <div className="space-y-2 text-sm p-3 bg-muted/20 rounded-lg">
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Build Cost</span>
-                      <span className="text-red-400">${(financials.buildCost / 1_000_000).toFixed(2)}M</span>
+                      <span className="text-muted-foreground">Build Cost ($75K/unit)</span>
+                      <span className="text-red-400">${(buildCost / 1_000_000).toFixed(2)}M</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Cash Sales ({financials.cashUnits} units)</span>
-                      <span className="text-green-400">${(financials.cashRevenue / 1_000_000).toFixed(2)}M</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Down Payments (30%)</span>
-                      <span className="text-green-400">${(financials.downPayments / 1_000_000).toFixed(2)}M</span>
+                      <span className="text-muted-foreground">Gross Sales (${flip.salePrice / 1000}K/unit)</span>
+                      <span className="text-green-400">${(grossSales / 1_000_000).toFixed(2)}M</span>
                     </div>
                     <div className="flex justify-between border-t border-border/50 pt-2">
-                      <span className="font-semibold">Immediate Cash</span>
-                      <span className="font-bold text-emerald-500">${(financials.totalImmediate / 1_000_000).toFixed(2)}M</span>
+                      <span className="font-semibold">Net Profit</span>
+                      <span className="font-bold text-emerald-500">${(netProfit / 1_000_000).toFixed(2)}M</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Mortgage Book</span>
-                      <span className="text-purple-400">${(financials.mortgageBook / 1_000_000).toFixed(2)}M</span>
+                      <span className="text-muted-foreground">Mortgage Book (70% LTV)</span>
+                      <span className="text-purple-400">${(mortgageBook / 1_000_000).toFixed(2)}M</span>
                     </div>
                   </div>
                 </CardContent>
@@ -252,13 +195,13 @@ export const SeedFundedRoadmap: React.FC = () => {
         <Card className="mt-8 bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-purple-500/30">
           <CardContent className="p-6 text-center">
             <Building2 className="h-8 w-8 mx-auto mb-3 text-purple-400" />
-            <h3 className="text-xl font-bold mb-2">Path to Institutional Capital</h3>
+            <h3 className="text-xl font-bold mb-2">Path to First $20M–$50M Credit Facility</h3>
             <p className="text-muted-foreground mb-4">
-              {totalMortgages} performing mortgages + ${totalMortgageBook.toFixed(2)}M book = 
+              {TOTAL_MORTGAGES} performing mortgages + ${MORTGAGE_BOOK}M book = 
               <span className="text-purple-400 font-semibold"> Proof of concept for MakerDAO / Centrifuge</span>
             </p>
             <div className="flex flex-wrap justify-center gap-3">
-              <Badge variant="outline" className="text-purple-400 border-purple-400/50">20+ Performing Loans ✓</Badge>
+              <Badge variant="outline" className="text-purple-400 border-purple-400/50">32 Performing Loans ✓</Badge>
               <Badge variant="outline" className="text-purple-400 border-purple-400/50">Multi-Jurisdiction ✓</Badge>
               <Badge variant="outline" className="text-purple-400 border-purple-400/50">Title Retention Legal ✓</Badge>
               <Badge variant="outline" className="text-purple-400 border-purple-400/50">OCCR Data Asset ✓</Badge>
