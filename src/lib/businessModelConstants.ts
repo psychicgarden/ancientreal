@@ -6,32 +6,19 @@
  */
 
 // ===========================================
-// CAPITAL STACK (VC Audit Response)
+// SEED RAISE TERMS
 // ===========================================
-export const CAPITAL_STACK = {
-  seedCapital: 1.9,           // VC seed borrowed against BTC
-  btcCollateral: 5.0,         // $5M BTC deposited
-  ltv: 0.35,                  // 35% LTV (conservative)
-  liquidationThreshold: 1.5,  // 150% LTV triggers liquidation
-  interestRate: 0.10,         // ~10% APR on borrowed USDC
+export const SEED_RAISE = {
+  amount: 1.9,                // $1.9M raise
+  safeCap: 12,                // $12M SAFE cap (negotiable)
+  targetOwnership: 0.15,      // ~15% target ownership
+  instrument: "SAFE",         // Standard SAFE
   
-  buyerCashFlow: {
-    cashSalesUnits: 6,        // 20% of 32 units
-    cashSalesRevenue: 0.84,   // 6 × $140K avg
-    downPaymentUnits: 26,     // 80% of 32 units (financed)
-    downPaymentPercent: 0.30, // 30% down
-    downPaymentRevenue: 1.09, // 26 × 30% × $140K
-    total: 1.93,              // Total buyer cash at closing
-  },
-  
-  totalCapitalAvailable: 3.83, // Seed + buyer cash flow
-  
-  uses: {
-    construction: 2.4,        // 32 × $75K
-    techLegal: 0.4,           // Protocol, SPVs, legal
-    teamOps: 0.1,             // Team salaries
-    marketing: 0.1,           // HELOC partnerships
-    contingency: 0.05,        // Buffer
+  useOfFunds: {
+    construction: 0.79,       // 79% - Build 32 units
+    techLegal: 0.10,          // 10% - Protocol + SPVs
+    team: 0.06,               // 6% - Operations
+    marketing: 0.05,          // 5% - HELOC partnerships
   },
 };
 
@@ -256,7 +243,7 @@ export const EXIT_SCENARIOS = {
 // ===========================================
 export const TEN_YEAR_PROJECTION = [
   {
-    year: "Year 1",
+    year: "Y1",
     label: "Peru Genesis",
     internalUnits: 15,
     partnerUnits: 0,
@@ -273,7 +260,7 @@ export const TEN_YEAR_PROJECTION = [
     funded: "seed",
   },
   {
-    year: "Year 2",
+    year: "Y2",
     label: "Brazil Scale",
     internalUnits: 17,
     partnerUnits: 0,
@@ -290,7 +277,7 @@ export const TEN_YEAR_PROJECTION = [
     funded: "seed",
   },
   {
-    year: "Year 3",
+    year: "Y3",
     label: "Platform Launch",
     internalUnits: 0,
     partnerUnits: 100,
@@ -307,7 +294,7 @@ export const TEN_YEAR_PROJECTION = [
     funded: "institutional",
   },
   {
-    year: "Year 5",
+    year: "Y5",
     label: "Protocol Scale",
     internalUnits: 0,
     partnerUnits: 500,
@@ -324,7 +311,7 @@ export const TEN_YEAR_PROJECTION = [
     funded: "institutional",
   },
   {
-    year: "Year 7",
+    year: "Y7",
     label: "Global Network",
     internalUnits: 0,
     partnerUnits: 2500,
@@ -341,7 +328,7 @@ export const TEN_YEAR_PROJECTION = [
     funded: "institutional",
   },
   {
-    year: "Year 10",
+    year: "Y10",
     label: "Credit Bureau",
     internalUnits: 0,
     partnerUnits: 10000,
@@ -350,13 +337,12 @@ export const TEN_YEAR_PROJECTION = [
     originationFees: 45,
     developerFee: 60,
     mortgageSpread: 30,
-    dataLicensing: 15,       // REDUCED from $75M - strategic optionality, not core thesis
-    totalRevenue: 150,       // Adjusted total
-    multiple: 15,            // Adjusted multiple (more conservative)
-    valuation: 2250,         // Adjusted valuation
+    dataLicensing: 15,
+    totalRevenue: 150,
+    multiple: 15,
+    valuation: 2250,
     phase: "data",
     funded: "institutional",
-    note: "Data licensing = optionality, not requirement",
   },
 ];
 
