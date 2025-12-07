@@ -241,21 +241,29 @@ export const EXIT_SCENARIOS = {
 // ===========================================
 // 10-YEAR PROJECTION (Platform Pivot Model)
 // ===========================================
+// Y1: 15 units × $135K = $2.025M GMV
+// - Platform fees: 3% = $61K
+// - Dev profit: $60K × 15 = $900K
+// - Mortgage interest: $1.62M × 10% = $162K
+// - Total Revenue: $1.12M
+// - Mortgage Book: 80% × $2.025M = $1.62M
+// Valuation: Revenue × 4x + Book Value = $6M
 export const TEN_YEAR_PROJECTION = [
   {
     year: "Y1",
     label: "Peru Genesis",
     internalUnits: 15,
     partnerUnits: 0,
-    gmv: 2.0,
+    gmv: 2.025,
     devCoProfit: 0.9,
-    originationFees: 0.06,
+    originationFees: 0.061,
     developerFee: 0,
-    mortgageSpread: 0.05,
+    mortgageSpread: 0.162,
     dataLicensing: 0,
-    totalRevenue: 1.0,
+    totalRevenue: 1.12,
+    mortgageBook: 1.62,
     multiple: 4,
-    valuation: 4,
+    valuation: 6,
     phase: "seed",
     funded: "seed",
   },
@@ -264,15 +272,16 @@ export const TEN_YEAR_PROJECTION = [
     label: "Brazil Scale",
     internalUnits: 17,
     partnerUnits: 0,
-    gmv: 2.5,
-    devCoProfit: 1.2,
-    originationFees: 0.08,
+    gmv: 2.465,
+    devCoProfit: 1.19,
+    originationFees: 0.074,
     developerFee: 0,
-    mortgageSpread: 0.15,
+    mortgageSpread: 0.197,
     dataLicensing: 0,
-    totalRevenue: 1.4,
-    multiple: 4,
-    valuation: 5.6,
+    totalRevenue: 1.46,
+    mortgageBook: 3.59, // Cumulative: Y1 + Y2
+    multiple: 5,
+    valuation: 11,
     phase: "seed",
     funded: "seed",
   },
@@ -288,6 +297,7 @@ export const TEN_YEAR_PROJECTION = [
     mortgageSpread: 1.2,
     dataLicensing: 0.25,
     totalRevenue: 2.5,
+    mortgageBook: 12, // $12M book from 100 partner units
     multiple: 6,
     valuation: 15,
     phase: "platform",
@@ -305,6 +315,7 @@ export const TEN_YEAR_PROJECTION = [
     mortgageSpread: 6.0,
     dataLicensing: 3.75,
     totalRevenue: 15,
+    mortgageBook: 60, // $60M cumulative book
     multiple: 10,
     valuation: 150,
     phase: "platform",
@@ -322,6 +333,7 @@ export const TEN_YEAR_PROJECTION = [
     mortgageSpread: 15,
     dataLicensing: 18.75,
     totalRevenue: 60,
+    mortgageBook: 300, // $300M cumulative
     multiple: 15,
     valuation: 900,
     phase: "data",
@@ -339,6 +351,7 @@ export const TEN_YEAR_PROJECTION = [
     mortgageSpread: 30,
     dataLicensing: 15,
     totalRevenue: 150,
+    mortgageBook: 1200, // $1.2B book
     multiple: 15,
     valuation: 2250,
     phase: "data",

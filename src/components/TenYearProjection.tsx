@@ -93,8 +93,18 @@ export default function TenYearProjection() {
                     ))}
                   </TableRow>
 
-                  {/* Total Revenue */}
+                  {/* Mortgage Book */}
                   <TableRow className="border-border/30">
+                    <TableCell className="font-medium">Mortgage Book</TableCell>
+                    {CONDENSED_PROJECTION.map((row) => (
+                      <TableCell key={row.year} className="text-center font-medium text-amber-400">
+                        {row.mortgageBook ? `$${row.mortgageBook}M` : "—"}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+
+                  {/* Total Revenue */}
+                  <TableRow className="border-border/30 bg-muted/10">
                     <TableCell className="font-medium">Revenue</TableCell>
                     {CONDENSED_PROJECTION.map((row) => (
                       <TableCell key={row.year} className="text-center font-bold text-green-500">
