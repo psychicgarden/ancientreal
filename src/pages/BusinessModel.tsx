@@ -37,6 +37,7 @@ import VCExitScenarios from "@/components/VCExitScenarios";
 import CapitalStackExplainer from "@/components/CapitalStackExplainer";
 import VentureStakingExplainer from "@/components/VentureStakingExplainer";
 import ModelAssumptions from "@/components/ModelAssumptions";
+import TeamSection from "@/components/TeamSection";
 
 // Import property images
 import villaTulum from "@/assets/villa-tulum.jpg";
@@ -390,6 +391,9 @@ const BusinessModel = () => {
 
       {/* Return Profile for Investors */}
       <ReturnProfile />
+
+      {/* Team Section */}
+      <TeamSection />
 
       {/* Model Assumptions & Dependencies - Full Transparency */}
       <ModelAssumptions />
