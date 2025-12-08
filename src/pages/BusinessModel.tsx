@@ -392,15 +392,13 @@ const BusinessModel = () => {
 
           {/* Tabbed Content */}
           <Tabs defaultValue="competition" className="w-full">
-            <TabsList className="grid w-full grid-cols-5 lg:grid-cols-10 lg:w-fit lg:mx-auto mb-8 gap-1">
+            <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 lg:w-fit lg:mx-auto mb-8 gap-1">
               <TabsTrigger value="competition" className="text-xs lg:text-sm">Competition</TabsTrigger>
               <TabsTrigger value="unit-economics" className="text-xs lg:text-sm">Unit Economics</TabsTrigger>
               <TabsTrigger value="risk-management" className="text-xs lg:text-sm">Risk Management</TabsTrigger>
-              <TabsTrigger value="10-year-model" className="text-xs lg:text-sm">10-Year Model</TabsTrigger>
+              <TabsTrigger value="financial-model" className="text-xs lg:text-sm">Financial Model</TabsTrigger>
               <TabsTrigger value="two-pocket-model" className="text-xs lg:text-sm">Two-Pocket</TabsTrigger>
-              <TabsTrigger value="capital-stack" className="text-xs lg:text-sm">Capital Stack</TabsTrigger>
               <TabsTrigger value="revenue-development" className="text-xs lg:text-sm">Revenue</TabsTrigger>
-              <TabsTrigger value="assumptions" className="text-xs lg:text-sm">Assumptions</TabsTrigger>
               <TabsTrigger value="legal" className="text-xs lg:text-sm">Legal</TabsTrigger>
               <TabsTrigger value="tech" className="text-xs lg:text-sm">Tech</TabsTrigger>
             </TabsList>
@@ -420,9 +418,12 @@ const BusinessModel = () => {
               <KillSwitch />
             </TabsContent>
 
-            {/* 10-Year Model Tab - Moved from main scroll */}
-            <TabsContent value="10-year-model">
-              <TenYearProjection />
+            {/* Financial Model Tab - Combined 10-Year + Capital Stack */}
+            <TabsContent value="financial-model">
+              <div className="space-y-12">
+                <TenYearProjection />
+                <CapitalStackExplainer />
+              </div>
             </TabsContent>
 
             {/* Two-Pocket Model Tab (formerly Tiered Portfolio) */}
@@ -455,83 +456,75 @@ const BusinessModel = () => {
 
             <TabsContent value="revenue-development">
 
-              {/* Profit Recycling Flywheel - from Hardware Roadmap */}
+              {/* Profit Recycling Flywheel - 2 Flips Only */}
               <Card className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/30 mb-12 overflow-hidden">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-center gap-2 mb-4">
                     <RefreshCw className="h-5 w-5 text-green-500" />
-                    <span className="font-bold text-green-500">Profit Recycling Flywheel</span>
-                    <Badge variant="outline" className="ml-2 border-green-500/50 text-green-400">Non-Dilutive Growth</Badge>
+                    <span className="font-bold text-green-500">Seed Phase Capital Recycling</span>
+                    <Badge variant="outline" className="ml-2 border-green-500/50 text-green-400">2 Flips</Badge>
                   </div>
-                  <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
-                    <Badge className="bg-primary/20 text-primary border-primary/30">$1.9M Seed</Badge>
-                    <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
-                    <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">Flip 1: +$0.9M</Badge>
-                    <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
-                    <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">Flip 2: +$1.47M</Badge>
-                    <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
-                    <Badge className="bg-pink-500/20 text-pink-400 border-pink-500/30">Flip 3: +$1.44M</Badge>
-                    <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
-                    <Badge className="bg-orange-500/20 text-orange-400 border-orange-500/30">Flip 4: +$0.88M</Badge>
-                    <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
-                    <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">Flip 5: +$3.5M</Badge>
-                    <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
-                    <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Flip 6: +$4.25M</Badge>
-                    <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
-                    <Badge className="bg-emerald-500/30 text-emerald-300 border-emerald-500/50 font-bold">$12.4M Total</Badge>
+                  <div className="flex flex-wrap items-center justify-center gap-3 text-sm">
+                    <Badge className="bg-primary/20 text-primary border-primary/30 text-base px-4 py-2">$1.9M Seed</Badge>
+                    <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                    <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30 text-base px-4 py-2">Flip 1 Peru: +$0.9M</Badge>
+                    <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                    <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30 text-base px-4 py-2">Flip 2 Brazil: +$1.19M</Badge>
+                    <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                    <Badge className="bg-emerald-500/30 text-emerald-300 border-emerald-500/50 font-bold text-base px-4 py-2">$4.0M Treasury</Badge>
                   </div>
                   <p className="text-center text-sm text-muted-foreground mt-4">
-                    $1.9M Seed funds Flip 1. <span className="text-green-500 font-semibold">Recycled Profits</span> fund Flips 2-6.
+                    $1.9M Seed funds Flip 1. <span className="text-green-500 font-semibold">Recycled Profits</span> fund Flip 2. <span className="text-primary font-semibold">$4M Treasury</span> enables platform pivot.
                   </p>
                 </CardContent>
               </Card>
 
-              {/* Stats Overview */}
-              <div className="grid grid-cols-4 gap-6 mb-16">
+              {/* Stats Overview - 2 Flips Only */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
                 <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                   <CardContent className="p-6 text-center">
                     <TrendingUp className="w-8 h-8 text-primary mx-auto mb-3" />
                     <div className="text-2xl font-bold text-foreground">$1.9M</div>
-                    <div className="text-sm text-muted-foreground">DevCo Seed Capital</div>
+                    <div className="text-sm text-muted-foreground">Seed Capital</div>
                   </CardContent>
                 </Card>
                 <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                   <CardContent className="p-6 text-center">
                     <Building className="w-8 h-8 text-primary mx-auto mb-3" />
-                    <div className="text-2xl font-bold text-foreground">{totalUnits}</div>
-                    <div className="text-sm text-muted-foreground">Total Units</div>
+                    <div className="text-2xl font-bold text-foreground">32</div>
+                    <div className="text-sm text-muted-foreground">Seed Phase Units</div>
                   </CardContent>
                 </Card>
                 <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                   <CardContent className="p-6 text-center">
                     <Target className="w-8 h-8 text-primary mx-auto mb-3" />
-                    <div className="text-2xl font-bold text-foreground">6</div>
-                    <div className="text-sm text-muted-foreground">Countries</div>
+                    <div className="text-2xl font-bold text-foreground">2</div>
+                    <div className="text-sm text-muted-foreground">Countries (Peru + Brazil)</div>
                   </CardContent>
                 </Card>
                 <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                   <CardContent className="p-6 text-center">
                     <DollarSign className="w-8 h-8 text-primary mx-auto mb-3" />
-                    <div className="text-2xl font-bold text-foreground">${totalDynamicRevenue.toFixed(2)}M</div>
-                    <div className="text-sm text-muted-foreground">15-Year Revenue</div>
+                    <div className="text-2xl font-bold text-foreground">$4.0M</div>
+                    <div className="text-sm text-muted-foreground">Final Treasury</div>
                   </CardContent>
                 </Card>
               </div>
 
-              {/* Flywheel Flow */}
+              {/* Flywheel Flow - 2 Flips Only */}
               <div>
                 <div className="text-center mb-16">
                   <Badge variant="outline" className="mb-4 border-emerald-500/50 text-emerald-400">
-                    Two-Pocket Model
+                    Seed Phase (2 Flips)
                   </Badge>
                   <h2 className="text-4xl font-bold mb-4">The Development Flywheel</h2>
                   <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                    DevCo receives 100% gross sales from FinCo at closing. Capital compounds from $1.9M → $14M+ across 6 flips.
+                    DevCo receives 100% gross sales from FinCo at closing. Capital compounds from $1.9M → $4M across 2 flips.
                   </p>
                 </div>
 
                 <div className="space-y-8">
-                  {flywheelData.map((flip, index) => <Card key={flip.flip} className="bg-card/80 backdrop-blur-sm border-border/50 overflow-hidden">
+                  {flywheelData.slice(0, 2).map((flip, index) => <Card key={flip.flip} className="bg-card/80 backdrop-blur-sm border-border/50 overflow-hidden">
                       <CardContent className="p-0">
                         <div className="grid md:grid-cols-3 gap-0">
                           {/* Image */}
@@ -940,15 +933,6 @@ const BusinessModel = () => {
 
             </TabsContent>
 
-            {/* Capital Stack Tab */}
-            <TabsContent value="capital-stack">
-              <CapitalStackExplainer />
-            </TabsContent>
-
-            {/* Assumptions Tab */}
-            <TabsContent value="assumptions">
-              <ModelAssumptions />
-            </TabsContent>
 
             {/* Legal Tab - The Defensible Moat */}
             <TabsContent value="legal">
