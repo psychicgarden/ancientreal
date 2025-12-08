@@ -99,37 +99,40 @@ const BusinessModel = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
         </div>
         
-        {/* Top Left Branding */}
-        <div className="absolute top-10 left-10 z-20">
-          <p className="text-[11px] uppercase tracking-[0.4em] text-white/70 font-light mb-2">
-            Ancient Protocol
-          </p>
-          <p className="text-[13px] tracking-[0.2em] text-amber-200/90 font-normal">
+      {/* Top Left Branding */}
+        <div className="absolute top-12 left-12 z-20">
+          <div className="flex items-center gap-3 mb-1">
+            <div className="w-8 h-[1px] bg-gradient-to-r from-amber-400/80 to-transparent" />
+            <p className="text-xs uppercase tracking-[0.35em] text-white/90 font-medium">
+              Ancient Protocol
+            </p>
+          </div>
+          <p className="text-sm italic tracking-[0.08em] text-amber-300/90 font-light pl-11">
             The Stripe for Global Mortgages
           </p>
         </div>
         
         <div className="relative z-10 w-full max-w-5xl mx-auto px-8 text-center">
           {/* Main Headline - Two Lines */}
-          <h1 className="font-playfair leading-[1.1] mb-12">
-            <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-light tracking-[-0.01em] text-white/95 mb-2">
+          <h1 className="font-playfair leading-[1.05] mb-14">
+            <span className="block text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extralight tracking-[0.02em] text-white mb-4">
               The World's First
             </span>
-            <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-medium italic tracking-[-0.02em] text-amber-100">
+            <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-normal italic tracking-[-0.01em] bg-gradient-to-r from-amber-200 via-amber-100 to-amber-200 bg-clip-text text-transparent">
               Borderless Mortgage Network
             </span>
           </h1>
           
           {/* Subheadline */}
-          <p className="text-lg sm:text-xl lg:text-2xl text-white/75 leading-relaxed max-w-2xl mx-auto mb-3 font-light tracking-wide">
-            80 million digital nomads burn <span className="text-amber-200 font-medium">$900B+</span> annually on dead rent.
+          <p className="text-base sm:text-lg lg:text-xl text-white/70 leading-relaxed max-w-2xl mx-auto mb-2 font-light tracking-wide">
+            80 million digital nomads burn <span className="text-amber-300 font-normal">$900B+</span> annually on dead rent.
           </p>
-          <p className="text-lg sm:text-xl lg:text-2xl text-white/90 leading-relaxed max-w-2xl mx-auto mb-10 font-normal tracking-wide">
+          <p className="text-base sm:text-lg lg:text-xl text-white/90 leading-relaxed max-w-2xl mx-auto mb-12 font-normal tracking-wide">
             We convert that into liquid, transferable on-chain homeownership.
           </p>
           
           {/* Emotional Line */}
-          <p className="text-lg lg:text-xl italic text-amber-200/80 mb-14 font-light">
+          <p className="text-base lg:text-lg italic text-amber-200/70 mb-16 font-light tracking-wide">
             We built the financial rails banks never could.
           </p>
           
