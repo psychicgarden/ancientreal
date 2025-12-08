@@ -100,23 +100,27 @@ const BusinessModel = () => {
         </div>
         
         <div className="absolute top-8 left-8 z-20">
-          <h3 className="text-xl lg:text-2xl font-display font-medium text-white/90 tracking-wide">
-            ANCIENT PROTOCOL
-          </h3>
+          <p className="text-xs uppercase tracking-[0.3em] text-white/60 font-light mb-1">
+            Ancient Protocol
+          </p>
+          <p className="text-sm tracking-[0.15em] text-emerald-400/90 font-medium">
+            The Stripe for Global Mortgages
+          </p>
         </div>
         
         <div className="relative z-10 w-full max-w-4xl mx-auto px-6 text-center">
           {/* Main Headline */}
-          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.1] tracking-tight text-white mb-8">
+          <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-light leading-[1.05] tracking-[-0.02em] text-white mb-10">
             The World's First<br />
-            <span className="italic">Borderless Mortgage Network</span>
+            <span className="font-medium italic bg-gradient-to-r from-emerald-300 via-white to-emerald-300 bg-clip-text text-transparent">Borderless Mortgage Network</span>
           </h1>
           
           {/* Subheadline */}
-          <p className="text-lg sm:text-xl lg:text-2xl text-white/80 leading-relaxed max-w-3xl mx-auto mb-6">
-            115 million global citizens spend nearly $1T a year on rent they'll never own.
-            <br className="hidden sm:block" />
-            <span className="text-white font-medium">We convert that into on-chain, transferable property.</span>
+          <p className="text-lg sm:text-xl lg:text-2xl text-white/70 leading-relaxed max-w-2xl mx-auto mb-4 font-light tracking-wide">
+            80 million digital nomads burn <span className="text-white font-medium">$900B+</span> annually on dead rent.
+          </p>
+          <p className="text-lg sm:text-xl lg:text-2xl text-emerald-300/90 leading-relaxed max-w-2xl mx-auto mb-8 font-medium tracking-wide">
+            We convert that into liquid, transferable on-chain homeownership.
           </p>
           
           {/* Emotional Line */}
