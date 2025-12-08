@@ -1,136 +1,166 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Shield, FileText, Zap, Home, DollarSign, CheckCircle2, ArrowRight } from "lucide-react";
-
-interface RiskMitigation {
-  title: string;
-  description: string;
-  icon: React.ElementType;
-  highlight?: string;
-}
-
-const mitigations: RiskMitigation[] = [
-  {
-    title: "Title Retention (Reserva de Dominio)",
-    description: "Ancient Protocol retains Legal Title until the final dollar is paid. No foreclosure court needed.",
-    icon: FileText,
-    highlight: "100% Title Control",
-  },
-  {
-    title: "Smart Default",
-    description: "If a buyer stops paying, the Smart Contract revokes their access NFT instantly. No legal delays.",
-    icon: Zap,
-    highlight: "Instant Revocation",
-  },
-  {
-    title: "Yield-Based Liquidation",
-    description: "If a unit defaults, we instantly seize it and place it in our Short-Term Rental Pool.",
-    icon: Home,
-    highlight: "2.5× Coverage",
-  },
-  {
-    title: "DeFi Rate Hedging",
-    description: "Fixed-rate hedging via Pendle Swaps and Threshold USD (thUSD) locks our cost of capital at 0-6%.",
-    icon: Shield,
-    highlight: "Rate Protection",
-  },
-];
+import { Shield, AlertTriangle, FileText, Zap, Layers } from "lucide-react";
 
 export default function KillSwitch() {
   return (
     <section className="py-16 px-4 bg-background">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
         <div className="text-center mb-12">
-          <Badge variant="outline" className="mb-4 text-lg px-6 py-2 border-destructive/50 text-destructive">
-            Risk Management
+          <Badge variant="outline" className="mb-4 text-sm px-4 py-1 border-destructive/50 text-destructive">
+            Enforcement Layer
           </Badge>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            The <span className="text-destructive">"Kill Switch"</span>
+          <h2 className="text-3xl md:text-4xl font-bold mb-3">
+            Our "Kill Switch" <span className="text-green-500">Makes Default Profitable</span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            We solve the "Illiquidity Risk" of Peruvian Real Estate with a{" "}
-            <span className="text-primary font-semibold">Yield-Based Liquidation</span> model.
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Zero foreclosure courts. Instant asset recovery. 2.5× rental coverage.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {mitigations.map((item, idx) => (
-            <Card 
-              key={item.title} 
-              className="bg-card/50 border-border/50 hover:border-primary/30 transition-all hover:shadow-lg"
-            >
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="p-3 bg-primary/10 rounded-full">
-                    <item.icon className="h-6 w-6 text-primary" />
-                  </div>
-                  <Badge className="bg-green-500/20 text-green-500 border-green-500/30">
-                    {item.highlight}
-                  </Badge>
+        {/* 3 Mechanism Cards */}
+        <div className="grid md:grid-cols-3 gap-6 mb-12">
+          {/* The Problem */}
+          <Card className="bg-destructive/5 border-destructive/20">
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-destructive/10 rounded-lg">
+                  <AlertTriangle className="h-5 w-5 text-destructive" />
                 </div>
-                <CardTitle className="text-lg mt-4">{item.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">{item.description}</p>
-              </CardContent>
-            </Card>
-          ))}
+                <CardTitle className="text-base">The Problem It Solves</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                Software-only lenders (TrueFi, Maple) failed because they have <span className="text-destructive font-medium">zero real-world enforcement</span>.
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Title Retention */}
+          <Card className="bg-primary/5 border-primary/20">
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <FileText className="h-5 w-5 text-primary" />
+                </div>
+                <CardTitle className="text-base">Title Retention</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                <span className="text-primary font-medium">Reserva de Dominio</span> — Ancient retains 100% legal title until the final dollar is paid.
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Smart Default */}
+          <Card className="bg-green-500/5 border-green-500/20">
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-green-500/10 rounded-lg">
+                  <Zap className="h-5 w-5 text-green-500" />
+                </div>
+                <CardTitle className="text-base">Smart Default</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                Buyer stops paying → Smart Contract revokes access NFT → <span className="text-green-500 font-medium">Instant physical reclaim</span>. No courts.
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Yield Liquidation Math */}
-        <Card className="bg-gradient-to-r from-green-500/10 via-emerald-500/10 to-green-500/10 border-green-500/30">
-          <CardHeader>
-            <CardTitle className="text-center text-2xl">
-              <Shield className="h-6 w-6 inline-block mr-2 text-green-500" />
-              Yield Liquidation Math
-            </CardTitle>
+        {/* Title-Wrapper NFT Visual */}
+        <Card className="mb-12 bg-card/50 border-border/50">
+          <CardHeader className="text-center pb-4">
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <Layers className="h-5 w-5 text-primary" />
+              <CardTitle className="text-xl">Core Innovation: The Title-Wrapper NFT</CardTitle>
+            </div>
+            <p className="text-sm text-muted-foreground">Three layers of enforceable ownership in one token</p>
           </CardHeader>
           <CardContent>
-            <div className="grid md:grid-cols-3 gap-8 items-center">
-              {/* Loan Cost */}
-              <div className="text-center p-6 bg-background/50 rounded-xl">
-                <DollarSign className="h-8 w-8 mx-auto mb-2 text-destructive" />
-                <p className="text-sm text-muted-foreground mb-1">Annual Loan Cost</p>
-                <p className="text-3xl font-bold text-destructive">$7,000</p>
-                <p className="text-xs text-muted-foreground">Interest + Principal</p>
+            <div className="max-w-md mx-auto space-y-3">
+              {/* Layer 1: Deed */}
+              <div className="relative">
+                <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 text-center">
+                  <p className="text-xs text-amber-500 uppercase tracking-wider mb-1">Legal Layer</p>
+                  <p className="font-semibold text-foreground">The Deed</p>
+                  <p className="text-xs text-muted-foreground mt-1">Legal ownership in jurisdiction-specific SPV</p>
+                </div>
               </div>
-
-              {/* Arrow */}
-              <div className="hidden md:flex items-center justify-center">
-                <ArrowRight className="h-8 w-8 text-muted-foreground" />
+              
+              {/* Layer 2: Debt */}
+              <div className="relative">
+                <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 text-center">
+                  <p className="text-xs text-blue-500 uppercase tracking-wider mb-1">Financial Layer</p>
+                  <p className="font-semibold text-foreground">The Debt</p>
+                  <p className="text-xs text-muted-foreground mt-1">Live on-chain ledger: principal, interest, repayment</p>
+                </div>
               </div>
-
-              {/* Rental Income */}
-              <div className="text-center p-6 bg-background/50 rounded-xl">
-                <Home className="h-8 w-8 mx-auto mb-2 text-green-500" />
-                <p className="text-sm text-muted-foreground mb-1">Annual Rental Income</p>
-                <p className="text-3xl font-bold text-green-500">$18,000</p>
-                <p className="text-xs text-muted-foreground">Short-Term Rental Pool</p>
+              
+              {/* Layer 3: Payment Stream */}
+              <div className="relative">
+                <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-4 text-center">
+                  <p className="text-xs text-green-500 uppercase tracking-wider mb-1">Cashflow Layer</p>
+                  <p className="font-semibold text-foreground">The Payment Stream</p>
+                  <p className="text-xs text-muted-foreground mt-1">Tokenized USDC payments: borrower → lender</p>
+                </div>
               </div>
-            </div>
-
-            {/* Result */}
-            <div className="mt-8 text-center p-6 bg-green-500/10 rounded-xl border border-green-500/30">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <CheckCircle2 className="h-6 w-6 text-green-500" />
-                <p className="text-xl font-bold text-green-500">Result: 2.5× Debt Service Coverage</p>
-              </div>
-              <p className="text-muted-foreground">
-                Rental income covers debt service <span className="font-semibold">2.5×</span>. 
-                The investor gets paid <span className="text-green-500 font-semibold">even if the house doesn't sell</span>.
-              </p>
             </div>
           </CardContent>
         </Card>
 
-        {/* Additional Safety Note */}
-        <div className="mt-8 text-center p-6 bg-muted/30 rounded-xl border border-border/50">
-          <p className="text-lg font-medium">
-            <span className="text-primary font-bold">Zero Foreclosure Risk</span> — We never go to court. 
-            Title retention means we already own the asset. Default = Rental activation.
-          </p>
-        </div>
+        {/* 2.5x Coverage Result */}
+        <Card className="bg-gradient-to-r from-green-500/5 via-emerald-500/5 to-green-500/5 border-green-500/20">
+          <CardContent className="py-8">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-8">
+              {/* Rental Income */}
+              <div className="text-center">
+                <div className="w-28 h-28 rounded-full bg-green-500/10 border-2 border-green-500/30 flex items-center justify-center mb-3 mx-auto">
+                  <div>
+                    <p className="text-2xl font-bold text-green-500">$18K</p>
+                    <p className="text-xs text-green-500/70">/year</p>
+                  </div>
+                </div>
+                <p className="text-sm font-medium">Rental Income</p>
+                <p className="text-xs text-muted-foreground">STR Pool Revenue</p>
+              </div>
+
+              {/* Ratio */}
+              <div className="flex flex-col items-center">
+                <div className="text-4xl font-bold text-green-500">2.5×</div>
+                <p className="text-xs text-muted-foreground">Coverage</p>
+              </div>
+
+              {/* Debt Service */}
+              <div className="text-center">
+                <div className="w-28 h-28 rounded-full bg-destructive/10 border-2 border-destructive/30 flex items-center justify-center mb-3 mx-auto">
+                  <div>
+                    <p className="text-2xl font-bold text-destructive">$7K</p>
+                    <p className="text-xs text-destructive/70">/year</p>
+                  </div>
+                </div>
+                <p className="text-sm font-medium">Debt Service</p>
+                <p className="text-xs text-muted-foreground">Interest + Principal</p>
+              </div>
+            </div>
+
+            {/* Result Line */}
+            <div className="mt-6 text-center">
+              <div className="inline-flex items-center gap-2 bg-green-500/10 px-4 py-2 rounded-full">
+                <Shield className="h-4 w-4 text-green-500" />
+                <span className="text-sm font-medium text-green-500">
+                  Investors get paid even if the house doesn't sell
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </section>
   );
