@@ -11,6 +11,7 @@ import CashFirstStrategy from "@/components/CashFirstStrategy";
 import CompetitiveLandscape from "@/components/CompetitiveLandscape";
 import DevCoFinCoModel from "@/components/DevCoFinCoModel";
 import MarketFailure from "@/components/MarketFailure";
+import StrategyRoadmap from "@/components/StrategyRoadmap";
 import TractionTrilogy from "@/components/TractionTrilogy";
 import UnfairUnitEconomics from "@/components/UnfairUnitEconomics";
 import KillSwitch from "@/components/KillSwitch";
@@ -36,6 +37,9 @@ const BusinessModel = () => {
 
       {/* Market Failure Section */}
       <MarketFailure />
+
+      {/* Strategy Roadmap - From Lab to Global Standard */}
+      <StrategyRoadmap />
 
       {/* Traction Trilogy Section */}
       <TractionTrilogy />
