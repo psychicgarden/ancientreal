@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, Loader2, Rocket, Building2, Database, TrendingUp, MapPin } from "lucide-react";
+import { CheckCircle2, Loader2, Rocket, Building2, Database, TrendingUp } from "lucide-react";
 
 interface TractionPhase {
   phase: number;
@@ -20,7 +20,7 @@ const phases: TractionPhase[] = [
     status: "live",
     metrics: "12 Units",
     revenue: "$75K Net Income",
-    purpose: "We know how to run this profitably. 18–20% Net Yields validated.",
+    purpose: "We know how to run this profitably. 18.75% Net Yields validated.",
     icon: Building2,
   },
   {
@@ -29,16 +29,16 @@ const phases: TractionPhase[] = [
     status: "building",
     metrics: "16 Units",
     revenue: "Fully Funded",
-    purpose: "16-unit apartment complex proving construction and permitting capabilities.",
+    purpose: "Vertical construction capability. Building infrastructure at scale.",
     icon: Loader2,
   },
   {
     phase: 3,
     title: "Proof of Protocol",
     status: "raising",
-    metrics: "32 Homes",
+    metrics: "15 Custom Homes",
     revenue: "$1.9M Raise",
-    purpose: "15 Peru + 17 Brazil = 32 mortgages. The 'Genesis Block' for the On-Chain Credit Score (OCCR).",
+    purpose: "The 'Genesis Block' for the On-Chain Credit Score (OCCR).",
     icon: Rocket,
   },
 ];
@@ -75,11 +75,10 @@ export default function TractionTrilogy() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <Badge variant="outline" className="mb-4 text-lg px-6 py-2">
-            The Trilogy of Proof
+            The Trilogy
           </Badge>
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            We Are Not Raising to Test a Theory.{" "}
-            <span className="text-primary">We Are Scaling a Proven Model.</span>
+            De-Risking <span className="text-primary">Execution</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             We aren't asking you to fund a theory. We are funding a <span className="text-primary font-semibold">scale-up</span>.
@@ -139,31 +138,14 @@ export default function TractionTrilogy() {
 
         {/* Bitcoin Valley Highlight */}
         <Card className="bg-gradient-to-r from-primary/10 via-orange-500/10 to-primary/10 border-primary/30">
-          <CardContent className="p-8">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <Database className="h-6 w-6 text-primary" />
-                  <h3 className="text-2xl font-bold">Bitcoin Valley</h3>
-                  <TrendingUp className="h-6 w-6 text-primary" />
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-3 justify-center">
-                <Badge variant="outline" className="border-primary/50 text-primary">
-                  <MapPin className="h-3 w-3 mr-1" />
-                  15 Units Peru
-                </Badge>
-                <Badge variant="outline" className="border-orange-500/50 text-orange-400">
-                  <MapPin className="h-3 w-3 mr-1" />
-                  17 Units Brazil
-                </Badge>
-                <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">
-                  32 Total Mortgages
-                </Badge>
-              </div>
+          <CardContent className="p-8 text-center">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Database className="h-6 w-6 text-primary" />
+              <h3 className="text-2xl font-bold">Bitcoin Valley</h3>
+              <TrendingUp className="h-6 w-6 text-primary" />
             </div>
-            <p className="text-lg text-muted-foreground text-center mt-4 max-w-3xl mx-auto">
-              Our flagship communities in Pisac, Peru and Bahia, Brazil — the <span className="text-primary font-semibold">"Genesis Block"</span> for the 
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Our flagship community in Pisac, Peru — the <span className="text-primary font-semibold">"Genesis Block"</span> for the 
               On-Chain Credit Score. Phase 3 proves the protocol before opening to global developers.
             </p>
           </CardContent>

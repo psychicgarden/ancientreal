@@ -1,46 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Bitcoin, Globe, XCircle, ArrowRight, TrendingUp, Banknote, Scale, Shield, Building2 } from "lucide-react";
-
-// 5 Megatrends from Pitch Deck Slide 6
-const megatrends = [
-  {
-    icon: TrendingUp,
-    title: "Nomad Surge",
-    stat: "5X since 2019",
-    desc: "Digital Nomads projected to reach 1B by 2035 — the forgotten high-income class invisible to banks.",
-    color: "text-blue-400",
-  },
-  {
-    icon: Bitcoin,
-    title: "Crypto Wealth Demands Real Assets",
-    stat: "$1.1T Trapped",
-    desc: "Selling BTC triggers 20–37% capital gains tax. Our model solves their #1 pain point.",
-    color: "text-orange-400",
-  },
-  {
-    icon: Banknote,
-    title: "Global Mortgage Collapse",
-    stat: "12–45% Rates",
-    desc: "Local mortgage rates in LATAM & SE Asia force markets to run on cash, locking out millions.",
-    color: "text-red-400",
-  },
-  {
-    icon: Scale,
-    title: "Legal Rails Unlocked",
-    stat: "Reserva de Dominio",
-    desc: "New title-retention laws enable instant, courtless foreclosure. Global mortgage enforcement is finally programmable.",
-    color: "text-purple-400",
-  },
-  {
-    icon: Building2,
-    title: "The RWA Boom",
-    stat: "#1 Priority",
-    desc: "Real-World Assets are the top priority for BlackRock, Fidelity, and Coinbase. On-chain mortgages are the next trillion-dollar category.",
-    color: "text-emerald-400",
-  },
-];
+import { Bitcoin, Globe, XCircle, ArrowRight } from "lucide-react";
 
 export default function MarketFailure() {
   return (
@@ -138,7 +99,7 @@ export default function MarketFailure() {
                 </div>
               </div>
               <div className="pt-4 border-t border-blue-500/20">
-                <p className="text-3xl font-bold text-blue-500">115M+</p>
+                <p className="text-3xl font-bold text-blue-500">50M+</p>
                 <p className="text-sm text-muted-foreground">Credit-Invisible Global Nomads</p>
               </div>
             </CardContent>
@@ -167,31 +128,72 @@ export default function MarketFailure() {
           </Card>
         </div>
 
-        {/* Perfect Macro Moment - 5 Megatrends */}
-        <div className="mt-16">
+        {/* Why Now / Perfect Storm Section */}
+        <div className="mt-12">
           <div className="text-center mb-12">
-            <Badge variant="outline" className="mb-4 text-lg px-6 py-2 border-primary/50 text-primary">
-              The Perfect Macro Moment
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Five Converging <span className="text-primary">Megatrends</span>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              🌪 Perfect Storm: <span className="text-primary">Why Now?</span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Ancient is not early — it's <span className="text-primary font-semibold">perfectly timed</span>.
-            </p>
+            <div className="max-w-4xl mx-auto text-xl text-muted-foreground">
+              <p>
+                <strong className="text-primary text-2xl">🌎 100M+ Digital Nomads by 2030, Zero Mortgage Infrastructure</strong>
+              </p>
+            </div>
           </div>
 
-          <div className="grid md:grid-cols-5 gap-4">
-            {megatrends.map((trend) => (
-              <Card 
-                key={trend.title} 
-                className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-lg transition-all duration-300 hover:border-primary/30"
-              >
-                <CardContent className="p-5">
-                  <trend.icon className={`h-8 w-8 mb-3 ${trend.color}`} />
-                  <div className={`text-xl font-bold mb-2 ${trend.color}`}>{trend.stat}</div>
-                  <h3 className="text-sm font-semibold mb-2">{trend.title}</h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">{trend.desc}</p>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[{
+              icon: "📈",
+              title: "Digital-Nomad Boom",
+              stat: "50M → 100M+",
+              desc: "6× growth since 2019, accelerating toward 100M+ by 2030"
+            }, {
+              icon: "⚖",
+              title: "Tokenized Real Estate",
+              stat: "$310M → $1.4T by 2030",
+              desc: "Real-estate RWAs have 4X'd in the past 18 months."
+            }, {
+              icon: "💻",
+              title: "Remote Work Default",
+              stat: "80%",
+              desc: "White-collar staff work hybrid/remote, severing income from geography"
+            }, {
+              icon: "🏠",
+              title: "Affordability Crisis",
+              stat: "8× Income",
+              desc: "Median home prices vs. household income—worst ratio in four decades"
+            }, {
+              icon: "🕰",
+              title: "Delayed Homeownership",
+              stat: "29 → 36",
+              desc: "U.S. first-time-buyer age climbed 7 years in a decade"
+            }, {
+              icon: "💰",
+              title: "Millennial Capital",
+              stat: "$5T Liquid",
+              desc: "Massive wealth, yet <50% own homes due to geographic constraints"
+            }, {
+              icon: "🏛",
+              title: "Institutional Scale-Up",
+              stat: "$5M → $1B+",
+              desc: "BlackRock's BUIDL Fund, launched Mar 2024, surpassed $1B AUM in under 12 months—a 200× growth, signaling rapid institutional adoption."
+            }, {
+              icon: "🗺",
+              title: "Visas & Tokenization Take Off",
+              stat: "50+ Countries",
+              desc: "Nomad visas have exploded from 6 to 66+ nations since 2019. At the same time, real estate tokenization has moved from pilots to legal frameworks in the US, UK, EU, UAE, Singapore, Switzerland, Mexico, Brazil, India—with new markets opening monthly."
+            }, {
+              icon: "💸",
+              title: "Global Mortgage Blackout",
+              stat: "$750B",
+              desc: "If just 10% of 50M digital nomads wanted $150K homes, that's a $750B TAM with a $250B immediate gap. Legacy banks leave the most mobile workforce locked out."
+            }].map(trend => (
+              <Card key={trend.title} className="bg-card/80 backdrop-blur-sm border-border/50 hover:shadow-lg transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="text-3xl mb-3">{trend.icon}</div>
+                  <div className="text-2xl font-bold text-primary mb-2">{trend.stat}</div>
+                  <h3 className="text-lg font-semibold mb-2">{trend.title}</h3>
+                  <p className="text-sm text-muted-foreground">{trend.desc}</p>
                 </CardContent>
               </Card>
             ))}

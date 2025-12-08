@@ -1,373 +1,947 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { ArrowRight, Menu, Home, Users, Briefcase, CreditCard, Plane, Code2, FileText, BarChart3, Rocket, Scale, Cpu, RefreshCw, Target, TrendingUp, Globe, Building, DollarSign, Sparkles } from "lucide-react";
+import { ArrowRight, TrendingUp, MapPin, DollarSign, Building, Globe, Shield, Code, Target, Rocket, Building2, BarChart3, Zap, Network, Menu, Home, Users, Briefcase, CreditCard, Plane, Code2, FileText, Settings, Calendar, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-// Core page components (cleaner old flow)
-import PerfectStorm from "@/components/PerfectStorm";
-import { DevelopmentFlywheel } from "@/components/DevelopmentFlywheel";
-import VCExitScenarios from "@/components/VCExitScenarios";
-import TeamSection from "@/components/TeamSection";
-
-// Deep dive tab components
-import CompetitiveLandscape from "@/components/CompetitiveLandscape";
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart, ComposedChart, PieChart, Pie, Cell } from "recharts";
+import SectionHeader from "@/components/SectionHeader";
+import TechDueDiligence from "@/components/TechDueDiligence";
+import TenYearProjection from "@/components/TenYearProjection";
+import ReturnProfile from "@/components/ReturnProfile";
+import SixFlipRoadmap from "@/components/SixFlipRoadmap";
 import TwoProductMortgage from "@/components/TwoProductMortgage";
 import SeedFundedRoadmap from "@/components/SeedFundedRoadmap";
-import DevCoFinCoModel from "@/components/DevCoFinCoModel";
-import FinCoLiquidityPool from "@/components/FinCoLiquidityPool";
+import InstitutionalCapitalTimeline from "@/components/InstitutionalCapitalTimeline";
+import { MortgageOptionsCalculator } from "@/components/MortgageOptionsCalculator";
+import { ScenarioComparison } from "@/components/ScenarioComparison";
+import { SensitivityDashboard } from "@/components/SensitivityDashboard";
+import { MortgageOnlySensitivityDashboard } from "@/components/MortgageOnlySensitivityDashboard";
+import { StrategicRecommendations } from "@/components/StrategicRecommendations";
+import { getCurrentScenario, getAggressiveScenario, getTieredScenario, getAcceleratedScenario, getHybridScenario, calculateDevelopmentFlywheel, getCashOptimizedScenario, getMortgageHeavyScenario, getHelocStrategyScenario } from "@/lib/revenueScenarios";
+import { ProductComparison } from "@/components/ProductComparison";
+import VCPitchDeck from "@/components/VCPitchDeck";
 import CashFirstStrategy from "@/components/CashFirstStrategy";
-import TechDueDiligence from "@/components/TechDueDiligence";
+import CompetitiveLandscape from "@/components/CompetitiveLandscape";
+import DevCoFinCoModel from "@/components/DevCoFinCoModel";
+import MarketFailure from "@/components/MarketFailure";
+import TractionTrilogy from "@/components/TractionTrilogy";
+import UnfairUnitEconomics from "@/components/UnfairUnitEconomics";
+import KillSwitch from "@/components/KillSwitch";
+import AWSPitch from "@/components/AWSPitch";
+import FinCoLiquidityPool from "@/components/FinCoLiquidityPool";
 import { LegalRegulatoryProofing } from "@/components/LegalRegulatoryProofing";
+import VCExitScenarios from "@/components/VCExitScenarios";
+import CapitalStackExplainer from "@/components/CapitalStackExplainer";
+import VentureStakingExplainer from "@/components/VentureStakingExplainer";
 import ModelAssumptions from "@/components/ModelAssumptions";
-import SixFlipRoadmap from "@/components/SixFlipRoadmap";
-import SimpleBusinessModel from "@/components/SimpleBusinessModel";
-import ScalingPath from "@/components/ScalingPath";
 
 // Import property images
+import villaTulum from "@/assets/villa-tulum.jpg";
+import beachChalet from "@/assets/beach-chalet.jpg";
+import villaEriceira from "@/assets/villa-ericeira-portugal.jpg";
+import villaGreece from "@/assets/villa-greece.jpg";
+import villaBali from "@/assets/villa-bali.jpg";
+import penthouseMexico from "@/assets/penthouse-mexico.jpg";
 import ecoSmartCity from "@/assets/eco-smart-city.jpg";
 
+// Calculate dynamic flywheel data with Two-Pocket Model
+// DevCo receives 100% gross sales from FinCo at closing
+const INITIAL_CAPITAL = 1.9; // $1.9M seed investment (DevCo only)
+
+const calculateFlywheelWithBudget = () => {
+  const flywheel = calculateDevelopmentFlywheel();
+  const images = [villaTulum, beachChalet, villaGreece, villaEriceira, villaBali, penthouseMexico];
+  const locations = [{
+    name: "Pisac, Peru",
+    flag: "🇵🇪",
+    structure: "Peruvian SAC + Reserva de Dominio"
+  }, {
+    name: "Bahia, Brazil",
+    flag: "🇧🇷",
+    structure: "Brazilian LTDA + Alienação Fiduciária"
+  }, {
+    name: "Corfu, Greece",
+    flag: "🇬🇷",
+    structure: "Greek IKE SPV"
+  }, {
+    name: "Koh Phangan, Thailand",
+    flag: "🇹🇭",
+    structure: "30+30 Leasehold"
+  }, {
+    name: "Mazunte, Mexico",
+    flag: "🇲🇽",
+    structure: "Mexican SAPI + Fideicomiso"
+  }, {
+    name: "Antalya, Turkey",
+    flag: "🇹🇷",
+    structure: "Turkish SPV"
+  }];
+  const prices = [135000, 145000, 165000, 110000, 250000, 160000]; // Canonical: Peru→Brazil→Greece→Thailand→Mexico→Turkey
+
+  let runningCapital = INITIAL_CAPITAL;
+  return flywheel.flips.map((flip, idx) => {
+    const buildCostM = flip.buildCost / 1_000_000;
+    const grossSalesM = flip.grossSales / 1_000_000;
+
+    // TWO-POCKET MODEL: DevCo receives 100% gross sales from FinCo at closing
+    // FinCo handles mortgages separately with its own capital pool
+    const netProfitM = grossSalesM - buildCostM;
+
+    // Capital compounds: start with seed, add net profit each flip
+    runningCapital = runningCapital + netProfitM;
+    return {
+      flip: flip.flip,
+      location: locations[idx].name,
+      flag: locations[idx].flag,
+      units: flip.units,
+      pricePerUnit: prices[idx],
+      buildCost: buildCostM,
+      salesPrice: grossSalesM,
+      grossSales: grossSalesM,
+      // 100% from FinCo at closing
+      netProfit: netProfitM,
+      runningCapital: runningCapital,
+      platformFee: flip.platformFees / 1_000,
+      image: images[idx],
+      structure: locations[idx].structure,
+      // Legacy fields for compatibility
+      cashIn: flip.immediateCash / 1_000_000,
+      remaining: runningCapital,
+      downPayments: flip.downPayments / 1_000_000,
+      cashSales: flip.cashSales / 1_000_000,
+      deferredPrincipal: flip.deferredPrincipal / 1_000_000
+    };
+  });
+};
+const flywheelData = calculateFlywheelWithBudget();
+const flywheel = calculateDevelopmentFlywheel();
+
+// SEED-FUNDED MODEL: 32 units across 2 flips (Peru + Brazil)
+// Full 6-flip model only for reference - seed phase is the investor focus
+const seedFundedUnits = 32; // 15 Peru + 17 Brazil
+const totalUnits = flywheel.flips.reduce((sum, f) => sum + f.units, 0); // All flips for reference
+const totalGrossSales = flywheel.totalGrossSales / 1_000_000;
+const totalPlatformFees = flywheel.totalPlatformFees / 1_000_000;
+const avgPrice = totalGrossSales / totalUnits * 1_000_000;
+
+// Seed-phase platform fees: 3% on 32 units (~$4.5M gross sales)
+const seedPhasePlatformFees = 0.135; // $135K from 32 seed-funded units
+const platformFeesY0 = seedPhasePlatformFees;
+
+// Mortgage Interest: Use proper amortization formula, not simple interest
+// Calculate total interest from mortgages using monthly payment formula
+let totalMortgageInterest = 0;
+let totalLoanAmount = 0;
+flywheel.flips.forEach(flip => {
+  const financedUnits = Math.floor(flip.units * 0.80); // 80% financed
+  const avgPrice = flip.grossSales / flip.units;
+  const loanAmount = avgPrice * 0.80 * financedUnits; // 80% LTV per unit
+
+  // Monthly payment calculation: P * [r(1+r)^n] / [(1+r)^n - 1]
+  const monthlyRate = 0.10 / 12; // 10% APR
+  const numPayments = 15 * 12; // 180 months
+  const monthlyPayment = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1);
+  const totalPaid = monthlyPayment * numPayments;
+  const interestPaid = totalPaid - loanAmount;
+  totalMortgageInterest += interestPaid;
+  totalLoanAmount += loanAmount;
+});
+const annualInterest = totalMortgageInterest / 15 / 1_000_000; // Convert to millions
+
+// Net Interest Margin (NIM): Ancient borrows at 7%, lends at 10%, keeps 3% spread
+// NIM = 3% of total loan principal per year for 15 years
+const totalNIM = totalLoanAmount * 0.03 * 15 / 1_000_000; // 3% spread over 15 years
+const annualNIM = totalLoanAmount * 0.03 / 1_000_000; // Annual NIM
+
+// Revenue over 15 years (Platform Fees + NIM) - NO SAM, buyers keep 100% appreciation
+const totalDynamicRevenue = platformFeesY0 + totalNIM;
+
+// Calculate 15-year cash flow waterfall (Platform Fees + NIM only)
+const generateCashFlowData = () => {
+  const data = [];
+  let cumulativeRevenue = 0;
+  for (let year = 0; year <= 15; year++) {
+    let platformFees = 0;
+    let nim = 0;
+    if (year === 0) {
+      platformFees = platformFeesY0;
+    }
+    if (year >= 1 && year <= 15) {
+      nim = annualNIM;
+    }
+    const yearlyRevenue = platformFees + nim;
+    cumulativeRevenue += yearlyRevenue;
+
+    // Calculate IRR at this point (simplified)
+    const yearsElapsed = year || 0.5;
+    const irr = ((cumulativeRevenue / 1.9) ** (1 / yearsElapsed) - 1) * 100;
+    data.push({
+      year: year === 0 ? "Y0" : `Y${year}`,
+      platformFees: platformFees,
+      nim: nim,
+      total: yearlyRevenue,
+      cumulative: cumulativeRevenue,
+      irr: Math.min(irr, 30) // Cap at 30% for visualization
+    });
+  }
+  return data;
+};
+const cashFlowData = generateCashFlowData();
+const revenueStreams = [{
+  title: "Platform Fees",
+  amount: `$${seedPhasePlatformFees.toFixed(2)}M`,
+  description: "3% fee on seed-funded sales (32 units)",
+  timeline: "Immediate capture (Years 1-2)",
+  icon: "🏛"
+}, {
+  title: "Net Interest Margin (3% NIM)",
+  amount: `$${totalNIM.toFixed(2)}M`,
+  description: "Borrow at 7% → Lend at 10% = 3% spread",
+  timeline: "15-year recurring stream",
+  icon: "💰"
+}];
+const landAcquisition = [{
+  country: "Mexico",
+  budget: "$270K",
+  structure: "Bank Fideicomiso via SAPI",
+  risk: "Ejido exclusion critical"
+}, {
+  country: "Brazil",
+  budget: "$230K",
+  structure: "Brazilian LTDA",
+  risk: "Environmental approvals"
+}, {
+  country: "Greece",
+  budget: "$360K",
+  structure: "Greek IKE SPV",
+  risk: "Coastal restrictions"
+}, {
+  country: "Spain",
+  budget: "$400K",
+  structure: "Spanish SL",
+  risk: "8-10% transfer costs"
+}, {
+  country: "Thailand",
+  budget: "$280K",
+  structure: "30+30 Leasehold",
+  risk: "Foreign ownership limits"
+}, {
+  country: "Turkey",
+  budget: "$260K",
+  structure: "Turkish SPV",
+  risk: "Military zone clearance"
+}];
 const BusinessModel = () => {
   const navigate = useNavigate();
-
-  return (
-    <div className="min-h-screen bg-background">
+  // Remove shadowing - use global totalPlatformFees from line 110
+  const currentScenario = getCurrentScenario();
+  const acceleratedScenario = getAcceleratedScenario();
+  const hybridScenario = getHybridScenario();
+  const cashOptimizedScenario = getCashOptimizedScenario();
+  const mortgageHeavyScenario = getMortgageHeavyScenario();
+  const helocStrategyScenario = getHelocStrategyScenario();
+  return <div className="min-h-screen bg-gradient-subtle">
       {/* Navigation Menu */}
-      <div className="fixed top-6 right-6 z-50">
+      <div className="fixed top-4 right-4 z-50">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon" className="h-11 w-11 bg-black/40 backdrop-blur-md border-white/20 hover:bg-black/60 shadow-xl">
-              <Menu className="h-5 w-5 text-white" />
+            <Button variant="outline" size="icon" className="h-12 w-12 bg-background/80 backdrop-blur-sm border-border/50 hover:bg-background/90 shadow-lg">
+              <Menu className="h-5 w-5" />
               <span className="sr-only">Open navigation menu</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56 bg-background/95 backdrop-blur-sm border-border/50 shadow-xl" sideOffset={8}>
             <DropdownMenuLabel className="font-semibold">Navigate to</DropdownMenuLabel>
             <DropdownMenuSeparator />
+            
             <DropdownMenuItem onClick={() => navigate("/")} className="cursor-pointer">
               <Home className="mr-2 h-4 w-4" />
               <span>Home</span>
             </DropdownMenuItem>
+            
             <DropdownMenuItem onClick={() => navigate("/investor-portal")} className="cursor-pointer">
               <Briefcase className="mr-2 h-4 w-4" />
               <span>Investment Access</span>
             </DropdownMenuItem>
+            
             <DropdownMenuItem onClick={() => navigate("/portfolio")} className="cursor-pointer">
               <BarChart3 className="mr-2 h-4 w-4" />
               <span>Portfolio</span>
             </DropdownMenuItem>
+            
             <DropdownMenuItem onClick={() => navigate("/banking")} className="cursor-pointer">
               <CreditCard className="mr-2 h-4 w-4" />
               <span>Banking</span>
             </DropdownMenuItem>
+            
             <DropdownMenuSeparator />
+            
             <DropdownMenuItem onClick={() => navigate("/traveler")} className="cursor-pointer">
               <Plane className="mr-2 h-4 w-4" />
               <span>Traveler Portal</span>
             </DropdownMenuItem>
+            
             <DropdownMenuItem onClick={() => navigate("/community")} className="cursor-pointer">
               <Users className="mr-2 h-4 w-4" />
               <span>Community</span>
             </DropdownMenuItem>
+            
             <DropdownMenuItem onClick={() => navigate("/developers")} className="cursor-pointer">
               <Code2 className="mr-2 h-4 w-4" />
               <span>Developers</span>
             </DropdownMenuItem>
+            
             <DropdownMenuSeparator />
+            
             <DropdownMenuItem onClick={() => navigate("/legal-portal")} className="cursor-pointer">
               <FileText className="mr-2 h-4 w-4" />
               <span>Legal Portal</span>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate("/pitch-deck")} className="cursor-pointer">
-              <Rocket className="mr-2 h-4 w-4" />
-              <span>Pitch Deck</span>
+            
+            <DropdownMenuItem onClick={() => navigate("/test")} className="cursor-pointer">
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Smart Contract Test</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-
-      {/* HERO SECTION - Clean Original Style */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Wide Banner Hero Section */}
+      <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
+        {/* Background Image */}
         <div className="absolute inset-0 z-0">
-          <img src={ecoSmartCity} alt="Ancient Property" className="w-full h-full object-cover filter brightness-[0.35] contrast-[1.1]" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/40" />
+          <img src={ecoSmartCity} alt="Eco Smart City Vision" className="w-full h-full object-cover filter brightness-[0.4] contrast-[1.3] saturate-[1.2]" />
+          {/* Dramatic Gradient Overlays */}
+          <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-transparent to-black/40" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
         </div>
         
-        <div className="relative z-10 w-full max-w-5xl mx-auto px-6 text-center">
-          {/* Logo/Brand */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-tight mb-4">
-            ANCIENT
-          </h1>
-          
-          {/* Tagline */}
-          <p className="text-lg md:text-xl text-white/60 mb-8 font-light tracking-wide">
-            The World's First Decentralized State
+        {/* ANCIENT branding top-left */}
+        <div className="absolute top-8 left-8 z-20">
+          <h3 className="text-2xl lg:text-4xl font-light text-white/95 tracking-[0.3em] uppercase">
+            ANCIENT PROTOCOL
+          </h3>
+          <p className="text-sm lg:text-base font-light text-white/80 tracking-wide mt-2">
+            The "Stripe for Mortgage" Protocol
           </p>
-          
-          {/* Main Headline */}
-          <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-6">
-            Building Infrastructure
-            <br />
-            <span className="text-primary">for a Borderless World</span>
-          </h2>
-          
-          {/* Value Prop */}
-          <p className="text-base md:text-xl text-white/80 leading-relaxed max-w-3xl mx-auto mb-10">
-            50 million nomads burn $900B annually on dead rent.
-            <br className="hidden md:block" />
-            <span className="block mt-2">We convert that into fractional, on-chain deeds of dream properties.</span>
-          </p>
-          
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Button size="lg" className="text-lg px-10 py-6 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-2xl" onClick={() => navigate("/pitch-deck")}>
-              <Rocket className="mr-2 h-5 w-5" />
-              View Pitch Deck
-            </Button>
-            <Button size="lg" variant="outline" className="text-lg px-10 py-6 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm" onClick={() => navigate("/investor-portal")}>
-              <Briefcase className="mr-2 h-5 w-5" />
-              Investment Access
-            </Button>
-          </div>
-          
-          {/* Quiet Proof Stats */}
-          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-white/60 text-sm">
-            <span className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              12 homes live
-            </span>
-            <span>•</span>
-            <span>19% realized returns</span>
-            <span>•</span>
-            <span>Revenue-generating assets</span>
-          </div>
         </div>
         
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-white/30 rounded-full mt-2" />
+        {/* Centered Main Content */}
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-6 text-center mt-24 lg:mt-32">
+          {/* Main Hero Text */}
+          <div className="space-y-4 mb-12">
+            <h1 className="text-5xl lg:text-7xl xl:text-8xl font-bold leading-[0.9] tracking-tight">
+              <span className="block text-white drop-shadow-2xl">The RWA Mortgage Rail</span>
+              <span className="block bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent drop-shadow-2xl">for the Borderless Economy</span>
+            </h1>
+          </div>
+          
+          {/* Value Proposition - Positioned Lower */}
+          <div className="max-w-3xl mx-auto mt-16">
+            <div className="bg-black/30 backdrop-blur-xl rounded-2xl border border-white/10 px-6 py-4 shadow-2xl">
+              <p className="text-base lg:text-lg font-light leading-relaxed text-white/90">
+                <span className="font-semibold text-orange-400">50M nomads</span> burn <span className="font-semibold text-red-400">$900B/year</span> on dead rent. We convert that into <span className="font-semibold text-emerald-400">fractional, on-chain deeds</span>.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* PERFECT STORM - Why Now */}
-      <PerfectStorm />
+      {/* AWS Pitch Section - The 30-Second Elevator Pitch */}
+      <AWSPitch />
 
-      {/* DEVELOPMENT FLYWHEEL - Flip Economics */}
-      <section className="py-16 px-4 bg-gradient-to-b from-background to-muted/20">
-        <div className="max-w-7xl mx-auto">
-          {/* Section Header */}
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center space-x-2 mb-4">
-              <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary" />
-              <Badge variant="outline" className="text-sm font-medium text-primary uppercase tracking-wider border-primary/50">
-                Development Model
-              </Badge>
-              <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary" />
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Development Flywheel Model
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              2 Locations, 2 Flips, 32 Units — Seed-Funded Capital Recycling
-            </p>
-          </div>
-          
-          {/* Summary Stats Row */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-            <div className="bg-card/50 border border-border/50 rounded-xl p-5 text-center">
-              <DollarSign className="h-6 w-6 text-primary mx-auto mb-2" />
-              <p className="text-2xl md:text-3xl font-bold text-primary">$1.9M</p>
-              <p className="text-sm text-muted-foreground">Initial Capital</p>
-            </div>
-            <div className="bg-card/50 border border-border/50 rounded-xl p-5 text-center">
-              <Home className="h-6 w-6 text-emerald-500 mx-auto mb-2" />
-              <p className="text-2xl md:text-3xl font-bold text-emerald-500">32</p>
-              <p className="text-sm text-muted-foreground">Total Units</p>
-            </div>
-            <div className="bg-card/50 border border-border/50 rounded-xl p-5 text-center">
-              <Globe className="h-6 w-6 text-blue-500 mx-auto mb-2" />
-              <p className="text-2xl md:text-3xl font-bold text-blue-500">2</p>
-              <p className="text-sm text-muted-foreground">Countries</p>
-            </div>
-            <div className="bg-card/50 border border-border/50 rounded-xl p-5 text-center">
-              <TrendingUp className="h-6 w-6 text-purple-500 mx-auto mb-2" />
-              <p className="text-2xl md:text-3xl font-bold text-purple-500">$24.5M</p>
-              <p className="text-sm text-muted-foreground">10-Year Capture</p>
-            </div>
-          </div>
-          
-          {/* Flywheel Component */}
-          <DevelopmentFlywheel />
-        </div>
-      </section>
+      {/* Market Failure Section */}
+      <MarketFailure />
 
-      {/* 10-YEAR REVENUE CAPTURE */}
-      <section className="py-16 px-4 bg-muted/10">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">10-Year Revenue Capture</h2>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-6 mb-8">
-            {/* Platform Fees */}
-            <div className="bg-gradient-to-br from-blue-500/10 to-blue-500/5 border border-blue-500/20 rounded-2xl p-6 text-center">
-              <Building className="h-10 w-10 text-blue-500 mx-auto mb-4" />
-              <p className="text-lg font-semibold text-blue-400 mb-2">Platform Fees</p>
-              <p className="text-4xl font-bold text-white mb-2">$0.82M</p>
-              <p className="text-sm text-muted-foreground">Infrastructure revenue for serving nomad economy</p>
-              <Badge className="mt-4 bg-blue-500/20 text-blue-400 border-blue-500/30">Immediate capture</Badge>
-            </div>
-            
-            {/* Mortgage Interest */}
-            <div className="bg-gradient-to-br from-purple-500/10 to-purple-500/5 border border-purple-500/20 rounded-2xl p-6 text-center">
-              <Globe className="h-10 w-10 text-purple-500 mx-auto mb-4" />
-              <p className="text-lg font-semibold text-purple-400 mb-2">Mortgage Interest</p>
-              <p className="text-4xl font-bold text-white mb-2">$13.5M</p>
-              <p className="text-sm text-muted-foreground">10% yield serving the $250B cross-border lending void</p>
-              <Badge className="mt-4 bg-purple-500/20 text-purple-400 border-purple-500/30">10-year stream</Badge>
-            </div>
-            
-            {/* SAM Appreciation */}
-            <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20 rounded-2xl p-6 text-center">
-              <Sparkles className="h-10 w-10 text-emerald-500 mx-auto mb-4" />
-              <p className="text-lg font-semibold text-emerald-400 mb-2">SAM Appreciation</p>
-              <p className="text-4xl font-bold text-white mb-2">$10.2M</p>
-              <p className="text-sm text-muted-foreground">Capturing nomad wealth lost to rent into property equity</p>
-              <Badge className="mt-4 bg-emerald-500/20 text-emerald-400 border-emerald-500/30">10-year capture</Badge>
-            </div>
-          </div>
-          
-          {/* Total */}
-          <div className="bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/30 rounded-2xl p-8 text-center">
-            <p className="text-lg text-muted-foreground mb-2">Total 10-Year Revenue Capture</p>
-            <p className="text-5xl md:text-6xl font-bold text-primary">$24.53M</p>
-          </div>
-        </div>
-      </section>
+      {/* Competitive Intelligence - Market Validation */}
+      <CompetitiveLandscape />
 
-      {/* SCALING PATH - Evolution */}
-      <ScalingPath />
+      {/* Traction Trilogy Section */}
+      <TractionTrilogy />
 
-      {/* INVESTOR RETURN SCENARIOS */}
+      {/* Capital Stack Explainer - Answer VC Question: "How does $1.9M fund $2.4M?" */}
+      <CapitalStackExplainer />
+
+      {/* VC Exit Scenarios - What's In It For Investors */}
       <VCExitScenarios />
 
-      {/* TEAM SECTION */}
-      <TeamSection />
+      {/* Venture Staking Mechanics - How BTC becomes USDC */}
+      <VentureStakingExplainer />
 
-      {/* Closing CTA */}
-      <section className="py-20 px-4 bg-gradient-to-b from-muted/20 to-background">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            ANCIENT
-          </h2>
-          <p className="text-xl text-muted-foreground mb-2">
-            The first mortgage rails for people who live internationally.
-          </p>
-          <p className="text-2xl font-medium text-primary mb-8">
-            Live anywhere. Own everywhere.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="text-lg px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold" onClick={() => navigate("/pitch-deck")}>
-              <Rocket className="mr-2 h-5 w-5" />
-              View Pitch Deck
-            </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8" onClick={() => navigate("/investor-portal")}>
-              <Briefcase className="mr-2 h-5 w-5" />
-              Contact Us
-            </Button>
-          </div>
-        </div>
-      </section>
+      {/* Two-Product Mortgage Protocol */}
+      <TwoProductMortgage />
 
-      {/* Deep Dive Tabs - Due Diligence Section */}
-      <section className="px-4 bg-muted/10 py-16">
+      {/* Seed-Funded Roadmap */}
+      <SeedFundedRoadmap />
+
+      {/* Institutional Capital Timeline */}
+      <InstitutionalCapitalTimeline />
+
+      {/* Unfair Unit Economics Section */}
+      <UnfairUnitEconomics />
+
+      {/* Kill Switch Risk Management Section */}
+      <KillSwitch />
+
+      {/* 10-Year Financial Projection */}
+      <TenYearProjection />
+
+      {/* Return Profile for Investors */}
+      <ReturnProfile />
+
+      {/* Model Assumptions & Dependencies - Full Transparency */}
+      <ModelAssumptions />
+
+      {/* Business Model Content with Tabs */}
+      <section className="px-4 bg-background py-[50px]">
         <div className="max-w-7xl mx-auto">
+          
+
+          {/* CTA Section Before Deep Dive */}
+          <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/30 border-2 mb-16">
+            
+          </Card>
+
           {/* Deep Dive Section Header */}
           <div className="text-center mb-12">
             <div className="inline-flex items-center space-x-2 mb-4">
-              <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary" />
-              <Badge variant="outline" className="text-sm font-medium text-primary uppercase tracking-wider border-primary/50">
-                Due Diligence
-              </Badge>
-              <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary" />
+              <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary"></div>
+              <div className="text-sm font-medium text-primary uppercase tracking-wider">Explore the Details</div>
+              <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary"></div>
             </div>
-            <h2 className="text-3xl font-bold mb-2">Deep Dive Documentation</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Comprehensive details for investors who want to explore specific areas.
+            <h2 className="text-4xl font-bold">Optional Deep Dives</h2>
+            <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">
+              Additional documentation for investors who want comprehensive details on specific areas.
             </p>
           </div>
 
           {/* Tabbed Content */}
-          <Tabs defaultValue="roadmap" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 lg:grid-cols-7 lg:w-fit lg:mx-auto mb-8 gap-1">
-              <TabsTrigger value="roadmap" className="text-xs lg:text-sm">
-                <Target className="h-4 w-4 mr-1 hidden sm:inline" />
-                Roadmap
-              </TabsTrigger>
-              <TabsTrigger value="revenue" className="text-xs lg:text-sm">
-                <DollarSign className="h-4 w-4 mr-1 hidden sm:inline" />
-                Revenue
-              </TabsTrigger>
-              <TabsTrigger value="competition" className="text-xs lg:text-sm">
-                <Globe className="h-4 w-4 mr-1 hidden sm:inline" />
-                Competition
-              </TabsTrigger>
-              <TabsTrigger value="mortgages" className="text-xs lg:text-sm">
-                <Building className="h-4 w-4 mr-1 hidden sm:inline" />
-                Mortgages
-              </TabsTrigger>
-              <TabsTrigger value="model" className="text-xs lg:text-sm">
-                <RefreshCw className="h-4 w-4 mr-1 hidden sm:inline" />
-                Model
-              </TabsTrigger>
-              <TabsTrigger value="legal" className="text-xs lg:text-sm">
-                <Scale className="h-4 w-4 mr-1 hidden sm:inline" />
-                Legal
-              </TabsTrigger>
-              <TabsTrigger value="tech" className="text-xs lg:text-sm">
-                <Cpu className="h-4 w-4 mr-1 hidden sm:inline" />
-                Tech
-              </TabsTrigger>
+          <Tabs defaultValue="two-pocket-model" className="w-full">
+            <TabsList className="grid w-full grid-cols-4 lg:w-fit lg:mx-auto mb-8">
+              <TabsTrigger value="two-pocket-model" className="text-xs lg:text-sm">Two-Pocket Model</TabsTrigger>
+              <TabsTrigger value="revenue-development" className="text-xs lg:text-sm">Revenue & Development</TabsTrigger>
+              <TabsTrigger value="legal" className="text-xs lg:text-sm">Legal</TabsTrigger>
+              <TabsTrigger value="tech" className="text-xs lg:text-sm">Tech</TabsTrigger>
             </TabsList>
 
-            {/* Roadmap Tab */}
-            <TabsContent value="roadmap">
-              <div className="space-y-8">
-                <SeedFundedRoadmap />
-                <SixFlipRoadmap />
-              </div>
-            </TabsContent>
+            {/* Two-Pocket Model Tab (formerly Tiered Portfolio) */}
+            <TabsContent value="two-pocket-model">
+              <div className="space-y-12">
+                <div className="text-center mb-12">
+                  <Badge variant="outline" className="mb-4">
+                    Two-Pocket Engine
+                  </Badge>
+                  <h2 className="text-4xl font-bold mb-4">
+                    DevCo Builds Fast. FinCo Holds Mortgages. IRR Protected.
+                  </h2>
+                  <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    Originate-to-Distribute model: 40/60 Cash-Heavy → 10/90 Debt Scale → Securitization
+                  </p>
+                </div>
 
-            {/* Revenue Tab */}
-            <TabsContent value="revenue">
-              <SimpleBusinessModel />
-            </TabsContent>
-
-            {/* Competition Tab */}
-            <TabsContent value="competition">
-              <CompetitiveLandscape />
-            </TabsContent>
-
-            {/* Mortgages Tab */}
-            <TabsContent value="mortgages">
-              <TwoProductMortgage />
-            </TabsContent>
-
-            {/* Model Tab - Two-Pocket, FinCo, Cash Strategy */}
-            <TabsContent value="model">
-              <div className="space-y-8">
+                {/* DevCo/FinCo Two-Pocket Model */}
                 <DevCoFinCoModel />
+
+                {/* FinCo Liquidity Pool - Mortgage Capital */}
                 <FinCoLiquidityPool />
+
+                {/* Cash First Strategy Component */}
                 <CashFirstStrategy />
-                <ModelAssumptions />
+
+              
               </div>
             </TabsContent>
 
-            {/* Legal Tab */}
+            <TabsContent value="revenue-development">
+
+              {/* Profit Recycling Flywheel - from Hardware Roadmap */}
+              <Card className="bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/30 mb-12 overflow-hidden">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-center gap-2 mb-4">
+                    <RefreshCw className="h-5 w-5 text-green-500" />
+                    <span className="font-bold text-green-500">Profit Recycling Flywheel</span>
+                    <Badge variant="outline" className="ml-2 border-green-500/50 text-green-400">Non-Dilutive Growth</Badge>
+                  </div>
+                  <div className="flex flex-wrap items-center justify-center gap-2 text-sm">
+                    <Badge className="bg-primary/20 text-primary border-primary/30">$1.9M Seed</Badge>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
+                    <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">Flip 1: +$0.9M</Badge>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
+                    <Badge className="bg-purple-500/20 text-purple-400 border-purple-500/30">Flip 2: +$1.47M</Badge>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
+                    <Badge className="bg-pink-500/20 text-pink-400 border-pink-500/30">Flip 3: +$1.44M</Badge>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
+                    <Badge className="bg-orange-500/20 text-orange-400 border-orange-500/30">Flip 4: +$0.88M</Badge>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
+                    <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">Flip 5: +$3.5M</Badge>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
+                    <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Flip 6: +$4.25M</Badge>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground hidden sm:block" />
+                    <Badge className="bg-emerald-500/30 text-emerald-300 border-emerald-500/50 font-bold">$12.4M Total</Badge>
+                  </div>
+                  <p className="text-center text-sm text-muted-foreground mt-4">
+                    $1.9M Seed funds Flip 1. <span className="text-green-500 font-semibold">Recycled Profits</span> fund Flips 2-6.
+                  </p>
+                </CardContent>
+              </Card>
+
+              {/* Stats Overview */}
+              <div className="grid grid-cols-4 gap-6 mb-16">
+                <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+                  <CardContent className="p-6 text-center">
+                    <TrendingUp className="w-8 h-8 text-primary mx-auto mb-3" />
+                    <div className="text-2xl font-bold text-foreground">$1.9M</div>
+                    <div className="text-sm text-muted-foreground">DevCo Seed Capital</div>
+                  </CardContent>
+                </Card>
+                <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+                  <CardContent className="p-6 text-center">
+                    <Building className="w-8 h-8 text-primary mx-auto mb-3" />
+                    <div className="text-2xl font-bold text-foreground">{totalUnits}</div>
+                    <div className="text-sm text-muted-foreground">Total Units</div>
+                  </CardContent>
+                </Card>
+                <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+                  <CardContent className="p-6 text-center">
+                    <Target className="w-8 h-8 text-primary mx-auto mb-3" />
+                    <div className="text-2xl font-bold text-foreground">6</div>
+                    <div className="text-sm text-muted-foreground">Countries</div>
+                  </CardContent>
+                </Card>
+                <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+                  <CardContent className="p-6 text-center">
+                    <DollarSign className="w-8 h-8 text-primary mx-auto mb-3" />
+                    <div className="text-2xl font-bold text-foreground">${totalDynamicRevenue.toFixed(2)}M</div>
+                    <div className="text-sm text-muted-foreground">15-Year Revenue</div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Flywheel Flow */}
+              <div>
+                <div className="text-center mb-16">
+                  <Badge variant="outline" className="mb-4 border-emerald-500/50 text-emerald-400">
+                    Two-Pocket Model
+                  </Badge>
+                  <h2 className="text-4xl font-bold mb-4">The Development Flywheel</h2>
+                  <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    DevCo receives 100% gross sales from FinCo at closing. Capital compounds from $1.9M → $14M+ across 6 flips.
+                  </p>
+                </div>
+
+                <div className="space-y-8">
+                  {flywheelData.map((flip, index) => <Card key={flip.flip} className="bg-card/80 backdrop-blur-sm border-border/50 overflow-hidden">
+                      <CardContent className="p-0">
+                        <div className="grid md:grid-cols-3 gap-0">
+                          {/* Image */}
+                          <div className="relative h-64 md:h-auto">
+                            <img src={flip.image} alt={flip.location} className="w-full h-full object-cover" />
+                            <div className="absolute inset-0 bg-gradient-to-r from-background/80 to-transparent md:hidden" />
+                            <div className="absolute top-4 left-4">
+                              <Badge variant="secondary" className="text-lg">
+                                {flip.flag} {flip.flip}
+                              </Badge>
+                            </div>
+                          </div>
+
+                          {/* Financial Data */}
+                          <div className="p-8 space-y-6">
+                            <div>
+                              <h3 className="text-2xl font-bold mb-2">{flip.location}</h3>
+                              <p className="text-muted-foreground">{flip.units} Units • {flip.structure}</p>
+                            </div>
+                            
+                            {/* Per-Unit Economics */}
+                            <div className="bg-background/50 rounded-lg p-4">
+                              <div className="text-sm text-muted-foreground mb-2">Per-Unit Economics</div>
+                              <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                  <div className="text-xs text-muted-foreground">Build Cost</div>
+                                  <div className="font-semibold">$75K/unit</div>
+                                </div>
+                                <div>
+                                  <div className="text-xs text-muted-foreground">Sale Price</div>
+                                  <div className="font-semibold">${(flip.pricePerUnit / 1000).toFixed(0)}K/unit</div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {/* Total Economics */}
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <div className="text-sm text-muted-foreground">Total Build Cost</div>
+                                <div className="text-lg font-semibold">${flip.buildCost}M</div>
+                              </div>
+                              <div>
+                                <div className="text-sm text-muted-foreground">Total Sales Price</div>
+                                <div className="text-lg font-semibold">${flip.salesPrice}M</div>
+                              </div>
+                            </div>
+
+                            {/* Two-Pocket Model: DevCo receives 100% from FinCo */}
+                            <div className="bg-emerald-500/10 rounded-lg p-3 border border-emerald-500/20">
+                              <div className="text-sm font-medium text-emerald-400 mb-2 flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                DevCo receives 100% from FinCo at Closing
+                              </div>
+                              <div className="space-y-1 text-sm">
+                                <div className="flex justify-between items-center">
+                                  <span className="text-muted-foreground">Gross Sales ({flip.units} units):</span>
+                                  <span className="font-mono font-semibold text-foreground">${flip.grossSales?.toFixed(2) || flip.salesPrice?.toFixed(2)}M</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                  <span className="text-muted-foreground">Build Cost:</span>
+                                  <span className="font-mono font-semibold text-muted-foreground">-${flip.buildCost.toFixed(2)}M</span>
+                                </div>
+                                <div className="border-t border-emerald-500/30 pt-1.5 mt-1.5 flex justify-between items-center">
+                                  <span className="font-semibold text-foreground">Net Profit to DevCo:</span>
+                                  <span className="font-mono text-lg font-bold text-emerald-500">+${flip.netProfit?.toFixed(2) || (flip.salesPrice - flip.buildCost).toFixed(2)}M</span>
+                                </div>
+                              </div>
+                              <div className="mt-3 text-xs text-muted-foreground bg-background/50 rounded p-2">
+                                💡 FinCo (DeFi stakers) provides mortgage capital separately at 7% yield
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Flow Indicator */}
+                          <div className="p-8 flex flex-col justify-center items-center border-l border-border/50">
+                            <div className="text-center mb-4">
+                              <div className="text-sm text-muted-foreground">Running Capital</div>
+                              <div className="text-3xl font-bold text-emerald-500">${flip.runningCapital?.toFixed(2) || flip.remaining?.toFixed(2)}M</div>
+                              <div className="text-xs text-muted-foreground mt-1">
+                                Started with $1.9M seed
+                              </div>
+                            </div>
+                            
+                            {index < flywheelData.length - 1 && <div className="flex flex-col items-center">
+                                <div className="text-sm text-muted-foreground mb-2">Funds Next Flip</div>
+                                <ArrowRight className="w-8 h-8 text-emerald-500 rotate-90 md:rotate-0" />
+                              </div>}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>)}
+                </div>
+              </div>
+
+              {/* Clean Revenue Model Showcase */}
+              <div className="mb-16 mt-24">
+                <div className="text-center mb-12">
+                  <h2 className="text-4xl font-bold mb-4">${totalDynamicRevenue.toFixed(2)}M Revenue Model</h2>
+                  <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                    Simple mortgage spread model: Borrow at 7%, Lend at 10%, Keep 3% NIM
+                  </p>
+                </div>
+
+                {/* VC-Friendly NIM Explanation */}
+                <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 border-emerald-500/30 border-2 mb-12">
+                  <CardContent className="p-10">
+                    <div className="text-center mb-8">
+                      <Badge variant="outline" className="mb-4 border-emerald-500/50 text-emerald-400 text-lg px-4 py-1">
+                        The Ancient Mortgage Spread Model
+                      </Badge>
+                      <h3 className="text-3xl font-bold mb-2">Crystal Clear Economics for VCs</h3>
+                    </div>
+                    
+                    <div className="max-w-3xl mx-auto">
+                      <div className="grid md:grid-cols-3 gap-6 mb-8">
+                        <div className="bg-background/50 rounded-xl p-6 text-center border border-border/50">
+                          <div className="text-4xl mb-3">🏦</div>
+                          <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">DeFi Stakers Provide</div>
+                          <div className="text-3xl font-bold text-emerald-500">7% Yield</div>
+                          <div className="text-sm text-muted-foreground mt-2">They fund the mortgage pool</div>
+                        </div>
+                        
+                        <div className="bg-background/50 rounded-xl p-6 text-center border border-border/50">
+                          <div className="text-4xl mb-3">🏠</div>
+                          <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">Buyers Pay</div>
+                          <div className="text-3xl font-bold text-primary">10% APR</div>
+                          <div className="text-sm text-muted-foreground mt-2">Fixed 15-year mortgage</div>
+                        </div>
+                        
+                        <div className="bg-emerald-500/10 rounded-xl p-6 text-center border-2 border-emerald-500/30">
+                          <div className="text-4xl mb-3">💰</div>
+                          <div className="text-sm text-emerald-400 uppercase tracking-wide mb-2">Ancient Keeps</div>
+                          <div className="text-3xl font-bold text-emerald-400">3% NIM</div>
+                          <div className="text-sm text-emerald-400/80 mt-2">Pure profit spread</div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-background/30 rounded-lg p-4 text-center">
+                        <p className="text-lg">
+                          <span className="text-muted-foreground">No appreciation sharing.</span>
+                          <span className="font-semibold text-foreground ml-2">Buyers keep 100% of their home value growth.</span>
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                {/* Revenue Breakdown Cards - 2 Streams */}
+                <div className="grid md:grid-cols-2 gap-8 mb-12">
+                  <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
+                    <CardContent className="p-8">
+                      <div className="text-center space-y-4">
+                        <div className="text-5xl">🏛</div>
+                        <div>
+                          <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">Platform Fees</div>
+                          <div className="text-4xl font-bold text-primary mb-3">${totalPlatformFees.toFixed(2)}M</div>
+                          <p className="text-sm text-muted-foreground">3% fee on all {totalUnits} unit sales</p>
+                        </div>
+                        <div className="bg-background/50 rounded-lg p-3 text-sm">
+                          <div className="text-muted-foreground">Captured immediately at closing (Years 0-6)</div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 border-emerald-500/20">
+                    <CardContent className="p-8">
+                      <div className="text-center space-y-4">
+                        <div className="text-5xl">💰</div>
+                        <div>
+                          <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">Net Interest Margin (3% NIM)</div>
+                          <div className="text-4xl font-bold text-emerald-500 mb-3">${totalNIM.toFixed(2)}M</div>
+                          <p className="text-sm text-muted-foreground">Borrow at 7% → Lend at 10% = 3% spread</p>
+                        </div>
+                        <div className="bg-background/50 rounded-lg p-3 text-sm">
+                          <div className="text-muted-foreground">Recurring 15-year revenue stream</div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Total Revenue Card */}
+                <Card className="bg-gradient-to-br from-primary/20 to-primary/10 border-primary/30 border-2 mb-12">
+                  <CardContent className="p-10">
+                    <div className="text-center">
+                      <div className="text-sm text-muted-foreground uppercase tracking-widest mb-3">15-Year Protocol Revenue</div>
+                      <div className="text-6xl font-bold text-primary mb-4">${totalDynamicRevenue.toFixed(2)}M</div>
+                      <div className="flex items-center justify-center gap-8 text-sm flex-wrap">
+                        <div>
+                          <span className="text-muted-foreground">Platform Fees:</span>
+                          <span className="font-bold ml-2">${totalPlatformFees.toFixed(2)}M</span>
+                        </div>
+                        <div className="h-4 w-px bg-border hidden md:block"></div>
+                        <div>
+                          <span className="text-muted-foreground">NIM (3% spread):</span>
+                          <span className="font-bold ml-2">${totalNIM.toFixed(2)}M</span>
+                        </div>
+                        <div className="h-4 w-px bg-border hidden md:block"></div>
+                        <div>
+                          <span className="text-muted-foreground">{totalUnits} Units:</span>
+                          <span className="font-bold ml-2">6 Countries</span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+                {/* Dynamic Pricing Strategy */}
+                <Card className="bg-card/80 backdrop-blur-sm border-border/50 mb-8">
+                  <CardContent className="p-8">
+                    <div className="mb-8">
+                      <div className="inline-flex items-center space-x-2 mb-4">
+                        <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary"></div>
+                        <div className="text-sm font-medium text-primary uppercase tracking-wider">Pricing Strategy</div>
+                        <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary"></div>
+                      </div>
+                      <h3 className="text-3xl font-bold mb-3">Geographic Pricing Strategy</h3>
+                      <p className="text-lg text-muted-foreground">
+                        Market-based pricing across 6 locations: $110K (Thailand) → $250K (Mexico luxury)
+                      </p>
+                    </div>
+                    
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b-2 border-border">
+                            <th className="text-left py-4 px-4 font-semibold">Flip</th>
+                            <th className="text-left py-4 px-4 font-semibold">Units</th>
+                            <th className="text-right py-4 px-4 font-semibold">Price</th>
+                            <th className="text-right py-4 px-4 font-semibold">Platform Fee</th>
+                            <th className="text-right py-4 px-4 font-semibold">Gross Sales</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {flywheel.flips.map((flip, idx) => <tr key={idx} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
+                              <td className="py-4 px-4 font-semibold">{flip.flip}</td>
+                              <td className="py-4 px-4">{flip.units}</td>
+                              <td className="py-4 px-4 text-right font-mono">${(flip.grossSales / flip.units / 1000).toFixed(0)}k</td>
+                              <td className="py-4 px-4 text-right font-mono text-primary">${(flip.platformFees / 1000).toFixed(1)}k</td>
+                              <td className="py-4 px-4 text-right font-mono font-semibold">${(flip.grossSales / 1000000).toFixed(2)}M</td>
+                            </tr>)}
+                          <tr className="font-bold bg-primary/5 border-t-2 border-primary/20">
+                            <td className="py-4 px-4 text-lg">TOTAL</td>
+                            <td className="py-4 px-4 text-lg">{totalUnits}</td>
+                            <td className="py-4 px-4 text-right font-mono text-lg">${(avgPrice / 1000).toFixed(0)}k avg</td>
+                            <td className="py-4 px-4 text-right font-mono text-primary text-lg">${totalPlatformFees.toFixed(2)}M</td>
+                            <td className="py-4 px-4 text-right font-mono text-primary text-lg">${totalGrossSales.toFixed(2)}M</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </CardContent>
+                </Card>
+
+
+              {/* Sensitivity Dashboard */}
+              <div className="mb-16">
+                <SensitivityDashboard />
+              </div>
+
+              {/* Mortgage-Only Dashboard */}
+              <div className="mb-16">
+                <MortgageOnlySensitivityDashboard />
+              </div>
+
+              {/* Strategic Recommendations */}
+              <div className="mb-16">
+                <StrategicRecommendations />
+              </div>
+
+              {/* From Engine → Ecosystem: 3-Phase Evolution */}
+              <div className="mb-16 mt-20">
+                {/* Enhanced Section Header */}
+                <div className="text-center mb-16">
+                  <div className="inline-flex items-center space-x-2 mb-4">
+                    <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary"></div>
+                    <div className="text-sm font-medium text-primary uppercase tracking-wider">Evolution</div>
+                    <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary"></div>
+                  </div>
+                  <h2 className="text-4xl font-bold mb-4">From Engine → Ecosystem: 3-Phase Evolution</h2>
+                  <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    Strategic roadmap from proof of concept to network state
+                  </p>
+                </div>
+                
+                <div className="max-w-6xl mx-auto space-y-16">
+                  {/* Three-Phase Evolution Cards */}
+                  <div className="grid lg:grid-cols-3 gap-8">
+                    {/* Phase 1: Proof Engine */}
+                    <Card className="relative overflow-hidden border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
+                      <CardContent className="p-8">
+                        <div className="text-center space-y-4">
+                          <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
+                            <Zap className="w-10 h-10 text-primary" />
+                          </div>
+                          <div>
+                            <h3 className="text-2xl font-bold mb-2">Proof Engine</h3>
+                            <div className="text-lg text-primary font-semibold">Years 0-3</div>
+                          </div>
+                          <div className="space-y-3 text-left">
+                            <div className="flex items-start space-x-3">
+                              <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                              <span className="text-sm">4 strategic property flips prove demand</span>
+                            </div>
+                            <div className="flex items-start space-x-3">
+                              <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                              <span className="text-sm">$7.6M revenue validates business model</span>
+                            </div>
+                            <div className="flex items-start space-x-3">
+                              <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
+                              <span className="text-sm">Build foundational community & systems</span>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    {/* Phase 2: Developer Platform */}
+                    <Card className="relative overflow-hidden border-2 border-green-500/20 bg-gradient-to-br from-green-500/5 to-green-500/10">
+                      <CardContent className="p-8">
+                        <div className="text-center space-y-4">
+                          <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto">
+                            <Network className="w-10 h-10 text-green-500" />
+                          </div>
+                          <div>
+                            <h3 className="text-2xl font-bold mb-2">Developer Platform</h3>
+                            <div className="text-lg text-green-500 font-semibold">$7M Investment</div>
+                          </div>
+                          <div className="space-y-3 text-left">
+                            <div className="flex items-start space-x-3">
+                              <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                              <span className="text-sm">Technology platform & legal framework</span>
+                            </div>
+                            <div className="flex items-start space-x-3">
+                              <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                              <span className="text-sm">Enable thousands of developers globally</span>
+                            </div>
+                            <div className="flex items-start space-x-3">
+                              <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                              <span className="text-sm">Financing tools & community systems</span>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    {/* Phase 3: Network State */}
+                    <Card className="relative overflow-hidden border-2 border-blue-500/20 bg-gradient-to-br from-blue-500/5 to-blue-500/10">
+                      <CardContent className="p-8">
+                        <div className="text-center space-y-4">
+                          <div className="w-20 h-20 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto">
+                            <Globe className="w-10 h-10 text-blue-500" />
+                          </div>
+                          <div>
+                            <h3 className="text-2xl font-bold mb-2">Network State</h3>
+                            <div className="text-lg text-blue-500 font-semibold">Years 3-10</div>
+                          </div>
+                          <div className="space-y-3 text-left">
+                            <div className="flex items-start space-x-3">
+                              <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                              <span className="text-sm">7,500 properties serving 2M nomads</span>
+                            </div>
+                            <div className="flex items-start space-x-3">
+                              <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                              <span className="text-sm">$300M annual revenue at scale</span>
+                            </div>
+                             <div className="flex items-start space-x-3">
+                               <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                               <span className="text-sm">Global nomad infrastructure network</span>
+                             </div>
+                             <div className="flex items-start space-x-3">
+                               <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                               <span className="text-sm">Decentralized governance & citizenship model</span>
+                             </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                  
+                   {/* Evolution Flow Visual */}
+                   <div className="relative">
+                     <div className="flex items-center justify-center space-x-8">
+                        <div className="text-center">
+                          <div className="text-3xl font-bold text-primary mb-2">$7.6M</div>
+                          <div className="text-sm text-muted-foreground">Boutique Development</div>
+                        </div>
+                       
+                       <div className="flex items-center space-x-2">
+                         <ArrowRight className="w-6 h-6 text-muted-foreground" />
+                         <div className="text-sm font-medium text-primary">$7M Platform</div>
+                         <ArrowRight className="w-6 h-6 text-muted-foreground" />
+                       </div>
+                       
+                       <div className="text-center">
+                         <div className="text-3xl font-bold text-blue-500 mb-2">$300M</div>
+                         <div className="text-sm text-muted-foreground">Platform Economics</div>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+
+
+            </TabsContent>
+
+            {/* Legal Tab - The Defensible Moat */}
             <TabsContent value="legal">
               <LegalRegulatoryProofing />
             </TabsContent>
@@ -376,18 +950,138 @@ const BusinessModel = () => {
             <TabsContent value="tech">
               <TechDueDiligence />
             </TabsContent>
+
+
+
           </Tabs>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-8 px-4 bg-background border-t border-border/50">
-        <div className="max-w-7xl mx-auto text-center text-sm text-muted-foreground">
-          <p>© 2024 Ancient Protocol. Building the infrastructure for borderless real estate ownership.</p>
+      {/* Investor Return Scenarios */}
+      <section className="px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">Investor Return Scenarios</h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Conservative modeling across different execution speeds with detailed valuation analysis
+            </p>
+            <p className="text-sm text-muted-foreground mt-2 italic">
+              Note: Valuations are deliberately conservative. Revenue × Multiple math would yield higher values, but we under-promise to over-deliver.
+            </p>
+          </div>
+          
+          <div className="max-w-6xl mx-auto">
+            <Card className="bg-card/30 backdrop-blur-sm border-border/30">
+              <CardContent className="p-8">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-border/30">
+                        <th className="text-left py-3 px-4 font-medium text-muted-foreground">Scenario</th>
+                        <th className="text-center py-3 px-4 font-medium text-muted-foreground">Partner Units</th>
+                        <th className="text-center py-3 px-4 font-medium text-muted-foreground">Year-10 Revenue</th>
+                        <th className="text-center py-3 px-4 font-medium text-muted-foreground">Multiple</th>
+                        <th className="text-center py-3 px-4 font-medium text-muted-foreground">Company EV</th>
+                        <th className="text-center py-3 px-4 font-medium text-muted-foreground">Your 15%</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="border-b border-border/20">
+                        <td className="py-4 px-4">
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg">🐻</span>
+                            <div>
+                              <div className="font-medium">Bear</div>
+                              <div className="text-sm text-muted-foreground italic">(50% of plan)</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="text-center py-4 px-4">
+                          <div className="font-medium">5,000 units</div>
+                        </td>
+                        <td className="text-center py-4 px-4 font-medium">$150M</td>
+                        <td className="text-center py-4 px-4 font-medium">15×</td>
+                        <td className="text-center py-4 px-4 font-bold text-foreground">$1.7B</td>
+                        <td className="text-center py-4 px-4 font-bold text-primary">$255M</td>
+                      </tr>
+                      <tr className="border-b border-border/20 bg-primary/5">
+                        <td className="py-4 px-4">
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg">🟢</span>
+                            <div>
+                              <div className="font-medium text-primary">Base</div>
+                              <div className="text-sm text-muted-foreground italic">(roadmap hit)</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="text-center py-4 px-4">
+                          <div className="font-medium">10,000 units</div>
+                        </td>
+                        <td className="text-center py-4 px-4 font-medium">$300M</td>
+                        <td className="text-center py-4 px-4 font-medium">20×</td>
+                        <td className="text-center py-4 px-4 font-bold text-primary">$4.5B</td>
+                        <td className="text-center py-4 px-4 font-bold text-primary">$675M</td>
+                      </tr>
+                      <tr>
+                        <td className="py-4 px-4">
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg">🚀</span>
+                            <div>
+                              <div className="font-medium">Bull</div>
+                              <div className="text-sm text-muted-foreground italic">(150% of plan)</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="text-center py-4 px-4">
+                          <div className="font-medium">15,000 units</div>
+                        </td>
+                        <td className="text-center py-4 px-4 font-medium">$450M</td>
+                        <td className="text-center py-4 px-4 font-medium">20×</td>
+                        <td className="text-center py-4 px-4 font-bold text-foreground">$6.8B</td>
+                        <td className="text-center py-4 px-4 font-bold text-primary">$1.0B</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
-      </footer>
-    </div>
-  );
-};
+      </section>
 
+
+      {/* CTA */}
+      <section className="py-20 px-4 text-center bg-gradient-primary/5">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-8">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Join the Post-City Revolution
+            </h2>
+            <p className="text-xl text-muted-foreground mb-6 max-w-3xl mx-auto">
+              Ancient isn't another booking app—it's the mortgage rail, the deed registry, and the town square 
+              for a post-city civilization.
+            </p>
+            <div className="text-lg font-medium text-accent mb-8">
+              🌍 Borderless Mortgages, Regenerative Villages
+            </div>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button size="lg" onClick={() => navigate('/investor-portal')} className="text-lg px-8 py-6">
+              Access Investment Portal
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+            <Button variant="outline" size="lg" onClick={() => navigate('/portfolio')} className="text-lg px-8 py-6">
+              Explore Properties
+              <Globe className="ml-2 w-5 h-5" />
+            </Button>
+          </div>
+          
+          <div className="mt-8 text-sm text-muted-foreground">
+            Building infrastructure for 100M+ digital nomads, one village at a time
+          </div>
+        </div>
+      </section>
+    </div>;
+};
 export default BusinessModel;

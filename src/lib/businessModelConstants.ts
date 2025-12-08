@@ -6,19 +6,32 @@
  */
 
 // ===========================================
-// SEED RAISE TERMS
+// CAPITAL STACK (VC Audit Response)
 // ===========================================
-export const SEED_RAISE = {
-  amount: 1.9,                // $1.9M raise
-  safeCap: 12,                // $12M SAFE cap (negotiable)
-  targetOwnership: 0.15,      // ~15% target ownership
-  instrument: "SAFE",         // Standard SAFE
+export const CAPITAL_STACK = {
+  seedCapital: 1.9,           // VC seed borrowed against BTC
+  btcCollateral: 5.0,         // $5M BTC deposited
+  ltv: 0.35,                  // 35% LTV (conservative)
+  liquidationThreshold: 1.5,  // 150% LTV triggers liquidation
+  interestRate: 0.10,         // ~10% APR on borrowed USDC
   
-  useOfFunds: {
-    construction: 0.79,       // 79% - Build 32 units
-    techLegal: 0.10,          // 10% - Protocol + SPVs
-    team: 0.06,               // 6% - Operations
-    marketing: 0.05,          // 5% - HELOC partnerships
+  buyerCashFlow: {
+    cashSalesUnits: 6,        // 20% of 32 units
+    cashSalesRevenue: 0.84,   // 6 × $140K avg
+    downPaymentUnits: 26,     // 80% of 32 units (financed)
+    downPaymentPercent: 0.30, // 30% down
+    downPaymentRevenue: 1.09, // 26 × 30% × $140K
+    total: 1.93,              // Total buyer cash at closing
+  },
+  
+  totalCapitalAvailable: 3.83, // Seed + buyer cash flow
+  
+  uses: {
+    construction: 2.4,        // 32 × $75K
+    techLegal: 0.4,           // Protocol, SPVs, legal
+    teamOps: 0.1,             // Team salaries
+    marketing: 0.1,           // HELOC partnerships
+    contingency: 0.05,        // Buffer
   },
 };
 
@@ -28,10 +41,8 @@ export const SEED_RAISE = {
 export const SEED_PHASE = {
   capital: 1.9,              // $1.9M seed investment
   units: 32,                 // 15 Peru + 17 Brazil
-  mortgages: 32,             // ALL 32 units generate mortgages (per deck)
-  mortgageBook: 3.46,        // $3.46M total mortgage principal (per deck)
-  annualRevenue: 0.345,      // $345K/year @ 10% APR (per deck)
-  treasuryRemaining: 0.494,  // $494K treasury after seed round (per deck)
+  mortgages: 26,             // 80% of 32 = ~26 mortgages
+  mortgageBook: 2.55,        // $2.55M total mortgage principal
   downPaymentPercent: 0.30,  // 30% down payment (uniform)
   flips: 2,                  // Peru + Brazil only
   countries: 2,
@@ -76,217 +87,160 @@ export const BUYER_SEGMENTS = {
 // ===========================================
 export const VC_BRIDGE = {
   rate: 0.10,               // 10% APR to borrowers
-  annualRevenue: 0.345,     // $345K/year on $3.46M book (per deck)
+  annualRevenue: 0.255,     // $255K/year on $2.55M book
   targetInstitutional: 24,  // Month 18-24 for credit facility
 };
 
 // ===========================================
 // EXIT SCENARIOS - TIERED (Conservative/Base/Optimistic)
 // ===========================================
-// EXIT SCENARIOS - Aligned with Pitch Deck Slide 19
 export const EXIT_SCENARIOS_TIERED = {
   conservative: {
     description: "Achievable with seed phase only. No institutional capital required.",
     year3: {
       label: "Seed Exit",
-      revenue: 2,
+      revenue: 1.5,
       multiple: 5,
-      valuation: 10,           // $10-12M per deck
-      stakeValue: 1.5,
-      multipleOnCapital: 0.8,
+      valuation: 7.5,
+      stakeValue: 1.125,
+      multipleOnCapital: 0.6,
       exitType: "M&A / Acqui-hire",
       phase: "seed",
       note: "32 units built, $2M DevCo profit, protocol proven",
     },
     year5: {
       label: "Modest Growth",
-      revenue: 10,
-      multiple: 7,
-      valuation: 70,           // Low end of $70-100M
-      stakeValue: 10.5,
-      multipleOnCapital: 5.5,
+      revenue: 5,
+      multiple: 8,
+      valuation: 40,
+      stakeValue: 6,
+      multipleOnCapital: 3.2,
       exitType: "M&A",
       phase: "platform",
       note: "Limited platform scaling, 50-100 partner units",
     },
   },
   base: {
-    description: "Requires $5-20M institutional facility by Year 3. Deck-aligned valuations.",
-    seed: {
-      label: "Seed",
-      revenue: 2,
-      multiple: 5,
-      valuation: 11,           // $10-12M per deck
-      stakeValue: 1.65,
-      multipleOnCapital: 0.9,
-      exitType: "Seed Round",
-      phase: "seed",
-      note: "32 mortgages, $3.46M book, protocol proven",
-    },
-    seriesA: {
-      label: "Series A",
-      revenue: 8,
-      multiple: 10,
-      valuation: 85,           // $70-100M per deck (Post 2 Flips)
-      stakeValue: 12.75,
-      multipleOnCapital: 6.7,
+    description: "Requires $5-20M institutional facility by Year 3.",
+    year3: {
+      label: "Platform Launch",
+      revenue: 2.5,
+      multiple: 6,
+      valuation: 15,
+      stakeValue: 2.25,
+      multipleOnCapital: 1.2,
       exitType: "Series A / M&A",
       phase: "platform",
-      note: "Post 2 Flips, Credit Line Secured",
+      note: "Institutional capital secured, 100 partner units",
     },
-    seriesB: {
-      label: "Series B",
-      revenue: 50,
-      multiple: 8,
-      valuation: 400,          // $300-500M per deck (5k+ Mortgages)
-      stakeValue: 60,
-      multipleOnCapital: 32,
-      exitType: "Series B / Growth",
+    year5: {
+      label: "Series B/C",
+      revenue: 15,
+      multiple: 10,
+      valuation: 150,
+      stakeValue: 22.5,
+      multipleOnCapital: 12,
+      exitType: "Growth Round / M&A",
       phase: "platform",
-      note: "5,000+ mortgages originated",
+      note: "500 partner units, proven OCCR data",
     },
-    exit: {
-      label: "Exit / IPO",
-      revenue: 150,
+    year10: {
+      label: "Full Scale",
+      revenue: 100,
       multiple: 15,
-      valuation: 2250,         // $1.5B-$3B per deck
-      stakeValue: 337.5,
-      multipleOnCapital: 178,
+      valuation: 1500,
+      stakeValue: 225,
+      multipleOnCapital: 118,
       exitType: "IPO / Strategic",
       phase: "data",
-      note: "Global Mortgage Bank or On-Chain Credit Bureau",
+      note: "5,000+ partner units, OCCR licensing ($15M)",
     },
   },
   optimistic: {
     description: "Requires platform dominance + OCCR becoming global standard.",
-    seriesA: {
-      label: "Series A",
-      revenue: 10,
-      multiple: 10,
-      valuation: 100,          // High end of $70-100M
-      stakeValue: 15,
-      multipleOnCapital: 7.9,
-      exitType: "Series A",
+    year5: {
+      label: "Breakout Growth",
+      revenue: 25,
+      multiple: 12,
+      valuation: 300,
+      stakeValue: 45,
+      multipleOnCapital: 24,
+      exitType: "Series C / Pre-IPO",
       phase: "platform",
-      note: "Strong credit facility, validated OCCR",
+      note: "1,000 partner units, institutional adoption",
     },
-    seriesB: {
-      label: "Series B",
-      revenue: 60,
-      multiple: 8,
-      valuation: 500,          // High end of $300-500M
-      stakeValue: 75,
-      multipleOnCapital: 39,
-      exitType: "Series B / Pre-IPO",
-      phase: "platform",
-      note: "5,000+ mortgages, institutional adoption",
-    },
-    exit: {
-      label: "Exit / IPO",
-      revenue: 200,
-      multiple: 15,
-      valuation: 3000,         // High end of $1.5B-$3B
+    year10: {
+      label: "Global Standard",
+      revenue: 150,
+      multiple: 20,
+      valuation: 3000,
       stakeValue: 450,
       multipleOnCapital: 237,
       exitType: "IPO / TGE",
       phase: "data",
-      note: "Global standard for borderless credit",
+      note: "10,000 units, OCCR = global credit identity",
     },
   },
 };
 
-// Legacy format for backward compatibility - Deck-aligned milestones
+// Legacy format for backward compatibility
 export const EXIT_SCENARIOS = {
-  seed: EXIT_SCENARIOS_TIERED.base.seed,
-  seriesA: EXIT_SCENARIOS_TIERED.base.seriesA,
-  seriesB: EXIT_SCENARIOS_TIERED.base.seriesB,
-  exit: EXIT_SCENARIOS_TIERED.base.exit,
-  // Legacy year-based format
-  year3: {
-    label: "Series A",
-    revenue: 8,
-    multiple: 10,
-    valuation: 85,
-    stakeValue: 12.75,
-    multipleOnCapital: 6.7,
-    exitType: "Series A / M&A",
-    phase: "platform",
-    note: "Post 2 Flips, Credit Line Secured",
-  },
-  year5: {
-    label: "Series B",
-    revenue: 50,
-    multiple: 8,
-    valuation: 400,
-    stakeValue: 60,
-    multipleOnCapital: 32,
-    exitType: "Series B / Growth",
-    phase: "platform",
-    note: "5,000+ mortgages originated",
-  },
+  year3: EXIT_SCENARIOS_TIERED.base.year3,
+  year5: EXIT_SCENARIOS_TIERED.base.year5,
   year7: {
-    label: "Pre-IPO",
-    revenue: 100,
-    multiple: 12,
-    valuation: 1200,
-    stakeValue: 180,
-    multipleOnCapital: 95,
-    exitType: "Pre-IPO / Strategic",
-    phase: "data",
+    label: "IPO-Ready",
+    revenue: 50,
+    multiple: 15,
+    valuation: 750,
+    stakeValue: 112.5,
+    multipleOnCapital: 59,
+    exitType: "IPO / Strategic",
+    phase: "platform",
     note: "Platform dominance, OCCR data growing",
   },
-  year10: EXIT_SCENARIOS_TIERED.base.exit,
+  year10: EXIT_SCENARIOS_TIERED.base.year10,
 };
 
 // ===========================================
 // 10-YEAR PROJECTION (Platform Pivot Model)
 // ===========================================
-// Y1: 15 units × $135K = $2.025M GMV
-// - Platform fees: 3% = $61K
-// - Dev profit: $60K × 15 = $900K
-// - Mortgage interest: $1.62M × 10% = $162K
-// - Total Revenue: $1.12M
-// - Mortgage Book: 80% × $2.025M = $1.62M
-// Valuation: Revenue × 4x + Book Value = $6M
 export const TEN_YEAR_PROJECTION = [
   {
-    year: "Y1",
+    year: "Year 1",
     label: "Peru Genesis",
     internalUnits: 15,
     partnerUnits: 0,
-    gmv: 2.025,
+    gmv: 2.0,
     devCoProfit: 0.9,
-    originationFees: 0.061,
+    originationFees: 0.06,
     developerFee: 0,
-    mortgageSpread: 0.162,
+    mortgageSpread: 0.05,
     dataLicensing: 0,
-    totalRevenue: 1.12,
-    mortgageBook: 1.62,
+    totalRevenue: 1.0,
     multiple: 4,
-    valuation: 6,
+    valuation: 4,
     phase: "seed",
     funded: "seed",
   },
   {
-    year: "Y2",
+    year: "Year 2",
     label: "Brazil Scale",
     internalUnits: 17,
     partnerUnits: 0,
-    gmv: 2.465,
-    devCoProfit: 1.19,
-    originationFees: 0.074,
+    gmv: 2.5,
+    devCoProfit: 1.2,
+    originationFees: 0.08,
     developerFee: 0,
-    mortgageSpread: 0.197,
+    mortgageSpread: 0.15,
     dataLicensing: 0,
-    totalRevenue: 1.46,
-    mortgageBook: 3.59, // Cumulative: Y1 + Y2
-    multiple: 5,
-    valuation: 11,
+    totalRevenue: 1.4,
+    multiple: 4,
+    valuation: 5.6,
     phase: "seed",
     funded: "seed",
   },
   {
-    year: "Y3",
+    year: "Year 3",
     label: "Platform Launch",
     internalUnits: 0,
     partnerUnits: 100,
@@ -297,14 +251,13 @@ export const TEN_YEAR_PROJECTION = [
     mortgageSpread: 1.2,
     dataLicensing: 0.25,
     totalRevenue: 2.5,
-    mortgageBook: 12, // $12M book from 100 partner units
     multiple: 6,
     valuation: 15,
     phase: "platform",
     funded: "institutional",
   },
   {
-    year: "Y5",
+    year: "Year 5",
     label: "Protocol Scale",
     internalUnits: 0,
     partnerUnits: 500,
@@ -315,14 +268,13 @@ export const TEN_YEAR_PROJECTION = [
     mortgageSpread: 6.0,
     dataLicensing: 3.75,
     totalRevenue: 15,
-    mortgageBook: 60, // $60M cumulative book
     multiple: 10,
     valuation: 150,
     phase: "platform",
     funded: "institutional",
   },
   {
-    year: "Y7",
+    year: "Year 7",
     label: "Global Network",
     internalUnits: 0,
     partnerUnits: 2500,
@@ -333,14 +285,13 @@ export const TEN_YEAR_PROJECTION = [
     mortgageSpread: 15,
     dataLicensing: 18.75,
     totalRevenue: 60,
-    mortgageBook: 300, // $300M cumulative
     multiple: 15,
     valuation: 900,
     phase: "data",
     funded: "institutional",
   },
   {
-    year: "Y10",
+    year: "Year 10",
     label: "Credit Bureau",
     internalUnits: 0,
     partnerUnits: 10000,
@@ -349,13 +300,13 @@ export const TEN_YEAR_PROJECTION = [
     originationFees: 45,
     developerFee: 60,
     mortgageSpread: 30,
-    dataLicensing: 15,
-    totalRevenue: 150,
-    mortgageBook: 1200, // $1.2B book
-    multiple: 15,
-    valuation: 2250,
+    dataLicensing: 15,       // REDUCED from $75M - strategic optionality, not core thesis
+    totalRevenue: 150,       // Adjusted total
+    multiple: 15,            // Adjusted multiple (more conservative)
+    valuation: 2250,         // Adjusted valuation
     phase: "data",
     funded: "institutional",
+    note: "Data licensing = optionality, not requirement",
   },
 ];
 
