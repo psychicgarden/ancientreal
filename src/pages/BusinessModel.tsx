@@ -7,9 +7,10 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { ArrowRight, TrendingUp, DollarSign, Building, Globe, Menu, Home, Users, Briefcase, CreditCard, Plane, Code2, FileText, Settings, BarChart3, Rocket, Scale, Cpu, RefreshCw, Target } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-// Core 8-section components
+// Core section components
 import AWSPitch from "@/components/AWSPitch";
 import MarketFailure from "@/components/MarketFailure";
+import PerfectStorm from "@/components/PerfectStorm";
 import TractionTrilogy from "@/components/TractionTrilogy";
 import TheDealSection from "@/components/TheDealSection";
 import UnfairUnitEconomics from "@/components/UnfairUnitEconomics";
@@ -91,7 +92,7 @@ const BusinessModel = () => {
         </DropdownMenu>
       </div>
 
-      {/* SECTION 1: Hero */}
+      {/* SECTION 1: Hero - Traction-Focused */}
       <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img src={ecoSmartCity} alt="Eco Smart City Vision" className="w-full h-full object-cover filter brightness-[0.4] contrast-[1.3] saturate-[1.2]" />
@@ -104,33 +105,67 @@ const BusinessModel = () => {
             ANCIENT PROTOCOL
           </h3>
           <p className="text-sm lg:text-base font-light text-white/80 tracking-wide mt-2">
-            The "Stripe for Mortgage" Protocol
+            The Rocket Mortgage for the Borderless Economy
           </p>
         </div>
         
         <div className="relative z-10 w-full max-w-6xl mx-auto px-6 text-center mt-16">
+          {/* Traction-First Headline */}
           <div className="space-y-4 mb-8">
             <h1 className="text-4xl lg:text-6xl xl:text-7xl font-bold leading-[0.9] tracking-tight">
-              <span className="block text-white drop-shadow-2xl">The RWA Mortgage Rail</span>
-              <span className="block bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 bg-clip-text text-transparent drop-shadow-2xl">for the Borderless Economy</span>
+              <span className="block text-white drop-shadow-2xl">12 Units Live.</span>
+              <span className="block text-white drop-shadow-2xl">10,000 in Pipeline.</span>
+              <span className="block bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400 bg-clip-text text-transparent drop-shadow-2xl">$675M Your 15% at Exit.</span>
             </h1>
           </div>
           
-          <div className="max-w-2xl mx-auto">
+          {/* Key Stats Row */}
+          <div className="flex flex-wrap justify-center gap-4 lg:gap-8 mb-8">
+            <div className="bg-black/40 backdrop-blur-xl rounded-xl border border-white/10 px-6 py-3">
+              <div className="text-2xl lg:text-3xl font-bold text-emerald-400">18.75%</div>
+              <div className="text-xs lg:text-sm text-white/70 uppercase tracking-wider">Net Verified Yields</div>
+            </div>
+            <div className="bg-black/40 backdrop-blur-xl rounded-xl border border-white/10 px-6 py-3">
+              <div className="text-2xl lg:text-3xl font-bold text-orange-400">44%</div>
+              <div className="text-xs lg:text-sm text-white/70 uppercase tracking-wider">Gross Margins</div>
+            </div>
+            <div className="bg-black/40 backdrop-blur-xl rounded-xl border border-white/10 px-6 py-3">
+              <div className="text-2xl lg:text-3xl font-bold text-cyan-400">$675M</div>
+              <div className="text-xs lg:text-sm text-white/70 uppercase tracking-wider">Your 15% at Y10 Exit</div>
+            </div>
+          </div>
+
+          {/* Value Prop */}
+          <div className="max-w-3xl mx-auto">
             <div className="bg-black/30 backdrop-blur-xl rounded-2xl border border-white/10 px-6 py-4 shadow-2xl">
               <p className="text-base lg:text-lg font-light leading-relaxed text-white/90">
-                <span className="font-semibold text-orange-400">115M nomads</span> burn <span className="font-semibold text-red-400">$900B/year</span> on dead rent. We convert that into <span className="font-semibold text-emerald-400">fractional, on-chain deeds</span>.
+                Borderless credit identity for <span className="font-semibold text-orange-400">35M+ global nomads</span> earning $50k-$250k who are rejected by every bank.
               </p>
             </div>
+          </div>
+
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+            <Button size="lg" className="text-lg px-8 bg-primary hover:bg-primary/90" onClick={() => navigate("/pitch-deck")}>
+              <Rocket className="mr-2 h-5 w-5" />
+              View Investment Memo
+            </Button>
+            <Button size="lg" variant="outline" className="text-lg px-8 border-white/30 text-white hover:bg-white/10" onClick={() => navigate("/investor-portal")}>
+              <Briefcase className="mr-2 h-5 w-5" />
+              Schedule Call
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* SECTION 2: AWS Pitch - The 30-Second Elevator Pitch */}
-      <AWSPitch />
+      {/* SECTION 2: Perfect Storm - Why Now? (9 Cards) */}
+      <PerfectStorm />
 
-      {/* SECTION 3: Market Failure */}
+      {/* SECTION 3: Market Failure - Two Worlds Disconnected */}
       <MarketFailure />
+
+      {/* SECTION 4: AWS Pitch - Our Solution */}
+      <AWSPitch />
 
       {/* SECTION 4: Traction Trilogy */}
       <TractionTrilogy />
