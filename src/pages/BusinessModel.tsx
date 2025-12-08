@@ -361,14 +361,8 @@ const BusinessModel = () => {
       {/* Traction Trilogy Section */}
       <TractionTrilogy />
 
-      {/* Capital Stack Explainer - Answer VC Question: "How does $1.9M fund $2.4M?" */}
-      <CapitalStackExplainer />
-
       {/* VC Exit Scenarios - What's In It For Investors */}
       <VCExitScenarios />
-
-      {/* Venture Staking Mechanics - How BTC becomes USDC */}
-      <VentureStakingExplainer />
 
       {/* Two-Product Mortgage Protocol */}
       <TwoProductMortgage />
@@ -390,9 +384,6 @@ const BusinessModel = () => {
 
       {/* Return Profile for Investors */}
       <ReturnProfile />
-
-      {/* Model Assumptions & Dependencies - Full Transparency */}
-      <ModelAssumptions />
 
       {/* Business Model Content with Tabs */}
       <section className="px-4 bg-background py-[50px]">
@@ -419,9 +410,11 @@ const BusinessModel = () => {
 
           {/* Tabbed Content */}
           <Tabs defaultValue="two-pocket-model" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 lg:w-fit lg:mx-auto mb-8">
+            <TabsList className="grid w-full grid-cols-6 lg:w-fit lg:mx-auto mb-8">
               <TabsTrigger value="two-pocket-model" className="text-xs lg:text-sm">Two-Pocket Model</TabsTrigger>
+              <TabsTrigger value="capital-stack" className="text-xs lg:text-sm">Capital Stack</TabsTrigger>
               <TabsTrigger value="revenue-development" className="text-xs lg:text-sm">Revenue & Development</TabsTrigger>
+              <TabsTrigger value="assumptions" className="text-xs lg:text-sm">Assumptions</TabsTrigger>
               <TabsTrigger value="legal" className="text-xs lg:text-sm">Legal</TabsTrigger>
               <TabsTrigger value="tech" className="text-xs lg:text-sm">Tech</TabsTrigger>
             </TabsList>
@@ -939,6 +932,16 @@ const BusinessModel = () => {
                </div>
 
 
+            </TabsContent>
+
+            {/* Capital Stack Tab */}
+            <TabsContent value="capital-stack">
+              <CapitalStackExplainer />
+            </TabsContent>
+
+            {/* Assumptions Tab */}
+            <TabsContent value="assumptions">
+              <ModelAssumptions />
             </TabsContent>
 
             {/* Legal Tab - The Defensible Moat */}
