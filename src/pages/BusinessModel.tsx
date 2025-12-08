@@ -358,29 +358,11 @@ const BusinessModel = () => {
       {/* Strategy Roadmap - Phased Growth Plan */}
       <StrategyRoadmap />
 
-      {/* Competitive Intelligence - Market Validation */}
-      <CompetitiveLandscape />
-
       {/* Traction Trilogy Section */}
       <TractionTrilogy />
 
       {/* VC Exit Scenarios - What's In It For Investors */}
       <VCExitScenarios />
-
-      {/* Seed-Funded Roadmap - Moved to tabs for deeper dive */}
-      {/* <SeedFundedRoadmap /> */}
-
-      {/* Institutional Capital Timeline - Moved to tabs for deeper dive */}
-      {/* <InstitutionalCapitalTimeline /> */}
-
-      {/* Unfair Unit Economics Section */}
-      <UnfairUnitEconomics />
-
-      {/* Kill Switch Risk Management Section */}
-      <KillSwitch />
-
-      {/* 10-Year Financial Projection */}
-      <TenYearProjection />
 
       {/* Return Profile for Investors - Moved to tabs for deeper dive */}
       {/* <ReturnProfile /> */}
@@ -409,15 +391,39 @@ const BusinessModel = () => {
           </div>
 
           {/* Tabbed Content */}
-          <Tabs defaultValue="two-pocket-model" className="w-full">
-            <TabsList className="grid w-full grid-cols-6 lg:w-fit lg:mx-auto mb-8">
-              <TabsTrigger value="two-pocket-model" className="text-xs lg:text-sm">Two-Pocket Model</TabsTrigger>
+          <Tabs defaultValue="competition" className="w-full">
+            <TabsList className="grid w-full grid-cols-5 lg:grid-cols-10 lg:w-fit lg:mx-auto mb-8 gap-1">
+              <TabsTrigger value="competition" className="text-xs lg:text-sm">Competition</TabsTrigger>
+              <TabsTrigger value="unit-economics" className="text-xs lg:text-sm">Unit Economics</TabsTrigger>
+              <TabsTrigger value="risk-management" className="text-xs lg:text-sm">Risk Management</TabsTrigger>
+              <TabsTrigger value="10-year-model" className="text-xs lg:text-sm">10-Year Model</TabsTrigger>
+              <TabsTrigger value="two-pocket-model" className="text-xs lg:text-sm">Two-Pocket</TabsTrigger>
               <TabsTrigger value="capital-stack" className="text-xs lg:text-sm">Capital Stack</TabsTrigger>
-              <TabsTrigger value="revenue-development" className="text-xs lg:text-sm">Revenue & Development</TabsTrigger>
+              <TabsTrigger value="revenue-development" className="text-xs lg:text-sm">Revenue</TabsTrigger>
               <TabsTrigger value="assumptions" className="text-xs lg:text-sm">Assumptions</TabsTrigger>
               <TabsTrigger value="legal" className="text-xs lg:text-sm">Legal</TabsTrigger>
               <TabsTrigger value="tech" className="text-xs lg:text-sm">Tech</TabsTrigger>
             </TabsList>
+
+            {/* Competition Tab - Moved from main scroll */}
+            <TabsContent value="competition">
+              <CompetitiveLandscape />
+            </TabsContent>
+
+            {/* Unit Economics Tab - Moved from main scroll */}
+            <TabsContent value="unit-economics">
+              <UnfairUnitEconomics />
+            </TabsContent>
+
+            {/* Risk Management Tab - Moved from main scroll */}
+            <TabsContent value="risk-management">
+              <KillSwitch />
+            </TabsContent>
+
+            {/* 10-Year Model Tab - Moved from main scroll */}
+            <TabsContent value="10-year-model">
+              <TenYearProjection />
+            </TabsContent>
 
             {/* Two-Pocket Model Tab (formerly Tiered Portfolio) */}
             <TabsContent value="two-pocket-model">
