@@ -66,7 +66,11 @@ export default {
 				gold: {
 					DEFAULT: 'hsl(var(--gold))',
 					foreground: 'hsl(var(--gold-foreground))'
-				}
+			},
+			fontFamily: {
+				'display': ['"Playfair Display"', 'serif'],
+				'playfair': ['"Playfair Display"', 'serif']
+			}
 			},
 			backgroundImage: {
 				'gradient-primary': 'var(--gradient-primary)',
