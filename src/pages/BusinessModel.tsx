@@ -5,7 +5,6 @@ import { ArrowRight, Globe } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import TechDueDiligence from "@/components/TechDueDiligence";
 import TenYearProjection from "@/components/TenYearProjection";
-import TwoProductMortgage from "@/components/TwoProductMortgage";
 import SeedFundedRoadmap from "@/components/SeedFundedRoadmap";
 import InstitutionalCapitalTimeline from "@/components/InstitutionalCapitalTimeline";
 import CashFirstStrategy from "@/components/CashFirstStrategy";
@@ -83,10 +82,9 @@ const BusinessModel = () => {
               </div>
             </TabsContent>
 
-            {/* The Deal Tab - Roadmap + 10-Year + Mortgage Products */}
+            {/* The Deal Tab - Roadmap + 10-Year */}
             <TabsContent value="the-deal">
               <div className="space-y-12">
-                <TwoProductMortgage />
                 <SeedFundedRoadmap />
                 <TenYearProjection />
                 <InstitutionalCapitalTimeline />
