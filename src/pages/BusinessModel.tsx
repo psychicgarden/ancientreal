@@ -367,11 +367,11 @@ const BusinessModel = () => {
       {/* Two-Product Mortgage Protocol */}
       <TwoProductMortgage />
 
-      {/* Seed-Funded Roadmap */}
-      <SeedFundedRoadmap />
+      {/* Seed-Funded Roadmap - Moved to tabs for deeper dive */}
+      {/* <SeedFundedRoadmap /> */}
 
-      {/* Institutional Capital Timeline */}
-      <InstitutionalCapitalTimeline />
+      {/* Institutional Capital Timeline - Moved to tabs for deeper dive */}
+      {/* <InstitutionalCapitalTimeline /> */}
 
       {/* Unfair Unit Economics Section */}
       <UnfairUnitEconomics />
@@ -382,8 +382,8 @@ const BusinessModel = () => {
       {/* 10-Year Financial Projection */}
       <TenYearProjection />
 
-      {/* Return Profile for Investors */}
-      <ReturnProfile />
+      {/* Return Profile for Investors - Moved to tabs for deeper dive */}
+      {/* <ReturnProfile /> */}
 
       {/* Business Model Content with Tabs */}
       <section className="px-4 bg-background py-[50px]">
@@ -960,97 +960,7 @@ const BusinessModel = () => {
         </div>
       </section>
 
-      {/* Investor Return Scenarios */}
-      <section className="px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4">Investor Return Scenarios</h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Conservative modeling across different execution speeds with detailed valuation analysis
-            </p>
-            <p className="text-sm text-muted-foreground mt-2 italic">
-              Note: Valuations are deliberately conservative. Revenue × Multiple math would yield higher values, but we under-promise to over-deliver.
-            </p>
-          </div>
-          
-          <div className="max-w-6xl mx-auto">
-            <Card className="bg-card/30 backdrop-blur-sm border-border/30">
-              <CardContent className="p-8">
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-border/30">
-                        <th className="text-left py-3 px-4 font-medium text-muted-foreground">Scenario</th>
-                        <th className="text-center py-3 px-4 font-medium text-muted-foreground">Partner Units</th>
-                        <th className="text-center py-3 px-4 font-medium text-muted-foreground">Year-10 Revenue</th>
-                        <th className="text-center py-3 px-4 font-medium text-muted-foreground">Multiple</th>
-                        <th className="text-center py-3 px-4 font-medium text-muted-foreground">Company EV</th>
-                        <th className="text-center py-3 px-4 font-medium text-muted-foreground">Your 15%</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="border-b border-border/20">
-                        <td className="py-4 px-4">
-                          <div className="flex items-center gap-2">
-                            <span className="text-lg">🐻</span>
-                            <div>
-                              <div className="font-medium">Bear</div>
-                              <div className="text-sm text-muted-foreground italic">(50% of plan)</div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="text-center py-4 px-4">
-                          <div className="font-medium">5,000 units</div>
-                        </td>
-                        <td className="text-center py-4 px-4 font-medium">$150M</td>
-                        <td className="text-center py-4 px-4 font-medium">15×</td>
-                        <td className="text-center py-4 px-4 font-bold text-foreground">$1.7B</td>
-                        <td className="text-center py-4 px-4 font-bold text-primary">$255M</td>
-                      </tr>
-                      <tr className="border-b border-border/20 bg-primary/5">
-                        <td className="py-4 px-4">
-                          <div className="flex items-center gap-2">
-                            <span className="text-lg">🟢</span>
-                            <div>
-                              <div className="font-medium text-primary">Base</div>
-                              <div className="text-sm text-muted-foreground italic">(roadmap hit)</div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="text-center py-4 px-4">
-                          <div className="font-medium">10,000 units</div>
-                        </td>
-                        <td className="text-center py-4 px-4 font-medium">$300M</td>
-                        <td className="text-center py-4 px-4 font-medium">20×</td>
-                        <td className="text-center py-4 px-4 font-bold text-primary">$4.5B</td>
-                        <td className="text-center py-4 px-4 font-bold text-primary">$675M</td>
-                      </tr>
-                      <tr>
-                        <td className="py-4 px-4">
-                          <div className="flex items-center gap-2">
-                            <span className="text-lg">🚀</span>
-                            <div>
-                              <div className="font-medium">Bull</div>
-                              <div className="text-sm text-muted-foreground italic">(150% of plan)</div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="text-center py-4 px-4">
-                          <div className="font-medium">15,000 units</div>
-                        </td>
-                        <td className="text-center py-4 px-4 font-medium">$450M</td>
-                        <td className="text-center py-4 px-4 font-medium">20×</td>
-                        <td className="text-center py-4 px-4 font-bold text-foreground">$6.8B</td>
-                        <td className="text-center py-4 px-4 font-bold text-primary">$1.0B</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
+      {/* Investor Return Scenarios - Removed as VCExitScenarios covers this */}
 
 
       {/* CTA */}
