@@ -93,56 +93,61 @@ const BusinessModel = () => {
       </div>
 
       {/* SECTION 1: Hero - Clean Narrative */}
-      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img src={ecoSmartCity} alt="Eco Smart City Vision" className="w-full h-full object-cover filter brightness-[0.3] contrast-[1.2] saturate-[1.1]" />
-          <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/50 to-black/70" />
+          <img src={ecoSmartCity} alt="Eco Smart City Vision" className="w-full h-full object-cover filter brightness-[0.55] contrast-[1.1] saturate-[1.2]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
         </div>
         
-        <div className="absolute top-8 left-8 z-20">
-          <p className="text-xs uppercase tracking-[0.3em] text-white/60 font-light mb-1">
+        {/* Top Left Branding */}
+        <div className="absolute top-10 left-10 z-20">
+          <p className="text-[11px] uppercase tracking-[0.4em] text-white/70 font-light mb-2">
             Ancient Protocol
           </p>
-          <p className="text-sm tracking-[0.15em] text-emerald-400/90 font-medium">
+          <p className="text-[13px] tracking-[0.2em] text-amber-200/90 font-normal">
             The Stripe for Global Mortgages
           </p>
         </div>
         
-        <div className="relative z-10 w-full max-w-4xl mx-auto px-6 text-center">
-          {/* Main Headline */}
-          <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-light leading-[1.05] tracking-[-0.02em] text-white mb-10">
-            The World's First<br />
-            <span className="font-medium italic bg-gradient-to-r from-emerald-300 via-white to-emerald-300 bg-clip-text text-transparent">Borderless Mortgage Network</span>
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-8 text-center">
+          {/* Main Headline - Two Lines */}
+          <h1 className="font-playfair leading-[1.1] mb-12">
+            <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-light tracking-[-0.01em] text-white/95 mb-2">
+              The World's First
+            </span>
+            <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-medium italic tracking-[-0.02em] text-amber-100">
+              Borderless Mortgage Network
+            </span>
           </h1>
           
           {/* Subheadline */}
-          <p className="text-lg sm:text-xl lg:text-2xl text-white/70 leading-relaxed max-w-2xl mx-auto mb-4 font-light tracking-wide">
-            80 million digital nomads burn <span className="text-white font-medium">$900B+</span> annually on dead rent.
+          <p className="text-lg sm:text-xl lg:text-2xl text-white/75 leading-relaxed max-w-2xl mx-auto mb-3 font-light tracking-wide">
+            80 million digital nomads burn <span className="text-amber-200 font-medium">$900B+</span> annually on dead rent.
           </p>
-          <p className="text-lg sm:text-xl lg:text-2xl text-emerald-300/90 leading-relaxed max-w-2xl mx-auto mb-8 font-medium tracking-wide">
+          <p className="text-lg sm:text-xl lg:text-2xl text-white/90 leading-relaxed max-w-2xl mx-auto mb-10 font-normal tracking-wide">
             We convert that into liquid, transferable on-chain homeownership.
           </p>
           
           {/* Emotional Line */}
-          <p className="text-lg lg:text-xl italic text-emerald-300/90 mb-12">
+          <p className="text-lg lg:text-xl italic text-amber-200/80 mb-14 font-light">
             We built the financial rails banks never could.
           </p>
           
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Button size="lg" className="text-lg px-10 py-6 bg-primary hover:bg-primary/90 shadow-xl" onClick={() => navigate("/pitch-deck")}>
+          <div className="flex flex-col sm:flex-row gap-5 justify-center mb-16">
+            <Button size="lg" className="text-base px-10 py-6 bg-amber-600 hover:bg-amber-500 text-white shadow-2xl border-0 tracking-wide" onClick={() => navigate("/pitch-deck")}>
               <Rocket className="mr-2 h-5 w-5" />
               View Pitch Deck
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-10 py-6 border-white/30 text-white hover:bg-white/10" onClick={() => navigate("/investor-portal")}>
+            <Button size="lg" variant="outline" className="text-base px-10 py-6 border-white/40 text-white hover:bg-white/10 tracking-wide" onClick={() => navigate("/investor-portal")}>
               <Briefcase className="mr-2 h-5 w-5" />
               Investment Access
             </Button>
           </div>
           
           {/* Quiet Proof */}
-          <p className="text-sm text-white/50 tracking-wide">
-            12 homes live • 19% realized returns • Revenue-generating assets
+          <p className="text-sm text-white/45 tracking-[0.1em] font-light">
+            12 homes live  •  19% realized returns  •  Revenue-generating assets
           </p>
         </div>
       </section>
