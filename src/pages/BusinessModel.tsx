@@ -3,19 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { ArrowRight, Menu, Home, Users, Briefcase, CreditCard, Plane, Code2, FileText, BarChart3, Rocket, Scale, Cpu, RefreshCw, Target, TrendingUp, Globe, Building } from "lucide-react";
+import { ArrowRight, Menu, Home, Users, Briefcase, CreditCard, Plane, Code2, FileText, BarChart3, Rocket, Scale, Cpu, RefreshCw, Target, TrendingUp, Globe, Building, DollarSign, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-// New deck-aligned components
-import TheProblem from "@/components/TheProblem";
-import WhatAncientDoes from "@/components/WhatAncientDoes";
-import DataLaboratory from "@/components/DataLaboratory";
-import The32HomeDataset from "@/components/The32HomeDataset";
-import RepaymentDataFlow from "@/components/RepaymentDataFlow";
-import SimpleBusinessModel from "@/components/SimpleBusinessModel";
-import CompetitorMoat from "@/components/CompetitorMoat";
-import ScalingPath from "@/components/ScalingPath";
-import TheAsk from "@/components/TheAsk";
+// Core page components (cleaner old flow)
+import PerfectStorm from "@/components/PerfectStorm";
+import { DevelopmentFlywheel } from "@/components/DevelopmentFlywheel";
+import VCExitScenarios from "@/components/VCExitScenarios";
 import TeamSection from "@/components/TeamSection";
 
 // Deep dive tab components
@@ -29,7 +23,8 @@ import TechDueDiligence from "@/components/TechDueDiligence";
 import { LegalRegulatoryProofing } from "@/components/LegalRegulatoryProofing";
 import ModelAssumptions from "@/components/ModelAssumptions";
 import SixFlipRoadmap from "@/components/SixFlipRoadmap";
-import PerfectStorm from "@/components/PerfectStorm";
+import SimpleBusinessModel from "@/components/SimpleBusinessModel";
+import ScalingPath from "@/components/ScalingPath";
 
 // Import property images
 import ecoSmartCity from "@/assets/eco-smart-city.jpg";
@@ -93,81 +88,177 @@ const BusinessModel = () => {
         </DropdownMenu>
       </div>
 
-      {/* SECTION 1: Hero - Deck Slide 1 */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+      {/* HERO SECTION - Clean Original Style */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img src={ecoSmartCity} alt="Ancient Property" className="w-full h-full object-cover filter brightness-[0.45] contrast-[1.1]" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/30" />
+          <img src={ecoSmartCity} alt="Ancient Property" className="w-full h-full object-cover filter brightness-[0.35] contrast-[1.1]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/40" />
         </div>
         
-        {/* Top Left Branding */}
-        <div className="absolute top-8 left-8 lg:top-10 lg:left-10 z-20">
-          <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-6 text-center">
+          {/* Logo/Brand */}
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-tight mb-4">
             ANCIENT
           </h1>
-        </div>
-        
-        <div className="relative z-10 w-full max-w-3xl mx-auto px-6 text-center">
-          {/* Main Tagline */}
-          <p className="text-xl md:text-2xl lg:text-3xl text-white/90 leading-relaxed mb-8 font-light">
-            Mortgage infrastructure for a borderless world.
+          
+          {/* Tagline */}
+          <p className="text-lg md:text-xl text-white/60 mb-8 font-light tracking-wide">
+            The World's First Decentralized State
           </p>
           
+          {/* Main Headline */}
+          <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white leading-tight mb-6">
+            Building Infrastructure
+            <br />
+            <span className="text-primary">for a Borderless World</span>
+          </h2>
+          
           {/* Value Prop */}
-          <p className="text-base md:text-lg text-white/70 leading-relaxed max-w-2xl mx-auto mb-12">
-            Digital nomads can finally buy homes in Latin America and begin building an onchain credit score.
+          <p className="text-base md:text-xl text-white/80 leading-relaxed max-w-3xl mx-auto mb-10">
+            50 million nomads burn $900B annually on dead rent.
+            <br className="hidden md:block" />
+            <span className="block mt-2">We convert that into fractional, on-chain deeds of dream properties.</span>
           </p>
           
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Button size="lg" className="text-base px-8 py-5 bg-white text-black hover:bg-white/90 font-semibold shadow-2xl" onClick={() => navigate("/pitch-deck")}>
+            <Button size="lg" className="text-lg px-10 py-6 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-2xl" onClick={() => navigate("/pitch-deck")}>
               <Rocket className="mr-2 h-5 w-5" />
               View Pitch Deck
             </Button>
-            <Button size="lg" variant="outline" className="text-base px-8 py-5 border-white/30 text-white hover:bg-white/10" onClick={() => navigate("/investor-portal")}>
+            <Button size="lg" variant="outline" className="text-lg px-10 py-6 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm" onClick={() => navigate("/investor-portal")}>
               <Briefcase className="mr-2 h-5 w-5" />
               Investment Access
             </Button>
           </div>
           
-          {/* Quiet Proof */}
-          <p className="text-sm text-white/50 tracking-wide">
-            12 homes live  •  19% realized returns  •  Revenue-generating assets
-          </p>
+          {/* Quiet Proof Stats */}
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-white/60 text-sm">
+            <span className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              12 homes live
+            </span>
+            <span>•</span>
+            <span>19% realized returns</span>
+            <span>•</span>
+            <span>Revenue-generating assets</span>
+          </div>
+        </div>
+        
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-white/30 rounded-full mt-2" />
+          </div>
         </div>
       </section>
 
-      {/* SECTION 2: The Problem (Deck Slide 2) */}
-      <TheProblem />
+      {/* PERFECT STORM - Why Now */}
+      <PerfectStorm />
 
-      {/* SECTION 3: What Ancient Does (Deck Slide 3) */}
-      <WhatAncientDoes />
+      {/* DEVELOPMENT FLYWHEEL - Flip Economics */}
+      <section className="py-16 px-4 bg-gradient-to-b from-background to-muted/20">
+        <div className="max-w-7xl mx-auto">
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center space-x-2 mb-4">
+              <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary" />
+              <Badge variant="outline" className="text-sm font-medium text-primary uppercase tracking-wider border-primary/50">
+                Development Model
+              </Badge>
+              <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary" />
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Development Flywheel Model
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              2 Locations, 2 Flips, 32 Units — Seed-Funded Capital Recycling
+            </p>
+          </div>
+          
+          {/* Summary Stats Row */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+            <div className="bg-card/50 border border-border/50 rounded-xl p-5 text-center">
+              <DollarSign className="h-6 w-6 text-primary mx-auto mb-2" />
+              <p className="text-2xl md:text-3xl font-bold text-primary">$1.9M</p>
+              <p className="text-sm text-muted-foreground">Initial Capital</p>
+            </div>
+            <div className="bg-card/50 border border-border/50 rounded-xl p-5 text-center">
+              <Home className="h-6 w-6 text-emerald-500 mx-auto mb-2" />
+              <p className="text-2xl md:text-3xl font-bold text-emerald-500">32</p>
+              <p className="text-sm text-muted-foreground">Total Units</p>
+            </div>
+            <div className="bg-card/50 border border-border/50 rounded-xl p-5 text-center">
+              <Globe className="h-6 w-6 text-blue-500 mx-auto mb-2" />
+              <p className="text-2xl md:text-3xl font-bold text-blue-500">2</p>
+              <p className="text-sm text-muted-foreground">Countries</p>
+            </div>
+            <div className="bg-card/50 border border-border/50 rounded-xl p-5 text-center">
+              <TrendingUp className="h-6 w-6 text-purple-500 mx-auto mb-2" />
+              <p className="text-2xl md:text-3xl font-bold text-purple-500">$24.5M</p>
+              <p className="text-sm text-muted-foreground">10-Year Capture</p>
+            </div>
+          </div>
+          
+          {/* Flywheel Component */}
+          <DevelopmentFlywheel />
+        </div>
+      </section>
 
-      {/* SECTION 4: Why Real Estate (Deck Slide 4) */}
-      <DataLaboratory />
+      {/* 10-YEAR REVENUE CAPTURE */}
+      <section className="py-16 px-4 bg-muted/10">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">10-Year Revenue Capture</h2>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            {/* Platform Fees */}
+            <div className="bg-gradient-to-br from-blue-500/10 to-blue-500/5 border border-blue-500/20 rounded-2xl p-6 text-center">
+              <Building className="h-10 w-10 text-blue-500 mx-auto mb-4" />
+              <p className="text-lg font-semibold text-blue-400 mb-2">Platform Fees</p>
+              <p className="text-4xl font-bold text-white mb-2">$0.82M</p>
+              <p className="text-sm text-muted-foreground">Infrastructure revenue for serving nomad economy</p>
+              <Badge className="mt-4 bg-blue-500/20 text-blue-400 border-blue-500/30">Immediate capture</Badge>
+            </div>
+            
+            {/* Mortgage Interest */}
+            <div className="bg-gradient-to-br from-purple-500/10 to-purple-500/5 border border-purple-500/20 rounded-2xl p-6 text-center">
+              <Globe className="h-10 w-10 text-purple-500 mx-auto mb-4" />
+              <p className="text-lg font-semibold text-purple-400 mb-2">Mortgage Interest</p>
+              <p className="text-4xl font-bold text-white mb-2">$13.5M</p>
+              <p className="text-sm text-muted-foreground">10% yield serving the $250B cross-border lending void</p>
+              <Badge className="mt-4 bg-purple-500/20 text-purple-400 border-purple-500/30">10-year stream</Badge>
+            </div>
+            
+            {/* SAM Appreciation */}
+            <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20 rounded-2xl p-6 text-center">
+              <Sparkles className="h-10 w-10 text-emerald-500 mx-auto mb-4" />
+              <p className="text-lg font-semibold text-emerald-400 mb-2">SAM Appreciation</p>
+              <p className="text-4xl font-bold text-white mb-2">$10.2M</p>
+              <p className="text-sm text-muted-foreground">Capturing nomad wealth lost to rent into property equity</p>
+              <Badge className="mt-4 bg-emerald-500/20 text-emerald-400 border-emerald-500/30">10-year capture</Badge>
+            </div>
+          </div>
+          
+          {/* Total */}
+          <div className="bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/30 rounded-2xl p-8 text-center">
+            <p className="text-lg text-muted-foreground mb-2">Total 10-Year Revenue Capture</p>
+            <p className="text-5xl md:text-6xl font-bold text-primary">$24.53M</p>
+          </div>
+        </div>
+      </section>
 
-      {/* SECTION 5: The 32-Home Dataset (Deck Slide 5) */}
-      <The32HomeDataset />
-
-      {/* SECTION 6: What the Data Looks Like (Deck Slide 6) */}
-      <RepaymentDataFlow />
-
-      {/* SECTION 7: Business Model (Deck Slide 9) */}
-      <SimpleBusinessModel />
-
-      {/* SECTION 8: Competitor Moat (Deck Slide 10) */}
-      <CompetitorMoat />
-
-      {/* SECTION 9: Scaling Path (Deck Slide 12) */}
+      {/* SCALING PATH - Evolution */}
       <ScalingPath />
 
-      {/* SECTION 10: Team (Deck Slide 13) */}
+      {/* INVESTOR RETURN SCENARIOS */}
+      <VCExitScenarios />
+
+      {/* TEAM SECTION */}
       <TeamSection />
 
-      {/* SECTION 11: The Ask (Deck Slide 14) */}
-      <TheAsk />
-
-      {/* Closing CTA (Deck Slide 15) */}
+      {/* Closing CTA */}
       <section className="py-20 px-4 bg-gradient-to-b from-muted/20 to-background">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
@@ -178,9 +269,6 @@ const BusinessModel = () => {
           </p>
           <p className="text-2xl font-medium text-primary mb-8">
             Live anywhere. Own everywhere.
-          </p>
-          <p className="text-lg text-muted-foreground mb-10">
-            Start building a global credit record today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" className="text-lg px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold" onClick={() => navigate("/pitch-deck")}>
@@ -201,11 +289,11 @@ const BusinessModel = () => {
           {/* Deep Dive Section Header */}
           <div className="text-center mb-12">
             <div className="inline-flex items-center space-x-2 mb-4">
-              <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary"></div>
+              <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary" />
               <Badge variant="outline" className="text-sm font-medium text-primary uppercase tracking-wider border-primary/50">
                 Due Diligence
               </Badge>
-              <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary"></div>
+              <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary" />
             </div>
             <h2 className="text-3xl font-bold mb-2">Deep Dive Documentation</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -214,8 +302,16 @@ const BusinessModel = () => {
           </div>
 
           {/* Tabbed Content */}
-          <Tabs defaultValue="competition" className="w-full">
+          <Tabs defaultValue="roadmap" className="w-full">
             <TabsList className="grid w-full grid-cols-3 lg:grid-cols-7 lg:w-fit lg:mx-auto mb-8 gap-1">
+              <TabsTrigger value="roadmap" className="text-xs lg:text-sm">
+                <Target className="h-4 w-4 mr-1 hidden sm:inline" />
+                Roadmap
+              </TabsTrigger>
+              <TabsTrigger value="revenue" className="text-xs lg:text-sm">
+                <DollarSign className="h-4 w-4 mr-1 hidden sm:inline" />
+                Revenue
+              </TabsTrigger>
               <TabsTrigger value="competition" className="text-xs lg:text-sm">
                 <Globe className="h-4 w-4 mr-1 hidden sm:inline" />
                 Competition
@@ -223,10 +319,6 @@ const BusinessModel = () => {
               <TabsTrigger value="mortgages" className="text-xs lg:text-sm">
                 <Building className="h-4 w-4 mr-1 hidden sm:inline" />
                 Mortgages
-              </TabsTrigger>
-              <TabsTrigger value="roadmap" className="text-xs lg:text-sm">
-                <Target className="h-4 w-4 mr-1 hidden sm:inline" />
-                Roadmap
               </TabsTrigger>
               <TabsTrigger value="model" className="text-xs lg:text-sm">
                 <RefreshCw className="h-4 w-4 mr-1 hidden sm:inline" />
@@ -240,11 +332,20 @@ const BusinessModel = () => {
                 <Cpu className="h-4 w-4 mr-1 hidden sm:inline" />
                 Tech
               </TabsTrigger>
-              <TabsTrigger value="market" className="text-xs lg:text-sm">
-                <TrendingUp className="h-4 w-4 mr-1 hidden sm:inline" />
-                Market
-              </TabsTrigger>
             </TabsList>
+
+            {/* Roadmap Tab */}
+            <TabsContent value="roadmap">
+              <div className="space-y-8">
+                <SeedFundedRoadmap />
+                <SixFlipRoadmap />
+              </div>
+            </TabsContent>
+
+            {/* Revenue Tab */}
+            <TabsContent value="revenue">
+              <SimpleBusinessModel />
+            </TabsContent>
 
             {/* Competition Tab */}
             <TabsContent value="competition">
@@ -254,14 +355,6 @@ const BusinessModel = () => {
             {/* Mortgages Tab */}
             <TabsContent value="mortgages">
               <TwoProductMortgage />
-            </TabsContent>
-
-            {/* Roadmap Tab */}
-            <TabsContent value="roadmap">
-              <div className="space-y-8">
-                <SeedFundedRoadmap />
-                <SixFlipRoadmap />
-              </div>
             </TabsContent>
 
             {/* Model Tab - Two-Pocket, FinCo, Cash Strategy */}
@@ -282,11 +375,6 @@ const BusinessModel = () => {
             {/* Tech Tab */}
             <TabsContent value="tech">
               <TechDueDiligence />
-            </TabsContent>
-
-            {/* Market Tab - PerfectStorm moved here */}
-            <TabsContent value="market">
-              <PerfectStorm />
             </TabsContent>
           </Tabs>
         </div>
