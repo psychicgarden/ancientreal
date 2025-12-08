@@ -92,80 +92,54 @@ const BusinessModel = () => {
         </DropdownMenu>
       </div>
 
-      {/* SECTION 1: Hero - Traction-Focused */}
+      {/* SECTION 1: Hero - Clean Narrative */}
       <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img src={ecoSmartCity} alt="Eco Smart City Vision" className="w-full h-full object-cover filter brightness-[0.35] contrast-[1.3] saturate-[1.2]" />
-          <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-transparent to-black/50" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+          <img src={ecoSmartCity} alt="Eco Smart City Vision" className="w-full h-full object-cover filter brightness-[0.3] contrast-[1.2] saturate-[1.1]" />
+          <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/50 to-black/70" />
         </div>
         
         <div className="absolute top-8 left-8 z-20">
           <h3 className="text-xl lg:text-2xl font-display font-medium text-white/90 tracking-wide">
             ANCIENT PROTOCOL
           </h3>
-          <p className="text-xs lg:text-sm text-white/60 tracking-wide mt-1 uppercase">
-            The Rocket Mortgage for the Borderless Economy
-          </p>
         </div>
         
-        <div className="relative z-10 w-full max-w-6xl mx-auto px-6 text-center">
-          {/* Lead-in Badge */}
-          <div className="mb-6">
-            <span className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/20 backdrop-blur-sm rounded-full text-sm text-emerald-300 border border-emerald-500/30">
-              <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
-              Live Traction — Not a Concept
-            </span>
-          </div>
-
-          {/* Premium Display Headline */}
-          <div className="space-y-2 mb-10">
-            <h1 className="font-display text-5xl lg:text-7xl xl:text-8xl font-medium leading-[1.05] tracking-tight italic">
-              <span className="block text-white">12 Units Live.</span>
-              <span className="block text-white">10,000 in Pipeline.</span>
-            </h1>
-            <h2 className="font-display text-4xl lg:text-6xl xl:text-7xl font-medium leading-[1.1] tracking-tight italic">
-              <span className="bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-300 bg-clip-text text-transparent">$675M Your 15% at Exit.</span>
-            </h2>
-          </div>
+        <div className="relative z-10 w-full max-w-4xl mx-auto px-6 text-center">
+          {/* Main Headline */}
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-medium leading-[1.1] tracking-tight text-white mb-8">
+            The World's First<br />
+            <span className="italic">Borderless Mortgage Network</span>
+          </h1>
           
-          {/* Key Stats Row */}
-          <div className="flex flex-wrap justify-center gap-4 lg:gap-6 mb-10">
-            <div className="bg-black/50 backdrop-blur-xl rounded-2xl border border-white/10 px-8 py-4 min-w-[140px]">
-              <div className="text-3xl lg:text-4xl font-display font-semibold text-emerald-400">18.75%</div>
-              <div className="text-xs text-white/60 uppercase tracking-wider mt-1">Net Verified Yields</div>
-            </div>
-            <div className="bg-black/50 backdrop-blur-xl rounded-2xl border border-white/10 px-8 py-4 min-w-[140px]">
-              <div className="text-3xl lg:text-4xl font-display font-semibold text-orange-400">44%</div>
-              <div className="text-xs text-white/60 uppercase tracking-wider mt-1">Gross Margins</div>
-            </div>
-            <div className="bg-black/50 backdrop-blur-xl rounded-2xl border border-white/10 px-8 py-4 min-w-[140px]">
-              <div className="text-3xl lg:text-4xl font-display font-semibold text-cyan-400">$675M</div>
-              <div className="text-xs text-white/60 uppercase tracking-wider mt-1">Your 15% at Y10</div>
-            </div>
-          </div>
-
-          {/* Value Prop */}
-          <div className="max-w-3xl mx-auto mb-10">
-            <div className="bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 px-8 py-5">
-              <p className="text-lg lg:text-xl leading-relaxed text-white/90">
-                We built the <span className="font-semibold text-white">protocol that banks cannot build</span>. 
-                Borderless credit for <span className="font-semibold text-orange-400">35M+ global nomads</span> earning $50k-$250k — rejected by every bank, welcomed by us.
-              </p>
-            </div>
-          </div>
-
+          {/* Subheadline */}
+          <p className="text-lg sm:text-xl lg:text-2xl text-white/80 leading-relaxed max-w-3xl mx-auto mb-6">
+            115 million global citizens spend nearly $1T a year on rent they'll never own.
+            <br className="hidden sm:block" />
+            <span className="text-white font-medium">We convert that into on-chain, transferable property.</span>
+          </p>
+          
+          {/* Emotional Line */}
+          <p className="text-lg lg:text-xl italic text-emerald-300/90 mb-12">
+            We built the financial rails banks never could.
+          </p>
+          
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Button size="lg" className="text-lg px-10 py-6 bg-primary hover:bg-primary/90 shadow-xl" onClick={() => navigate("/pitch-deck")}>
               <Rocket className="mr-2 h-5 w-5" />
-              View Investment Memo
+              View Pitch Deck
             </Button>
             <Button size="lg" variant="outline" className="text-lg px-10 py-6 border-white/30 text-white hover:bg-white/10" onClick={() => navigate("/investor-portal")}>
               <Briefcase className="mr-2 h-5 w-5" />
-              Schedule Call
+              Investment Access
             </Button>
           </div>
+          
+          {/* Quiet Proof */}
+          <p className="text-sm text-white/50 tracking-wide">
+            12 homes live • 19% realized returns • Revenue-generating assets
+          </p>
         </div>
       </section>
 
