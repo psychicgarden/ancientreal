@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Download, Maximize2, Minimize2, Home, ZoomIn, ZoomOut } from "lucide-react";
+import { Download, Maximize2, Minimize2, Home, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Viewer, Worker } from "@react-pdf-viewer/core";
+import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout";
+import "@react-pdf-viewer/core/lib/styles/index.css";
+import "@react-pdf-viewer/default-layout/lib/styles/index.css";
 
 export default function PitchDeck() {
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [zoom, setZoom] = useState(100);
+  const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -17,9 +21,6 @@ export default function PitchDeck() {
       setIsFullscreen(false);
     }
   };
-
-  const handleZoomIn = () => setZoom(Math.min(zoom + 25, 200));
-  const handleZoomOut = () => setZoom(Math.max(zoom - 25, 50));
 
   const pdfUrl = "/documents/ancient-pitch-deck.pdf";
 
@@ -41,22 +42,19 @@ export default function PitchDeck() {
           </div>
           
           <div className="flex items-center gap-2">
-            {/* Zoom Controls */}
-            <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
-              <Button variant="ghost" size="icon" onClick={handleZoomOut} disabled={zoom <= 50}>
-                <ZoomOut className="h-4 w-4" />
+            {/* Open in new tab */}
+            <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
+              <Button variant="outline" size="sm" className="gap-2">
+                <ExternalLink className="h-4 w-4" />
+                Open in Tab
               </Button>
-              <span className="text-sm font-medium w-12 text-center">{zoom}%</span>
-              <Button variant="ghost" size="icon" onClick={handleZoomIn} disabled={zoom >= 200}>
-                <ZoomIn className="h-4 w-4" />
-              </Button>
-            </div>
+            </a>
 
             {/* Download Button */}
             <a href={pdfUrl} download="Ancient-Protocol-Pitch-Deck.pdf">
               <Button variant="outline" size="sm" className="gap-2">
                 <Download className="h-4 w-4" />
-                Download PDF
+                Download
               </Button>
             </a>
 
@@ -69,13 +67,16 @@ export default function PitchDeck() {
       </div>
 
       {/* PDF Viewer */}
-      <div className="flex-1 bg-muted/30" style={{ height: isFullscreen ? 'calc(100vh - 60px)' : 'calc(100vh - 120px)' }}>
-        <iframe
-          src={`${pdfUrl}#zoom=${zoom}&toolbar=0&navpanes=0`}
-          className="w-full h-full border-0"
-          title="Ancient Protocol Pitch Deck"
-          style={{ transform: `scale(${zoom / 100})`, transformOrigin: 'top center' }}
-        />
+      <div 
+        className="bg-muted/30" 
+        style={{ height: isFullscreen ? 'calc(100vh - 60px)' : 'calc(100vh - 120px)' }}
+      >
+        <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+          <Viewer
+            fileUrl={pdfUrl}
+            plugins={[defaultLayoutPluginInstance]}
+          />
+        </Worker>
       </div>
 
       {/* Footer */}
