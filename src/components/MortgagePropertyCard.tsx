@@ -179,7 +179,7 @@ export const MortgagePropertyCard = ({
                 
                 <div className="flex-1 text-center min-w-0">
                   <div className="text-xl font-bold text-primary mb-1 whitespace-nowrap">
-                    ${monthlyProfit > 0 ? '+' : ''}${monthlyProfit.toLocaleString()}
+                    ${monthlyProfit.toLocaleString()}
                   </div>
                   <div className="text-xs text-muted-foreground uppercase tracking-wide leading-tight">
                     Profit<br />Per Month
