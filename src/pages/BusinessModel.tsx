@@ -1,24 +1,24 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { ArrowRight, TrendingUp, DollarSign, Building, Globe, Menu, Home, Users, Briefcase, CreditCard, Plane, Code2, FileText, Settings, BarChart3, Rocket, Scale, Cpu, RefreshCw, Target } from "lucide-react";
+import { ArrowRight, Menu, Home, Users, Briefcase, CreditCard, Plane, Code2, FileText, BarChart3, Rocket, Scale, Cpu, RefreshCw, Target, TrendingUp, Globe, Building } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-// Core section components
-import AWSPitch from "@/components/AWSPitch";
-import MarketFailure from "@/components/MarketFailure";
-import TractionTrilogy from "@/components/TractionTrilogy";
-import TheDealSection from "@/components/TheDealSection";
-import VCExitScenarios from "@/components/VCExitScenarios";
-import UnfairUnitEconomics from "@/components/UnfairUnitEconomics";
-import KillSwitch from "@/components/KillSwitch";
-import TenYearProjection from "@/components/TenYearProjection";
+// New deck-aligned components
+import TheProblem from "@/components/TheProblem";
+import WhatAncientDoes from "@/components/WhatAncientDoes";
+import DataLaboratory from "@/components/DataLaboratory";
+import The32HomeDataset from "@/components/The32HomeDataset";
+import RepaymentDataFlow from "@/components/RepaymentDataFlow";
+import SimpleBusinessModel from "@/components/SimpleBusinessModel";
+import CompetitorMoat from "@/components/CompetitorMoat";
+import ScalingPath from "@/components/ScalingPath";
+import TheAsk from "@/components/TheAsk";
 import TeamSection from "@/components/TeamSection";
 
-// Tab content components
+// Deep dive tab components
 import CompetitiveLandscape from "@/components/CompetitiveLandscape";
 import TwoProductMortgage from "@/components/TwoProductMortgage";
 import SeedFundedRoadmap from "@/components/SeedFundedRoadmap";
@@ -38,7 +38,7 @@ const BusinessModel = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-subtle">
+    <div className="min-h-screen bg-background">
       {/* Navigation Menu */}
       <div className="fixed top-6 right-6 z-50">
         <DropdownMenu>
@@ -93,112 +93,103 @@ const BusinessModel = () => {
         </DropdownMenu>
       </div>
 
-      {/* SECTION 1: Hero - Tightened & Refined */}
-      <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
+      {/* SECTION 1: Hero - Deck Slide 1 */}
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img src={ecoSmartCity} alt="Eco Smart City Vision" className="w-full h-full object-cover filter brightness-[0.5] contrast-[1.15] saturate-[1.1]" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/20" />
+          <img src={ecoSmartCity} alt="Ancient Property" className="w-full h-full object-cover filter brightness-[0.45] contrast-[1.1]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/30" />
         </div>
         
-        {/* Top Left Branding - Tightened */}
+        {/* Top Left Branding */}
         <div className="absolute top-8 left-8 lg:top-10 lg:left-10 z-20">
-          <p className="text-[11px] uppercase tracking-[0.3em] text-white/80 font-medium mb-1">
-            Ancient Protocol
-          </p>
-          <p className="text-sm tracking-[0.05em] text-amber-300/90 italic">
-            The Stripe for Global Mortgages
-          </p>
+          <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
+            ANCIENT
+          </h1>
         </div>
         
-        <div className="relative z-10 w-full max-w-4xl mx-auto px-6 text-center">
-          {/* Main Headline - Two Lines, Tighter */}
-          <h1 className="font-playfair leading-[1.08] mb-8">
-            <span className="block text-4xl sm:text-5xl lg:text-6xl font-light tracking-[0.01em] text-white mb-3">
-              The World's First
-            </span>
-            <span className="block text-5xl sm:text-6xl lg:text-7xl font-medium italic tracking-[-0.02em] text-amber-100">
-              Borderless Mortgage Network
-            </span>
-          </h1>
-          
-          {/* Subheadline - Condensed */}
-          <p className="text-lg lg:text-xl text-white/75 leading-relaxed max-w-2xl mx-auto mb-10 font-light">
-            80 million digital nomads burn <span className="text-amber-300 font-medium">$900B+</span> annually on dead rent.
-            <br className="hidden sm:block" />
-            <span className="text-white/90 font-normal">We convert that into liquid, on-chain homeownership.</span>
+        <div className="relative z-10 w-full max-w-3xl mx-auto px-6 text-center">
+          {/* Main Tagline */}
+          <p className="text-xl md:text-2xl lg:text-3xl text-white/90 leading-relaxed mb-8 font-light">
+            Mortgage infrastructure for a borderless world.
           </p>
           
-          {/* Emotional Line */}
-          <p className="text-base lg:text-lg italic text-amber-200/80 mb-10 font-light">
-            The financial rails banks never could build.
+          {/* Value Prop */}
+          <p className="text-base md:text-lg text-white/70 leading-relaxed max-w-2xl mx-auto mb-12">
+            Digital nomads can finally buy homes in Latin America and begin building an onchain credit score.
           </p>
           
-          {/* CTAs - Tighter */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button size="lg" className="text-base px-8 py-5 bg-amber-500 hover:bg-amber-400 text-amber-950 font-semibold shadow-2xl border-0" onClick={() => navigate("/pitch-deck")}>
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            <Button size="lg" className="text-base px-8 py-5 bg-white text-black hover:bg-white/90 font-semibold shadow-2xl" onClick={() => navigate("/pitch-deck")}>
               <Rocket className="mr-2 h-5 w-5" />
               View Pitch Deck
             </Button>
-            <Button size="lg" variant="outline" className="text-base px-8 py-5 border-amber-300/40 text-amber-100 hover:bg-amber-300/10" onClick={() => navigate("/investor-portal")}>
+            <Button size="lg" variant="outline" className="text-base px-8 py-5 border-white/30 text-white hover:bg-white/10" onClick={() => navigate("/investor-portal")}>
               <Briefcase className="mr-2 h-5 w-5" />
               Investment Access
             </Button>
           </div>
           
-          {/* Quiet Proof - More Visible */}
-          <p className="text-base text-white/60 tracking-[0.08em] font-light">
+          {/* Quiet Proof */}
+          <p className="text-sm text-white/50 tracking-wide">
             12 homes live  •  19% realized returns  •  Revenue-generating assets
           </p>
         </div>
       </section>
 
-      {/* SECTION 2: Traction First (Proof) */}
-      <TractionTrilogy />
+      {/* SECTION 2: The Problem (Deck Slide 2) */}
+      <TheProblem />
 
-      {/* SECTION 3: Market Failure - Why This Matters */}
-      <MarketFailure />
+      {/* SECTION 3: What Ancient Does (Deck Slide 3) */}
+      <WhatAncientDoes />
 
-      {/* SECTION 4: AWS Pitch - Our Solution */}
-      <AWSPitch />
+      {/* SECTION 4: Why Real Estate (Deck Slide 4) */}
+      <DataLaboratory />
 
-      {/* SECTION 5: The Deal */}
-      <TheDealSection />
+      {/* SECTION 5: The 32-Home Dataset (Deck Slide 5) */}
+      <The32HomeDataset />
 
-      {/* SECTION 6: VC Exit Scenarios - What You Get */}
-      <VCExitScenarios />
+      {/* SECTION 6: What the Data Looks Like (Deck Slide 6) */}
+      <RepaymentDataFlow />
 
-      {/* SECTION 7: Unit Economics + Kill Switch */}
-      <div className="py-8">
-        <UnfairUnitEconomics />
-        <KillSwitch />
-      </div>
+      {/* SECTION 7: Business Model (Deck Slide 9) */}
+      <SimpleBusinessModel />
 
-      {/* SECTION 8: 10-Year Projection */}
-      <TenYearProjection />
+      {/* SECTION 8: Competitor Moat (Deck Slide 10) */}
+      <CompetitorMoat />
 
-      {/* SECTION 9: Team */}
+      {/* SECTION 9: Scaling Path (Deck Slide 12) */}
+      <ScalingPath />
+
+      {/* SECTION 10: Team (Deck Slide 13) */}
       <TeamSection />
 
-      {/* CTA Section - Updated Copy */}
-      <section className="py-16 px-4 bg-gradient-to-b from-background to-muted/20">
-        <div className="max-w-4xl mx-auto text-center">
-          <Badge variant="outline" className="mb-4 text-lg px-6 py-2 border-amber-500/50 text-amber-500">
-            Ready to Invest?
-          </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Join the Borderless Economy
+      {/* SECTION 11: The Ask (Deck Slide 14) */}
+      <TheAsk />
+
+      {/* Closing CTA (Deck Slide 15) */}
+      <section className="py-20 px-4 bg-gradient-to-b from-muted/20 to-background">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            ANCIENT
           </h2>
-          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            $1.9M SAFE at $12M Cap — 15% equity in the world's first global mortgage protocol.
+          <p className="text-xl text-muted-foreground mb-2">
+            The first mortgage rails for people who live internationally.
+          </p>
+          <p className="text-2xl font-medium text-primary mb-8">
+            Live anywhere. Own everywhere.
+          </p>
+          <p className="text-lg text-muted-foreground mb-10">
+            Start building a global credit record today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="text-lg px-8 bg-amber-500 hover:bg-amber-400 text-amber-950 font-semibold" onClick={() => navigate("/pitch-deck")}>
+            <Button size="lg" className="text-lg px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold" onClick={() => navigate("/pitch-deck")}>
               <Rocket className="mr-2 h-5 w-5" />
               View Pitch Deck
             </Button>
             <Button size="lg" variant="outline" className="text-lg px-8" onClick={() => navigate("/investor-portal")}>
               <Briefcase className="mr-2 h-5 w-5" />
-              Investor Portal
+              Contact Us
             </Button>
           </div>
         </div>
