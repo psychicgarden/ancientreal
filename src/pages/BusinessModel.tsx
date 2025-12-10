@@ -121,44 +121,34 @@ const flywheelData = calculateFlywheelWithBudget();
 const flywheel = calculateDevelopmentFlywheel();
 
 // SEED-FUNDED MODEL: 32 units across 2 flips (Peru + Brazil)
-// Full 6-flip model only for reference - seed phase is the investor focus
 const seedFundedUnits = 32; // 15 Peru + 17 Brazil
-const totalUnits = flywheel.flips.reduce((sum, f) => sum + f.units, 0); // All flips for reference
-const totalGrossSales = flywheel.totalGrossSales / 1_000_000;
-const totalPlatformFees = flywheel.totalPlatformFees / 1_000_000;
-const avgPrice = totalGrossSales / totalUnits * 1_000_000;
+const seedGrossSales = 4.49; // $2.03M Peru + $2.47M Brazil
+const seedPlatformFees = 0.135; // 3% of $4.49M
+const seedAvgPrice = 140000; // ($135K + $145K) / 2
 
-// Seed-phase platform fees: 3% on 32 units (~$4.5M gross sales)
-const seedPhasePlatformFees = 0.135; // $135K from 32 seed-funded units
-const platformFeesY0 = seedPhasePlatformFees;
+// Seed-phase mortgage calculations (only 2 flips)
+// 80% of units financed = ~26 mortgages
+const seedFinancedUnits = Math.floor(seedFundedUnits * 0.80); // 26 mortgages
+const seedLoanPerUnit = seedAvgPrice * 0.80; // 80% LTV = $112K average loan
+const seedTotalLoanBook = seedFinancedUnits * seedLoanPerUnit; // ~$2.91M mortgage book
 
-// Mortgage Interest: Use proper amortization formula, not simple interest
-// Calculate total interest from mortgages using monthly payment formula
-let totalMortgageInterest = 0;
-let totalLoanAmount = 0;
-flywheel.flips.forEach(flip => {
-  const financedUnits = Math.floor(flip.units * 0.80); // 80% financed
-  const avgPrice = flip.grossSales / flip.units;
-  const loanAmount = avgPrice * 0.80 * financedUnits; // 80% LTV per unit
+// Calculate NIM: 3% spread on mortgage book over 15 years
+// Using simplified average balance method (mortgages amortize, so average ~50% of original over life)
+const avgOutstandingBalance = seedTotalLoanBook * 0.55; // Average balance over 15 years
+const seedAnnualNIM = avgOutstandingBalance * 0.03; // 3% annual spread
+const seedTotalNIM = seedAnnualNIM * 15 / 1_000_000; // Total NIM over 15 years in millions (~$720K)
 
-  // Monthly payment calculation: P * [r(1+r)^n] / [(1+r)^n - 1]
-  const monthlyRate = 0.10 / 12; // 10% APR
-  const numPayments = 15 * 12; // 180 months
-  const monthlyPayment = loanAmount * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1);
-  const totalPaid = monthlyPayment * numPayments;
-  const interestPaid = totalPaid - loanAmount;
-  totalMortgageInterest += interestPaid;
-  totalLoanAmount += loanAmount;
-});
-const annualInterest = totalMortgageInterest / 15 / 1_000_000; // Convert to millions
+// Seed-phase totals
+const totalPlatformFees = seedPlatformFees; // $135K
+const totalNIM = seedTotalNIM; // ~$0.72M
+const totalDynamicRevenue = totalPlatformFees + totalNIM; // ~$0.86M
 
-// Net Interest Margin (NIM): Ancient borrows at 7%, lends at 10%, keeps 3% spread
-// NIM = 3% of total loan principal per year for 15 years
-const totalNIM = totalLoanAmount * 0.03 * 15 / 1_000_000; // 3% spread over 15 years
-const annualNIM = totalLoanAmount * 0.03 / 1_000_000; // Annual NIM
-
-// Revenue over 15 years (Platform Fees + NIM) - NO SAM, buyers keep 100% appreciation
-const totalDynamicRevenue = platformFeesY0 + totalNIM;
+// Legacy variables for compatibility
+const totalUnits = seedFundedUnits;
+const totalGrossSales = seedGrossSales;
+const avgPrice = seedAvgPrice;
+const annualNIM = seedAnnualNIM / 1_000_000;
+const platformFeesY0 = seedPlatformFees;
 
 // Calculate 15-year cash flow waterfall (Platform Fees + NIM only)
 const generateCashFlowData = () => {
@@ -193,14 +183,14 @@ const generateCashFlowData = () => {
 const cashFlowData = generateCashFlowData();
 const revenueStreams = [{
   title: "Platform Fees",
-  amount: `$${seedPhasePlatformFees.toFixed(2)}M`,
+  amount: `$${(seedPlatformFees * 1000).toFixed(0)}K`,
   description: "3% fee on seed-funded sales (32 units)",
   timeline: "Immediate capture (Years 1-2)",
   icon: "🏛"
 }, {
   title: "Net Interest Margin (3% NIM)",
-  amount: `$${totalNIM.toFixed(2)}M`,
-  description: "Borrow at 7% → Lend at 10% = 3% spread",
+  amount: `$${(totalNIM * 1000).toFixed(0)}K`,
+  description: "3% spread on $2.9M mortgage book",
   timeline: "15-year recurring stream",
   icon: "💰"
 }];
@@ -626,9 +616,9 @@ const BusinessModel = () => {
               {/* Clean Revenue Model Showcase */}
               <div className="mb-16 mt-24">
                 <div className="text-center mb-12">
-                  <h2 className="text-4xl font-bold mb-4">${totalDynamicRevenue.toFixed(2)}M Revenue Model</h2>
+                  <h2 className="text-4xl font-bold mb-4">Seed Phase Revenue Model</h2>
                   <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                    Simple mortgage spread model: Borrow at 7%, Lend at 10%, Keep 3% NIM
+                    32 units generate ~$860K protocol revenue. Platform scaling unlocks millions more.
                   </p>
                 </div>
 
@@ -684,11 +674,11 @@ const BusinessModel = () => {
                         <div className="text-5xl">🏛</div>
                         <div>
                           <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">Platform Fees</div>
-                          <div className="text-4xl font-bold text-primary mb-3">${totalPlatformFees.toFixed(2)}M</div>
-                          <p className="text-sm text-muted-foreground">3% fee on all {totalUnits} unit sales</p>
+                          <div className="text-4xl font-bold text-primary mb-3">${(totalPlatformFees * 1000).toFixed(0)}K</div>
+                          <p className="text-sm text-muted-foreground">3% fee on 32 seed-phase units</p>
                         </div>
                         <div className="bg-background/50 rounded-lg p-3 text-sm">
-                          <div className="text-muted-foreground">Captured immediately at closing (Years 0-6)</div>
+                          <div className="text-muted-foreground">Captured immediately at closing (Years 1-2)</div>
                         </div>
                       </div>
                     </CardContent>
@@ -700,11 +690,11 @@ const BusinessModel = () => {
                         <div className="text-5xl">💰</div>
                         <div>
                           <div className="text-sm text-muted-foreground uppercase tracking-wide mb-2">Net Interest Margin (3% NIM)</div>
-                          <div className="text-4xl font-bold text-emerald-500 mb-3">${totalNIM.toFixed(2)}M</div>
-                          <p className="text-sm text-muted-foreground">Borrow at 7% → Lend at 10% = 3% spread</p>
+                          <div className="text-4xl font-bold text-emerald-500 mb-3">${(totalNIM * 1000).toFixed(0)}K</div>
+                          <p className="text-sm text-muted-foreground">3% spread on $2.9M mortgage book</p>
                         </div>
                         <div className="bg-background/50 rounded-lg p-3 text-sm">
-                          <div className="text-muted-foreground">Recurring 15-year revenue stream</div>
+                          <div className="text-muted-foreground">~26 mortgages over 15 years</div>
                         </div>
                       </div>
                     </CardContent>
@@ -715,23 +705,26 @@ const BusinessModel = () => {
                 <Card className="bg-gradient-to-br from-primary/20 to-primary/10 border-primary/30 border-2 mb-12">
                   <CardContent className="p-10">
                     <div className="text-center">
-                      <div className="text-sm text-muted-foreground uppercase tracking-widest mb-3">15-Year Protocol Revenue</div>
-                      <div className="text-6xl font-bold text-primary mb-4">${totalDynamicRevenue.toFixed(2)}M</div>
+                      <div className="text-sm text-muted-foreground uppercase tracking-widest mb-3">Seed Phase 15-Year Protocol Revenue</div>
+                      <div className="text-6xl font-bold text-primary mb-4">${(totalDynamicRevenue * 1000).toFixed(0)}K</div>
                       <div className="flex items-center justify-center gap-8 text-sm flex-wrap">
                         <div>
                           <span className="text-muted-foreground">Platform Fees:</span>
-                          <span className="font-bold ml-2">${totalPlatformFees.toFixed(2)}M</span>
+                          <span className="font-bold ml-2">${(totalPlatformFees * 1000).toFixed(0)}K</span>
                         </div>
                         <div className="h-4 w-px bg-border hidden md:block"></div>
                         <div>
                           <span className="text-muted-foreground">NIM (3% spread):</span>
-                          <span className="font-bold ml-2">${totalNIM.toFixed(2)}M</span>
+                          <span className="font-bold ml-2">${(totalNIM * 1000).toFixed(0)}K</span>
                         </div>
                         <div className="h-4 w-px bg-border hidden md:block"></div>
                         <div>
                           <span className="text-muted-foreground">32 Units:</span>
                           <span className="font-bold ml-2">2 Countries (Peru + Brazil)</span>
                         </div>
+                      </div>
+                      <div className="mt-4 text-sm text-muted-foreground">
+                        Note: This is seed-phase only. Platform scaling adds developer partnerships revenue.
                       </div>
                     </div>
                   </CardContent>
