@@ -37,6 +37,7 @@ import VCExitScenarios from "@/components/VCExitScenarios";
 import CapitalStackExplainer from "@/components/CapitalStackExplainer";
 import VentureStakingExplainer from "@/components/VentureStakingExplainer";
 import ModelAssumptions from "@/components/ModelAssumptions";
+import PhaseEvolution from "@/components/PhaseEvolution";
 
 // Import property images
 import villaTulum from "@/assets/villa-tulum.jpg";
@@ -357,6 +358,9 @@ const BusinessModel = () => {
 
       {/* Strategy Roadmap - Phased Growth Plan */}
       <StrategyRoadmap />
+
+      {/* Phase Evolution - From Engine to Ecosystem */}
+      <PhaseEvolution />
 
       {/* Traction Trilogy Section */}
       <TractionTrilogy />
@@ -725,8 +729,8 @@ const BusinessModel = () => {
                         </div>
                         <div className="h-4 w-px bg-border hidden md:block"></div>
                         <div>
-                          <span className="text-muted-foreground">{totalUnits} Units:</span>
-                          <span className="font-bold ml-2">6 Countries</span>
+                          <span className="text-muted-foreground">32 Units:</span>
+                          <span className="font-bold ml-2">2 Countries (Peru + Brazil)</span>
                         </div>
                       </div>
                     </div>
@@ -734,18 +738,18 @@ const BusinessModel = () => {
                 </Card>
               </div>
 
-                {/* Dynamic Pricing Strategy */}
+                {/* Seed-Funded Pricing Strategy - 2 Flips Only */}
                 <Card className="bg-card/80 backdrop-blur-sm border-border/50 mb-8">
                   <CardContent className="p-8">
                     <div className="mb-8">
                       <div className="inline-flex items-center space-x-2 mb-4">
                         <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary"></div>
-                        <div className="text-sm font-medium text-primary uppercase tracking-wider">Pricing Strategy</div>
+                        <div className="text-sm font-medium text-primary uppercase tracking-wider">Seed Phase</div>
                         <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary"></div>
                       </div>
-                      <h3 className="text-3xl font-bold mb-3">Geographic Pricing Strategy</h3>
+                      <h3 className="text-3xl font-bold mb-3">Seed-Funded Development</h3>
                       <p className="text-lg text-muted-foreground">
-                        Market-based pricing across 6 locations: $110K (Thailand) → $250K (Mexico luxury)
+                        $1.9M seed capital funds 2 flips: Peru ($135K) + Brazil ($145K)
                       </p>
                     </div>
                     
@@ -754,26 +758,36 @@ const BusinessModel = () => {
                         <thead>
                           <tr className="border-b-2 border-border">
                             <th className="text-left py-4 px-4 font-semibold">Flip</th>
+                            <th className="text-left py-4 px-4 font-semibold">Location</th>
                             <th className="text-left py-4 px-4 font-semibold">Units</th>
                             <th className="text-right py-4 px-4 font-semibold">Price</th>
-                            <th className="text-right py-4 px-4 font-semibold">Platform Fee</th>
+                            <th className="text-right py-4 px-4 font-semibold">Platform Fee (3%)</th>
                             <th className="text-right py-4 px-4 font-semibold">Gross Sales</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {flywheel.flips.map((flip, idx) => <tr key={idx} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
-                              <td className="py-4 px-4 font-semibold">{flip.flip}</td>
-                              <td className="py-4 px-4">{flip.units}</td>
-                              <td className="py-4 px-4 text-right font-mono">${(flip.grossSales / flip.units / 1000).toFixed(0)}k</td>
-                              <td className="py-4 px-4 text-right font-mono text-primary">${(flip.platformFees / 1000).toFixed(1)}k</td>
-                              <td className="py-4 px-4 text-right font-mono font-semibold">${(flip.grossSales / 1000000).toFixed(2)}M</td>
-                            </tr>)}
+                          <tr className="border-b border-border/50 hover:bg-muted/20 transition-colors">
+                            <td className="py-4 px-4 font-semibold">Flip 1</td>
+                            <td className="py-4 px-4">🇵🇪 Pisac, Peru</td>
+                            <td className="py-4 px-4">15</td>
+                            <td className="py-4 px-4 text-right font-mono">$135k</td>
+                            <td className="py-4 px-4 text-right font-mono text-primary">$60.8k</td>
+                            <td className="py-4 px-4 text-right font-mono font-semibold">$2.03M</td>
+                          </tr>
+                          <tr className="border-b border-border/50 hover:bg-muted/20 transition-colors">
+                            <td className="py-4 px-4 font-semibold">Flip 2</td>
+                            <td className="py-4 px-4">🇧🇷 Bahia, Brazil</td>
+                            <td className="py-4 px-4">17</td>
+                            <td className="py-4 px-4 text-right font-mono">$145k</td>
+                            <td className="py-4 px-4 text-right font-mono text-primary">$73.9k</td>
+                            <td className="py-4 px-4 text-right font-mono font-semibold">$2.47M</td>
+                          </tr>
                           <tr className="font-bold bg-primary/5 border-t-2 border-primary/20">
-                            <td className="py-4 px-4 text-lg">TOTAL</td>
-                            <td className="py-4 px-4 text-lg">{totalUnits}</td>
-                            <td className="py-4 px-4 text-right font-mono text-lg">${(avgPrice / 1000).toFixed(0)}k avg</td>
-                            <td className="py-4 px-4 text-right font-mono text-primary text-lg">${totalPlatformFees.toFixed(2)}M</td>
-                            <td className="py-4 px-4 text-right font-mono text-primary text-lg">${totalGrossSales.toFixed(2)}M</td>
+                            <td className="py-4 px-4 text-lg" colSpan={2}>SEED PHASE TOTAL</td>
+                            <td className="py-4 px-4 text-lg">32</td>
+                            <td className="py-4 px-4 text-right font-mono text-lg">$140k avg</td>
+                            <td className="py-4 px-4 text-right font-mono text-primary text-lg">$134.7k</td>
+                            <td className="py-4 px-4 text-right font-mono text-primary text-lg">$4.49M</td>
                           </tr>
                         </tbody>
                       </table>
@@ -797,138 +811,6 @@ const BusinessModel = () => {
                 <StrategicRecommendations />
               </div>
 
-              {/* From Engine → Ecosystem: 3-Phase Evolution */}
-              <div className="mb-16 mt-20">
-                {/* Enhanced Section Header */}
-                <div className="text-center mb-16">
-                  <div className="inline-flex items-center space-x-2 mb-4">
-                    <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary"></div>
-                    <div className="text-sm font-medium text-primary uppercase tracking-wider">Evolution</div>
-                    <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary"></div>
-                  </div>
-                  <h2 className="text-4xl font-bold mb-4">From Engine → Ecosystem: 3-Phase Evolution</h2>
-                  <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                    Strategic roadmap from proof of concept to network state
-                  </p>
-                </div>
-                
-                <div className="max-w-6xl mx-auto space-y-16">
-                  {/* Three-Phase Evolution Cards */}
-                  <div className="grid lg:grid-cols-3 gap-8">
-                    {/* Phase 1: Proof Engine */}
-                    <Card className="relative overflow-hidden border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
-                      <CardContent className="p-8">
-                        <div className="text-center space-y-4">
-                          <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
-                            <Zap className="w-10 h-10 text-primary" />
-                          </div>
-                          <div>
-                            <h3 className="text-2xl font-bold mb-2">Proof Engine</h3>
-                            <div className="text-lg text-primary font-semibold">Years 0-3</div>
-                          </div>
-                          <div className="space-y-3 text-left">
-                            <div className="flex items-start space-x-3">
-                              <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                              <span className="text-sm">4 strategic property flips prove demand</span>
-                            </div>
-                            <div className="flex items-start space-x-3">
-                              <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                              <span className="text-sm">$7.6M revenue validates business model</span>
-                            </div>
-                            <div className="flex items-start space-x-3">
-                              <div className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0"></div>
-                              <span className="text-sm">Build foundational community & systems</span>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                    
-                    {/* Phase 2: Developer Platform */}
-                    <Card className="relative overflow-hidden border-2 border-green-500/20 bg-gradient-to-br from-green-500/5 to-green-500/10">
-                      <CardContent className="p-8">
-                        <div className="text-center space-y-4">
-                          <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto">
-                            <Network className="w-10 h-10 text-green-500" />
-                          </div>
-                          <div>
-                            <h3 className="text-2xl font-bold mb-2">Developer Platform</h3>
-                            <div className="text-lg text-green-500 font-semibold">$7M Investment</div>
-                          </div>
-                          <div className="space-y-3 text-left">
-                            <div className="flex items-start space-x-3">
-                              <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                              <span className="text-sm">Technology platform & legal framework</span>
-                            </div>
-                            <div className="flex items-start space-x-3">
-                              <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                              <span className="text-sm">Enable thousands of developers globally</span>
-                            </div>
-                            <div className="flex items-start space-x-3">
-                              <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
-                              <span className="text-sm">Financing tools & community systems</span>
-                            </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                    
-                    {/* Phase 3: Network State */}
-                    <Card className="relative overflow-hidden border-2 border-blue-500/20 bg-gradient-to-br from-blue-500/5 to-blue-500/10">
-                      <CardContent className="p-8">
-                        <div className="text-center space-y-4">
-                          <div className="w-20 h-20 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto">
-                            <Globe className="w-10 h-10 text-blue-500" />
-                          </div>
-                          <div>
-                            <h3 className="text-2xl font-bold mb-2">Network State</h3>
-                            <div className="text-lg text-blue-500 font-semibold">Years 3-10</div>
-                          </div>
-                          <div className="space-y-3 text-left">
-                            <div className="flex items-start space-x-3">
-                              <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                              <span className="text-sm">7,500 properties serving 2M nomads</span>
-                            </div>
-                            <div className="flex items-start space-x-3">
-                              <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                              <span className="text-sm">$300M annual revenue at scale</span>
-                            </div>
-                             <div className="flex items-start space-x-3">
-                               <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                               <span className="text-sm">Global nomad infrastructure network</span>
-                             </div>
-                             <div className="flex items-start space-x-3">
-                               <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                               <span className="text-sm">Decentralized governance & citizenship model</span>
-                             </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                  
-                   {/* Evolution Flow Visual */}
-                   <div className="relative">
-                     <div className="flex items-center justify-center space-x-8">
-                        <div className="text-center">
-                          <div className="text-3xl font-bold text-primary mb-2">$7.6M</div>
-                          <div className="text-sm text-muted-foreground">Boutique Development</div>
-                        </div>
-                       
-                       <div className="flex items-center space-x-2">
-                         <ArrowRight className="w-6 h-6 text-muted-foreground" />
-                         <div className="text-sm font-medium text-primary">$7M Platform</div>
-                         <ArrowRight className="w-6 h-6 text-muted-foreground" />
-                       </div>
-                       
-                       <div className="text-center">
-                         <div className="text-3xl font-bold text-blue-500 mb-2">$300M</div>
-                         <div className="text-sm text-muted-foreground">Platform Economics</div>
-                       </div>
-                     </div>
-                   </div>
-                 </div>
-               </div>
 
 
             </TabsContent>
@@ -943,8 +825,6 @@ const BusinessModel = () => {
             <TabsContent value="tech">
               <TechDueDiligence />
             </TabsContent>
-
-
 
           </Tabs>
         </div>
